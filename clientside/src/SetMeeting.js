@@ -91,13 +91,16 @@ const ConferenceCall = () => {
         {allMeetings && (
           <table>
             <tr>
-              {allMeetings[0].length}
-              {allMeetings.flatMap(Object.keys).map((e,index)=>{
-                if(index!=0 && e!="__v"){
-                  // console.log(index+""+e);
-                 return <th>{e}</th>
-                }
-              })}
+              {/* Get all the headers from the array of objects */}
+              {
+                Object.keys(allMeetings[0]).map((header,index)=>{
+                  if(index!=0 && header!="__v"){
+                    // console.log(index+""+e);
+                   return <th>{header}</th>
+                  }
+                })
+              }
+              {/* {console.log(Object.keys(allMeetings[0]))} */}
             </tr>
             {allMeetings.map((myObj, key) => {
               return (

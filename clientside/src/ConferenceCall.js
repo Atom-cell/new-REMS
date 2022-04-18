@@ -6,16 +6,6 @@ import io from "socket.io-client";
 const ConferenceCall = (props) => {
   const { roomId } = useParams();
 
-
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      }).then(stream => {
-        console.log("Hello");
-    });
-  }, []);
-
   return (
     <div class="main">
       <div class="main__left">
