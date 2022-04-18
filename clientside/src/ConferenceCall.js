@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import "./ConferenceCall.css";
-import Peer from "simple-peer";
+import Peer from 'peerjs';
 import io from "socket.io-client";
 
+const peer = new Peer(undefined,{
+  host: "/",
+  port: 5000,
+  path: "/peerjs",
+  // pingInterval: 5000,
+});
 
 const socket = io.connect("http://localhost:5000");
 const ConferenceCall = (props) => {
@@ -31,21 +37,26 @@ const ConferenceCall = (props) => {
         // play the local stream on my video
         myVideo.current.srcObject = stream;
       });
-      
-      // emit join room signal so that server can listen on this event
-      // Join room with a specific room id and a user id
-      socket.emit("join-room", roomId);
 
+      //Listen on peer connection
+      peer.on("open", (id)=>{
+        // id is for the specific person who is connecting or joining the room
+        // pass that specific person id who joined the room to server
+        // console.log("My Peer Id"+id);
+
+        // emit join room signal so that server can listen on this event
+        // Join room with a specific room id and a user id coming from the peer id
+        socket.emit("join-room", roomId, id);
+      })
   }, []);
 
-
-  socket.on("user-connected", ()=>{
+  socket.on("user-connected", (userId)=>{
     // whenever new user connects
-    connectNewUser();
+    connectNewUser(userId);
   })
 
-  const connectNewUser = ()=>{
-    console.log("New User");
+  const connectNewUser = (userId)=>{
+    console.log("New User:" + userId);
   }
 
   return (

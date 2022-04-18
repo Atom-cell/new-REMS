@@ -45,11 +45,12 @@ app.use("/myVideo", myVideoRouter);
 io.on("connection", (socket) => {
 
   // listen for an event join_room
-  socket.on("join-room", (roomId)=>{
-    console.log("Rooom Joinedddd");
+  socket.on("join-room", (roomId, userId)=>{
+    // console.log("Rooom Joinedddd");
     socket.join(roomId);
     // when someone joins the room we need to tell all the users that another user has joined the room
-    socket.to(roomId).broadcast.emit('user-connected');
+    // Here is the user id that has connected
+    socket.to(roomId).broadcast.emit('user-connected', userId);
   })
 
 
