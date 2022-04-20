@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const cors = require("cors");
 // import mongoose
 const mongoose = require("mongoose");
-var bodyParser = require('body-parser')
+var bodyParser = require("body-parser");
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -13,13 +13,13 @@ const io = require("socket.io")(server, {
   },
 });
 
-const { ExpressPeerServer } = require('peer');
+const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
-  debug: true
+  debug: true,
 });
-const { v4: uuidV4 } = require('uuid')
+const { v4: uuidV4 } = require("uuid");
 
-app.use('/peerjs', peerServer);
+app.use("/peerjs", peerServer);
 
 // mongoose connection
 var mongoDB = "mongodb://127.0.0.1/fyp";
@@ -30,7 +30,7 @@ mongoose.connect(mongoDB, (err) => {
 
 app.use(cors());
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // all routers
 var myCalendarRouter = require("./routes/myCalendar");
@@ -43,21 +43,26 @@ app.use("/myCalendar", myCalendarRouter);
 app.use("/myVideo", myVideoRouter);
 
 io.on("connection", (socket) => {
-
   // listen for an event join_room
-  socket.on("join-room", (roomId, userId)=>{
+  socket.on("join-room", (roomId, userId) => {
     // console.log("Rooom Joinedddd");
     socket.join(roomId);
     // when someone joins the room we need to tell all the users that another user has joined the room
     // Here is the user id that has connected
-    socket.to(roomId).broadcast.emit('user-connected', userId);
-  })
+    socket.to(roomId).broadcast.emit("user-connected", userId);
 
+    // messages
+    socket.on("message", (message) => {
+      //send message to the same room
+      io.to(roomId).emit("createMessage", message);
+    });
+
+    socket.on('disconnect', () => {
+      socket.to(roomId).broadcast.emit('user-disconnected', userId)
+    });
+  });
 
   socket.emit("me", socket.id);
-
-
-  
 
   socket.on("callUser", (data) => {
     io.to(data.userToCall).emit("callUser", {

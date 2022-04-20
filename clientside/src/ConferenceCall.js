@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import "./ConferenceCall.css";
-import Peer from 'peerjs';
+import Peer from "peerjs";
 import io from "socket.io-client";
 
-const peer = new Peer(undefined,{
+const peer = new Peer(undefined, {
   host: "/",
   port: 5000,
   path: "/peerjs",
@@ -12,21 +12,12 @@ const peer = new Peer(undefined,{
 });
 
 const socket = io.connect("http://localhost:5000");
+const peers = {}
 const ConferenceCall = (props) => {
   const { roomId } = useParams();
   const [mystream, setMyStream] = useState();
   const myVideo = useRef();
-
-  const [me, setMe] = useState("");
-  const [receivingCall, setReceivingCall] = useState(false);
-  const [caller, setCaller] = useState("");
-  const [callerSignal, setCallerSignal] = useState();
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [idToCall, setIdToCall] = useState("");
-  const [callEnded, setCallEnded] = useState(false);
-  const [name, setName] = useState("");
-  const userVideo = useRef();
-  const connectionRef = useRef();
+  const [text, setText] = useState("");
 
   useEffect(() => {
     navigator.mediaDevices
@@ -36,35 +27,156 @@ const ConferenceCall = (props) => {
         setMyStream(stream);
         // play the local stream on my video
         myVideo.current.srcObject = stream;
+
+        peer.on("call", (call) => {
+          // answer the call that the new user joins
+          call.answer(stream);
+          const video = document.createElement("video");
+          // add video stream from the new user to front end
+          call.on("stream", (userVideoStream) => {
+            addVideoStream(video, userVideoStream);
+          });
+        });
+
+        socket.on("user-connected", (userId) => {
+          // whenever new user connects
+          connectNewUser(userId, stream);
+        });
+
+        // when user disconnects
+        socket.on('user-disconnected', userId => {
+          if (peers[userId]) peers[userId].close()
+        })
       });
 
-      //Listen on peer connection
-      peer.on("open", (id)=>{
-        // id is for the specific person who is connecting or joining the room
-        // pass that specific person id who joined the room to server
-        // console.log("My Peer Id"+id);
+    //Listen on peer connection
+    peer.on("open", (id) => {
+      // id is for the specific person who is connecting or joining the room
+      // pass that specific person id who joined the room to server
+      // console.log("My Peer Id"+id);
 
-        // emit join room signal so that server can listen on this event
-        // Join room with a specific room id and a user id coming from the peer id
-        socket.emit("join-room", roomId, id);
-      })
+      // emit join room signal so that server can listen on this event
+      // Join room with a specific room id and a user id coming from the peer id
+      socket.emit("join-room", roomId, id);
+
+      // get message from server
+
+      socket.on("createMessage", (message) => {
+        const messageBox = document.getElementById("unorderedListMessage");
+        messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
+        // scrollToBottom()
+        // alert(message);
+      });
+    });
   }, []);
 
-  socket.on("user-connected", (userId)=>{
-    // whenever new user connects
-    connectNewUser(userId);
-  })
-
-  const connectNewUser = (userId)=>{
+  const connectNewUser = (userId, stream) => {
     console.log("New User:" + userId);
-  }
+    // Now use peer connection to call a user
+    // call user with the id and send him my stream
+    const call = peer.call(userId, stream);
+    const video = document.createElement("video");
+    // when called add that stream on the front end
+    call.on("stream", (userVideoStream) => {
+      // userVideoStream is the person joining the call stream
+      addVideoStream(video, userVideoStream);
+    });
+
+    call.on('close', () => {
+      video.remove()
+    })
+  
+    peers[userId] = call
+  };
+
+  const addVideoStream = (video, stream) => {
+    video.srcObject = stream;
+    video.addEventListener("loadedmetadata", () => {
+      video.play();
+    });
+    const videoGrid = document.getElementById("video-grid");
+    videoGrid.append(video);
+  };
+
+  const muteUnmute = () => {
+    // get current stream
+    const enabled = mystream.getAudioTracks()[0].enabled;
+    // if its enabled disable it
+    if (enabled) {
+      mystream.getAudioTracks()[0].enabled = false;
+      setUnmuteButton();
+    }
+    // if its disabled enable it
+    else {
+      setMuteButton();
+      mystream.getAudioTracks()[0].enabled = true;
+    }
+  };
+
+  const setMuteButton = () => {
+    const html = `
+      <i class="fas fa-microphone"></i>
+      <span>Mute</span>
+    `;
+    document.querySelector(".main__mute_button").innerHTML = html;
+  };
+
+  const setUnmuteButton = () => {
+    const html = `
+      <i class="unmute fas fa-microphone-slash"></i>
+      <span>Unmute</span>
+    `;
+    document.querySelector(".main__mute_button").innerHTML = html;
+  };
+
+  // stop or play video
+
+  const stopVideo = () => {
+    let enabled = mystream.getVideoTracks()[0].enabled;
+    if (enabled) {
+      mystream.getVideoTracks()[0].enabled = false;
+      setPlayVideo();
+    } else {
+      setStopVideo();
+      mystream.getVideoTracks()[0].enabled = true;
+    }
+  };
+
+  const setStopVideo = () => {
+    const html = `
+      <i class="fas fa-video"></i>
+      <span>Stop Video</span>
+    `;
+    document.querySelector(".main__video_button").innerHTML = html;
+  };
+
+  const setPlayVideo = () => {
+    const html = `
+    <i class="stop fas fa-video-slash"></i>
+      <span>Play Video</span>
+    `;
+    document.querySelector(".main__video_button").innerHTML = html;
+  };
+
+  // scroll bar for messages window
+  // const scrollToBottom = () => {
+  //   var d = $('.main__chat_window');
+  //   d.scrollTop(d.prop("scrollHeight"));
+  // }
+
+  // handling messaging
+  const handleSendMessage = (msg) => {
+    // alert(msg);
+    socket.emit("message", msg);
+    setText("");
+  };
 
   return (
-    <div class="main">
-      <div class="main__left">
-        <div class="main__videos">
+    <div className="main">
+      <div className="main__left">
+        <div className="main__videos">
           <div id="video-grid">
-          {mystream && (
+            {mystream && (
               <video
                 playsInline
                 muted
@@ -75,57 +187,60 @@ const ConferenceCall = (props) => {
             )}
           </div>
         </div>
-        <div class="main__controls">
-          <div class="main__controls__block">
+        <div className="main__controls">
+          <div className="main__controls__block">
             <div
-              onclick="muteUnmute()"
-              class="main__controls__button main__mute_button"
+              onClick={() => muteUnmute()}
+              className="main__controls__button main__mute_button"
             >
-              <i class="fas fa-microphone"></i>
+              <i className="fas fa-microphone"></i>
               <span>Mute</span>
             </div>
             <div
-              onclick="playStop()"
-              class="main__controls__button main__video_button"
+              onClick={() => stopVideo()}
+              className="main__controls__button main__video_button"
             >
-              <i class="fas fa-video"></i>
+              <i className="fas fa-video"></i>
               <span>Stop Video</span>
             </div>
           </div>
-          <div class="main__controls__block">
-            <div class="main__controls__button">
-              <i class="fas fa-shield-alt"></i>
+          <div className="main__controls__block">
+            <div className="main__controls__button">
+              <i className="fas fa-shield-alt"></i>
               <span>Security</span>
             </div>
-            <div class="main__controls__button">
-              <i class="fas fa-user-friends"></i>
+            <div className="main__controls__button">
+              <i className="fas fa-user-friends"></i>
               <span>Participants</span>
             </div>
-            <div class="main__controls__button">
-              <i class="fas fa-comment-alt"></i>
+            <div className="main__controls__button">
+              <i className="fas fa-comment-alt"></i>
               <span>Chat</span>
             </div>
           </div>
-          <div class="main__controls__block">
-            <div class="main__controls__button">
-              <span class="leave_meeting">Leave Meeting</span>
+          <div className="main__controls__block">
+            <div className="main__controls__button">
+              <span className="leave_meeting">Leave Meeting</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="main__right">
-        <div class="main__header">
+      <div className="main__right">
+        <div className="main__header">
           <h6>Chat</h6>
         </div>
-        <div class="main__chat_window">
-          <ul class="messages"></ul>
+        <div className="main__chat_window">
+          <ul className="messages" id="unorderedListMessage"></ul>
         </div>
-        <div class="main__message_container">
+        <div className="main__message_container">
           <input
             id="chat_message"
             type="text"
             placeholder="Type message here..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
           />
+          <button onClick={() => handleSendMessage(text)}>Send Message</button>
         </div>
       </div>
     </div>
@@ -133,3 +248,10 @@ const ConferenceCall = (props) => {
 };
 
 export default ConferenceCall;
+
+// connectToNewUser()
+// first we call user using peer.call() then
+// Connect to new user and send to the new user our own stream
+
+// IN useEffect, peer.on("call")
+// whenever a new user calls us we answer it and add it to video stream
