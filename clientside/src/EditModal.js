@@ -50,8 +50,20 @@ const EditModal = ({
             onChange={(e) => setEvent({ ...event, title: e.target.value })}
             className="inputTextFields"
           />
-          {/* <DatePicker format='yyyy-MM-dd' selected={event.startDate} onChange={(start)=> setEvent({...event, startDate: start})} className="inputTextFields"/>
-            <DatePicker format='yyyy-MM-dd' selected={event.endDate} onChange={(end)=> setEvent({...event, endDate: end})} className="inputTextFields"/> */}
+          <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/>
+          {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
+          {/* <DatePicker
+            format="yyyy-MM-dd"
+            selected={event.startDate}
+            onChange={(start) => setEvent({ ...event, startDate: start })}
+            className="inputTextFields"
+          />
+          <DatePicker
+            format="yyyy-MM-dd"
+            selected={event.endDate}
+            onChange={(end) => setEvent({ ...event, endDate: end })}
+            className="inputTextFields"
+          /> */}
           <div className="selectContainer">
             <label for="framework">Select Event Category</label>
             <select

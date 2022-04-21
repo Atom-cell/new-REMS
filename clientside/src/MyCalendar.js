@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from "./Modal";
 import axios from "axios";
+import ReactLoading from "react-loading";
 import EditModal from "./EditModal";
 import { Link } from "react-router-dom";
 const locales = {
@@ -51,27 +52,73 @@ const MyCalendar = ({ name }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [filterOptionValue, setFilterOptionValue] = useState("All");
-  const [event, setEvent] = useState();
-  const [calendarData, setCalendarData] = useState(null);
+  const [event, setEvent] = useState(); // handle modal events
+  const [calendarData, setCalendarData] = useState(null); // handling filter
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/myCalendar")
-      .then((res) => res.json())
-      .then((json) => {
-        // array that has objects
-        // console.log(json);
-        setCalendarData(json);
-        setAllEvents(json);
+    const fetchData = async () => {
+      // get the data from the api
+      const res = await axios.get("http://localhost:5000/myCalendar", {
+        params: {
+          name: name,
+        },
       });
-  }, [newEvent]);
+      // console.log(res.data);
+      setCalendarData(res.data);
+      setAllEvents(res.data);
+      setLoading(true);
+    };
+
+    // call the function
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, [modalOpen, newEvent]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5000/myCalendar", {
+  //       params: {
+  //         name: name,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       // console.log("All Events: " + res);
+  //       // console.log(res);
+  //       // console.log(res.data);
+  //       setCalendarData(res.data);
+  //       setAllEvents(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error!", error);
+  //     });
+
+  //   // fetch("http://localhost:5000/myCalendar")
+  //   //   .then((res) => res.json())
+  //   //   .then((json) => {
+  //   //     // array that has objects
+  //   //     console.log(json);
+  //   //     var myData = json.filter((el)=> {
+  //   //       return el.madeBy==name;
+  //   //     });
+  //   //     // console.log(myData);
+  //   //     setCalendarData(myData);
+  //   //     setAllEvents(myData);
+  //   //   });
+  // }, [modalOpen, newEvent]);
 
   // function to add a new event
   const addNewEvent = (newEvent) => {
     // console.log(newEvent);
+    // set event category default value if category is not selected
+    if (!newEvent.category) {
+      newEvent.category = "Goal";
+    }
     var myObj = {
       // _id: Math.floor(Math.random() * 10000),
-      madeBy: "Naseer",
+      madeBy: name,
       title: newEvent.title,
       startDate: newEvent.start,
       endDate: newEvent.end,
@@ -80,7 +127,7 @@ const MyCalendar = ({ name }) => {
     axios
       .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
       .then((res) => {
-        console.log("Event Added: "+ res.data);
+        console.log("Event Added: " + res.data);
         // console.log(res);
         // console.log(res.data);
       });
@@ -140,20 +187,20 @@ const MyCalendar = ({ name }) => {
 
   // function to update an event
   const updateEvent = (eventPassed) => {
-    // console.log(eventPassed.madeBy);
+    // console.log(typeof eventPassed.startDate);
     var myObj = {
       _id: eventPassed._id,
-      madeBy: "Naseer",
+      madeBy: name,
       title: eventPassed.title,
-      startDate: "04/09/2022",
-      endDate: "04/10/2022",
+      startDate: eventPassed.startDate,
+      endDate: eventPassed.endDate,
       category: eventPassed.category,
     };
     // console.log(myObj);
     axios
       .put("http://localhost:5000/myCalendar/updateEvent", myObj)
       .then((res) => {
-        console.log("Updated"+ res.data);
+        console.log("Updated" + res.data);
         // console.log(res);
         // console.log(res.data);
       });
@@ -177,61 +224,74 @@ const MyCalendar = ({ name }) => {
   };
 
   return (
-    <div className="App">
-      <div className="backButtonContainer">
-        <Link to="/" className="backButton">Back</Link>
-      </div>
-      <h1>{name} Calendar</h1>
-      <div>
-        <button
-          className="openModalBtn"
-          onClick={() => {
-            setModalOpen(true);
-          }}
-        >
-          Add Work Goals/ Reminder
-        </button>
-      </div>
-      {modalOpen && (
-        <Modal
-          setModalOpen={setModalOpen}
-          newEvent={newEvent}
-          setNewEvent={setNewEvent}
-          addNewEvent={addNewEvent}
+    <>
+      {!setLoading ? (
+        <ReactLoading
+          type={"bars"}
+          color={"#03fc4e"}
+          height={100}
+          width={100}
         />
+      ) : (
+        <div className="App">
+          <div className="backButtonContainer">
+            <Link to="/" className="backButton">
+              Back
+            </Link>
+          </div>
+          <h1>{name} Calendar</h1>
+          <div>
+            <button
+              className="openModalBtn"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              Add Work Goals/ Reminder
+            </button>
+          </div>
+          {modalOpen && (
+            <Modal
+              setModalOpen={setModalOpen}
+              newEvent={newEvent}
+              setNewEvent={setNewEvent}
+              addNewEvent={addNewEvent}
+            />
+          )}
+          {editModalOpen && (
+            <EditModal
+              setEditModalOpen={setEditModalOpen}
+              event={event}
+              setEvent={setEvent}
+              updateEvent={updateEvent}
+              deleteEvent={deleteEvent}
+            />
+          )}
+          <div className="selectContainer">
+            <label>Select Goals/Reminders</label>
+            <select
+              id="framework"
+              value={filterOptionValue}
+              onChange={handlefilter}
+            >
+              <option value="All">All</option>
+              <option value="Goal">Goal</option>
+              <option value="Reminder">Reminder</option>
+            </select>
+          </div>
+          {!modalOpen && !editModalOpen && (
+            <Calendar
+              localizer={localizer}
+              events={allEvents}
+              startAccessor="startDate"
+              endAccessor="endDate"
+              onSelectEvent={(event) => eventSelected(event)}
+              style={{ height: 500, margin: "50px" }}
+            />
+          )}
+        </div>
       )}
-      {editModalOpen && (
-        <EditModal
-          setEditModalOpen={setEditModalOpen}
-          event={event}
-          setEvent={setEvent}
-          updateEvent={updateEvent}
-          deleteEvent={deleteEvent}
-        />
-      )}
-      <div className="selectContainer">
-        <label>Select Goals/Reminders</label>
-        <select
-          id="framework"
-          value={filterOptionValue}
-          onChange={handlefilter}
-        >
-          <option value="All">All</option>
-          <option value="Goal">Goal</option>
-          <option value="Reminder">Reminder</option>
-        </select>
-      </div>
-      {!modalOpen && !editModalOpen && (
-        <Calendar
-          localizer={localizer}
-          events={allEvents}
-          startAccessor="startDate"
-          endAccessor="endDate"
-          onSelectEvent={(event) => eventSelected(event)}
-          style={{ height: 500, margin: "50px" }}
-        />
-      )}
-    </div>
+    </>
   );
 };
 

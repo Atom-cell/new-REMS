@@ -9,9 +9,14 @@ var myCal = require("../model/myCalender.model");
 
 /* GET My Calendar. */
 router.get("/", function (req, res, next) {
+  // console.log(req.query.name);
   myCal.find({}).exec((error, records) => {
     if (error) throw error;
-    res.json(records);
+    var myData = records.filter((el) => {
+      return el.madeBy == req.query.name;
+    });
+    // console.log(myData);
+    res.json(myData);
   });
 });
 
