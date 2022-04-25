@@ -20,6 +20,7 @@ var myVideoSchema = mongoose.Schema({
   endDate: {
     type: String,
   },
+  employees: [String],
 });
 
 module.exports = myVid = mongoose.model("myMeeting", myVideoSchema);

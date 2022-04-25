@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import SearchBar from "./SearchBar";
+import RemoveIcon from "@material-ui/icons/Remove";
 const { v4: uuidV4 } = require("uuid");
+
 const ConferenceCall = () => {
   const [newMeet, setNewMeet] = useState({
     title: "",
@@ -12,9 +15,12 @@ const ConferenceCall = () => {
     endDate: "",
   });
   const [allMeetings, setAllMeetings] = useState();
+  const [employees, setEmployees] = useState([]);
+
+  // Add a meeting
   const addMeeting = () => {
     var uniqueId = uuidV4();
-    // console.log(uniqueId);
+    console.log(employees);
     const myObj = {
       roomUrl: uniqueId,
       hostedBy: "Naseer",
@@ -22,8 +28,9 @@ const ConferenceCall = () => {
       agenda: newMeet.agenda,
       startDate: newMeet.startDate,
       endDate: newMeet.endDate,
+      employees: employees
     };
-    // console.log(myObj);
+    console.log(myObj);
 
     axios
       .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
@@ -33,17 +40,28 @@ const ConferenceCall = () => {
         // console.log(res.data);
       });
     setNewMeet({ title: "", agenda: "", startDate: "", endDate: "" });
+    setEmployees([]);
   };
 
   // get all meetings
   useEffect(() => {
-    fetch("http://localhost:5000/myVideo")
+    fetch("http://localhost:5000/myVideo/getMyMeetings")
       .then((res) => res.json())
       .then((json) => {
         // array that has objects
         setAllMeetings(json);
       });
   }, []);
+
+  const addEmployeeToMeeting = (word) => {
+    setEmployees([...employees, word]);
+    // console.log(employees);
+  };
+
+  const handleRemoveEmployee = (emp) => {
+    // remove employee from list
+    setEmployees(employees.filter((item) => item !== emp))
+  };
 
   return (
     <div>
@@ -80,6 +98,27 @@ const ConferenceCall = () => {
           selected={newMeet.endDate}
           onChange={(endDate) => setNewMeet({ ...newMeet, endDate })}
         />
+        <SearchBar
+          placeholder="Search Employees"
+          employees={employees}
+          setEmployees={setEmployees}
+          addEmployeeToMeeting={addEmployeeToMeeting}
+        />
+        {/* Show Selected Employees */}
+        <div className="selectedEmployeesContainer">
+          {employees.map((entry) => (
+            <div className="selectedEmployees" style={{ display: "flex" }}>
+              {entry}{" "}
+              <div
+                onClick={() => handleRemoveEmployee(entry)}
+                style={{ marginLeft: "10px" }}
+              >
+                {" "}
+                <RemoveIcon style={{ cursor: "pointer" }} />{" "}
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="addMeetButtonContainer">
           <button className="addMeetButton" onClick={() => addMeeting()}>
             Add Meting
@@ -87,19 +126,17 @@ const ConferenceCall = () => {
         </div>
       </div>
       <div>
-        <h1 style={{textAlign:"center"}}>All Meetings</h1>
+        <h1 style={{ textAlign: "center" }}>All Meetings</h1>
         {allMeetings && (
           <table>
             <tr>
               {/* Get all the headers from the array of objects */}
-              {
-                Object.keys(allMeetings[0]).map((header,index)=>{
-                  if(index!=0 && header!="__v"){
-                    // console.log(index+""+e);
-                   return <th>{header}</th>
-                  }
-                })
-              }
+              {Object.keys(allMeetings[0]).map((header, index) => {
+                if (index != 0 && header != "__v" && header !="employees") {
+                  // console.log(index+""+e);
+                  return <th>{header}</th>;
+                }
+              })}
               {/* {console.log(Object.keys(allMeetings[0]))} */}
             </tr>
             {allMeetings.map((myObj, key) => {

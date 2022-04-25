@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import "./ConferenceCall.css";
 import Peer from "peerjs";
 import io from "socket.io-client";
+import SendIcon from "@material-ui/icons/Send";
 
 const peer = new Peer(undefined, {
   host: "/",
@@ -12,7 +13,7 @@ const peer = new Peer(undefined, {
 });
 
 const socket = io.connect("http://localhost:5000");
-const peers = {}
+const peers = {};
 const ConferenceCall = (props) => {
   const { roomId } = useParams();
   const [mystream, setMyStream] = useState();
@@ -44,9 +45,9 @@ const ConferenceCall = (props) => {
         });
 
         // when user disconnects
-        socket.on('user-disconnected', userId => {
-          if (peers[userId]) peers[userId].close()
-        })
+        socket.on("user-disconnected", (userId) => {
+          if (peers[userId]) peers[userId].close();
+        });
       });
 
     //Listen on peer connection
@@ -63,7 +64,15 @@ const ConferenceCall = (props) => {
 
       socket.on("createMessage", (message) => {
         const messageBox = document.getElementById("unorderedListMessage");
-        messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
+        // messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
+        const msgItem = document.createElement("li");
+        const boldItem = document.createElement("b");
+        msgItem.setAttribute("class", "message");
+        boldItem.innerHTML = "User";
+        msgItem.innerHTML = message;
+        messageBox.appendChild(boldItem);
+        messageBox.append(msgItem);
+
         // scrollToBottom()
         // alert(message);
       });
@@ -76,17 +85,18 @@ const ConferenceCall = (props) => {
     // call user with the id and send him my stream
     const call = peer.call(userId, stream);
     const video = document.createElement("video");
+    video.setAttribute("class", "myVideo");
     // when called add that stream on the front end
     call.on("stream", (userVideoStream) => {
       // userVideoStream is the person joining the call stream
       addVideoStream(video, userVideoStream);
     });
 
-    call.on('close', () => {
-      video.remove()
-    })
-  
-    peers[userId] = call
+    call.on("close", () => {
+      video.remove();
+    });
+
+    peers[userId] = call;
   };
 
   const addVideoStream = (video, stream) => {
@@ -171,13 +181,26 @@ const ConferenceCall = (props) => {
     setText("");
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage(text);
+    }
+  };
+
+  const handleLeave = ()=>{
+    const vid = document.getElementsByClassName("myVideo");
+    vid.pause();
+    vid.src = "";
+    mystream.stop();
+  }
+
   return (
     <div className="main">
       <div className="main__left">
         <div className="main__videos">
           <div id="video-grid">
             {mystream && (
-              <video
+              <video className="myVideo"
                 playsInline
                 muted
                 ref={myVideo}
@@ -220,14 +243,16 @@ const ConferenceCall = (props) => {
           </div>
           <div className="main__controls__block">
             <div className="main__controls__button">
-              <span className="leave_meeting">Leave Meeting</span>
+              <Link to="/setMeeting" className="leave_meeting" onClick={()=>handleLeave()}>
+                Leave Meeting
+              </Link>
             </div>
           </div>
         </div>
       </div>
       <div className="main__right">
         <div className="main__header">
-          <h6>Chat</h6>
+          <h2>Chat</h2>
         </div>
         <div className="main__chat_window">
           <ul className="messages" id="unorderedListMessage"></ul>
@@ -239,8 +264,13 @@ const ConferenceCall = (props) => {
             placeholder="Type message here..."
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyPress={(e) => handleKeyPress(e)}
           />
-          <button onClick={() => handleSendMessage(text)}>Send Message</button>
+          <SendIcon
+            style={{ color: "#fff", fontSize: "30px" }}
+            onClick={() => handleSendMessage(text)}
+          />
+          {/* <button onClick={() => handleSendMessage(text)}>Send Message</button> */}
         </div>
       </div>
     </div>

@@ -36,11 +36,15 @@ app.use(bodyParser.json());
 var myCalendarRouter = require("./routes/myCalendar");
 var myHomeRouter = require("./routes/myHome");
 var myVideoRouter = require("./routes/myVideo");
+var myEmployeeRouter = require("./routes/myEmployee");
+var myEmployerRouter = require("./routes/myEmployer");
 
 // mount point for routers
 app.use("/", myHomeRouter);
 app.use("/myCalendar", myCalendarRouter);
 app.use("/myVideo", myVideoRouter);
+app.use("/myEmployee", myEmployeeRouter);
+app.use("/myEmployer", myEmployerRouter);
 
 io.on("connection", (socket) => {
   // listen for an event join_room
