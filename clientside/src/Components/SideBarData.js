@@ -5,6 +5,8 @@ import CalendarMonthIcon from "@material-ui/icons/TodayRounded";
 import VideoCallRoundedIcon from "@material-ui/icons/VideoCallRounded";
 import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
 import MeetingRoomRoundedIcon from "@material-ui/icons/MeetingRoomRounded";
+import ArrowDropDownRoundedIcon from "@material-ui/icons/ArrowDropDownRounded";
+import ArrowDropUpRoundedIcon from "@material-ui/icons/ArrowDropUpRounded";
 import GroupIcon from "@material-ui/icons/Group";
 export const SideBarData = {
   links: [
@@ -17,18 +19,36 @@ export const SideBarData = {
     },
     {
       id:2,
-      title: "My Calendar",
-      path: "/myCalendar",
+      title: "Calendar",
+      cName: "nav-text",
       icon: <CalendarTodayIcon />,
-      cName: "nav-text",
+      iconClosed: <ArrowDropDownRoundedIcon />,
+      iconOpened: <ArrowDropUpRoundedIcon />,
+      path: "#",
+      subNav: [
+        {
+          id: 8,
+          title: "My Calendar",
+          path: "/myCalendar",
+          icon: <CalendarTodayIcon />,
+          cName: "sub-nav-text",
+        },
+        {
+          id: 9,
+          title: "My Team Calendar",
+          path: "/myTeamCalendar",
+          icon: <CalendarMonthIcon />,
+          cName: "sub-nav-text",
+        },
+      ],
     },
-    {
-      id:3,
-      title: "My Team Calendar",
-      path: "/myTeamCalendar",
-      icon: <CalendarMonthIcon />,
-      cName: "nav-text",
-    },
+    // {
+    //   id:3,
+    //   title: "My Team Calendar",
+    //   path: "/myTeamCalendar",
+    //   icon: <CalendarMonthIcon />,
+    //   cName: "nav-text",
+    // },
     {
       id:4,
       title: "Video Call",

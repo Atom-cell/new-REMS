@@ -31,8 +31,6 @@ const Messenger = () => {
       }
     };
     getConversations();
-    const te = "hello";
-    socket.emit("checking", te);
   }, []);
 
   useEffect(() => {

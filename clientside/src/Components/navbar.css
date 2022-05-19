@@ -1,5 +1,6 @@
 .navbar {
-  background-color: #060b26;
+  /* background-color: #060b26; */
+  background-color: #f2e6fb;
   height: 80px;
   display: flex;
   justify-content: start;
@@ -10,10 +11,17 @@
   margin-left: 2rem;
   font-size: 2rem;
   background: none;
+  color: black;
+}
+
+.menu-bars:hover {
+  /* color: #1a83ff; */
+  color: rgba(130,72,222,255);
 }
 
 .nav-menu {
-  background-color: #060b26;
+  /* background-color: #060b26; */
+  background-color: #f2e6fb;
   width: 250px;
   height: 100vh;
   display: flex;
@@ -41,7 +49,8 @@
 
 .nav-text a {
   text-decoration: none;
-  color: #f5f5f5;
+  /* color: #f5f5f5; */
+  color: black;
   font-size: 18px;
   width: 95%;
   height: 100%;
@@ -52,7 +61,10 @@
 }
 
 .nav-text a:hover {
-  background-color: #1a83ff;
+  /* background-color: #1a83ff; */
+  background-color: rgba(130,72,222,255);
+  border-left: 3px solid transparent;
+  cursor: pointer;
 }
 
 .nav-menu-items {
@@ -60,7 +72,8 @@
 }
 
 .navbar-toggle {
-  background-color: #060b26;
+  /* background-color: #060b26; */
+  background-color: #f2e6fb;
   width: 100%;
   height: 80px;
   display: flex;
@@ -73,5 +86,23 @@ span {
 }
 
 .activeLink{
-  background-color: #1a83ff;
+  /* background-color: #1a83ff; */
+  background-color: rgba(130,72,222,255);
+}
+.sub-nav{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 8px 0px 8px 46px;
+  list-style: none;
+  height: 60px;
+  text-decoration: none;
+  /* color: #f5f5f5; */
+  color: black;
+  font-size: 16px;
+}
+.sub-nav:hover{
+  background-color: rgba(130,72,222,255);
+  border-left: 3px solid transparent;
+  cursor: pointer;
 }

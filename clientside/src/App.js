@@ -17,7 +17,7 @@ const App = () => {
         <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
         <Route path="/myTeamCalendar" element={<MyCalendar name="Nasani" />} />
         <Route path="/videoCall" element={<VideoCall />} />
-        <Route path="/setMeeting/:roomId" element={<ConferenceCall />} />
+        <Route path="/allMeetings/:roomId" element={<ConferenceCall />} />
         <Route exact path="/setMeeting" element={<SetMeeting />} />
         <Route path="/myMessenger" element={<Messenger />} />
         <Route path="/allMeetings" element={<AllMeetings />} />

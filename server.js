@@ -84,9 +84,5 @@ io.on("connection", (socket) => {
     io.to(data.to).emit("callAccepted", data.signal);
   });
 
-  socket.on('checking', (mesg) => {
-    console.log(mesg);
-  });
-
 });
 server.listen(5000, () => console.log("server is running on port 5000"));

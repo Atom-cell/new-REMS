@@ -63,7 +63,7 @@ const AllMeetings = () => {
               return (
                 <tr key={myObj._id}>
                   <td>
-                    <Link to={`/setMeeting/:${myObj.roomUrl}`}>
+                    <Link to={`/allMeetings/:${myObj.roomUrl}`}>
                       {myObj.roomUrl}
                     </Link>
                   </td>
