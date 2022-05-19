@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import VideoCall from "./VideoCall";
-import MyCalendar from "./MyCalendar";
+import VideoCall from "./Meetings/VideoCall";
+import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import HomeScreen from "./HomeScreen";
-import SetMeeting from "./SetMeeting";
-import ConferenceCall from "./ConferenceCall";
+import SetMeeting from "./Meetings/SetMeeting";
+import ConferenceCall from "./Meetings/ConferenceCall";
+import Messenger from "./Chat/Messenger";
+import AllMeetings from "./Meetings/AllMeetings";
 const App = () => {
   return (
     <Router>
@@ -15,6 +17,8 @@ const App = () => {
         <Route path="/videoCall" element={<VideoCall />} />
         <Route path="/setMeeting/:roomId" element={<ConferenceCall />} />
         <Route exact path="/setMeeting" element={<SetMeeting />} />
+        <Route path="/myMessenger" element={<Messenger />} />
+        <Route path="/allMeetings" element={<AllMeetings />} />
       </Routes>
     </Router>
   );

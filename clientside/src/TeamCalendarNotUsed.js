@@ -8,7 +8,7 @@ import enUS from 'date-fns/locale/en-US';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
-import Modal from './Modal'
+import Modal from './Calendar/Modal'
 
 const locales = {
   'en-US': enUS,

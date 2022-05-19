@@ -12,6 +12,7 @@ router.get("/", function (req, res, next) {
   // console.log(req.query.name);
   myCal.find({}).exec((error, records) => {
     if (error) throw error;
+    // show only the events of the user logged in 
     var myData = records.filter((el) => {
       return el.madeBy == req.query.name;
     });
@@ -22,13 +23,13 @@ router.get("/", function (req, res, next) {
 
 //add new Event
 router.post("/addNewEvent", function (req, res, next) {
-  // console.log(req.body._id);
+  // console.log(req.body.startDate);
+  // console.log(typeof req.body.startDate);
   var newEvent = new myCal({
     // _id: req.body._id,
     madeBy: req.body.madeBy,
     title: req.body.title,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
+    startDate: new Date(req.body.startDate),
     category: req.body.category,
   });
 

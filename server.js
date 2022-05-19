@@ -38,6 +38,8 @@ var myHomeRouter = require("./routes/myHome");
 var myVideoRouter = require("./routes/myVideo");
 var myEmployeeRouter = require("./routes/myEmployee");
 var myEmployerRouter = require("./routes/myEmployer");
+var myMessagesRouter = require("./routes/myMessages");
+var myConversationRouter = require("./routes/myConversation");
 
 // mount point for routers
 app.use("/", myHomeRouter);
@@ -45,6 +47,8 @@ app.use("/myCalendar", myCalendarRouter);
 app.use("/myVideo", myVideoRouter);
 app.use("/myEmployee", myEmployeeRouter);
 app.use("/myEmployer", myEmployerRouter);
+app.use("/myConversation", myConversationRouter);
+app.use("/myMessages", myMessagesRouter);
 
 io.on("connection", (socket) => {
   // listen for an event join_room
@@ -79,6 +83,11 @@ io.on("connection", (socket) => {
   socket.on("answerCall", (data) => {
     io.to(data.to).emit("callAccepted", data.signal);
   });
+
+  socket.on('checking', (mesg) => {
+    console.log(mesg);
+  });
+
 });
 
 server.listen(5000, () => console.log("server is running on port 5000"));

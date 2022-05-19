@@ -1,36 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import SearchBar from "./SearchBar";
+import SearchBar from "../Components/SearchBar";
 import RemoveIcon from "@material-ui/icons/Remove";
+import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
+import moment from "moment";
 const { v4: uuidV4 } = require("uuid");
 
-const ConferenceCall = () => {
+const SetMeeting = () => {
   const [newMeet, setNewMeet] = useState({
     title: "",
     agenda: "",
     startDate: "",
-    endDate: "",
+    // endDate: "",
   });
-  const [allMeetings, setAllMeetings] = useState();
   const [employees, setEmployees] = useState([]);
 
   // Add a meeting
   const addMeeting = () => {
     var uniqueId = uuidV4();
-    console.log(employees);
+    console.log(newMeet.startDate);
+    // console.log(employees);
     const myObj = {
       roomUrl: uniqueId,
       hostedBy: "Naseer",
       title: newMeet.title,
       agenda: newMeet.agenda,
       startDate: newMeet.startDate,
-      endDate: newMeet.endDate,
-      employees: employees
+      // endDate: newMeet.endDate,
+      employees: employees,
     };
-    console.log(myObj);
+    // console.log(myObj);
 
     axios
       .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
@@ -39,19 +41,9 @@ const ConferenceCall = () => {
         // console.log(res);
         // console.log(res.data);
       });
-    setNewMeet({ title: "", agenda: "", startDate: "", endDate: "" });
+    setNewMeet({ title: "", agenda: "", startDate: "" });
     setEmployees([]);
   };
-
-  // get all meetings
-  useEffect(() => {
-    fetch("http://localhost:5000/myVideo/getMyMeetings")
-      .then((res) => res.json())
-      .then((json) => {
-        // array that has objects
-        setAllMeetings(json);
-      });
-  }, []);
 
   const addEmployeeToMeeting = (word) => {
     setEmployees([...employees, word]);
@@ -60,7 +52,7 @@ const ConferenceCall = () => {
 
   const handleRemoveEmployee = (emp) => {
     // remove employee from list
-    setEmployees(employees.filter((item) => item !== emp))
+    setEmployees(employees.filter((item) => item !== emp));
   };
 
   return (
@@ -87,6 +79,15 @@ const ConferenceCall = () => {
           onChange={(e) => setNewMeet({ ...newMeet, agenda: e.target.value })}
         />
         <DatePicker
+          placeholderText="Start Date & Time"
+          selected={newMeet.startDate}
+          onChange={(startDate) => setNewMeet({ ...newMeet, startDate })}
+          timeInputLabel="Time:"
+          dateFormat="MM/dd/yyyy h:mm"
+          showTimeInput
+          className="inputTextFields"
+        />
+        {/* <DatePicker
           placeholderText="Start Date"
           selected={newMeet.startDate}
           onChange={(startDate) => setNewMeet({ ...newMeet, startDate })}
@@ -97,7 +98,7 @@ const ConferenceCall = () => {
           className="inputTextFields"
           selected={newMeet.endDate}
           onChange={(endDate) => setNewMeet({ ...newMeet, endDate })}
-        />
+        /> */}
         <SearchBar
           placeholder="Search Employees"
           employees={employees}
@@ -125,38 +126,8 @@ const ConferenceCall = () => {
           </button>
         </div>
       </div>
-      <div>
-        <h1 style={{ textAlign: "center" }}>All Meetings</h1>
-        {allMeetings && (
-          <table>
-            <tr>
-              {/* Get all the headers from the array of objects */}
-              {Object.keys(allMeetings[0]).map((header, index) => {
-                if (index != 0 && header != "__v" && header !="employees") {
-                  // console.log(index+""+e);
-                  return <th>{header}</th>;
-                }
-              })}
-              {/* {console.log(Object.keys(allMeetings[0]))} */}
-            </tr>
-            {allMeetings.map((myObj, key) => {
-              return (
-                <tr key={myObj._id}>
-                  {/* <td>{myObj._id}</td> */}
-                  <td>{myObj.roomUrl}</td>
-                  <td>{myObj.hostedBy}</td>
-                  <td>{myObj.title}</td>
-                  <td>{myObj.agenda}</td>
-                  <td>{myObj.startDate}</td>
-                  <td>{myObj.endDate}</td>
-                </tr>
-              );
-            })}
-          </table>
-        )}
-      </div>
     </div>
   );
 };
 
-export default ConferenceCall;
+export default SetMeeting;

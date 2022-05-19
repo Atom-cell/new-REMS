@@ -243,7 +243,7 @@ const ConferenceCall = (props) => {
           </div>
           <div className="main__controls__block">
             <div className="main__controls__button">
-              <Link to="/setMeeting" className="leave_meeting" onClick={()=>handleLeave()}>
+              <Link to="/allMeetings" className="leave_meeting" onClick={()=>handleLeave()}>
                 Leave Meeting
               </Link>
             </div>

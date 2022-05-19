@@ -50,7 +50,18 @@ const EditModal = ({
             onChange={(e) => setEvent({ ...event, title: e.target.value })}
             className="inputTextFields"
           />
-          <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/>
+          {/* <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/> */}
+
+          <DatePicker
+            placeholderText="Start Date"
+            selected={new Date(event.startDate)}
+            onChange={(start) => setEvent({ ...event, startDate: start })}
+            timeInputLabel="Time:"
+            dateFormat="MM/dd/yyyy h:mm aa"
+            showTimeInput
+            className="inputTextFields"
+          />
+
           {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
           {/* <DatePicker
             format="yyyy-MM-dd"
@@ -95,8 +106,8 @@ const EditModal = ({
           >
             Save
           </button>
+          <button onClick={() => deleteEvent(event)}>Delete Event</button>
         </div>
-        <button onClick={() => deleteEvent(event)}>Delete Event</button>
       </div>
     </div>
   );

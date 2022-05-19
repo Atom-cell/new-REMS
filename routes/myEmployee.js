@@ -12,6 +12,15 @@ router.get("/", (req, res, next)=> {
   });
 });
 
+// search specific Employee
+router.get("/:userId", (req, res, next)=> {
+  // console.log(req.params.userId);
+  myEmp.findById(req.params.userId).exec((error, records) => {
+    if (error) throw error;
+    res.json(records);
+  });
+});
+
 //add new Employee
 router.post("/addNewEmployee", (req, res, next) => {
   // console.log(req.body.username);

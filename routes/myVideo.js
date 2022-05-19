@@ -17,7 +17,7 @@ router.get("/", function (req, res, next) {
 // only the specific name containing object will be returned
 router.get("/getMyMeetings", function (req, res, next) {
   myVid.find(
-    { employees: "sani" },
+    { employees: "nas" },
     function(err, result) {
       if (err) {
         res.send(err);
@@ -45,7 +45,6 @@ router.post("/addNewMeeting", function (req, res, next) {
     title: req.body.title,
     agenda: req.body.agenda,
     startDate: req.body.startDate,
-    endDate: req.body.endDate,
     employees: req.body.employees,
   });
 
@@ -53,6 +52,15 @@ router.post("/addNewMeeting", function (req, res, next) {
   newMeet.save(function (err) {
     if (err) console.log("error", err);
     // saved!
+  });
+});
+
+// delete a meeting
+router.delete("/deleteMeeting", function (req, res, next) {
+  console.log(req.body._id);
+  myVid.findOneAndRemove({ _id: req.body._id }, function (err) {
+    if (err) console.log("Error " + err);
+    console.log("Removed");
   });
 });
 

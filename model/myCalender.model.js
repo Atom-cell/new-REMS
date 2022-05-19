@@ -9,10 +9,7 @@ var myCalendarSchema = mongoose.Schema({
     type: String,
   },
   startDate: {
-    type: String,
-  },
-  endDate: {
-    type: String,
+    type: Date,
   },
   category: {
     type: String,
