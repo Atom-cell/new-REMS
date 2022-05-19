@@ -7,9 +7,11 @@ import SetMeeting from "./Meetings/SetMeeting";
 import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
 import AllMeetings from "./Meetings/AllMeetings";
+import NavBar from "./Components/NavBar";
 const App = () => {
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route exact path="/" element={<HomeScreen />} />
         <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
