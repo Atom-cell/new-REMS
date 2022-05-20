@@ -11,7 +11,7 @@ const SubNavBar = ({ item, showSidebar }) => {
       <div onClick={item.subNav && showSubnav} 
       className={item.cName}
       >
-        <Link to={item.path} onClick={showSidebar} >
+        <Link to={item.path} onClick={!item.subNav && showSidebar} >
           {item.icon}
           <span>{item.title}</span>
         </Link>
