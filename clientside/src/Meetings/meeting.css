@@ -1,0 +1,17 @@
+.header{
+    border-bottom: 1px solid;
+    padding: 10px;
+    background-color: #e9ecef;
+}
+.row{
+    padding: 10px;
+    border: 1px solid gray;
+}
+.link a{
+    color: #8248de;
+    font-weight: 500;
+}
+.loading{
+    margin-left: 30%;
+    margin-top: 40px;
+}

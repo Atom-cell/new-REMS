@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import axios from "axios";
-
+import "./meeting.css";
+import ReactLoading from "react-loading";
 const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
+  const [headers, setHeaders] = useState();
+  const [loading, setLoading] = useState(false);
 
   //get All Meetings
   useEffect(() => {
@@ -15,13 +18,16 @@ const AllMeetings = () => {
         "http://localhost:5000/myVideo/getMyMeetings"
       );
       setAllMeetings(res.data);
+      // console.log(Object.keys(res.data[0]));
+      setHeaders(Object.keys(res.data[0]));
+      setLoading(true);
     };
 
     // call the function
     fetchData()
       // make sure to catch any error
       .catch(console.error);
-  }, [allMeetings]);
+  }, []);
 
   const handleDeleteMeeting = (meeting) => {
     // delete a meeting
@@ -39,51 +45,72 @@ const AllMeetings = () => {
   };
   return (
     <div>
-      <div className="backButtonContainer">
+      {/* <div className="backButtonContainer">
         <Link to="/" className="backButton">
           Back
         </Link>
-      </div>
-      {allMeetings ? (
-        <>
-          <h1 style={{ textAlign: "center" }}>All Meetings</h1>
-          <table>
-            <tr>
+      </div> */}
+      {loading?(
+        <div>
+          {allMeetings ? (
+          <>
+            <h1 style={{ textAlign: "center" }}>All Meetings</h1>
+            <table>
+              {headers?.map((header) => {
+                console.log(header);
+                if (header != "_id" && header != "employees" && header != "__v") {
+                  return <th className="header">{header}</th>;
+                }
+                if (header == "__v") {
+                  return (
+                    <>
+                      <th className="header">Time</th>
+                      <th className="header">Delete</th>
+                    </>
+                  );
+                }
+              })}
               {/* All headers */}
-              <th>Room URL</th>
-              <th>Hosted By</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Delete</th>
-            </tr>
-            {allMeetings.map((myObj, key) => {
-              var time = moment.utc(myObj.startDate).format("HH:mm");
-              return (
-                <tr key={myObj._id}>
-                  <td>
-                    <Link to={`/allMeetings/:${myObj.roomUrl}`}>
-                      {myObj.roomUrl}
-                    </Link>
-                  </td>
-                  {/* <td>{myObj.roomUrl}</td> */}
-                  <td>{myObj.hostedBy}</td>
-                  <td>{myObj.title}</td>
-                  <td>{myObj.agenda}</td>
-                  {/* {console.log(myObj.startDate.substr(11))} */}
-                  <td>{myObj.startDate.substr(0, 10)}</td>
-                  <td>{time}</td>
-                  <td>
-                    <DeleteIcon onClick={() => handleDeleteMeeting(myObj)} />
-                  </td>
-                </tr>
-              );
-            })}
-          </table>
-        </>
-      ) : (
-        <h1>No Meetings</h1>
+              {/* <th className="header">Room URL</th>
+                <th className="header">Hosted By</th>
+                <th className="header">Title</th>
+                <th className="header">Description</th>
+                <th className="header">Date</th>
+                <th className="header">Time</th>
+                <th className="header">Delete</th> */}
+              {/* </tr> */}
+              {allMeetings.map((myObj, key) => {
+                var time = moment.utc(myObj.startDate).format("HH:mm");
+                return (
+                  <tr key={myObj._id}>
+                    <td className="row link">
+                      <Link to={`/allMeetings/:${myObj.roomUrl}`}>
+                        {myObj.roomUrl}
+                      </Link>
+                    </td>
+                    {/* <td className="row">{myObj.roomUrl}</td> */}
+                    <td className="row">{myObj.hostedBy}</td>
+                    <td className="row">{myObj.title}</td>
+                    <td className="row">{myObj.agenda}</td>
+                    {/* {console.log(myObj.startDate.substr(11))} */}
+                    <td className="row">{myObj.startDate.substr(0, 10)}</td>
+                    <td className="row">{time}</td>
+                    <td className="row">
+                      <DeleteIcon onClick={() => handleDeleteMeeting(myObj)} />
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
+          </>
+        ) : (
+          <>
+            <h1>You have No Meetings</h1>
+          </>
+        )}
+        </div>
+      ):(
+        <ReactLoading type="spin" color="#fafa" height={667} width={375} className="loading" />
       )}
     </div>
   );

@@ -9,6 +9,7 @@ import Peer from "simple-peer";
 import io from "socket.io-client";
 import "./videocall.css";
 import { Link } from "react-router-dom";
+import VideoCallControls from "./VideoCallControls";
 const socket = io.connect("http://localhost:5000");
 function VideoCall() {
   const [me, setMe] = useState("");
@@ -20,6 +21,7 @@ function VideoCall() {
   const [idToCall, setIdToCall] = useState("");
   const [callEnded, setCallEnded] = useState(false);
   const [name, setName] = useState("");
+  const [userStream, setUserStream] = useState();
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
@@ -28,6 +30,7 @@ function VideoCall() {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        // set my stream
         setStream(stream);
         myVideo.current.srcObject = stream;
       });
@@ -60,6 +63,7 @@ function VideoCall() {
     });
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream;
+      setUserStream(stream);
     });
     socket.on("callAccepted", (signal) => {
       setCallAccepted(true);
@@ -94,14 +98,6 @@ function VideoCall() {
 
   return (
     <div className="videocallContainer">
-      <div className="backButtonContainer">
-        <Link to="/" className="backButton">
-          Back
-        </Link>
-      </div>
-      <h1 style={{ textAlign: "center", color: "#fff" }}>
-        Naseer Video Call App
-      </h1>
       <div className="container">
         <div className="video-container">
           <div className="video">
@@ -114,15 +110,19 @@ function VideoCall() {
                 style={{ width: "300px" }}
               />
             )}
+            <VideoCallControls leaveCall={leaveCall} mystream={stream} />
           </div>
           <div className="video">
             {callAccepted && !callEnded ? (
-              <video
-                playsInline
-                ref={userVideo}
-                autoPlay
-                style={{ width: "300px" }}
-              />
+              <>
+                <video
+                  playsInline
+                  ref={userVideo}
+                  autoPlay
+                  style={{ width: "300px" }}
+                />
+                <VideoCallControls leaveCall={leaveCall} mystream={userStream} />
+              </>
             ) : null}
           </div>
         </div>

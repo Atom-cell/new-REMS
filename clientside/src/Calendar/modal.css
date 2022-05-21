@@ -74,10 +74,20 @@
     padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
+    margin: 5px;
 }
-/* .selectContainer label{
+.selectContainer button{
     margin-right: 20px;
-} */
+    background-color: #e1c5ff;
+    color: #8248de;
+    border: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+.selectContainer spam{
+    margin-right: 20px;
+}
 .selectContainer select:focus {
     outline: none;
 }

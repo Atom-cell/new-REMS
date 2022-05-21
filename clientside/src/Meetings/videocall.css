@@ -1,6 +1,8 @@
 .container {
 	display: grid;
 	grid-template-columns: 7fr 3fr;
+	background-color: black;
+	height: 120vh;
 }
 
 .myId {
@@ -18,6 +20,7 @@
 	display: grid;
 	justify-content: center;
 	align-content: center;
+	height: 60vh;
 }
 
 .call-button {
@@ -28,10 +31,10 @@
 .video-container {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	justify-content: center;
-	align-content: center;
-	margin-top: 10rem;
-	margin-left: 10rem;
+	/* justify-content: center;
+	align-content: center; */
+	/* margin-top: 10rem;
+	margin-left: 10rem; */
 }
 
 .caller {
@@ -39,13 +42,10 @@
 	color: #fff;
 }
 
-.videocallContainer {
-	background: #4776e6; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to right, #8e54e9, #4776e6); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(
-		to right,
-		#8e54e9,
-		#4776e6
-	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-	height: 120vh;
-}
+/* .videocallContainer { */
+	/* background: #4776e6; fallback for old browsers */
+	/* background: -webkit-linear-gradient(to right, #8e54e9, #4776e6); Chrome 10-25, Safari 5.1-6 */
+	/* background: linear-gradient( to right,	#8e54e9,	#4776e6 */
+	/* ); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	/* height: 120vh; */
+/* } */

@@ -8,10 +8,8 @@ const SubNavBar = ({ item, showSidebar }) => {
 
   return (
     <>
-      <div onClick={item.subNav && showSubnav} 
-      className={item.cName}
-      >
-        <Link to={item.path} onClick={!item.subNav && showSidebar} >
+      <div onClick={item.subNav && showSubnav} className={item.cName}>
+        <Link to={item.path} onClick={!item.subNav && showSidebar}>
           {item.icon}
           <span>{item.title}</span>
         </Link>
@@ -26,7 +24,12 @@ const SubNavBar = ({ item, showSidebar }) => {
       {subnav &&
         item.subNav.map((item, index) => {
           return (
-            <Link to={item.path} key={index} className="sub-nav" onClick={showSidebar} >
+            <Link
+              to={item.path}
+              key={index}
+              className="sub-nav"
+              onClick={showSidebar}
+            >
               {item.icon}
               <span>{item.title}</span>
             </Link>

@@ -13,6 +13,8 @@ import axios from "axios";
 import EditModal from "./EditModal";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import "./mycalendar.css";
+import AddCircleOutlineRoundedIcon from "@material-ui/icons/AddCircleOutlineRounded";
 const locales = {
   "en-US": enUS,
 };
@@ -243,21 +245,12 @@ const MyCalendar = ({ name }) => {
       )}
       {!modalOpen && !editModalOpen && (
         <>
-          <div className="backButtonContainer">
-            <Link to="/" className="backButton">
-              Back
-            </Link>
-            <h2>{name} Calendar</h2>
-            <button
-              className="openModalBtn backButton"
-              onClick={() => {
-                setModalOpen(true);
-              }}
-            >
-              Add Work Goals/ Reminder
-            </button>
-          </div>
+          <h2>{name} Calendar</h2>
           <div className="selectContainer">
+            <button onClick={() => setModalOpen(true)}>
+              <AddCircleOutlineRoundedIcon />
+              <span>Add Events</span>
+            </button>
             <label>Select Goals/Reminders</label>
             <select
               id="framework"
@@ -275,10 +268,15 @@ const MyCalendar = ({ name }) => {
             startAccessor="startDate"
             endAccessor="startDate"
             onSelectEvent={(event) => eventSelected(event)}
-            style={{ height: 400, margin: "50px" }}
             // defaultView={'day'}
             views={["month", "agenda"]}
             // , "day", "work_week"
+            style={{ height: "400px", margin: "0 50px 0 50px" }}
+            eventPropGetter={(event) => {
+              const backgroundColor =
+                event.category == "Reminder" ? "#8248de" : "#9c64f5";
+              return { style: { backgroundColor } };
+            }}
           />
         </>
       )}
