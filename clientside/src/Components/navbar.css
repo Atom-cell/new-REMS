@@ -86,8 +86,8 @@ span {
 }
 
 .activeLink{
-  /* background-color: #1a83ff; */
-  background-color: rgba(130,72,222,255);
+  background-color: #1a83ff;
+  /* background-color: rgba(130,72,222,255); */
 }
 .sub-nav{
   display: flex;

@@ -5,7 +5,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import AddIcon from "@material-ui/icons/Add";
 
-const SearchBar = ({ placeholder, employees, setEmployees, addEmployeeToMeeting }) => {
+const SearchBar = ({
+  placeholder,
+  employees,
+  setEmployees,
+  addEmployeeToMeeting,
+}) => {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
   const [data, setData] = useState();
@@ -15,7 +20,7 @@ const SearchBar = ({ placeholder, employees, setEmployees, addEmployeeToMeeting 
     const fetchData = async () => {
       // get the data from the api
       const res = await axios.get("http://localhost:5000/myEmployee");
-    //   console.log(res.data);
+      //   console.log(res.data);
       setData(res.data);
     };
 
@@ -49,11 +54,11 @@ const SearchBar = ({ placeholder, employees, setEmployees, addEmployeeToMeeting 
     setFilteredData([]);
   };
 
-  const addEmployeeToMeetingList = (word)=>{
-      addEmployeeToMeeting(word);
-      setFilteredData([]);
-      setWordEntered("");
-  }
+  const addEmployeeToMeetingList = (word) => {
+    addEmployeeToMeeting(word);
+    setFilteredData([]);
+    setWordEntered("");
+  };
 
   return (
     <div className="search">
@@ -65,7 +70,11 @@ const SearchBar = ({ placeholder, employees, setEmployees, addEmployeeToMeeting 
           onChange={handleFilter}
         />
         <div className="searchIcon">
-            {wordEntered && <div onClick={()=>addEmployeeToMeetingList(wordEntered)}><AddIcon /></div>}
+          {wordEntered && (
+            <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
+              <AddIcon />
+            </div>
+          )}
           {filteredData.length === 0 ? (
             <SearchIcon />
           ) : (

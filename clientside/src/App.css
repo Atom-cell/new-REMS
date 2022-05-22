@@ -69,31 +69,4 @@
 	padding: 10px;
 	text-decoration: none;
 }
-
-.addMeetButtonContainer{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-.addMeetButton{
-	width: 150px;
-    height: 45px;
-    margin: 15px;
-    border: none;
-    background-color: cornflowerblue;
-    color: white;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-}
-table{
-	margin-top: 20px;
-}
-table, td, th {
-	border: 1px solid;
-}
-table {
-	width: 100%;
-	border-collapse: collapse;
-}
   

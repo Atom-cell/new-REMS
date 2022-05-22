@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import VideoCall from "./Meetings/VideoCall";
 import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import HomeScreen from "./HomeScreen";
+import Dashboard from "./Dashboard/Dashboard";
 import SetMeeting from "./Meetings/SetMeeting";
 import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
@@ -13,7 +13,7 @@ const App = () => {
     <Router>
       <NavBar />
       <Routes>
-        <Route exact path="/" element={<HomeScreen />} />
+        <Route exact path="/" element={<Dashboard />} />
         <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
         <Route path="/myTeamCalendar" element={<MyCalendar name="Nasani" />} />
         <Route path="/videoCall" element={<VideoCall />} />

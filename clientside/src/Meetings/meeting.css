@@ -15,3 +15,13 @@
     margin-left: 30%;
     margin-top: 40px;
 }
+.all-meetings-table{
+    width: 100%;
+}
+.delete-icon{
+    color: #e1c5ff;
+}
+.delete-icon:hover{
+    color: #8248de;
+    cursor: pointer;
+}

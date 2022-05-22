@@ -7,6 +7,7 @@ import SearchBar from "../Components/SearchBar";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import moment from "moment";
+import "./setmeeting.css";
 const { v4: uuidV4 } = require("uuid");
 
 const SetMeeting = () => {
@@ -57,12 +58,12 @@ const SetMeeting = () => {
 
   return (
     <div>
-      <div className="backButtonContainer">
+      {/* <div className="backButtonContainer">
         <Link to="/" className="backButton">
           Back
         </Link>
-      </div>
-      <div className="modalContainer" style={{ marginLeft: "30%" }}>
+      </div> */}
+      <div className="modalContainer" style={{ marginLeft: "30%", marginTop:"50px" }}>
         <h1>Set Meeting</h1>
         <input
           type="text"
@@ -115,7 +116,7 @@ const SetMeeting = () => {
                 style={{ marginLeft: "10px" }}
               >
                 {" "}
-                <RemoveIcon style={{ cursor: "pointer" }} />{" "}
+                <RemoveIcon className="remove-icon"/>{" "}
               </div>
             </div>
           ))}

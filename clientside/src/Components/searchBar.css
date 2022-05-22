@@ -1,4 +1,3 @@
-
 .searchInputs {
     display: flex;
 }
@@ -65,5 +64,50 @@ a {
 } */
 
 #clearBtn {
+    cursor: pointer;
+}
+
+.selectContainer{
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    /* border-bottom: 2px solid gray; */
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+    margin: 5px;
+}
+.selectContainer button{
+    margin-right: 20px;
+    background-color: #e1c5ff;
+    color: #8248de;
+    border: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+.selectContainer span{
+    margin-right: 20px;
+}
+.selectContainer select:focus {
+    outline: none;
+}
+.selectedEmployeesContainer{ 
+    color: white;
+    padding: 10px 10px;  
+    display: flex;
+}
+.selectedEmployees{
+    background-color: #8248de; 
+    border: 1px solid;
+    width: fit-content;
+    margin-Right: 15px;
+    padding: 10px;
+}
+.remove-icon:hover{
+    color: #e1c5ff;
+    border: 3px solid #8248de;
     cursor: pointer;
 }
