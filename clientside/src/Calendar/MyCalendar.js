@@ -66,7 +66,7 @@ const MyCalendar = ({ name }) => {
           name: name,
         },
       });
-      console.log(res.data);
+      // console.log(res.data);
       setCalendarData(res.data);
       setAllEvents(res.data);
     };
@@ -117,7 +117,7 @@ const MyCalendar = ({ name }) => {
       newEvent.category = "Goal";
     }
     // const formatted = moment(newEvent.start).toDate();
-    console.log(newEvent.start);
+    // console.log(newEvent.start);
     var myObj = {
       // _id: Math.floor(Math.random() * 10000),
       madeBy: name,
@@ -194,7 +194,7 @@ const MyCalendar = ({ name }) => {
       madeBy: name,
       title: eventPassed.title,
       startDate: eventPassed.startDate,
-      endDate: eventPassed.endDate,
+      // endDate: eventPassed.endDate,
       category: eventPassed.category,
     };
     // console.log(myObj);
@@ -225,7 +225,7 @@ const MyCalendar = ({ name }) => {
   };
 
   return (
-    <div className="App">
+    <div className="calendar-container">
       {modalOpen && (
         <Modal
           setModalOpen={setModalOpen}
@@ -244,23 +244,29 @@ const MyCalendar = ({ name }) => {
         />
       )}
       {!modalOpen && !editModalOpen && (
-        <>
-          <h2>{name} Calendar</h2>
-          <div className="selectContainer">
-            <button onClick={() => setModalOpen(true)}>
-              <AddCircleOutlineRoundedIcon />
-              <span>Add Events</span>
-            </button>
-            <label>Select Goals/Reminders</label>
-            <select
-              id="framework"
-              value={filterOptionValue}
-              onChange={handlefilter}
-            >
-              <option value="All">All</option>
-              <option value="Goal">Goal</option>
-              <option value="Reminder">Reminder</option>
-            </select>
+        <div className="calendar">
+          <div className="calendar-header">
+            <div className="calendar-header-button">
+              <button onClick={() => setModalOpen(true)}>
+                <AddCircleOutlineRoundedIcon />
+                <span>Add Events</span>
+              </button>
+            </div>
+            <div className="calendar-header-h2">
+              <h2>{name} Calendar</h2>
+            </div>
+            <div className="selectContainer">
+              <label>Filter Calendar </label>
+              <select
+                id="framework"
+                value={filterOptionValue}
+                onChange={handlefilter}
+              >
+                <option value="All">All</option>
+                <option value="Goal">Goal</option>
+                <option value="Reminder">Reminder</option>
+              </select>
+            </div>
           </div>
           <Calendar
             localizer={localizer}
@@ -278,7 +284,7 @@ const MyCalendar = ({ name }) => {
               return { style: { backgroundColor } };
             }}
           />
-        </>
+        </div>
       )}
     </div>
   );

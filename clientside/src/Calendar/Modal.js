@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "./modal.css";
+import "./modal.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,7 +10,7 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
     // console.log(event.target.value);
   };
   return (
-    <div>
+    <div className="add-new-event-container">
       <h1>Add New Event</h1>
       <div className="modalBackground">
         <div className="modalContainer">
@@ -54,14 +54,15 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
             onChange={(end) => setNewEvent({ ...newEvent, end })}
             className="inputTextFields"
           /> */}
-            <div className="selectContainer">
-              <label>Select Event Category</label>
+            <div className="inputTextFields selectContainerModal">
+              {/* <label>Select Event Category</label> */}
               <select
                 id="framework"
                 value={newEvent.category}
                 onChange={handleSelectedChange}
               >
-                <option value="Goal" selected="selected">
+                <option value="" selected="selected">Select Event Category</option>
+                <option value="Goal">
                   Goal
                 </option>
                 <option value="Reminder">Reminder</option>

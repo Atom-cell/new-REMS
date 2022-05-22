@@ -1,6 +1,90 @@
-.abc{
+/* .abc{ */
     /* background-color: #ebe9e9; */
-    height: 400px;
-    margin: 0 40px 0 40px;
+    /* height: 400px; */
+    /* margin: 0 40px 0 40px; */
     /* color: #9c64f5; */
+/* } */
+/* .calendar-container{
+    text-align: center;
+     //display: flex;
+    //flex-direction: column;
+}
+.calendar{
+    display: flex;
+    flex-direction: column;
+
+}
+.calendar-header{
+    display: flex;
+    justify-content: center;
+
+}
+.selectContainer{
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    // border-bottom: 2px solid gray; 
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.selectContainer h2{
+    margin-right: 20%;
+}
+.calendar-header button{
+    margin: 20px;
+    background-color: #e1c5ff;
+    //color: #8248de; 
+    border: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: fit-content;
+    border-radius: 10px;
+}
+.calendar-header button:hover{
+    background-color: #8248de;
+}
+.calendar-header span{
+    margin-right: 20px;
+}
+.selectContainer select:focus {
+    outline: none;
+} */
+.calendar-header{
+    display: flex;
+    justify-content: space-between;
+}
+.calendar-header div{ 
+    /* border:1px solid red; */
+    margin:1%;    
+}
+.calendar-header-button button, .selectContainer{
+    margin: 20px;
+    background-color: #e1c5ff;
+    /* color: #8248de;  */
+    border: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: fit-content;
+    border-radius: 10px;
+}
+.calendar-header-button button:hover, .selectContainer:hover{
+    background-color: #8248de;
+}
+.selectContainer label{
+    margin-Right: 5px;
+}
+.selectContainer option, .selectContainer select{
+    background-color: #e1c5ff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }

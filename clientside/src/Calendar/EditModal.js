@@ -31,39 +31,41 @@ const EditModal = ({
   //     return months[parts[1]] + "-" + parts[2] + "-" + parts[3];
   //   };
   return (
-    <div className="modalBackground">
-      <div className="modalContainer">
-        <div className="titleCloseBtn">
-          <button
-            onClick={() => {
-              setEditModalOpen(false);
-            }}
-          >
-            X
-          </button>
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Add Meet Title"
-            value={event.title}
-            onChange={(e) => setEvent({ ...event, title: e.target.value })}
-            className="inputTextFields"
-          />
-          {/* <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/> */}
+    <div className="add-new-event-container">
+      <h1>Edit Event</h1>
+      <div className="modalBackground">
+        <div className="modalContainer">
+          <div className="titleCloseBtn">
+            <button
+              onClick={() => {
+                setEditModalOpen(false);
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Add Meet Title"
+              value={event.title}
+              onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              className="inputTextFields"
+            />
+            {/* <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/> */}
 
-          <DatePicker
-            placeholderText="Start Date"
-            selected={new Date(event.startDate)}
-            onChange={(start) => setEvent({ ...event, startDate: start })}
-            timeInputLabel="Time:"
-            dateFormat="MM/dd/yyyy h:mm aa"
-            showTimeInput
-            className="inputTextFields"
-          />
+            <DatePicker
+              placeholderText="Start Date"
+              selected={new Date(event.startDate)}
+              onChange={(start) => setEvent({ ...event, startDate: start })}
+              timeInputLabel="Time:"
+              dateFormat="MM/dd/yyyy h:mm aa"
+              showTimeInput
+              className="inputTextFields"
+            />
 
-          {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
-          {/* <DatePicker
+            {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
+            {/* <DatePicker
             format="yyyy-MM-dd"
             selected={event.startDate}
             onChange={(start) => setEvent({ ...event, startDate: start })}
@@ -75,38 +77,41 @@ const EditModal = ({
             onChange={(end) => setEvent({ ...event, endDate: end })}
             className="inputTextFields"
           /> */}
-          <div className="selectContainer">
-            <label for="framework">Select Event Category</label>
-            <select
-              id="framework"
-              value={event.category}
-              onChange={(e) => setEvent({ ...event, category: e.target.value })}
-            >
-              <option value="Goal" selected="selected">
-                Goal
-              </option>
-              <option value="Reminder">Reminder</option>
-            </select>
+            <div className="inputTextFields selectContainerModal">
+              {/* <label for="framework">Select Event Category</label> */}
+              <select
+                id="framework"
+                value={event.category}
+                onChange={(e) =>
+                  setEvent({ ...event, category: e.target.value })
+                }
+              >
+                <option value="Goal" selected="selected">
+                  Goal
+                </option>
+                <option value="Reminder">Reminder</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="footer">
-          <button
-            onClick={() => {
-              setEditModalOpen(false);
-            }}
-            id="cancelBtn"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              //   console.log(event);
-              updateEvent(event);
-            }}
-          >
-            Save
-          </button>
-          <button onClick={() => deleteEvent(event)}>Delete Event</button>
+          <div className="footer">
+            <button
+              onClick={() => {
+                setEditModalOpen(false);
+              }}
+              id="cancelBtn"
+            >
+              Cancel
+            </button>
+            <button id="cancelBtn" onClick={() => deleteEvent(event)}>Delete Event</button>
+            <button
+              onClick={() => {
+                //   console.log(event);
+                updateEvent(event);
+              }}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
