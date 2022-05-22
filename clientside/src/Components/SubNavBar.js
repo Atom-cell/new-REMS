@@ -12,27 +12,27 @@ const SubNavBar = ({ item, showSidebar }) => {
         <Link to={item.path} onClick={!item.subNav && showSidebar}>
           {item.icon}
           <span>{item.title}</span>
-        </Link>
-        <div>
           {item.subNav && subnav
             ? item.iconOpened
             : item.subNav
             ? item.iconClosed
             : null}
-        </div>
+        </Link>
       </div>
       {subnav &&
         item.subNav.map((item, index) => {
           return (
-            <Link
-              to={item.path}
-              key={index}
-              className="sub-nav"
-              onClick={showSidebar}
-            >
-              {item.icon}
-              <span>{item.title}</span>
-            </Link>
+            <div className={item.cName}>
+              <Link
+                to={item.path}
+                key={index}
+                className="sub-nav"
+                onClick={showSidebar}
+              >
+                {item.icon}
+                <span>{item.title}</span>
+              </Link>
+            </div>
           );
         })}
     </>
