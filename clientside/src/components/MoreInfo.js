@@ -52,7 +52,7 @@ function MoreInfo() {
           </div>
         ) : (
           <Row>
-            {data.screenshot.map((i, index) => {
+            {data.screenshot?.map((i, index) => {
               return (
                 <Col sm={3} key={index}>
                   <div
