@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios";
 import "./EmpManage.css";
 import { Table, Button, Dropdown, Spinner } from "react-bootstrap";
-// import { confirmAlert } from "react-confirm-alert"; // Import
-// import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import {
   Input,

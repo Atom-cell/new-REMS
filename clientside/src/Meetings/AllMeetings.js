@@ -88,7 +88,7 @@ const AllMeetings = () => {
                   var time = moment.utc(myObj.startDate).format("HH:mm");
                   return (
                     <tr key={myObj._id}>
-                      <td className="row link">
+                      <td className="all-meeting-row link">
                         <Link to={`/allMeetings/:${myObj.roomUrl}`}>
                           {myObj.roomUrl}
                         </Link>

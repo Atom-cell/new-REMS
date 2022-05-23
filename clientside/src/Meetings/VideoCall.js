@@ -98,7 +98,7 @@ function VideoCall() {
 
   return (
     <div className="videocallContainer">
-      <div className="container">
+      <div className="video-call-container-container">
         <div className="video-container">
           <div className="video">
             {stream && (

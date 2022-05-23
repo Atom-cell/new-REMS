@@ -27,7 +27,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const App = () => {
   return (
     <Router>
-      {/* <NavBar /> */}
+      <NavBar />
       <Routes>
         <Route exact path="/" element={<LandPage />} />
         <Route path="/home" element={<LandPage />} />
