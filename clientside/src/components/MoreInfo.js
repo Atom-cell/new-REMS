@@ -12,14 +12,14 @@ function MoreInfo() {
 
   const loadData = async () => {
     let a = await JSON.parse(localStorage.getItem("info"));
+    console.log(a);
     // if (a.screenshot && a.appTime && a.totalTime) {
+
     console.log(a.totalTime);
-    // let times = a.totalTime;
-    // times.map(function (time) {
-    //   return console.log(time.activetime);
-    // });
     setLoading(false);
     setData(a);
+    console.log("Data: " + data);
+    // }
   };
 
   return (
@@ -82,7 +82,7 @@ function MoreInfo() {
               <Spinner animation="border" />
             </div>
           ) : (
-            data.totalTime.map(function (time, index) {
+            data.totalTime?.map(function (time, index) {
               return (
                 time.date.slice(0, 10) +
                 " " +
@@ -104,7 +104,7 @@ function MoreInfo() {
               <Spinner animation="border" />
             </div>
           ) : (
-            data.totalTime.map(function (time, index) {
+            data.totalTime?.map(function (time, index) {
               return (
                 time.date.slice(0, 10) +
                 " " +
@@ -133,7 +133,7 @@ function MoreInfo() {
             </tr>
           </thead>
           <tbody>
-            {data.appTime.map(function (time) {
+            {data.appTime?.map(function (time) {
               return Object.entries(time.apps).map(function (
                 [key, value],
                 index
