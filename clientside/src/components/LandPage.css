@@ -1,0 +1,160 @@
+* {
+  color: #000000;
+  background-color: aqua;
+  /* border: 1px solid black; */
+}
+.appbar {
+  background-color: #e1c5ff;
+}
+.one:hover {
+  text-decoration: underline;
+}
+.two:hover {
+  text-decoration: underline;
+}
+.three:hover {
+  text-decoration: underline;
+}
+.me-auto Nav.Link {
+  color: #000000 !important;
+}
+.four:hover {
+  text-decoration: underline;
+}
+.signbtn {
+  background-color: transparent !important;
+  color: "white" !important;
+  border: 1px solid #663399 !important;
+  padding: 0.7rem 2rem 0.7rem 2rem;
+
+  font-weight: bold !important;
+  border-radius: 50px;
+}
+.signbtn:hover {
+  background-color: #663399 !important;
+  color: "white" !important;
+  margin: 0.1rem !important;
+}
+.signbtn2 {
+  background-color: #e1c5ff !important;
+  color: "white" !important;
+  font-weight: bold !important;
+  border: 1px solid #663399 !important;
+  padding: 0.7rem 2rem 0.7rem 2rem !important;
+  margin-top: 2rem !important;
+}
+.signbtn2:hover {
+  background-color: #663399 !important;
+  color: "white" !important;
+  /* margin: 0.1rem !important; */
+}
+
+.headerimg {
+  max-width: 113%;
+  max-height: 115%;
+  margin-top: 3rem;
+  padding-right: 3.7rem;
+  /* position: absolute;
+  right: 0;
+  z-index: -5; */
+}
+.header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+  text-align: center;
+}
+.header-text h1 {
+  color: rgb(112, 112, 112);
+  color: #172c56;
+  font-size: 2.8rem;
+  font-weight: 900;
+}
+.header-text h2 {
+  color: rgb(112, 112, 112);
+  color: #172c56;
+  font-weight: 700;
+}
+.header-text p {
+  color: rgb(112, 112, 112);
+  color: #172c56;
+}
+
+.header-features {
+  margin-top: 2rem;
+  display: flex;
+  text-align: center;
+}
+.header-features h4 {
+  color: rgb(112, 112, 112);
+  color: #172c56;
+}
+
+.ft1img {
+  /* border: 1px solid black !important; */
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+  padding-right: 1rem !important;
+}
+.ft1 {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  padding: 3rem;
+}
+.ft1 > h1 {
+  font-weight: 900;
+}
+
+.footer {
+  background-color: #e1c5ff;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.more {
+  padding: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.more Button {
+  background-color: #e1c5ff !important;
+  color: "white" !important;
+  border: 1px solid #663399 !important;
+  padding: 0.7rem 5rem 0.7rem 5rem;
+}
+
+.more Button:hover {
+  background-color: #663399 !important;
+  color: "white" !important;
+  margin: 0.1rem !important;
+}
+
+.footer {
+  width: 100%;
+}
+.footer h1 {
+  font-weight: 900;
+}
+
+.footer Button {
+  background-color: #e1c5ff !important;
+  color: "white" !important;
+  font-weight: bold !important;
+  border: 1px solid #663399 !important;
+  padding: 0.7rem 4rem 0.7rem 4rem !important;
+  margin-top: 2rem !important;
+}
+
+.footer > Button:hover {
+  background-color: #663399 !important;
+  color: "white" !important;
+}

@@ -1,0 +1,18 @@
+.featuretitle {
+  font-weight: 900;
+  text-align: center;
+  margin: 5rem;
+}
+.ftnames {
+  text-align: center;
+}
+
+.ftnames > h5 > a {
+  text-decoration: none;
+  color: #172c56;
+  margin: 1rem;
+}
+
+.ftnames > h5 > a:hover {
+  text-decoration: underline;
+}

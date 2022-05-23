@@ -1,0 +1,27 @@
+.downloadWrapper {
+  margin-top: 7rem;
+  margin-bottom: 7rem;
+}
+.img {
+  /* border: 3px solid black;
+  background-color: red; */
+}
+.downloadbtnwrapper {
+  /* background-color: blue;
+  border: 3px solid black; */
+  padding: 5rem;
+}
+.downloadbtnwrapper h1 {
+  font-weight: bold;
+}
+.windows {
+  border-color: black !important;
+  background-color: black !important;
+  color: white !important;
+  margin-right: 2rem !important;
+}
+.ios {
+  border-color: black !important;
+  background-color: black !important;
+  color: white !important;
+}

@@ -5,7 +5,7 @@ import Message from "./Message";
 import "./messenger.css";
 import axios from "axios";
 import io from "socket.io-client";
-import SearchBar from "../Components/SearchBar";
+import SearchBar from "../Componentss/SearchBar";
 const socket = io.connect("http://localhost:5000");
 const Messenger = () => {
   const [newMessage, setNewMessage] = useState();

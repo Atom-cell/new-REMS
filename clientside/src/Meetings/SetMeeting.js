@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import SearchBar from "../Components/SearchBar";
+import SearchBar from "../Componentss/SearchBar";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import moment from "moment";

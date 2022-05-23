@@ -1,0 +1,21 @@
+.cnt {
+  padding: 1.5rem;
+  background-color: #ffffff;
+}
+
+thead {
+  background-color: #e1c5ff;
+}
+
+.search {
+  display: flex;
+  width: 100%;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
