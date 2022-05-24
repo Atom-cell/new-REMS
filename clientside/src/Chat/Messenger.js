@@ -107,10 +107,7 @@ const Messenger = () => {
             {/* Show all conversations of Naseer 6262243469482d6b557e3b59 */}
             {conversations?.map((convo) => (
               <div onClick={() => setCurrentChat(convo)}>
-                <Conversation
-                  conversation={convo}
-                  currentUser={user?._id}
-                />
+                <Conversation conversation={convo} currentUser={user?._id} />
               </div>
             ))}
           </div>
