@@ -139,7 +139,7 @@ function Login() {
       ) : data.updated === false ? (
         (window.location = "/update")
       ) : data.updated ? (
-        (window.location = "/home")
+        (window.location = "/dashboard")
       ) : null}
       <h2>LOGO</h2>
       <h2>Login to REMS</h2>
