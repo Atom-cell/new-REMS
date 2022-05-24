@@ -53,6 +53,25 @@ const verifyJWT = (req, res, next) => {
 //   }
 // });
 
+// search employees
+router.get("/", (req, res, next)=> {
+  // console.log(req.query.name);
+  Emp.find({}).exec((error, records) => {
+    if (error) throw error;
+    res.json(records);
+  });
+});
+
+// search specific Employee
+router.get("/:userId", (req, res, next)=> {
+  // console.log(req.params.userId);
+  Emp.findById(req.params.userId).exec((error, records) => {
+    if (error) throw error;
+    // console.log(records.username);
+    res.json(records);
+  });
+});
+
 router.post("/register", verifyJWT, async (req, res, next) => {
   console.log("In Register");
   let { email } = req.body;

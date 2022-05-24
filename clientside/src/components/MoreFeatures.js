@@ -24,7 +24,7 @@ function MoreFeatures() {
               <Nav.Link href="/download" className="three">
                 Download
               </Nav.Link>
-              <Nav.Link href="#login" className="four">
+              <Nav.Link href="/login" className="four">
                 Login
               </Nav.Link>
             </Nav>

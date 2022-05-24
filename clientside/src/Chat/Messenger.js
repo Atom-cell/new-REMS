@@ -18,8 +18,9 @@ const Messenger = () => {
   const [user, setUser] = useState([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("info"));
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
+      // console.log(user);
       setUser(user);
       // serCurrentChat(user._id)
     }
@@ -43,6 +44,7 @@ const Messenger = () => {
     getConversations();
   }, [user._id]);
 
+  // Get Messages for specific convo
   useEffect(() => {
     const getMessages = async () => {
       try {
@@ -67,7 +69,7 @@ const Messenger = () => {
     // e.preventDefault();
     // sender is the person that is currently logged in i-e Naseer
     const message = {
-      sender: "6262243469482d6b557e3b59",
+      sender: user?._id,
       text: newMessage,
       conversationId: currentChat._id,
     };
@@ -107,7 +109,7 @@ const Messenger = () => {
             {/* Show all conversations of Naseer 6262243469482d6b557e3b59 */}
             {conversations?.map((convo) => (
               <div onClick={() => setCurrentChat(convo)}>
-                <Conversation conversation={convo} currentUser={user?._id} />
+                <Conversation conversation={convo} currentUser={user} />
               </div>
             ))}
           </div>
@@ -121,7 +123,8 @@ const Messenger = () => {
                     <div ref={scrollRef}>
                       <Message
                         message={m}
-                        own={m.sender === "6262243469482d6b557e3b59"}
+                        own={m.sender === user?._id}
+                        userPhoto={user?.profilePicture}
                       />
                     </div>
                   ))}

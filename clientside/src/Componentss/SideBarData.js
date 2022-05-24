@@ -1,22 +1,24 @@
 import React from "react";
 import DashboardRoundedIcon from "@material-ui/icons/DashboardRounded";
-import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
+import EventAvailableRoundedIcon from "@material-ui/icons/EventAvailableRounded";
 import MenuIcon from "@material-ui/icons/Menu";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import CalendarMonthIcon from "@material-ui/icons/TodayRounded";
 import VideoCallRoundedIcon from "@material-ui/icons/VideoCallRounded";
 import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
-import MailOutlineRoundedIcon from '@material-ui/icons/MailOutlineRounded';
+import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
 import MeetingRoomRoundedIcon from "@material-ui/icons/MeetingRoomRounded";
 import ArrowDropDownRoundedIcon from "@material-ui/icons/ArrowDropDownRounded";
 import ArrowDropUpRoundedIcon from "@material-ui/icons/ArrowDropUpRounded";
 import GroupIcon from "@material-ui/icons/Group";
+import WorkIcon from "@mui/icons-material/Work";
+import EngineeringIcon from "@mui/icons-material/Engineering";
 export const SideBarData = {
   links: [
     {
       id: 1,
       title: "Dashboard",
-      path: "/",
+      path: "/dashboard",
       icon: <DashboardRoundedIcon />,
       cName: "nav-text",
     },
@@ -94,6 +96,20 @@ export const SideBarData = {
           cName: "nav-text sub-nav",
         },
       ],
+    },
+    {
+      id: 11,
+      title: "Activity Log",
+      path: "/log",
+      icon: <WorkIcon />,
+      cName: "nav-text",
+    },
+    {
+      id: 12,
+      title: "Manange Employee",
+      path: "/empManage",
+      icon: <EngineeringIcon />,
+      cName: "nav-text",
     },
   ],
   activeLink: 1,

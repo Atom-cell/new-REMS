@@ -64,6 +64,8 @@ function Login() {
             //for updating info email is needed
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("email", response.data.data.email);
+            localStorage.setItem("user", JSON.stringify(response.data.data));
+            localStorage.setItem("role", response.data.data.role);
             setData(response.data.data);
           })
           .catch(function (error) {
@@ -133,7 +135,7 @@ function Login() {
       ) : data.role === "admin" && !data.verified ? (
         alert("Show verify screen")
       ) : data.role === "admin" && data.verified ? (
-        (window.location = "/empManage")
+        (window.location = "/dashboard")
       ) : data.updated === false ? (
         (window.location = "/update")
       ) : data.updated ? (

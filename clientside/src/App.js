@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CssBaseline } from "@mui/material";
 
 import VideoCall from "./Meetings/VideoCall";
@@ -25,9 +25,15 @@ import Log from "./components/Log";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
+  const [nav, setNav] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("email")) {
+      setNav(true);
+    }
+  }, []);
   return (
     <Router>
-      <NavBar />
+      {nav ? <NavBar /> : null}
       <Routes>
         <Route exact path="/" element={<LandPage />} />
         <Route path="/home" element={<LandPage />} />
@@ -42,7 +48,7 @@ const App = () => {
         <Route path="/moreInfo" element={<MoreInfo />} />
         <Route path="/log" element={<Log />} />
 
-        {/* <Route exact path="/" element={<Dashboard />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
         <Route path="/myTeamCalendar" element={<MyCalendar name="Nasani" />} />
         <Route path="/videoCall" element={<VideoCall />} />

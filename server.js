@@ -111,10 +111,10 @@ io.on("connection", (socket) => {
 
   // io.to(socket.id).emit("Ex", `Exclsusive Message ${Math.random(100)}`);
 
-  socket.on("disconnect", () => {
-    console.log("disconnected", socket.id);
-    //delete socket[]
-  });
+  // socket.on("disconnect", () => {
+  //   console.log("disconnected", socket.id);
+  //   //delete socket[]
+  // });
 
   socket.on("fromCLIENT", (data) => {
     console.log("DATA: ", data);

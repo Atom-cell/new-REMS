@@ -7,8 +7,13 @@ import "./navbar.css";
 import SubNavBar from "./SubNavBar";
 
 const Navbar = () => {
-  const [sidebar, setSidebar] = useState(false);
+  React.useEffect(() => {
+    let a = localStorage.getItem("role");
+    setRole(a);
+  }, []);
 
+  const [sidebar, setSidebar] = useState(false);
+  const [role, setRole] = useState("");
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
@@ -25,9 +30,38 @@ const Navbar = () => {
               <CloseIcon onClick={showSidebar} />
             </Link>
           </li>
-          {SideBarData.links.map((item, index) => {
-              return <SubNavBar item={item} key={index} showSidebar={showSidebar} />;
-          })}
+          {role === "admin"
+            ? SideBarData.links.map((item, index) => {
+                if (
+                  item.title === "Activity Log" ||
+                  item.title === "Manange Employee" ||
+                  item.title === "Dashboard"
+                ) {
+                  return (
+                    <SubNavBar
+                      item={item}
+                      key={index}
+                      showSidebar={showSidebar}
+                    />
+                  );
+                }
+              })
+            : SideBarData.links.map((item, index) => {
+                if (
+                  item.title === "Activity Log" ||
+                  item.title === "Manange Employee"
+                ) {
+                  return null;
+                } else {
+                  return (
+                    <SubNavBar
+                      item={item}
+                      key={index}
+                      showSidebar={showSidebar}
+                    />
+                  );
+                }
+              })}
         </ul>
       </nav>
     </>
@@ -35,78 +69,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-{/* {SideBarData.links.map((item, index) => {
-            return (
-              <>
-                {item.subNav ? (
-                  <li
-                    key={index}
-                    className={
-                      item.cName + (item.id === activeLink ? " activeLink" : "")
-                    }
-                    onClick={() => setActiveLinkFunction(item.id)}
-                  >
-                    <Link to="#" onClick={showSidebar}>
-                      {item.icon}
-                      <span>{item.title}</span>
-                    </Link>
-                    <ul className="nav-menu-items" onClick={showSubNav}>
-                      <li>
-                        <Link to="#">
-                          {subNav ? item.iconOpened : item.iconClosed}
-                        </Link>
-                      </li>
-                      <li className="sub-nav">
-                        {subNav && item.subNav.map((subItem, subIndex) => {
-                          return (
-                            <Link to={subItem.path} onClick={showSidebar}>
-                              {subItem.icon}
-                              <span>{subItem.title}</span>
-                            </Link>
-                          );
-                        })}
-                      </li>
-                    </ul>
-                  </li>
-                ) : (
-                  // <>
-                  //   <div
-                  //     className={
-                  //       item.cName +
-                  //       (item.id === activeLink ? " activeLink" : "")
-                  //     }
-                  //   >
-                  //     <span>{item.title}</span>
-                  //     <button onClick={showSubNav}>
-                  //       {subNav ? item.iconOpened : item.iconClosed}
-                  //     </button>
-                  //     <div className="sub-nav">
-                  // {subNav &&
-                  //   item.subNav.map((subItem, subIndex) => {
-                  //     return (
-                  //       <Link to={subItem.path} onClick={showSidebar}>
-                  //         {subItem.icon}
-                  //         <span>{subItem.title}</span>
-                  //       </Link>
-                  //     );
-                  //   })}
-                  //     </div>
-                  //   </div>
-                  // </>
-                  <li
-                    key={index}
-                    className={
-                      item.cName + (item.id === activeLink ? " activeLink" : "")
-                    }
-                    onClick={() => setActiveLinkFunction(item.id)}
-                  >
-                    <Link to={item.path} onClick={showSidebar}>
-                      {item.icon}
-                      <span>{item.title}</span>
-                    </Link>
-                  </li>
-                )}
-              </>
-            );
-          })} */}
