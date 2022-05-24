@@ -15,6 +15,16 @@ const Messenger = () => {
   const scrollRef = useRef();
   const [employees, setEmployees] = useState([]);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("info"));
+    if (user) {
+      setUser(user);
+      // serCurrentChat(user._id)
+    }
+  }, []);
+
   // fetch all messages of the current user
   useEffect(() => {
     const getConversations = async () => {
@@ -22,7 +32,7 @@ const Messenger = () => {
       // naseer employee id is : 6262243469482d6b557e3b59
       try {
         const res = await axios.get(
-          "http://localhost:5000/myConversation/6262243469482d6b557e3b59"
+          `http://localhost:5000/myConversation/${user._id}`
         );
         // console.log(res.data);
         setConversations(res.data);
@@ -31,7 +41,7 @@ const Messenger = () => {
       }
     };
     getConversations();
-  }, []);
+  }, [user._id]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -99,7 +109,7 @@ const Messenger = () => {
               <div onClick={() => setCurrentChat(convo)}>
                 <Conversation
                   conversation={convo}
-                  currentUser="6262243469482d6b557e3b59"
+                  currentUser={user?._id}
                 />
               </div>
             ))}
