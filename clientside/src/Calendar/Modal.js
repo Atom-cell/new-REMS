@@ -69,7 +69,7 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               </select>
             </div>
           </div>
-          <div className="footer">
+          <div className="modal-footer">
             <button
               onClick={() => {
                 setModalOpen(false);

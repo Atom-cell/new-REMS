@@ -93,7 +93,7 @@ const EditModal = ({
               </select>
             </div>
           </div>
-          <div className="footer">
+          <div className="modal-footer">
             <button
               onClick={() => {
                 setEditModalOpen(false);

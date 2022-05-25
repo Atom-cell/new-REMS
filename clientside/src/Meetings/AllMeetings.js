@@ -3,26 +3,32 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import axios from "axios";
-// import "./meeting.css";
+import "./meeting.css";
 import ReactLoading from "react-loading";
 import SetMeeting from "./SetMeeting";
 import { Table, Button, Dropdown, Spinner } from "react-bootstrap";
 const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
-  const [headers, setHeaders] = useState();
-  const [loading, setLoading] = useState(false);
+  // const [headers, setHeaders] = useState();
+  const [loading, setLoading] = useState(true);
 
   //get All Meetings
   useEffect(() => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let username = user.username;
+    // console.log("username: " + username);
+
     const fetchData = async () => {
       // get the data from the api
       const res = await axios.get(
-        "http://localhost:5000/myVideo/getMyMeetings"
+        `http://localhost:5000/myVideo/getMyMeetings/${username}`
       );
+      // console.log(res.data);
       setAllMeetings(res.data);
+      setLoading(false);
       // console.log(Object.keys(res.data[0]));
-      setHeaders(Object.keys(res.data[0]));
-      setLoading(true);
+      // setHeaders(Object.keys(res.data[0]));
+      // console.log("loading", loading);
     };
 
     // call the function
@@ -53,23 +59,25 @@ const AllMeetings = () => {
         </Link>
       </div> */}
       {loading ? (
+        <div className="loading">
+          <ReactLoading type="spin" color="#fafa" height={667} width={375} />
+        </div>
+      ) : (
         <div className="all-meetings-container">
-          {allMeetings ? (
-            <>
-              <h1 style={{ textAlign: "center" }}>All Meetings</h1>
-              <Table hover bordered className="all-meetings-table">
-                <thead>
-                  <tr>
-                    <th>Room URL</th>
-                    <th>Hosted by</th>
-                    <th>Title</th>
-                    <th>Agenda</th>
-                    <th>Start Date</th>
-                    <th>Start Time</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                {/* {headers?.map((header) => {
+          <h1 style={{ textAlign: "center" }}>All Meetings</h1>
+          <Table hover bordered className="all-meetings-table">
+            <thead>
+              <tr>
+                <th>Room URL</th>
+                <th>Hosted by</th>
+                <th>Title</th>
+                <th>Agenda</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            {/* {headers?.map((header) => {
                   // console.log(header);
                   if (
                     header != "_id" &&
@@ -87,60 +95,52 @@ const AllMeetings = () => {
                     );
                   }
                 })} */}
-                {/* All headers */}
-                {/* <th className="header">Room URL</th>
+            {/* All headers */}
+            {/* <th className="header">Room URL</th>
                 <th className="header">Hosted By</th>
                 <th className="header">Title</th>
                 <th className="header">Description</th>
                 <th className="header">Date</th>
                 <th className="header">Time</th>
                 <th className="header">Delete</th> */}
-                {/* </tr> */}
-                <tbody>
-                  {allMeetings.map((myObj, key) => {
-                    var time = moment.utc(myObj.startDate).format("HH:mm");
-                    return (
-                      <tr key={myObj._id}>
-                        <td className="all-meeting-row link">
-                          <Link to={`/allMeetings/:${myObj.roomUrl}`}>
-                            {myObj.roomUrl}
-                          </Link>
-                        </td>
-                        {/* <td className="row">{myObj.roomUrl}</td> */}
-                        <td className="all-meeting-row">{myObj.hostedBy}</td>
-                        <td className="all-meeting-row">{myObj.title}</td>
-                        <td className="all-meeting-row">{myObj.agenda}</td>
-                        {/* {console.log(myObj.startDate.substr(11))} */}
-                        <td className="all-meeting-row">
-                          {myObj.startDate.substr(0, 10)}
-                        </td>
-                        <td className="all-meeting-row">{time}</td>
-                        <td className="all-meeting-row">
-                          <DeleteIcon
-                            className="delete-icon"
-                            onClick={() => handleDeleteMeeting(myObj)}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </>
-          ) : (
-            <>
-              <h1>You have No Meetings</h1>
-            </>
-          )}
+            {/* </tr> */}
+            <tbody>
+              {allMeetings.length != 0 ? (
+                allMeetings?.map((myObj, key) => {
+                  var time = moment.utc(myObj.startDate).format("HH:mm");
+                  return (
+                    <tr key={myObj._id}>
+                      <td className="all-meeting-row link">
+                        <Link to={`/allMeetings/:${myObj.roomUrl}`}>
+                          {myObj.roomUrl}
+                        </Link>
+                      </td>
+                      {/* <td className="row">{myObj.roomUrl}</td> */}
+                      <td className="all-meeting-row">{myObj.hostedBy}</td>
+                      <td className="all-meeting-row">{myObj.title}</td>
+                      <td className="all-meeting-row">{myObj.agenda}</td>
+                      {/* {console.log(myObj.startDate.substr(11))} */}
+                      <td className="all-meeting-row">
+                        {myObj.startDate.substr(0, 10)}
+                      </td>
+                      <td className="all-meeting-row">{time}</td>
+                      <td className="all-meeting-row">
+                        <DeleteIcon
+                          className="delete-icon"
+                          onClick={() => handleDeleteMeeting(myObj)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <div className="no-meetings">
+                  <h1>No Meetings</h1>
+                </div>
+              )}
+            </tbody>
+          </Table>
         </div>
-      ) : (
-        <ReactLoading
-          type="spin"
-          color="#fafa"
-          height={667}
-          width={375}
-          className="loading"
-        />
       )}
     </div>
   );

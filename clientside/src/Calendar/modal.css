@@ -36,14 +36,14 @@
     cursor: pointer;
 }
 
-.modalContainer .footer {
+.modalContainer .modal-footer {
     flex: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.modalContainer .footer button {
+.modalContainer .modal-footer button {
     width: 150px;
     height: 45px;
     margin: 5px;
@@ -54,7 +54,7 @@
     font-size: 20px;
     cursor: pointer;
 }
-.modalContainer .footer button:hover {
+.modalContainer .modal-footer button:hover {
     background-color: #e1c5ff;
 }
 

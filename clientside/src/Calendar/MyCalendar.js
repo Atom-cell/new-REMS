@@ -57,7 +57,6 @@ const MyCalendar = ({ name }) => {
   const [event, setEvent] = useState(); // handle modal events
   const [calendarData, setCalendarData] = useState(null); // handling filter
   const [newEvent, setNewEvent] = useState({ title: "", start: null });
-
   useEffect(() => {
     const fetchData = async () => {
       // get the data from the api

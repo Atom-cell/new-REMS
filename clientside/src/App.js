@@ -26,7 +26,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   const [nav, setNav] = useState(false);
+  const [username, setUsername] = useState();
+
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    // console.log(user.username);
+    setUsername(user.username);
     if (localStorage.getItem("email")) {
       setNav(true);
     }
@@ -49,8 +54,8 @@ const App = () => {
         <Route path="/log" element={<Log />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
-        <Route path="/myTeamCalendar" element={<MyCalendar name="Nasani" />} />
+        <Route path="/myCalendar" element={<MyCalendar name={username}/>} />
+        <Route path="/myTeamCalendar" element={<MyCalendar name={username} />} />
         <Route path="/videoCall" element={<VideoCall />} />
         <Route path="/allMeetings/:roomId" element={<ConferenceCall />} />
         <Route exact path="/setMeeting" element={<SetMeeting />} />

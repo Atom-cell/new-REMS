@@ -15,17 +15,17 @@ router.get("/", function (req, res, next) {
 // get only specific meetings i-e the user that is logged in only his meetings
 // get all Meetings
 // only the specific name containing object will be returned
-router.get("/getMyMeetings", function (req, res, next) {
-  myVid.find(
-    { employees: "nas" },
-    function(err, result) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.json(result);
-      }
+router.get("/getMyMeetings/:username", function (req, res, next) {
+  // case insensitive search
+  // 'name': {'$regex': thename,$options:'i'}
+  myVid.find({ employees: {'$regex': req.params.username,$options:'i'} }, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      // console.log(result);
+      res.json(result);
     }
-  );
+  });
 });
 
 // router.get("/generateid", (req, res) => {
@@ -48,7 +48,7 @@ router.post("/addNewMeeting", function (req, res, next) {
     employees: req.body.employees,
   });
 
-//   res.json(newMeet);
+  //   res.json(newMeet);
   newMeet.save(function (err) {
     if (err) console.log("error", err);
     // saved!

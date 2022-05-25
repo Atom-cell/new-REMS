@@ -8,16 +8,12 @@ var myCal = require("../model/myCalender.model");
 // Compile model from schema
 
 /* GET My Calendar. */
+// show only the events of the user logged in
 router.get("/", function (req, res, next) {
-  // console.log(req.query.name);
-  myCal.find({}).exec((error, records) => {
+  console.log(req.query.name);
+  myCal.find({madeBy:req.query.name}).exec((error, records) => {
     if (error) throw error;
-    // show only the events of the user logged in 
-    var myData = records.filter((el) => {
-      return el.madeBy == req.query.name;
-    });
-    // console.log(myData);
-    res.json(myData);
+    res.json(records);
   });
 });
 

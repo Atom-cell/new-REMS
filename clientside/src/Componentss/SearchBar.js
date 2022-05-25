@@ -19,7 +19,7 @@ const SearchBar = ({
   useEffect(() => {
     const fetchData = async () => {
       // get the data from the api
-      const res = await axios.get("http://localhost:5000/myEmployee");
+      const res = await axios.get("http://localhost:5000/emp/");
       //   console.log(res.data);
       setData(res.data);
     };
@@ -34,7 +34,7 @@ const SearchBar = ({
     const searchWord = event.target.value;
     setWordEntered(searchWord);
     const newFilter = data.filter((value) => {
-      return value.username.toLowerCase().includes(searchWord.toLowerCase());
+      return value.username?.toLowerCase().includes(searchWord.toLowerCase());
     });
 
     if (searchWord === "") {

@@ -21,19 +21,21 @@ const SetMeeting = () => {
 
   // Add a meeting
   const addMeeting = () => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let username = user.username;
+    employees.push(username);
     var uniqueId = uuidV4();
     console.log(newMeet.startDate);
     // console.log(employees);
     const myObj = {
       roomUrl: uniqueId,
-      hostedBy: "Naseer",
+      hostedBy: username,
       title: newMeet.title,
       agenda: newMeet.agenda,
       startDate: newMeet.startDate,
       // endDate: newMeet.endDate,
       employees: employees,
     };
-    // console.log(myObj);
 
     axios
       .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
@@ -48,7 +50,6 @@ const SetMeeting = () => {
 
   const addEmployeeToMeeting = (word) => {
     setEmployees([...employees, word]);
-    // console.log(employees);
   };
 
   const handleRemoveEmployee = (emp) => {
@@ -63,7 +64,10 @@ const SetMeeting = () => {
           Back
         </Link>
       </div> */}
-      <div className="modalContainer" style={{ marginLeft: "30%", marginTop:"50px" }}>
+      <div
+        className="modalContainer"
+        style={{ marginLeft: "30%", marginTop: "50px" }}
+      >
         <h1>Set Meeting</h1>
         <input
           type="text"
@@ -116,7 +120,7 @@ const SetMeeting = () => {
                 style={{ marginLeft: "10px" }}
               >
                 {" "}
-                <RemoveIcon className="remove-icon"/>{" "}
+                <RemoveIcon className="remove-icon" />{" "}
               </div>
             </div>
           ))}
