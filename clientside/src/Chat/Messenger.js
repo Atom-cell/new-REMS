@@ -7,6 +7,7 @@ import axios from "axios";
 import io from "socket.io-client";
 import SearchBar from "../Componentss/SearchBar";
 const socket = io.connect("http://localhost:5000");
+
 const Messenger = () => {
   const [newMessage, setNewMessage] = useState();
   const [conversations, setConversations] = useState();
@@ -14,6 +15,7 @@ const Messenger = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const scrollRef = useRef();
   const [employees, setEmployees] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [user, setUser] = useState([]);
 
@@ -24,7 +26,30 @@ const Messenger = () => {
       setUser(user);
       // serCurrentChat(user._id)
     }
+    socket.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
   }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  useEffect(() => {
+    socket.emit("addUser", user._id);
+    socket.on("getUsers", (users) => {
+      console.log(users);
+      // setOnlineUsers(
+      //   user.followings.filter((f) => users.some((u) => u.userId === f))
+      // );
+    });
+  }, [user]);
 
   // fetch all messages of the current user
   useEffect(() => {
@@ -73,6 +98,16 @@ const Messenger = () => {
       text: newMessage,
       conversationId: currentChat._id,
     };
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+
+    socket.emit("sendMessage", {
+      senderId: user._id,
+      receiverId,
+      text: newMessage,
+    });
 
     try {
       const res = await axios.post(

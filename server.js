@@ -59,6 +59,24 @@ app.use("/admin", adminRouter);
 app.use("/emp", empRouter);
 app.use("/desk", desktopRouter);
 
+// methods for real time messages
+let users = [];
+console.log("USERS:" + users);
+const addUser = (userId, socketId) => {
+  if (userId && socketId) {
+    !users.some((user) => user.userId === userId) &&
+      users.push({ userId, socketId });
+  }
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
 io.on("connection", (socket) => {
   // listen for an event join_room
   socket.on("join-room", (roomId, userId) => {
@@ -118,6 +136,36 @@ io.on("connection", (socket) => {
 
   socket.on("fromCLIENT", (data) => {
     console.log("DATA: ", data);
+  });
+
+  // MESSENGERRR
+  //when ceonnect
+  console.log("a user connected.");
+
+  console.log(users);
+
+  //take userId and socketId from user
+  socket.on("addUser", (userId) => {
+    console.log("userId" + userId);
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  //send and get message
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    console.log("USER:" + user.userId);
+    io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text,
+    });
+  });
+
+  //when disconnect
+  socket.on("disconnect", () => {
+    console.log("a user disconnected!");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
   });
 });
 
