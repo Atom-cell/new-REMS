@@ -64,7 +64,7 @@ const Messenger = () => {
       const res = await axios.get(
         `http://localhost:5000/myConversation/${user._id}`
       );
-      console.log(res.data);
+      // console.log(res.data);
       setConversations(res.data);
     } catch (err) {
       console.log(err);
@@ -206,11 +206,13 @@ const Messenger = () => {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline
-              onlineUsers={onlineUsers}
-              currentId={user._id}
-              setCurrentChat={setCurrentChat}
-            />
+            {onlineUsers?.length > 0 && (
+              <ChatOnline
+                onlineUsers={onlineUsers}
+                currentId={user._id}
+                setCurrentChat={setCurrentChat}
+              />
+            )}
           </div>
         </div>
       </div>
