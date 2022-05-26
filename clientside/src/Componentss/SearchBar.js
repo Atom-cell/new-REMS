@@ -71,13 +71,19 @@ const SearchBar = ({
           onChange={handleFilter}
         />
         <div className="searchIcon">
+          {wordEntered && <div></div>}
           {wordEntered && (
             // <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
             <div
               onClick={() => {
-                newConversation(userId,wordEntered);
-                setFilteredData([]);
-                setWordEntered("");
+                if (addEmployeeToMeeting !== undefined) {
+                  addEmployeeToMeetingList(wordEntered);
+                }
+                if (newConversation !== undefined) {
+                  newConversation(userId, wordEntered);
+                  setFilteredData([]);
+                  setWordEntered("");
+                }
               }}
             >
               <AddIcon />
@@ -94,10 +100,12 @@ const SearchBar = ({
         <div className="dataResult">
           {filteredData.slice(0, 6).map((value, key) => {
             return (
-              <p onClick={() => {
-                handleFilteredDataClick(value.username);
-                setUserId(value?._id);
-                }}>
+              <p
+                onClick={() => {
+                  handleFilteredDataClick(value.username);
+                  setUserId(value?._id);
+                }}
+              >
                 {value.username}{" "}
               </p>
             );
