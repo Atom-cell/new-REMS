@@ -14,7 +14,7 @@ const peer = new Peer(undefined, {
 
 const socket = io.connect("http://localhost:5000");
 const peers = {};
-const ConferenceCall = (props) => {
+const ConferenceCall = ({ username }) => {
   const { roomId } = useParams();
   const [mystream, setMyStream] = useState();
   const myVideo = useRef();
@@ -68,7 +68,7 @@ const ConferenceCall = (props) => {
         const msgItem = document.createElement("li");
         const boldItem = document.createElement("b");
         msgItem.setAttribute("class", "message");
-        boldItem.innerHTML = "User";
+        boldItem.innerHTML = username;
         msgItem.innerHTML = message;
         messageBox.appendChild(boldItem);
         messageBox.append(msgItem);
@@ -187,12 +187,12 @@ const ConferenceCall = (props) => {
     }
   };
 
-  const handleLeave = ()=>{
+  const handleLeave = () => {
     const vid = document.getElementsByClassName("myVideo");
     vid.pause();
     vid.src = "";
     mystream.stop();
-  }
+  };
 
   return (
     <div className="main">
@@ -200,7 +200,8 @@ const ConferenceCall = (props) => {
         <div className="main__videos">
           <div id="video-grid">
             {mystream && (
-              <video className="myVideo"
+              <video
+                className="myVideo"
                 playsInline
                 muted
                 ref={myVideo}
@@ -243,7 +244,11 @@ const ConferenceCall = (props) => {
           </div>
           <div className="main__controls__block">
             <div className="main__controls__button">
-              <Link to="/allMeetings" className="leave_meeting" onClick={()=>handleLeave()}>
+              <Link
+                to="/allMeetings"
+                className="leave_meeting"
+                onClick={() => handleLeave()}
+              >
                 Leave Meeting
               </Link>
             </div>
@@ -267,7 +272,7 @@ const ConferenceCall = (props) => {
             onKeyPress={(e) => handleKeyPress(e)}
           />
           <SendIcon
-            style={{ color: "#fff", fontSize: "30px" }}
+            style={{ fill: "#fff", fontSize: "30px" }}
             onClick={() => handleSendMessage(text)}
           />
           {/* <button onClick={() => handleSendMessage(text)}>Send Message</button> */}

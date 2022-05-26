@@ -38,7 +38,17 @@
 }
 
 .caller {
+	position: absolute;
+	top: 5%;
+	left: 30%;
 	text-align: center;
+	background-color: #1C1E20;
+	border-radius: 20px;
+}
+.caller h1{
+	color: #fff;
+}
+.main__mute_button i, .main__mute_button span{
 	color: #fff;
 }
 

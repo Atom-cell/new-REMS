@@ -16,10 +16,10 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
   }, [currentId]);
 
   useEffect(() => {
-    console.log("USERSS");
-    console.log(onlineUsers);
+    // console.log("USERSS");
+    // console.log(onlineUsers);
     // setOnlineFriends(friends.filter((f) => onlineUsers?.includes(f._id)));
-    console.log("setOnlineFriends");
+    // console.log("setOnlineFriends");
     setOnlineFriends(friends.filter(o1 => onlineUsers.some(o2 => o1._id == o2.userId)));
     // console.log(friends.filter(o1 => onlineUsers.some(o2 => o1._id == o2.userId)));
   }, [friends, onlineUsers]);
