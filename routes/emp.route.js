@@ -64,7 +64,7 @@ router.get("/", (req, res, next)=> {
 
 // search specific Employee
 router.get("/:userId", (req, res, next)=> {
-  // console.log(req.params.userId);
+  console.log(req.params.userId);
   Emp.findById(req.params.userId).exec((error, records) => {
     if (error) throw error;
     // console.log(records.username);
@@ -94,25 +94,25 @@ router.post("/register", verifyJWT, async (req, res, next) => {
       .then((data) => res.status(200).json({ data: data, msg: 1 }))
       .catch((err) => res.status(err));
 
-    //send email
-    // let mailOptions = {
-    //   from: ' "Verify your email" <cinnakale@gmail.com>',
-    //   to: email,
-    //   subject: "REMS - Login Credentials",
-    //   html: `
-    //   <h2>Thank you for choosing REMS </h2>
-    //   <h4>Following are your credentials</h4>
-    //   <p>Email: ${email}</p>
-    //   <p>Password: ${password}</p>
-    //   <a href="http://localhost:3000/login">Login to REMS</a>`,
-    // };
+    // send email
+    let mailOptions = {
+      from: ' "Verify your email" <cinnakale@gmail.com>',
+      to: email,
+      subject: "REMS - Login Credentials",
+      html: `
+      <h2>Thank you for choosing REMS </h2>
+      <h4>Following are your credentials</h4>
+      <p>Email: ${email}</p>
+      <p>Password: ${password}</p>
+      <a href="http://localhost:3000/login">Login to REMS</a>`,
+    };
 
-    // transporter.sendMail(mailOptions, (err, info) => {
-    //   if (err) console.log(err);
-    //   else {
-    //     console.log("VERIFICATION EMAIL SENT!!!");
-    //   }
-    // });
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) console.log(err);
+      else {
+        console.log("VERIFICATION EMAIL SENT!!!");
+      }
+    });
   }
 
   // get email of admin from jwt

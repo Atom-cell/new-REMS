@@ -5,10 +5,11 @@ const Conversation = require("../model/myConversation.model");
 
 // create a new conversation
 router.post("/", async (req, res) => {
-    // create a new conversation with filling the array
-    // in memebers array the sedener id and the reciever id will go
+  // console.log(req.body.senderId);
+  // create a new conversation with filling the array
+  // in memebers array the sedener id and the reciever id will go
   const newConversation = new Conversation({
-    members: [req.body.senderId, req.body.receiverId],
+    members: [req.body.senderId, req.body.recieverId],
   });
 
   // add to mongo
@@ -23,14 +24,15 @@ router.post("/", async (req, res) => {
 //get conv of a user
 // only return result that contains userId
 router.get("/:userId", async (req, res) => {
+  // console.log(req.params.userId);
   try {
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
     });
-    // console.log(conversation);
     res.status(200).json(conversation);
   } catch (err) {
-    res.status(500).json(err);
+    // res.status(500).json(err);
+    console.log(err);
   }
 });
 
@@ -41,7 +43,7 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
     const conversation = await Conversation.findOne({
       members: { $all: [req.params.firstUserId, req.params.secondUserId] },
     });
-    res.status(200).json(conversation)
+    res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
   }

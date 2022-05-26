@@ -18,6 +18,7 @@ const Messenger = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [user, setUser] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -42,9 +43,9 @@ const Messenger = () => {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    socket.emit("addUser", user._id);
+    socket.emit("addUser", user?._id);
     socket.on("getUsers", (users) => {
-      console.log(users);
+      setOnlineUsers(users);
       // setOnlineUsers(
       //   user.followings.filter((f) => users.some((u) => u.userId === f))
       // );
@@ -53,21 +54,22 @@ const Messenger = () => {
 
   // fetch all messages of the current user
   useEffect(() => {
-    const getConversations = async () => {
-      // get all conversation of a specific user i-e the one that is logged in Naseer
-      // naseer employee id is : 6262243469482d6b557e3b59
-      try {
-        const res = await axios.get(
-          `http://localhost:5000/myConversation/${user._id}`
-        );
-        // console.log(res.data);
-        setConversations(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     getConversations();
   }, [user._id]);
+
+  const getConversations = async () => {
+    // get all conversation of a specific user i-e the one that is logged in Naseer
+    // naseer employee id is : 6262243469482d6b557e3b59
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/myConversation/${user._id}`
+      );
+      console.log(res.data);
+      setConversations(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // Get Messages for specific convo
   useEffect(() => {
@@ -128,6 +130,20 @@ const Messenger = () => {
     }
   };
 
+  // create a new conversation
+  const newConversation = async (friendId, friendUsername) => {
+    try {
+      const res = await axios.post("http://localhost:5000/myConversation/", {
+        senderId: user._id,
+        recieverId: friendId,
+      });
+      getConversations();
+    } catch (err) {
+      console.log(err);
+    }
+    // console.log(res);
+  };
+
   return (
     <div>
       <div className="messenger">
@@ -138,6 +154,7 @@ const Messenger = () => {
               placeholder="Search for friends"
               employees={employees}
               setEmployees={setEmployees}
+              newConversation={newConversation}
             />
             {/* <Conversation />
             <Conversation /> */}
@@ -189,14 +206,11 @@ const Messenger = () => {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline />
-            <ChatOnline />
-            <ChatOnline />
-            {/* <ChatOnline
+            <ChatOnline
               onlineUsers={onlineUsers}
               currentId={user._id}
               setCurrentChat={setCurrentChat}
-            /> */}
+            />
           </div>
         </div>
       </div>

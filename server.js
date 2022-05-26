@@ -61,11 +61,19 @@ app.use("/desk", desktopRouter);
 
 // methods for real time messages
 let users = [];
-console.log("USERS:" + users);
 const addUser = (userId, socketId) => {
-  if (userId && socketId) {
-    !users.some((user) => user.userId === userId) &&
-      users.push({ userId, socketId });
+  if (socketId && userId) {
+    // update users array with new socket id
+    // if user is same and socket id is different then assign the new socket id to the user
+    users.forEach((user, index) => {
+      if (user.userId == userId && user.socketId != socketId) {
+        users[index] = { userId, socketId };
+      }
+    });
+    // check whether the userId is in array or not
+    !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
+    console.log("ADDED USERS");
+    console.log(users);
   }
 };
 
@@ -80,7 +88,7 @@ const getUser = (userId) => {
 io.on("connection", (socket) => {
   // listen for an event join_room
   socket.on("join-room", (roomId, userId) => {
-    // console.log("Rooom Joinedddd");
+    console.log("Rooom Joinedddd");
     socket.join(roomId);
     // when someone joins the room we need to tell all the users that another user has joined the room
     // Here is the user id that has connected
@@ -139,23 +147,20 @@ io.on("connection", (socket) => {
   });
 
   // MESSENGERRR
-  //when ceonnect
-  console.log("a user connected.");
-
-  console.log(users);
+  // console.log("a user connected.");
 
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
-    console.log("userId" + userId);
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    // console.log("REciever ID:" + receiverId);
     const user = getUser(receiverId);
-    console.log("USER:" + user.userId);
-    io.to(user.socketId).emit("getMessage", {
+    // console.log("USER:" + user);
+    io.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
     });

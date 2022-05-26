@@ -10,10 +10,12 @@ const SearchBar = ({
   employees,
   setEmployees,
   addEmployeeToMeeting,
+  newConversation,
 }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
   const [data, setData] = useState();
+  const [userId, setUserId] = useState();
 
   // Get All Employees
   useEffect(() => {
@@ -33,10 +35,9 @@ const SearchBar = ({
   const handleFilter = (event) => {
     const searchWord = event.target.value;
     setWordEntered(searchWord);
-    const newFilter = data.filter((value) => {
+    const newFilter = data?.filter((value) => {
       return value.username?.toLowerCase().includes(searchWord.toLowerCase());
     });
-
     if (searchWord === "") {
       setFilteredData([]);
     } else {
@@ -71,7 +72,14 @@ const SearchBar = ({
         />
         <div className="searchIcon">
           {wordEntered && (
-            <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
+            // <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
+            <div
+              onClick={() => {
+                newConversation(userId,wordEntered);
+                setFilteredData([]);
+                setWordEntered("");
+              }}
+            >
               <AddIcon />
             </div>
           )}
@@ -86,7 +94,10 @@ const SearchBar = ({
         <div className="dataResult">
           {filteredData.slice(0, 6).map((value, key) => {
             return (
-              <p onClick={() => handleFilteredDataClick(value.username)}>
+              <p onClick={() => {
+                handleFilteredDataClick(value.username);
+                setUserId(value?._id);
+                }}>
                 {value.username}{" "}
               </p>
             );

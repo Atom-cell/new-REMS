@@ -31,7 +31,7 @@ const App = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     // console.log(user.username);
-    setUsername(user.username);
+    setUsername(user?.username);
     if (localStorage.getItem("email")) {
       setNav(true);
     }
