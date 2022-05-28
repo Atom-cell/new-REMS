@@ -54,10 +54,22 @@ const App = () => {
         <Route path="/log" element={<Log />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/myCalendar" element={<MyCalendar name={username}/>} />
-        <Route path="/myTeamCalendar" element={<MyCalendar name={username} />} />
+        <Route path="/myCalendar" element={<MyCalendar name={username} />} />
+        <Route
+          path="/myTeamCalendar"
+          element={<MyCalendar name={username} />}
+        />
         <Route path="/videoCall" element={<VideoCall />} />
-        <Route path="/allMeetings/:roomId" element={username?<ConferenceCall username={username}/>:console.log("Hello")} />
+        <Route
+          path="/allMeetings/:roomId"
+          element={
+            username ? (
+              <ConferenceCall username={username} />
+            ) : (
+              console.log("Hello")
+            )
+          }
+        />
         <Route exact path="/setMeeting" element={<SetMeeting />} />
         <Route path="/myMessenger" element={<Messenger />} />
         <Route path="/allMeetings" element={<AllMeetings />} />

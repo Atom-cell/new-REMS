@@ -71,7 +71,8 @@ const addUser = (userId, socketId) => {
       }
     });
     // check whether the userId is in array or not
-    !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
+    !users.some((user) => user.userId === userId) &&
+      users.push({ userId, socketId });
     console.log("ADDED USERS");
     console.log(users);
   }
@@ -151,7 +152,9 @@ io.on("connection", (socket) => {
 
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
+    console.log("ADD USERSS");
     addUser(userId, socket.id);
+    console.log(users);
     io.emit("getUsers", users);
   });
 
@@ -164,6 +167,16 @@ io.on("connection", (socket) => {
       senderId,
       text,
     });
+  });
+
+  //Get User Socket id
+  socket.on("getUserSocketId", (friendId, userId) => {
+    const friend = getUser(friendId);
+    const user = getUser(userId);
+    console.log(user);
+    console.log(friend);
+    io.to(user?.socketId).emit("userSocketId", friend);
+    // io.emit("getUsers", users);
   });
 
   //when disconnect

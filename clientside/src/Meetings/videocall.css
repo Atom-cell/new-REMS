@@ -1,6 +1,6 @@
 .video-call-container-container {
 	display: grid;
-	grid-template-columns: 7fr 3fr;
+	grid-template-columns: 9fr 1fr;
 	background-color: black;
 	height: 120vh;
 }
@@ -48,8 +48,30 @@
 .caller h1{
 	color: #fff;
 }
+.MuiButton-containedPrimary{
+	margin-right: 10px !important;
+}
 .main__mute_button i, .main__mute_button span{
 	color: #fff;
+}
+.video{
+	/* text-align: center; */
+	margin-left: 10%;
+	margin-top: 3%;
+}
+.video h3{
+	/* color: black; */
+	/* background-color: #c9d6ff; */
+	background-color: #1C1E20;
+    /* display: flex; */
+    /* width: fit-content; */
+    font-size: 18px;
+    color: #F5F5F5;
+    margin-left: 8px;
+	width: 54%;
+	text-align: center;
+	padding: 8px;
+	/* margin-bottom: -8px; */
 }
 
 /* .videocallContainer { */

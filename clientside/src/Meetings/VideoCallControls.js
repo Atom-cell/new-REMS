@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./videocallcontrol.css";
 
 const VideoCallControls = ({ leaveCall, mystream }) => {
-    console.log(mystream);
+    // console.log("mystream"+mystream);
   const muteUnmute = () => {
     // get current stream
     const enabled = mystream.getAudioTracks()[0].enabled;
