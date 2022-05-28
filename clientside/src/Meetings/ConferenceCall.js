@@ -100,6 +100,7 @@ const ConferenceCall = ({ username }) => {
   };
 
   const addVideoStream = (video, stream) => {
+    console.log("ADD VIDEO STREAM");
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();

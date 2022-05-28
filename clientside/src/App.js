@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CssBaseline } from "@mui/material";
-
+import ProtectedRoutes from "./ProtectedRoutes";
 import VideoCall from "./Meetings/VideoCall";
 import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -47,32 +47,33 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forget" element={<ResetPassword />} />
-        <Route path="/update" element={<UpdateProfile />} />
-        <Route path="/no" element={<NoMobile />} />
-        <Route path="/empManage" element={<EmpManage />} />
-        <Route path="/moreInfo" element={<MoreInfo />} />
-        <Route path="/log" element={<Log />} />
-
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/myCalendar" element={<MyCalendar name={username} />} />
-        <Route
-          path="/myTeamCalendar"
-          element={<MyCalendar name={username} />}
-        />
-        <Route path="/videoCall" element={<VideoCall />} />
-        <Route
-          path="/allMeetings/:roomId"
-          element={
-            username ? (
-              <ConferenceCall username={username} />
-            ) : (
-              console.log("Hello")
-            )
-          }
-        />
-        <Route exact path="/setMeeting" element={<SetMeeting />} />
-        <Route path="/myMessenger" element={<Messenger />} />
-        <Route path="/allMeetings" element={<AllMeetings />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/update" element={<UpdateProfile />} />
+          <Route path="/no" element={<NoMobile />} />
+          <Route path="/empManage" element={<EmpManage />} />
+          <Route path="/moreInfo" element={<MoreInfo />} />
+          <Route path="/log" element={<Log />} />
+          <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
+          <Route
+            path="/myTeamCalendar"
+            element={<MyCalendar name="Nasani" />}
+          />
+          <Route path="/videoCall" element={<VideoCall />} />
+          <Route
+            path="/allMeetings/:roomId"
+            element={
+              username ? (
+                <ConferenceCall username={username} />
+              ) : (
+                console.log("Hello")
+              )
+            }
+          />
+          <Route exact path="/setMeeting" element={<SetMeeting />} />
+          <Route path="/myMessenger" element={<Messenger />} />
+          <Route path="/allMeetings" element={<AllMeetings />} />
+        </Route>
       </Routes>
     </Router>
   );

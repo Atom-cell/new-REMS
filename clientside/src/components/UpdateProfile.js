@@ -10,7 +10,9 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function UpdateProfile() {
+  const navigate = useNavigate();
   const [username, setUsername] = React.useState("");
   const [contact, setContact] = React.useState("");
   const [bank, setBank] = React.useState("");
@@ -61,8 +63,10 @@ function UpdateProfile() {
       setpasswordE({ error: false, msg: "" });
       setcontactE({ error: false, msg: "" });
 
+      localStorage.clear();
+
       setTimeout(function () {
-        window.location.href = "/home";
+        navigate("/");
       }, 2000);
     }
   };

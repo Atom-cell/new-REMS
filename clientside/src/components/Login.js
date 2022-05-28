@@ -133,7 +133,7 @@ function Login() {
           </Alert>
         </Snackbar>
       ) : data.role === "admin" && !data.verified ? (
-        alert("Show verify screen")
+        alert("Please Verify your Credentials")
       ) : data.role === "admin" && data.verified ? (
         (window.location = "/dashboard")
       ) : data.updated === false ? (

@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { SideBarData } from "./SideBarData";
 import "./navbar.css";
 import SubNavBar from "./SubNavBar";
-
+import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  let navigate = useNavigate();
   React.useEffect(() => {
     let a = localStorage.getItem("role");
     setRole(a);
@@ -16,12 +18,20 @@ const Navbar = () => {
   const [role, setRole] = useState("");
   const showSidebar = () => setSidebar(!sidebar);
 
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = "/home";
+  };
+
   return (
     <>
       <div className="navbar">
         <Link to="#" className="menu-bars">
           <MenuIcon onClick={showSidebar} />
         </Link>
+        <Button className="signbtn" type="button" onClick={() => logout()}>
+          Logout
+        </Button>
       </div>
       <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
         <ul className="nav-menu-items">
