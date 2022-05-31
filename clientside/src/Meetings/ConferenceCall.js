@@ -24,12 +24,14 @@ const ConferenceCall = ({ username }) => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        console.log("Hello");
         // getting my own local stream first
         setMyStream(stream);
         // play the local stream on my video
         myVideo.current.srcObject = stream;
 
         peer.on("call", (call) => {
+          console.log("IN CALLLL");
           // answer the call that the new user joins
           call.answer(stream);
           const video = document.createElement("video");
@@ -41,7 +43,7 @@ const ConferenceCall = ({ username }) => {
 
         socket.on("user-connected", (userId) => {
           // whenever new user connects
-          connectNewUser(userId, stream);
+          setTimeout(connectNewUser, 1000, userId, stream);
         });
 
         // when user disconnects
@@ -107,6 +109,7 @@ const ConferenceCall = ({ username }) => {
     });
     const videoGrid = document.getElementById("video-grid");
     videoGrid.append(video);
+    console.log(videoGrid);
   };
 
   const muteUnmute = () => {

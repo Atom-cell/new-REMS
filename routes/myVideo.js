@@ -33,6 +33,7 @@ router.get("/getMyMeetings/:username", function (req, res, next) {
 // });
 
 router.get("/:room", (req, res) => {
+  console.log("Room");
   res.send(req.params.room);
 });
 

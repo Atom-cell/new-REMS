@@ -39,6 +39,16 @@ const verifyJWT = (req, res, next) => {
     });
   }
 };
+
+router.get("/download", function (req, res) {
+  try {
+    res.download("./REMSSetup.msi");
+  } catch (e) {
+    console.log("Error: ", e.message);
+  }
+  // REMSSetup.msi;
+});
+
 // router.get("/allEmps", verifyJWT, async (req, res) => {
 //   console.log("In all Empps");
 //   try {
@@ -54,7 +64,7 @@ const verifyJWT = (req, res, next) => {
 // });
 
 // search employees
-router.get("/", (req, res, next)=> {
+router.get("/", (req, res, next) => {
   // console.log(req.query.name);
   Emp.find({}).exec((error, records) => {
     if (error) throw error;
@@ -63,7 +73,7 @@ router.get("/", (req, res, next)=> {
 });
 
 // search specific Employee
-router.get("/:userId", (req, res, next)=> {
+router.get("/:userId", (req, res, next) => {
   console.log(req.params.userId);
   Emp.findById(req.params.userId).exec((error, records) => {
     if (error) throw error;

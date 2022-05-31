@@ -66,7 +66,7 @@ const App = () => {
               username ? (
                 <ConferenceCall username={username} />
               ) : (
-                console.log("Hello")
+                console.log("")
               )
             }
           />

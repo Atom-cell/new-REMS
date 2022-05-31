@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Nav } from "react-bootstrap";
 import moment from "moment";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import axios from "axios";
@@ -111,9 +112,9 @@ const AllMeetings = () => {
                   return (
                     <tr key={myObj._id}>
                       <td className="all-meeting-row link">
-                        <Link to={`/allMeetings/:${myObj.roomUrl}`}>
+                        <Nav.Link href={`/allMeetings/:${myObj.roomUrl}`}>
                           {myObj.roomUrl}
-                        </Link>
+                        </Nav.Link>
                       </td>
                       {/* <td className="row">{myObj.roomUrl}</td> */}
                       <td className="all-meeting-row">{myObj.hostedBy}</td>
