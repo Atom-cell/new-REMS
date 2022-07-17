@@ -5,6 +5,7 @@ import VideoCall from "./Meetings/VideoCall";
 import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
+import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
 import SetMeeting from "./Meetings/SetMeeting";
 import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
@@ -49,15 +50,23 @@ const App = () => {
         <Route path="/forget" element={<ResetPassword />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/empDashboard" element={<EmployeeDashboard />} />
           <Route path="/update" element={<UpdateProfile />} />
           <Route path="/no" element={<NoMobile />} />
           <Route path="/empManage" element={<EmpManage />} />
           <Route path="/moreInfo" element={<MoreInfo />} />
           <Route path="/log" element={<Log />} />
-          <Route path="/myCalendar" element={<MyCalendar name="Naseer" />} />
+          <Route
+            path="/myCalendar"
+            element={
+              username ? <MyCalendar username={username} /> : console.log("")
+            }
+          />
           <Route
             path="/myTeamCalendar"
-            element={<MyCalendar name="Nasani" />}
+            element={
+              username ? <MyCalendar username={username} /> : console.log("")
+            }
           />
           <Route path="/videoCall" element={<VideoCall />} />
           <Route

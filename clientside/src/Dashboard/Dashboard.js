@@ -23,12 +23,12 @@ const Dashboard = () => {
   return (
     <div className="home">
       <FeaturedInfo />
-      <Chart
+      {/* <Chart
         data={userData}
         title="User Analytics"
         grid
         dataKey="Active User"
-      />
+      /> */}
       <TopUsers data={productivityData} />
       <div className="homeWidgets">
         <WidgetSmall />

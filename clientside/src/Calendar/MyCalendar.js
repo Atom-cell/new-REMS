@@ -74,39 +74,7 @@ const MyCalendar = ({ name }) => {
     fetchData()
       // make sure to catch any error
       .catch(console.error);
-  }, [modalOpen, newEvent]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:5000/myCalendar", {
-  //       params: {
-  //         name: name,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log("All Events: " + res);
-  //       // console.log(res);
-  //       // console.log(res.data);
-  //       setCalendarData(res.data);
-  //       setAllEvents(res.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error!", error);
-  //     });
-
-  //   // fetch("http://localhost:5000/myCalendar")
-  //   //   .then((res) => res.json())
-  //   //   .then((json) => {
-  //   //     // array that has objects
-  //   //     console.log(json);
-  //   //     var myData = json.filter((el)=> {
-  //   //       return el.madeBy==name;
-  //   //     });
-  //   //     // console.log(myData);
-  //   //     setCalendarData(myData);
-  //   //     setAllEvents(myData);
-  //   //   });
-  // }, [modalOpen, newEvent]);
+  }, [newEvent]);
 
   // function to add a new event
   const addNewEvent = (newEvent) => {
@@ -133,23 +101,6 @@ const MyCalendar = ({ name }) => {
       });
     setNewEvent({ title: "", start: null });
     setModalOpen(false);
-    // fetch('http://localhost:9000/myCalendar/addNewEvent', {
-    //   method: 'POST', // or 'PUT'
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(myObj),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    // });
-    // setAllEvents([...allEvents, newEvent]);
-    // // console.log(allEvents);
-    // setModalOpen(false);
   };
 
   // show that category that is selected on filter

@@ -5,14 +5,15 @@ export default function FeaturedInfo() {
   return (
     <div className="featured">
       <div className="featuredItem">
-        <span className="featuredTitle">Revenue</span>
+        <span className="featuredTitle">Total Employees</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,415</span>
-          <span className="featuredMoneyRate">
+          <span className="featuredMoney">10</span>
+          {/* <span className="featuredMoneyRate">
             -11.4 <ArrowDownward className="featuredIcon negative" />
-          </span>
+          </span> */}
         </div>
-        <span className="featuredSub">Compared to last month</span>
+        <span className="featuredSub">Currently Working </span>
+        <span> 3</span>
       </div>
       <div className="featuredItem">
         <span className="featuredTitle">Projects</span>
@@ -25,11 +26,15 @@ export default function FeaturedInfo() {
         <span className="featuredSub">Compared to last month</span>
       </div>
       <div className="featuredItem">
-        <span className="featuredTitle">Cost</span>
+        <span className="featuredTitle">Total Hours Worked</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,225</span>
+          <span className="featuredMoney">30:25 hrs </span>
           <span className="featuredMoneyRate">
-            +2.4 <ArrowUpward className="featuredIcon" />
+            -11.4{" "}
+            <ArrowDownward
+              className="featuredIcon negative"
+              style={{ fill: "red" }}
+            />
           </span>
         </div>
         <span className="featuredSub">Compared to last month</span>

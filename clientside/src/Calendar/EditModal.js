@@ -60,8 +60,9 @@ const EditModal = ({
               onChange={(start) => setEvent({ ...event, startDate: start })}
               timeInputLabel="Time:"
               dateFormat="MM/dd/yyyy h:mm aa"
-              showTimeInput
+              showTimeSelect
               className="inputTextFields"
+              minDate={new Date()}
             />
 
             {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
@@ -102,7 +103,9 @@ const EditModal = ({
             >
               Cancel
             </button>
-            <button id="cancelBtn" onClick={() => deleteEvent(event)}>Delete Event</button>
+            <button id="cancelBtn" onClick={() => deleteEvent(event)}>
+              Delete Event
+            </button>
             <button
               onClick={() => {
                 //   console.log(event);

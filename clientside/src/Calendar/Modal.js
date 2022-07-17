@@ -45,8 +45,9 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               onChange={(start) => setNewEvent({ ...newEvent, start: start })}
               timeInputLabel="Time:"
               dateFormat="MM/dd/yyyy h:mm"
-              showTimeInput
+              showTimeSelect
               className="inputTextFields"
+              minDate={new Date()}
             />
             {/* <DatePicker
             placeholderText="End Date"
@@ -61,10 +62,10 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
                 value={newEvent.category}
                 onChange={handleSelectedChange}
               >
-                <option value="" selected="selected">Select Event Category</option>
-                <option value="Goal">
-                  Goal
+                <option value="" selected="selected">
+                  Select Event Category
                 </option>
+                <option value="Goal">Goal</option>
                 <option value="Reminder">Reminder</option>
               </select>
             </div>

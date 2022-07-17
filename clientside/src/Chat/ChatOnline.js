@@ -4,6 +4,7 @@ import "./chatonline.css";
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from "@material-ui/icons/Phone";
 import Button from "@material-ui/core/Button";
+import VideoCallIcon from '@material-ui/icons/VideoCall';
 export default function ChatOnline({
   onlineUsers,
   currentId,
@@ -84,7 +85,7 @@ export default function ChatOnline({
                   aria-label="call"
                   onClick={() => callUser(idToCall)}
                 >
-                  <PhoneIcon fontSize="large" />
+                  <VideoCallIcon fontSize="large" />
                 </IconButton>
               )}
               {/* {idToCall} */}

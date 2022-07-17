@@ -21,31 +21,37 @@ const SetMeeting = () => {
 
   // Add a meeting
   const addMeeting = () => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    let username = user.username;
-    employees.push(username);
-    var uniqueId = uuidV4();
-    console.log(newMeet.startDate);
-    // console.log(employees);
-    const myObj = {
-      roomUrl: uniqueId,
-      hostedBy: username,
-      title: newMeet.title,
-      agenda: newMeet.agenda,
-      startDate: newMeet.startDate,
-      // endDate: newMeet.endDate,
-      employees: employees,
-    };
+    if(newMeet.title && newMeet.startDate && newMeet.agenda && employees.length>0){
+      let user = JSON.parse(localStorage.getItem("user"));
+      let username = user.username;
+      employees.push(username);
+      var uniqueId = uuidV4();
+      // console.log(newMeet.startDate);
+      // console.log(employees);
+      const myObj = {
+        roomUrl: uniqueId,
+        hostedBy: username,
+        title: newMeet.title,
+        agenda: newMeet.agenda,
+        startDate: newMeet.startDate,
+        // endDate: newMeet.endDate,
+        employees: employees,
+      };
+  
+      axios
+        .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
+        .then((res) => {
+          console.log("Meeting Added: " + res.data);
+          // console.log(res);
+          // console.log(res.data);
+        });
+      setNewMeet({ title: "", agenda: "", startDate: "" });
+      setEmployees([]);
+    }
+    else{
+      alert("Please Fill All Required Fields");
 
-    axios
-      .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
-      .then((res) => {
-        console.log("Meeting Added: " + res.data);
-        // console.log(res);
-        // console.log(res.data);
-      });
-    setNewMeet({ title: "", agenda: "", startDate: "" });
-    setEmployees([]);
+    }
   };
 
   const addEmployeeToMeeting = (word) => {
