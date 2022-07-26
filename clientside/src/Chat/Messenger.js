@@ -4,21 +4,21 @@ import Conversation from "./Conversation";
 import Message from "./Message";
 import "./messenger.css";
 import axios from "axios";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import SearchBar from "../Componentss/SearchBar";
-const socket = io.connect("http://localhost:5000");
+// const socket = io.connect("http://localhost:5000");
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8900");
 
-const Messenger = () => {
+const Messenger = ({ onlineUsers, setOnlineUsers, notify, arrivalMessage, setArrivalMessage }) => {
   const [newMessage, setNewMessage] = useState();
   const [conversations, setConversations] = useState();
   const [messages, setMessages] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const scrollRef = useRef();
   const [employees, setEmployees] = useState([]);
-  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [user, setUser] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -27,13 +27,6 @@ const Messenger = () => {
       setUser(user);
       // serCurrentChat(user._id)
     }
-    socket.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
-    });
   }, []);
 
   useEffect(() => {
@@ -107,6 +100,7 @@ const Messenger = () => {
 
     socket.emit("sendMessage", {
       senderId: user._id,
+      senderName: user.username,
       receiverId,
       text: newMessage,
     });
@@ -206,12 +200,14 @@ const Messenger = () => {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            {onlineUsers?.length > 0 && (
+            {onlineUsers?.length > 0 ? (
               <ChatOnline
                 onlineUsers={onlineUsers}
                 currentId={user._id}
                 setCurrentChat={setCurrentChat}
               />
+            ) : (
+              <h2>No Online Users</h2>
             )}
           </div>
         </div>

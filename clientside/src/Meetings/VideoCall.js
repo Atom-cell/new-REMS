@@ -6,13 +6,14 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Peer from "simple-peer";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import "./videocall.css";
 import { Link } from "react-router-dom";
 import VideoCallControls from "./VideoCallControls";
 import ChatOnline from "../Chat/ChatOnline";
-const socket = io.connect("http://localhost:5000");
-const VideoCall = () => {
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8900");
+const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
   const [me, setMe] = useState("");
   const [stream, setStream] = useState();
   const [receivingCall, setReceivingCall] = useState(false);
@@ -29,7 +30,6 @@ const VideoCall = () => {
   // allows to disconnect the call
   const connectionRef = useRef();
 
-  const [onlineUsers, setOnlineUsers] = useState();
   const [user, setUser] = useState();
 
   useEffect(() => {
@@ -42,7 +42,6 @@ const VideoCall = () => {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
-          console.log("Hello");
           // set my stream
           setStream(stream);
           myVideo.current.srcObject = stream;

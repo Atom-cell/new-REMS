@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import "./ConferenceCall.css";
 import Peer from "peerjs";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import SendIcon from "@material-ui/icons/Send";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8900");
 
 const peer = new Peer(undefined, {
   host: "/",
@@ -12,7 +14,7 @@ const peer = new Peer(undefined, {
   // pingInterval: 5000,
 });
 
-const socket = io.connect("http://localhost:5000");
+
 const peers = {};
 const ConferenceCall = ({ username }) => {
   const { roomId } = useParams();
