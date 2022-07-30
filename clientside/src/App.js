@@ -58,6 +58,7 @@ const App = () => {
         sender: data.senderId,
         senderName: data.senderName,
         text: data.text,
+        image: data.image,
         createdAt: Date.now(),
       });
       if (window.location.href != "http://localhost:3000/myMessenger") {

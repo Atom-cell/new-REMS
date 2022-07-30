@@ -9,7 +9,7 @@ const Conversation = ({ conversation, currentUser }) => {
     const getUser = async () => {
       try {
         // get user information using id
-        const res = await axios(`http://localhost:5000/emp/${friendId}`);
+        const res = await axios.get(`http://localhost:5000/emp/${friendId}`);
         setUser(res.data);
       } catch (err) {
         console.log(err);
@@ -20,11 +20,7 @@ const Conversation = ({ conversation, currentUser }) => {
 
   return (
     <div className="conversation">
-      <img
-        className="conversationImg"
-        src={user?.profilePicture}
-        alt=""
-      />
+      <img className="conversationImg" src={user?.profilePicture} alt="" />
       <span className="conversationName">{user?.username}</span>
     </div>
   );
