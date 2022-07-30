@@ -11,8 +11,15 @@ const myMessageSchema = new mongoose.Schema(
     text: {
       type: String,
     },
+    image: {
+      type: String,
+    },
+    // Image: {
+    //   name: { type: "string" },
+    //   image: { type: "string" },
+    // },
   },
   { timestamps: true }
 );
 
-module.exports = myMessage= mongoose.model("Message", myMessageSchema);
+module.exports = myMessage = mongoose.model("Message", myMessageSchema);
