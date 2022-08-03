@@ -59,19 +59,7 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       });
     }
   }, []);
-
-  useEffect(() => {
-    socket.emit("addUser", JSON.parse(localStorage.getItem("user"))._id);
-    socket.on("getUsers", (users) => {
-      setOnlineUsers(users);
-    });
-
-    socket.on("userSocketId", (friend) => {
-      // console.log(friend.socketId);
-      setIdToCall(friend.socketId);
-    });
-  }, []);
-
+  
   const callUser = (id) => {
     const peer = new Peer({
       initiator: true,
@@ -97,6 +85,19 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
 
     connectionRef.current = peer;
   };
+
+  useEffect(() => {
+    socket.emit("addUser", JSON.parse(localStorage.getItem("user"))._id);
+    socket.on("getUsers", (users) => {
+      setOnlineUsers(users);
+    });
+
+    socket.on("userSocketId", (friend) => {
+      // console.log(friend.socketId);
+      setIdToCall(friend.socketId);
+    });
+  }, []);
+
 
   const answerCall = () => {
     setCallAccepted(true);

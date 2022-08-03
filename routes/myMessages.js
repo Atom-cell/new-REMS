@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 const Message = require("../model/myMessage.model");
-const Image = require("../model/myImage.model");
 
 //add message
 

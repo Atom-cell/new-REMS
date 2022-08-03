@@ -4,7 +4,7 @@ import "./chatonline.css";
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from "@material-ui/icons/Phone";
 import Button from "@material-ui/core/Button";
-import VideoCallIcon from '@material-ui/icons/VideoCall';
+import VideoCallIcon from "@material-ui/icons/VideoCall";
 export default function ChatOnline({
   onlineUsers,
   currentId,
@@ -12,6 +12,7 @@ export default function ChatOnline({
   handleChatOnlineClick,
   callUser,
   idToCall,
+  setIdToCall,
   callAccepted,
   callEnded,
   leaveCall,
@@ -41,27 +42,19 @@ export default function ChatOnline({
 
   const handleClick = async (user) => {
     // when clicked we should get that user socket id so we can call on that socket id
-    // JSON.parse(localStorage.getItem("user"))._id
     handleChatOnlineClick(user);
-    // console.log(user);
-    // try {
-    //   const res = await axios.get(
-    //     `/conversations/find/${currentId}/${user._id}`
-    //   );
-    //   setCurrentChat(res.data);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    var userInfo = onlineUsers.find((usr) => usr.userId == user._id);
+    // console.log(userInfo.socketId);
+    // setIdToCall(userInfo.socketId);
+    callUser(userInfo.socketId);
   };
 
   return (
     <div className="chatOnline">
       <h2>Online Users</h2>
+      {/* onClick={() => callUser != undefined && handleClick(o)} */}
       {onlineFriends?.map((o) => (
-        <div
-          className="chatOnlineFriend"
-          onClick={() => callUser != undefined && handleClick(o)}
-        >
+        <div className="chatOnlineFriend">
           {/* {console.log("OnlineFriends Map")} */}
           {/* {console.log(o)} */}
           <div className="chatOnlineImgContainer">
@@ -83,7 +76,7 @@ export default function ChatOnline({
                 <IconButton
                   color="primary"
                   aria-label="call"
-                  onClick={() => callUser(idToCall)}
+                  onClick={() => handleClick(o)}
                 >
                   <VideoCallIcon fontSize="large" />
                 </IconButton>

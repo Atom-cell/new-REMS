@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./ConferenceCall.css";
 import Peer from "peerjs";
 // import io from "socket.io-client";
@@ -14,19 +15,19 @@ const peer = new Peer(undefined, {
   // pingInterval: 5000,
 });
 
-
 const peers = {};
 const ConferenceCall = ({ username }) => {
   const { roomId } = useParams();
   const [mystream, setMyStream] = useState();
   const myVideo = useRef();
   const [text, setText] = useState("");
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [participants, setParticipants] = useState();
 
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        console.log("Hello");
         // getting my own local stream first
         setMyStream(stream);
         // play the local stream on my video
@@ -37,22 +38,34 @@ const ConferenceCall = ({ username }) => {
           // answer the call that the new user joins
           call.answer(stream);
           const video = document.createElement("video");
+          video.setAttribute("id", `video-${call.peer}`);
           // add video stream from the new user to front end
           call.on("stream", (userVideoStream) => {
             addVideoStream(video, userVideoStream);
           });
         });
 
-        socket.on("user-connected", (userId) => {
+        socket.on("user-connected", (userId, friendUsername) => {
+          // setParticipants(conferenceCallUsers);
           // whenever new user connects
-          setTimeout(connectNewUser, 1000, userId, stream);
+          setTimeout(connectNewUser, 1000, userId, friendUsername, stream);
         });
 
         // when user disconnects
-        socket.on("user-disconnected", (userId) => {
+        socket.on("user-disconnected", (userId, username) => {
+          console.log(peers[userId]);
           if (peers[userId]) peers[userId].close();
+          toast.info(`${username} has left the Meeting`);
+          // const video = document.getElementById(`video-${peers[userId]}`);
+          // const videoGrid = document.getElementById(`video-grid`);
+          // video.remove();
+          // videoGrid.append(video);
+          // 89d73d09-a1be-44d0-9e81-608bcfb10b6d
+          // console.log(videoGrid);
         });
       });
+
+    // socket.emit("getConferenceUsers", roomId);
 
     //Listen on peer connection
     peer.on("open", (id) => {
@@ -62,17 +75,21 @@ const ConferenceCall = ({ username }) => {
 
       // emit join room signal so that server can listen on this event
       // Join room with a specific room id and a user id coming from the peer id
-      socket.emit("join-room", roomId, id);
+      socket.emit("join-room", roomId, id, username);
+
+      socket.on("conferenceUsers", (conferenceCallUsers) => {
+        // console.log(conferenceCallUsers);
+        setParticipants(conferenceCallUsers);
+      });
 
       // get message from server
-
-      socket.on("createMessage", (message) => {
+      socket.on("createMessage", (message, friendUsername) => {
         const messageBox = document.getElementById("unorderedListMessage");
         // messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
         const msgItem = document.createElement("li");
         const boldItem = document.createElement("b");
         msgItem.setAttribute("class", "message");
-        boldItem.innerHTML = username;
+        boldItem.innerHTML = friendUsername;
         msgItem.innerHTML = message;
         messageBox.appendChild(boldItem);
         messageBox.append(msgItem);
@@ -81,15 +98,23 @@ const ConferenceCall = ({ username }) => {
         // alert(message);
       });
     });
+
+    // socket.on("conferenceUsers", (conferenceCallUsers) => {
+    //   console.log(conferenceCallUsers);
+    //   setParticipants(conferenceCallUsers);
+    // });
   }, []);
 
-  const connectNewUser = (userId, stream) => {
+  const connectNewUser = (userId, friendUsername, stream) => {
     console.log("New User:" + userId);
+    if (username != friendUsername)
+      toast.info(`${friendUsername} has joined the meeting`);
     // Now use peer connection to call a user
     // call user with the id and send him my stream
     const call = peer.call(userId, stream);
     const video = document.createElement("video");
     video.setAttribute("class", "myVideo");
+    video.setAttribute("id", `video-${call.peer}`);
     // when called add that stream on the front end
     call.on("stream", (userVideoStream) => {
       // userVideoStream is the person joining the call stream
@@ -99,19 +124,18 @@ const ConferenceCall = ({ username }) => {
     call.on("close", () => {
       video.remove();
     });
-
     peers[userId] = call;
   };
 
   const addVideoStream = (video, stream) => {
-    console.log("ADD VIDEO STREAM");
+    console.log("ADD VIDEO STREAM ");
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();
     });
     const videoGrid = document.getElementById("video-grid");
     videoGrid.append(video);
-    console.log(videoGrid);
+    // console.log(videoGrid);
   };
 
   const muteUnmute = () => {
@@ -183,9 +207,21 @@ const ConferenceCall = ({ username }) => {
   // handling messaging
   const handleSendMessage = (msg) => {
     // alert(msg);
-    socket.emit("message", msg);
+    socket.emit("message", msg, username);
     setText("");
   };
+
+  const handleClickParticipants = () => {
+    // alert(msg);
+    socket.emit("getConferenceUsers", roomId);
+    setShowParticipants(!showParticipants);
+    // console.log(document.getElementById("unorderedListMessage"));
+  };
+
+  // const handleClickChat = () => {
+  //   setShowParticipants(false);
+  //   console.log(document.getElementById("unorderedListMessage"));
+  // };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -202,19 +238,37 @@ const ConferenceCall = ({ username }) => {
 
   return (
     <div className="main">
+      <div className="main-participants">
+        {showParticipants && (
+          <>
+            <div className="main__header">
+              <h2>{participants ? "Participants" : "No Participants"}</h2>
+            </div>
+            <ul className="messages">
+              {participants &&
+                participants.map((p) => {
+                  return <li className="participants-li">{p.username}</li>;
+                })}
+            </ul>
+          </>
+        )}
+      </div>
       <div className="main__left">
         <div className="main__videos">
           <div id="video-grid">
-            {mystream && (
-              <video
-                className="myVideo"
-                playsInline
-                muted
-                ref={myVideo}
-                autoPlay
-                style={{ width: "300px" }}
-              />
-            )}
+            <div id="video-grid-video">
+              {/* <h3>{username}</h3> */}
+              {mystream && (
+                <video
+                  className="myVideo"
+                  playsInline
+                  muted
+                  ref={myVideo}
+                  autoPlay
+                  style={{ width: "300px" }}
+                />
+              )}
+            </div>
           </div>
         </div>
         <div className="main__controls">
@@ -235,18 +289,23 @@ const ConferenceCall = ({ username }) => {
             </div>
           </div>
           <div className="main__controls__block">
-            <div className="main__controls__button">
+            {/* <div className="main__controls__button">
               <i className="fas fa-shield-alt"></i>
               <span>Security</span>
-            </div>
-            <div className="main__controls__button">
+            </div> */}
+            <div
+              onClick={handleClickParticipants}
+              className="main__controls__button"
+            >
               <i className="fas fa-user-friends"></i>
-              <span>Participants</span>
+              <span>
+                {showParticipants ? "Hide Participants" : "Show Participants"}
+              </span>
             </div>
-            <div className="main__controls__button">
+            {/* <div className="main__controls__button">
               <i className="fas fa-comment-alt"></i>
               <span>Chat</span>
-            </div>
+            </div> */}
           </div>
           <div className="main__controls__block">
             <div className="main__controls__button">

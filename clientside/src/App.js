@@ -72,8 +72,8 @@ const App = () => {
     socket.emit("addUser", loggedUser?._id);
     socket.on("getUsers", (users) => {
       // console.log(users);
-      const usersWithoutMe = users.filter(
-        (user) => user.userId != loggedUser._id
+      const usersWithoutMe = users?.filter(
+        (user) => user?.userId != loggedUser?._id
       );
       // console.log(usersWithoutMe);
       setOnlineUsers(usersWithoutMe);

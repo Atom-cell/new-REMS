@@ -8,6 +8,9 @@ var myVideoSchema = mongoose.Schema({
   hostedBy: {
     type: String,
   },
+  hostedById: {
+    type: String,
+  },
   title: {
     type: String,
   },

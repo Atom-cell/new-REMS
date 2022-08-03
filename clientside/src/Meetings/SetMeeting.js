@@ -8,6 +8,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import moment from "moment";
 import "./setmeeting.css";
+import { toast } from "react-toastify";
 const { v4: uuidV4 } = require("uuid");
 
 const SetMeeting = () => {
@@ -19,9 +20,19 @@ const SetMeeting = () => {
   });
   const [employees, setEmployees] = useState([]);
 
+  const fixTimezoneOffset = (date) => {
+    if (!date) return "";
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
+  };
+
   // Add a meeting
   const addMeeting = () => {
-    if(newMeet.title && newMeet.startDate && newMeet.agenda && employees.length>0){
+    if (
+      newMeet.title &&
+      newMeet.startDate &&
+      newMeet.agenda &&
+      employees.length > 0
+    ) {
       let user = JSON.parse(localStorage.getItem("user"));
       let username = user.username;
       employees.push(username);
@@ -31,26 +42,26 @@ const SetMeeting = () => {
       const myObj = {
         roomUrl: uniqueId,
         hostedBy: username,
+        hostedById: user._id,
         title: newMeet.title,
         agenda: newMeet.agenda,
-        startDate: newMeet.startDate,
+        startDate: fixTimezoneOffset(newMeet.startDate),
         // endDate: newMeet.endDate,
         employees: employees,
       };
-  
+
       axios
         .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
         .then((res) => {
           console.log("Meeting Added: " + res.data);
+          toast.success("Meeting Set");
           // console.log(res);
           // console.log(res.data);
         });
       setNewMeet({ title: "", agenda: "", startDate: "" });
       setEmployees([]);
-    }
-    else{
+    } else {
       alert("Please Fill All Required Fields");
-
     }
   };
 
@@ -95,8 +106,9 @@ const SetMeeting = () => {
           onChange={(startDate) => setNewMeet({ ...newMeet, startDate })}
           timeInputLabel="Time:"
           dateFormat="MM/dd/yyyy h:mm"
-          showTimeInput
+          showTimeSelect
           className="inputTextFields"
+          minDate={new Date()}
         />
         {/* <DatePicker
           placeholderText="Start Date"

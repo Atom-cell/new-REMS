@@ -18,14 +18,17 @@ router.get("/", function (req, res, next) {
 router.get("/getMyMeetings/:username", function (req, res, next) {
   // case insensitive search
   // 'name': {'$regex': thename,$options:'i'}
-  myVid.find({ employees: {'$regex': req.params.username,$options:'i'} }, function (err, result) {
-    if (err) {
-      res.send(err);
-    } else {
-      // console.log(result);
-      res.json(result);
+  myVid.find(
+    { employees: { $regex: req.params.username, $options: "i" } },
+    function (err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        // console.log(result);
+        res.json(result);
+      }
     }
-  });
+  );
 });
 
 // router.get("/generateid", (req, res) => {
@@ -43,6 +46,7 @@ router.post("/addNewMeeting", function (req, res, next) {
   var newMeet = new myVid({
     roomUrl: req.body.roomUrl,
     hostedBy: req.body.hostedBy,
+    hostedById: req.body.hostedById,
     title: req.body.title,
     agenda: req.body.agenda,
     startDate: req.body.startDate,
@@ -50,8 +54,9 @@ router.post("/addNewMeeting", function (req, res, next) {
   });
 
   //   res.json(newMeet);
-  newMeet.save(function (err) {
+  newMeet.save(function (err, result) {
     if (err) console.log("error", err);
+    res.status(200).send(result);
     // saved!
   });
 });
@@ -59,8 +64,9 @@ router.post("/addNewMeeting", function (req, res, next) {
 // delete a meeting
 router.delete("/deleteMeeting", function (req, res, next) {
   console.log(req.body._id);
-  myVid.findOneAndRemove({ _id: req.body._id }, function (err) {
+  myVid.findOneAndRemove({ _id: req.body._id }, function (err, result) {
     if (err) console.log("Error " + err);
+    res.status(200).send(result);
     console.log("Removed");
   });
 });

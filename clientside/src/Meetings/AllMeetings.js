@@ -12,6 +12,21 @@ const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
   // const [headers, setHeaders] = useState();
   const [loading, setLoading] = useState(true);
+  var loggedUser = JSON.parse(localStorage.getItem("user"));
+
+  const formatAMPM = (date) => {
+    // var date = date.substr(0, 10);
+
+    // var hours = date.substr(0, 5);
+    // console.log(date.substr(3, 4));
+    var hours = date.substr(0, 2);
+    var minutes = date.substr(3, 4);
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  };
 
   //get All Meetings
   useEffect(() => {
@@ -48,7 +63,9 @@ const AllMeetings = () => {
           data: { _id: meeting._id },
         })
         .then(() => {
-          console.log("Deleted");
+          // console.log("Deleted");
+          // console.log(allMeetings.filter((data) => data._id != meeting._id));
+          setAllMeetings(allMeetings.filter((data) => data._id != meeting._id));
         });
     }
   };
@@ -109,6 +126,7 @@ const AllMeetings = () => {
               {allMeetings.length != 0 ? (
                 allMeetings?.map((myObj, key) => {
                   var time = moment.utc(myObj.startDate).format("HH:mm");
+                  time = formatAMPM(time);
                   return (
                     <tr key={myObj._id}>
                       <td className="all-meeting-row link">
@@ -125,12 +143,14 @@ const AllMeetings = () => {
                         {myObj.startDate.substr(0, 10)}
                       </td>
                       <td className="all-meeting-row">{time}</td>
-                      <td className="all-meeting-row">
-                        <DeleteIcon
-                          className="delete-icon"
-                          onClick={() => handleDeleteMeeting(myObj)}
-                        />
-                      </td>
+                      {loggedUser._id == myObj.hostedById && (
+                        <td className="all-meeting-row">
+                          <DeleteIcon
+                            className="delete-icon"
+                            onClick={() => handleDeleteMeeting(myObj)}
+                          />
+                        </td>
+                      )}
                     </tr>
                   );
                 })
