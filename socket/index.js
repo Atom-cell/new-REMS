@@ -91,32 +91,57 @@ io.on("connection", (socket) => {
     });
   });
 
+  // One to One Video Call
   socket.emit("me", socket.id);
 
   //Get User Socket id
-  socket.on("getUserSocketId", (friendId, userId) => {
-    console.log("GET USER SOCKET ID");
-    const friend = getUser(friendId);
-    const user = getUser(userId);
-    // console.log(user);
-    // console.log(friend);
-    io.to(user?.socketId).emit("userSocketId", friend);
-    // io.emit("getUsers", users);
-  });
+  // socket.on("getUserSocketId", (friendId, userId) => {
+  //   console.log("GET USER SOCKET ID");
+  //   const friend = getUser(friendId);
+  //   const user = getUser(userId);
+  //   // console.log(user);
+  //   // console.log(friend);
+  //   io.to(user?.socketId).emit("userSocketId", friend);
+  //   // io.emit("getUsers", users);
+  // });
 
   socket.on("callUser", (data) => {
+    // console.log("CALL USER");
     console.log(users);
-    console.log(data.userToCall);
-    io.to(data.userToCall).emit("callUser", {
+    // console.log(data.userToCall);
+    // now get the socket id of the user to call
+    const user = getUser(data.userToCall);
+    // console.log(user.socketId);
+    const friend = getUser(data.from);
+
+    io.to(user.socketId).emit("callUser", {
       signal: data.signalData,
-      from: data.from,
+      from: friend.socketId,
       name: data.name,
+    });
+
+    // so that both callers can end the call
+    io.to(user.socketId).to(friend.socketId).emit("setBothCallers", {
+      from: friend.socketId,
+      to: user.socketId,
     });
   });
 
   socket.on("answerCall", (data) => {
-    io.to(data.to).emit("callAccepted", data.signal);
+    // console.log("answerCall");
+    // console.log(data.to);
+    io.to(data.to).emit("callAccepted", data.signal, data.name);
   });
+
+  socket.on("leaveCall", (friendId, userId, name) => {
+    // console.log(userId);
+    // console.log(friendId);
+    // const friend = getUser(friendId);
+    const user = getUser(userId);
+    io.to(friendId).emit("leaveCallId", user, name);
+  });
+
+  // end of one to one video call
 
   // Sanii
 

@@ -5,26 +5,29 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import PhoneIcon from "@material-ui/icons/Phone";
 import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
 import Peer from "simple-peer";
 // import io from "socket.io-client";
 import "./videocall.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import VideoCallControls from "./VideoCallControls";
 import ChatOnline from "../Chat/ChatOnline";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8900");
 const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
+  const navigate = useNavigate();
   const [me, setMe] = useState("");
   const [stream, setStream] = useState();
   const [receivingCall, setReceivingCall] = useState(false);
   const [caller, setCaller] = useState("");
+  const [callerName, setCallerName] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
   const [idToCall, setIdToCall] = useState();
   const [callEnded, setCallEnded] = useState(false);
   const [name, setName] = useState("");
-  const [callerName, setCallerName] = useState("");
   const [userStream, setUserStream] = useState();
+  const [both, setBoth] = useState();
   const myVideo = useRef();
   const userVideo = useRef();
   // allows to disconnect the call
@@ -52,15 +55,23 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       });
 
       socket.on("callUser", (data) => {
+        // console.log(data);
         setReceivingCall(true);
         setCaller(data.from);
         setCallerName(data.name);
         setCallerSignal(data.signal);
       });
+
+      socket.on("setBothCallers", (data) => {
+        // console.log("Both callers Id:");
+        // console.log(data);
+        setBoth([data.to, data.from]);
+      });
     }
   }, []);
-  
+
   const callUser = (id) => {
+    // console.log(id);
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -70,7 +81,7 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       socket.emit("callUser", {
         userToCall: id,
         signalData: data,
-        from: me,
+        from: JSON.parse(localStorage.getItem("user"))._id,
         name: name,
       });
     });
@@ -78,8 +89,9 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       userVideo.current.srcObject = stream;
       setUserStream(stream);
     });
-    socket.on("callAccepted", (signal) => {
+    socket.on("callAccepted", (signal, name) => {
       setCallAccepted(true);
+      setCallerName(name);
       peer.signal(signal);
     });
 
@@ -92,12 +104,19 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       setOnlineUsers(users);
     });
 
-    socket.on("userSocketId", (friend) => {
-      // console.log(friend.socketId);
-      setIdToCall(friend.socketId);
+    socket.on("leaveCallId", (friend, name) => {
+      // callAccepted && !callEnded
+      // console.log(name);
+      toast.info(`${name} Ended the call`);
+      // window.location.reload();
+      navigate("/dashboard");
     });
-  }, []);
 
+    // socket.on("userSocketId", (friend) => {
+    //   console.log(friend.socketId);
+    //   setIdToCall(friend.socketId);
+    // });
+  }, []);
 
   const answerCall = () => {
     setCallAccepted(true);
@@ -107,7 +126,9 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       stream: stream,
     });
     peer.on("signal", (data) => {
-      socket.emit("answerCall", { signal: data, to: caller });
+      // console.log("Signal");
+      // console.log(data);
+      socket.emit("answerCall", { signal: data, to: caller, name: name });
     });
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream;
@@ -120,15 +141,22 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
   const leaveCall = () => {
     setCallEnded(true);
     connectionRef.current.destroy();
+    let otherId = "";
+    if (!caller) {
+      otherId = both.find((usr) => usr != user._id);
+      socket.emit("leaveCall", otherId, user._id, name);
+    } else socket.emit("leaveCall", caller, user._id, name);
+    // window.location.reload();
+    navigate("/dashboard");
   };
 
-  const handleChatOnlineClick = (friend) => {
-    socket.emit(
-      "getUserSocketId",
-      friend._id,
-      JSON.parse(localStorage.getItem("user"))._id
-    );
-  };
+  // const handleChatOnlineClick = (friend) => {
+  //   socket.emit(
+  //     "getUserSocketId",
+  //     friend._id,
+  //     JSON.parse(localStorage.getItem("user"))._id
+  //   );
+  // };
 
   const rejectCall = () => {
     // receivingCall && !callAccepted ?
@@ -153,7 +181,12 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                 style={{ width: "300px" }}
               />
             )}
-            <VideoCallControls leaveCall={leaveCall} mystream={stream} />
+            <VideoCallControls
+              leaveCall={leaveCall}
+              mystream={stream}
+              callAccepted={callAccepted}
+              callEnded={callEnded}
+            />
           </div>
           <div className="video">
             {callAccepted && !callEnded ? (
@@ -176,57 +209,13 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
         <ChatOnline
           onlineUsers={onlineUsers}
           currentId={user?._id}
-          handleChatOnlineClick={handleChatOnlineClick}
+          // handleChatOnlineClick={handleChatOnlineClick}
           callUser={callUser}
           idToCall={idToCall}
           callAccepted={callAccepted}
           callEnded={callEnded}
           leaveCall={leaveCall}
         />
-        {/* <div className="myId">
-          <TextField
-            id="filled-basic"
-            label="Name"
-            variant="filled"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginBottom: "20px" }}
-            disabled={true}
-          />
-          <CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AssignmentIcon fontSize="large" />}
-            >
-              Copy ID
-            </Button>
-          </CopyToClipboard>
-
-          <TextField
-            id="filled-basic"
-            label="ID to call"
-            variant="filled"
-            value={idToCall}
-            onChange={(e) => setIdToCall(e.target.value)}
-          />
-          <div className="call-button">
-            {callAccepted && !callEnded ? (
-              <Button variant="contained" color="secondary" onClick={leaveCall}>
-                End Call
-              </Button>
-            ) : (
-              <IconButton
-                color="primary"
-                aria-label="call"
-                onClick={() => callUser(idToCall)}
-              >
-                <PhoneIcon fontSize="large" />
-              </IconButton>
-            )}
-            {idToCall}
-          </div>
-        </div> */}
         <div>
           {receivingCall && !callAccepted ? (
             <div className="caller">

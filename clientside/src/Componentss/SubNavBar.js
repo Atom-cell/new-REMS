@@ -23,6 +23,11 @@ const SubNavBar = ({ item, showSidebar }) => {
         item.subNav.map((item, index) => {
           return (
             <div className={item.cName}>
+              {/* I want to refresh whenever video call componenet is called that is why i used Nav.link */}
+              {/* <Nav.Link href={item.path} onClick={showSidebar}>
+                  {item.icon}
+                  <span>{item.title}</span>
+                </Nav.Link> */}
               <Link
                 to={item.path}
                 key={index}

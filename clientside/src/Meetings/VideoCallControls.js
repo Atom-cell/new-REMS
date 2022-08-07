@@ -1,9 +1,15 @@
 import React from "react";
+import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import "./videocallcontrol.css";
 
-const VideoCallControls = ({ leaveCall, mystream }) => {
-    // console.log("mystream"+mystream);
+const VideoCallControls = ({
+  leaveCall,
+  mystream,
+  callAccepted,
+  callEnded,
+}) => {
+  // console.log("mystream"+mystream);
   const muteUnmute = () => {
     // get current stream
     const enabled = mystream.getAudioTracks()[0].enabled;
@@ -76,9 +82,18 @@ const VideoCallControls = ({ leaveCall, mystream }) => {
         <span>Stop Video</span>
       </div>
       <div className="main__controls__button">
-        <Link to="/" className="leave_meeting" onClick={() => leaveCall()}>
+        {/* <Link
+          to="/dashboard"
+          className="leave_meeting"
+          onClick={() => leaveCall()}
+        >
           Leave
-        </Link>
+        </Link> */}
+        {callAccepted && !callEnded && (
+          <Button variant="contained" color="secondary" onClick={leaveCall}>
+            End Call
+          </Button>
+        )}
       </div>
     </div>
   );

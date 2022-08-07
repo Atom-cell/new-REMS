@@ -9,7 +9,6 @@ export default function ChatOnline({
   onlineUsers,
   currentId,
   setCurrentChat,
-  handleChatOnlineClick,
   callUser,
   idToCall,
   setIdToCall,
@@ -40,13 +39,14 @@ export default function ChatOnline({
     // console.log(friends.filter(o1 => onlineUsers.some(o2 => o1._id == o2.userId)));
   }, [friends, onlineUsers]);
 
-  const handleClick = async (user) => {
+  const handleClick = (user) => {
+    // console.log(user._id);
     // when clicked we should get that user socket id so we can call on that socket id
-    handleChatOnlineClick(user);
-    var userInfo = onlineUsers.find((usr) => usr.userId == user._id);
+    // handleChatOnlineClick(user);
+    // var userInfo = onlineUsers.find((usr) => usr.userId == user._id);
     // console.log(userInfo.socketId);
     // setIdToCall(userInfo.socketId);
-    callUser(userInfo.socketId);
+    callUser(user._id);
   };
 
   return (
@@ -64,7 +64,16 @@ export default function ChatOnline({
           <span className="chatOnlineName">{o?.username}</span>
           {callUser != undefined && (
             <div className="call-button">
-              {callAccepted && !callEnded ? (
+              {callAccepted && !callEnded ? null : (
+                <IconButton
+                  color="primary"
+                  aria-label="call"
+                  onClick={() => handleClick(o)}
+                >
+                  <VideoCallIcon fontSize="large" />
+                </IconButton>
+              )}
+              {/* {callAccepted && !callEnded ? (
                 <Button
                   variant="contained"
                   color="secondary"
@@ -80,7 +89,7 @@ export default function ChatOnline({
                 >
                   <VideoCallIcon fontSize="large" />
                 </IconButton>
-              )}
+              )} */}
               {/* {idToCall} */}
             </div>
           )}
