@@ -27,6 +27,7 @@ import MoreInfo from "./components/MoreInfo";
 import Log from "./components/Log";
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
+import AllProjects from "./Projects/AllProjects";
 const socket = io.connect("http://localhost:8900");
 
 const App = () => {
@@ -156,6 +157,7 @@ const App = () => {
             }
           />
           <Route path="/allMeetings" element={<AllMeetings />} />
+          <Route path="/projects" element={<AllProjects />} />
         </Route>
       </Routes>
       <ToastContainer />

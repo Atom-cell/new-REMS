@@ -111,6 +111,13 @@ export const SideBarData = {
       icon: <EngineeringIcon />,
       cName: "nav-text",
     },
+    {
+      id: 13,
+      title: "Projects",
+      path: "/projects",
+      icon: <EngineeringIcon />,
+      cName: "nav-text",
+    },
   ],
   activeLink: 1,
 };

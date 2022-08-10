@@ -33,12 +33,6 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               }
               className="inputTextFields"
             />
-            {/* <DatePicker
-            placeholderText="Start Date"
-            selected={newEvent.start}
-            onChange={(start) => setNewEvent({ ...newEvent, start: start })}
-            className="inputTextFields"
-          /> */}
             <DatePicker
               placeholderText="Start Date & Time"
               selected={newEvent.start}
@@ -49,12 +43,6 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               className="inputTextFields"
               minDate={new Date()}
             />
-            {/* <DatePicker
-            placeholderText="End Date"
-            selected={newEvent.end}
-            onChange={(end) => setNewEvent({ ...newEvent, end })}
-            className="inputTextFields"
-          /> */}
             <div className="inputTextFields selectContainerModal">
               {/* <label>Select Event Category</label> */}
               <select

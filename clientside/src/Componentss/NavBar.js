@@ -43,6 +43,7 @@ const Navbar = () => {
           {role === "admin"
             ? SideBarData.links.map((item, index) => {
                 if (
+                  item.title === "Projects" ||
                   item.title === "Activity Log" ||
                   item.title === "Manange Employee" ||
                   item.title === "Dashboard"
@@ -59,7 +60,8 @@ const Navbar = () => {
             : SideBarData.links.map((item, index) => {
                 if (
                   item.title === "Activity Log" ||
-                  item.title === "Manange Employee"
+                  item.title === "Manange Employee" ||
+                  item.title === "Projects"
                 ) {
                   return null;
                 } else {
