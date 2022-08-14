@@ -36,15 +36,30 @@ const ProjectCard = ({ project }) => {
         </div>
         <div className="due-date">
           <span className="featuredSub">Due Date: </span>
-          <span>{dueDate.toString().slice(3, 15)}</span>
+          {typeof dueDate == "string" ? (
+            <span>{dueDate.slice(0, 10)}</span>
+          ) : (
+            <span>{dueDate.toString().slice(3, 15)}</span>
+          )}
         </div>
         <div className="progress">
-          <div
-            className="progress-done"
-            style={{ opacity: "1", width: milestones }}
-          >
-            {milestones}
-          </div>
+          {completed == "Completed" ? (
+            <div
+              className="progress-done"
+              style={{ opacity: "1", width: "100%" }}
+            >
+              100%
+              {/* {milestones} */}
+            </div>
+          ) : (
+            <div
+              className="progress-done"
+              style={{ opacity: "1", width: "30%" }}
+            >
+              30%
+              {/* {milestones} */}
+            </div>
+          )}
         </div>
       </div>
     </div>

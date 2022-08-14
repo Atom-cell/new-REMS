@@ -1,29 +1,115 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
-const NewProjectModal = ({ handleClose, show }) => {
+import axios from "axios";
+import EmployeesTable from "./EmployeesTable";
+const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
   const [check, setCheck] = useState();
-  const [type, setType] = useState();
+  //   const [type, setType] = useState();
+  //   const [projectName, setProjectName] = useState();
+  //   const [projectDescription, setProjectDescription] = useState();
+  //   const [dueDate, setDueDate] = useState();
+  const [milestones30, setMilestones30] = useState();
+  const [milestones60, setMilestones60] = useState();
+  const [milestones100, setMilestones100] = useState();
+  const [employees, setEmployees] = useState([]);
+
+  const [showw, setShoww] = useState(false);
+  const handleClosee = () => setShoww(false);
+  const handleShoww = () => setShoww(true);
+
   const getFiles = (files) => {
     const type = files.base64.split(";")[0].split(":")[1];
-    setType(type);
+    // setType(type);
     // console.log(type);
     if (
-      type.includes("image") ||
-      type.includes("video") ||
+      //   type.includes("image") ||
+      //   type.includes("video") ||
       type.includes("pdf")
     ) {
       setCheck(files.base64);
     } else {
-      toast.info("you can only send image or pdf or video");
+      toast.info("you can only Upload pdf");
     }
   };
+
+  const handleCreateProject = () => {
+    // console.log(newProject);
+    if (!check) {
+      toast.error("Please Select a Pdf file");
+    } else if (
+      newProject.projectName &&
+      newProject.projectDescription &&
+      milestones100
+    ) {
+      // create new project
+      const myObj = {
+        projectName: newProject.projectName,
+        projectDescription: newProject.projectDescription,
+        projectAssignedBy: JSON.parse(localStorage.getItem("user")).username,
+        projectAssignedTo: newProject.assignTo,
+        projectAssignedToId: newProject.assignToId,
+        helpingMaterial: check,
+        hoursWorked: "3",
+        hoursWorkedOn: "false",
+        dueDate: milestones100,
+        milestones: [
+          {
+            completionPercentage: "30%",
+            dueDate: milestones30,
+          },
+          {
+            completionPercentage: "60%",
+            dueDate: milestones60,
+          },
+          {
+            completionPercentage: "100%",
+            dueDate: milestones100,
+          },
+        ],
+        completed: "Incompleted",
+      };
+      //   console.table(myObj);
+      axios
+        .post("/myProjects/addNewProject", myObj)
+        .then((res) => {
+          console.log(res);
+          toast.info(`${res.data.projectName} Created`);
+          setNewProject({
+            projectName: "",
+            projectDescription: "",
+            assignTo: "",
+            assignToId: "",
+          });
+          handleClose();
+        })
+        .catch((err) => console.log(err));
+    } else {
+      toast.error("Please fill all required fields");
+    }
+  };
+
+  // Get All Employees
+  useEffect(() => {
+    const fetchData = async () => {
+      // get the data from the api
+      const res = await axios.get("http://localhost:5000/emp/");
+      //   console.log(res.data);
+      setEmployees(res.data);
+    };
+
+    // call the function
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, []);
+
   return (
-    <Modal show={show} fullscreen={true} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Create New Project</Modal.Title>
       </Modal.Header>
@@ -32,50 +118,100 @@ const NewProjectModal = ({ handleClose, show }) => {
           <input
             type="text"
             placeholder="Enter Project Name"
-            // value={newEvent.title}
-            // onChange={(e) =>
-            //   setNewEvent({ ...newEvent, title: e.target.value })
-            // }
+            value={newProject.projectName}
+            onChange={(e) =>
+              setNewProject({ ...newProject, projectName: e.target.value })
+            }
             className="inputTextFields"
           />
           <input
             type="text"
             placeholder="Enter Project Description"
-            // value={newEvent.title}
-            // onChange={(e) =>
-            //   setNewEvent({ ...newEvent, title: e.target.value })
-            // }
+            value={newProject.projectDescription}
+            onChange={(e) =>
+              setNewProject({
+                ...newProject,
+                projectDescription: e.target.value,
+              })
+            }
             className="inputTextFields"
           />
-          <DatePicker
+          {/* <DatePicker
             placeholderText="Due Date"
-            // selected={newEvent.start}
-            // onChange={(start) => setNewEvent({ ...newEvent, start: start })}
+            selected={newProject.dueDate}
+            onChange={(start) =>
+              setNewProject({ ...newProject, dueDate: start })
+            }
+            dateFormat="MM/dd/yyyy"
+            className="inputTextFields"
+            minDate={new Date()}
+          /> */}
+          {/* Milestones */}
+          <DatePicker
+            placeholderText="30% due Date"
+            selected={milestones30}
+            onChange={(start) => setMilestones30(start)}
             dateFormat="MM/dd/yyyy"
             className="inputTextFields"
             minDate={new Date()}
           />
-          <input
+          <DatePicker
+            placeholderText="60% due Date"
+            selected={milestones60}
+            onChange={(start) => setMilestones60(start)}
+            dateFormat="MM/dd/yyyy"
+            className="inputTextFields"
+            minDate={new Date()}
+          />
+          <DatePicker
+            placeholderText="100% due Date"
+            selected={milestones100}
+            onChange={(start) => setMilestones100(start)}
+            dateFormat="MM/dd/yyyy"
+            className="inputTextFields"
+            minDate={new Date()}
+          />
+          {/* <input
             type="text"
             placeholder="Set Milestones"
-            // value={newEvent.title}
-            // onChange={(e) =>
-            //   setNewEvent({ ...newEvent, title: e.target.value })
-            // }
+            value={newProject.milestones}
+            onChange={(e) =>
+              setNewProject({ ...newProject, milestones: e.target.value })
+            }
             className="inputTextFields"
-          />
-          <input
-            type="text"
-            placeholder="Assign Project"
-            // value={newEvent.title}
-            // onChange={(e) =>
-            //   setNewEvent({ ...newEvent, title: e.target.value })
-            // }
-            className="inputTextFields"
-          />
+          /> */}
+          {newProject.assignTo && (
+            <input
+              type="text"
+              placeholder="Assign Project"
+              value={newProject.assignTo}
+              editable={false}
+              className="inputTextFields"
+            />
+          )}
+
+          <div style={{ margin: "10px 0 10px 0" }}>
+            <Button variant="primary" onClick={handleShoww}>
+              Assign Project To
+            </Button>
+          </div>
+
+          <Modal show={showw} onHide={handleClosee}>
+            <Modal.Header closeButton>
+              <Modal.Title>My Employees</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <EmployeesTable
+                employees={employees}
+                newProject={newProject}
+                setNewProject={setNewProject}
+                handleClosee={handleClosee}
+              />
+            </Modal.Body>
+          </Modal>
           <div>
             <FileBase64 multiple={false} onDone={getFiles} />
-            {check && type.includes("image") && (
+            {/* {check && type.includes("image") && (
               <img
                 src={check}
                 alt="No Image"
@@ -85,7 +221,7 @@ const NewProjectModal = ({ handleClose, show }) => {
                   marginTop: "5px",
                 }}
               />
-            )}
+            )} */}
           </div>
         </div>
       </Modal.Body>
@@ -93,7 +229,7 @@ const NewProjectModal = ({ handleClose, show }) => {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={handleCreateProject}>
           Create Project
         </Button>
       </Modal.Footer>
