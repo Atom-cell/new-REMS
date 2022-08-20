@@ -28,6 +28,8 @@ import Log from "./components/Log";
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
 import AllProjects from "./Projects/AllProjects";
+import AllBoards from "./Boards/AllBoards";
+import Boards from "./Boards/Boards";
 const socket = io.connect("http://localhost:8900");
 
 const App = () => {
@@ -157,7 +159,9 @@ const App = () => {
             }
           />
           <Route path="/allMeetings" element={<AllMeetings />} />
-          <Route path="/projects" element={<AllProjects />} />
+          <Route path="/projects" element={<AllProjects user={loggedUser} />} />
+          <Route path="/allboards" element={<AllBoards user={loggedUser} />} />
+          <Route path="/boards/:bid" element={<Boards user={loggedUser} />} />
         </Route>
       </Routes>
       <ToastContainer />

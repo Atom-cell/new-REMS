@@ -118,6 +118,13 @@ export const SideBarData = {
       icon: <EngineeringIcon />,
       cName: "nav-text",
     },
+    {
+      id: 14,
+      title: "All Boards",
+      path: "/allboards",
+      icon: <EngineeringIcon />,
+      cName: "nav-text",
+    },
   ],
   activeLink: 1,
 };

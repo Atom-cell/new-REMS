@@ -60,8 +60,8 @@ const Navbar = () => {
             : SideBarData.links.map((item, index) => {
                 if (
                   item.title === "Activity Log" ||
-                  item.title === "Manange Employee" ||
-                  item.title === "Projects"
+                  item.title === "Manange Employee" 
+                  // item.title === "Projects"
                 ) {
                   return null;
                 } else {

@@ -68,7 +68,7 @@ import axios from "axios";
 //     completed: "Incompleted",
 //   },
 // ];
-const AllProjects = () => {
+const AllProjects = ({ user }) => {
   const [projects, setProjects] = useState();
   const [newProject, setNewProject] = useState({
     projectName: "",
@@ -84,6 +84,7 @@ const AllProjects = () => {
     // endDate: "",
   });
 
+  const [role, setRole] = useState(localStorage.getItem("role"));
   const [searchInput, setSearchInput] = useState();
   const [show, setShow] = useState(false);
 
@@ -218,15 +219,24 @@ const AllProjects = () => {
             Sort By Due Date
           </Button>
         </div>
-        <div className="create-project">
-          <Button variant="contained" color="secondary" onClick={handleShow}>
-            Create Project
-          </Button>
-        </div>
+        {role == "Employee" ? null : (
+          <div className="create-project">
+            <Button variant="contained" color="secondary" onClick={handleShow}>
+              Create Project
+            </Button>
+          </div>
+        )}
       </div>
       <div className="allProjects">
         {projects?.map((project) => {
-          return <ProjectCard project={project} />;
+          {
+            console.log(role);
+          }
+          if (role == "Employee" && user._id == project.projectAssignedToId) {
+            return <ProjectCard project={project} />;
+          } else if (role == "admin") {
+            return <ProjectCard project={project} />;
+          }
         })}
       </div>
 
