@@ -135,8 +135,10 @@ const AllBoards = ({ user }) => {
       </div>
       <div className="allProjects">
         {boards?.map((board, index) => {
+          console.log(board);
           return (
             <>
+              {/* <div style={{ flex: "0.3 1 350px", padding: "10px" }} key={index}> */}
               <div className="project-column" key={index}>
                 <div
                   style={{
@@ -159,13 +161,15 @@ const AllBoards = ({ user }) => {
                 >
                   <span className="featuredTitle">{board.title}</span>
                   <div className="assigned-by">
-                    <span className="featuredSub">Total Cards: </span>
-                    <span className="featuredTitle">{board.cards?.length}</span>
+                    <span className="featuredSub">Total Boards: </span>
+                    <span className="featuredTitle">
+                      {board.boards?.length || 0}
+                    </span>
                   </div>
-                  <div className="assigned-to">
+                  {/* <div className="assigned-to">
                     <span className="featuredSub">Related To: </span>
                     <span className="featuredTitle">Project Name</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </>

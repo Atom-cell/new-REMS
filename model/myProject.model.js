@@ -8,6 +8,9 @@ var myProjectSchema = mongoose.Schema({
   projectDescription: {
     type: String,
   },
+  projectCost: {
+    type: String,
+  },
   projectAssignedBy: {
     type: String,
   },
@@ -18,6 +21,9 @@ var myProjectSchema = mongoose.Schema({
     type: String,
   },
   helpingMaterial: {
+    type: String,
+  },
+  fileName: {
     type: String,
   },
   hoursWorked: {

@@ -9,6 +9,7 @@ import axios from "axios";
 import EmployeesTable from "./EmployeesTable";
 const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
   const [check, setCheck] = useState();
+  const [fileName, setFileName] = useState();
   //   const [type, setType] = useState();
   //   const [projectName, setProjectName] = useState();
   //   const [projectDescription, setProjectDescription] = useState();
@@ -23,6 +24,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
   const handleShoww = () => setShoww(true);
 
   const getFiles = (files) => {
+    setFileName(files.name);
     const type = files.base64.split(";")[0].split(":")[1];
     // setType(type);
     // console.log(type);
@@ -44,16 +46,19 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
     } else if (
       newProject.projectName &&
       newProject.projectDescription &&
+      newProject.projectCost &&
       milestones100
     ) {
       // create new project
       const myObj = {
         projectName: newProject.projectName,
         projectDescription: newProject.projectDescription,
+        projectCost: newProject.projectCost,
         projectAssignedBy: JSON.parse(localStorage.getItem("user")).username,
         projectAssignedTo: newProject.assignTo,
         projectAssignedToId: newProject.assignToId,
         helpingMaterial: check,
+        fileName: fileName,
         hoursWorked: "3",
         hoursWorkedOn: "false",
         dueDate: milestones100,
@@ -82,6 +87,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
           setNewProject({
             projectName: "",
             projectDescription: "",
+            projectCost: "",
             assignTo: "",
             assignToId: "",
           });
@@ -136,16 +142,18 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             }
             className="inputTextFields"
           />
-          {/* <DatePicker
-            placeholderText="Due Date"
-            selected={newProject.dueDate}
-            onChange={(start) =>
-              setNewProject({ ...newProject, dueDate: start })
+          <input
+            type="number"
+            placeholder="Enter Project Cost"
+            value={newProject.projectCost}
+            onChange={(e) =>
+              setNewProject({
+                ...newProject,
+                projectCost: e.target.value,
+              })
             }
-            dateFormat="MM/dd/yyyy"
             className="inputTextFields"
-            minDate={new Date()}
-          /> */}
+          />
           {/* Milestones */}
           <DatePicker
             placeholderText="30% due Date"

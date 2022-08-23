@@ -73,6 +73,7 @@ const AllProjects = ({ user }) => {
   const [newProject, setNewProject] = useState({
     projectName: "",
     projectDescription: "",
+    projectCost: "",
     assignTo: "",
     assignToId: "",
     // milestones: [
@@ -102,14 +103,6 @@ const AllProjects = ({ user }) => {
         setProjects(records.data);
       })
       .catch((err) => console.log(err));
-
-    // if (searchInput?.length > 0) {
-    //   var searchedProjects = projects.filter((obj) => {
-    //     return obj.projectName.toLowerCase().match(searchInput);
-    //   });
-    //   console.log(searchedProjects);
-    //   setProjects(searchedProjects);
-    // }
   };
 
   const filterProjects = (category) => {
@@ -160,10 +153,35 @@ const AllProjects = ({ user }) => {
     setProjects(sortedAsc);
   };
 
+  const filterByAssigned = () => {
+    axios
+      .get("/myprojects/assigned")
+      .then((rec) => {
+        // console.log(rec);
+        setProjects(rec.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleVolunteerClick = (project) => {
+    axios
+      .post("/myprojects/acceptvolunteerproject", {
+        assignedTo: user.username,
+        assignedToId: user._id,
+        _id: project._id,
+      })
+      .then((rec) => {
+        // remove the project from Projects
+        const newProjects = projects.filter((proj) => proj._id != project._id);
+        setProjects(newProjects);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get("/myProjects");
-      console.log(res.data);
+      // console.log(res.data);
       setProjects(res.data);
     };
     fetchData().catch(console.error);
@@ -214,6 +232,13 @@ const AllProjects = ({ user }) => {
           <Button
             variant="contained"
             color="secondary"
+            onClick={filterByAssigned}
+          >
+            Not Assigned
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
             onClick={filterProjectsDate}
           >
             Sort By Due Date
@@ -228,14 +253,25 @@ const AllProjects = ({ user }) => {
         )}
       </div>
       <div className="allProjects">
-        {projects?.map((project) => {
-          {
-            console.log(role);
-          }
+        {projects?.map((project, index) => {
           if (role == "Employee" && user._id == project.projectAssignedToId) {
-            return <ProjectCard project={project} />;
+            return (
+              <ProjectCard
+                project={project}
+                role={role}
+                userEmail={user.email}
+              />
+            );
           } else if (role == "admin") {
             return <ProjectCard project={project} />;
+          } else if (!project.projectAssignedTo) {
+            return (
+              <ProjectCard
+                project={project}
+                volunteer={false}
+                handleVolunteerClick={handleVolunteerClick}
+              />
+            );
           }
         })}
       </div>

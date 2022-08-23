@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 var myBoardSchema = mongoose.Schema({
   empId: String,
   title: String,
-  relatedTo: String,
   color: String,
   boards: [
     {

@@ -30,7 +30,6 @@ router.post("/createboard", (req, res) => {
   var newBoard = new myBoard({
     empId: req.body.userId,
     title: "Title Not Set",
-    relatedTo: "",
     color: "#fff",
     boards: [
       {
@@ -52,7 +51,6 @@ router.put("/updateboard", (req, res) => {
     _id: req.body.bid,
     empId: req.body.uid,
     title: req.body.title,
-    relatedTo: "",
     boards: req.body.boards,
   });
   myBoard.findOneAndUpdate({ _id: req.body.bid }, updatedObj, (err, rec) => {
@@ -62,8 +60,8 @@ router.put("/updateboard", (req, res) => {
 });
 
 router.put("/updatecolor", (req, res) => {
-  console.log(req.body.bid);
-  console.log(req.body.color);
+  // console.log(req.body.bid);
+  // console.log(req.body.color);
 
   myBoard.findOneAndUpdate(
     { _id: req.body.bid },
