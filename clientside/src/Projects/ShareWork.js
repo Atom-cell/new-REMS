@@ -38,6 +38,7 @@ const ShareWork = ({ handleClose, show, project, userEmail }) => {
         .catch((err) => console.log(err));
     } else toast.error("Please Fill All Required Fields");
   };
+  
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>

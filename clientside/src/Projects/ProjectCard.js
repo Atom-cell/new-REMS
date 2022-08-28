@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@material-ui/core";
 import axios from "axios";
 import ShareWork from "./ShareWork";
+import { useNavigate } from "react-router-dom";
 
 const ProjectCard = ({
   project,
+  setProjects,
   volunteer,
   handleVolunteerClick,
   role,
   userEmail,
+  check,
+  widthh,
 }) => {
   var {
     projectName,
     projectAssignedBy,
     projectDescription,
+    projectPriority,
     projectCost,
     projectAssignedTo,
     hoursWorked,
@@ -24,10 +29,9 @@ const ProjectCard = ({
     fileName,
   } = project;
 
-  const [show, setShow] = useState(false);
+  const navigate = useNavigate();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [width, setWidth] = useState();
 
   const downloadPDF = (pdf) => {
     const linkSource = pdf;
@@ -38,6 +42,22 @@ const ProjectCard = ({
     downloadLink.download = fileName;
     downloadLink.click();
   };
+
+  useEffect(() => {
+    // find in project files whether completed=true
+    // get all the project files objects that has completed=true
+    // then compare which has most completion percentage
+    // store that
+    if (!widthh) {
+      const completeTrue = project.projectFiles.filter(
+        (pf) => pf.completed == true
+      );
+      const cp = completeTrue.map((ct) => ct.completionPercentage);
+      const max = Math.max(...cp);
+      if (Number.isFinite(max)) setWidth(`${max}%`);
+      else setWidth("0");
+    }
+  }, [project]);
 
   return (
     <div className="project-column">
@@ -51,7 +71,12 @@ const ProjectCard = ({
           Volunteer
         </Button>
       )}
-      <div className="featuredItem">
+      <div
+        className="featuredItem"
+        onClick={() => {
+          projectAssignedTo && setProjects(project, check, width);
+        }}
+      >
         <span className="featuredTitle">{projectName}</span>
         <div className="assigned-by">
           <span className="featuredSub">Assigned By: </span>
@@ -69,13 +94,17 @@ const ProjectCard = ({
         </div>
         <div className="project-description">
           <span className="featuredSub">Cost: </span>
-          <span>$ {projectCost}</span>
+          <span>${projectCost}</span>
+        </div>
+        <div className="project-description">
+          <span className="featuredSub">Priority: </span>
+          <span>{projectPriority}</span>
         </div>
         <div className="helping-material">
           <div
             className="menu"
             style={{
-              backgroundImage: `url(https://w7.pngwing.com/pngs/415/881/png-transparent-computer-icons-pdf-others-text-rectangle-logo.png)`,
+              backgroundImage: `url(/Images/pdf.png)`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               width: "100px",
@@ -96,24 +125,19 @@ const ProjectCard = ({
             <span>{dueDate.toString().slice(3, 15)}</span>
           )}
         </div>
-        {role == "Employee" && (
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{ marginTop: "10px" }}
-            onClick={handleShow}
-          >
-            Share Work
-          </Button>
-        )}
         <div className="progress">
-          {completed == "Completed" ? (
+          <div
+            className="progress-done"
+            style={{ opacity: "1", width: widthh ? widthh : width }}
+          >
+            {widthh ? widthh : width}
+          </div>
+          {/* {completed == "Completed" ? (
             <div
               className="progress-done"
               style={{ opacity: "1", width: "100%" }}
             >
               100%
-              {/* {milestones} */}
             </div>
           ) : (
             <div
@@ -121,19 +145,10 @@ const ProjectCard = ({
               style={{ opacity: "1", width: "30%" }}
             >
               30%
-              {/* {milestones} */}
             </div>
-          )}
+          )} */}
         </div>
       </div>
-      {show && (
-        <ShareWork
-          handleClose={handleClose}
-          show={show}
-          project={project}
-          userEmail={userEmail}
-        />
-      )}
     </div>
   );
 };

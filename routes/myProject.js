@@ -17,18 +17,66 @@ router.get("/", (req, res, next) => {
 // Get Completed Projects
 router.get("/completed", (req, res, next) => {
   // console.log(req.query.name);
-  myProject.find({ completed: "Completed" }).exec((error, records) => {
-    if (error) throw error;
-    res.json(records);
-  });
+  // find project
+  // search in project files that if completionPercentage==100 and completed==true then return
+  // "projectFiles._id": req.body.projectFileId,
+  // {
+  //   "projectFiles.completionPercentage": "100",
+  //   "projectFiles.completed": "true",
+  // }
+  // {$elemMatch: {description:"8989", zone:"front"}}
+  myProject
+    .find({
+      projectFiles: {
+        $elemMatch: {
+          completionPercentage: "100",
+          completed: "true",
+        },
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
 });
 
 // Get Incompleted Projects
 router.get("/incompleted", (req, res, next) => {
   // console.log(req.query.name);
-  myProject.find({ completed: "Incompleted" }).exec((error, records) => {
+  // get all projects whose completion percentage is 100 and completed is false
+  // also get all projects that does not have any completion percentage
+  // "projectFiles.completionPercentage": "100",
+  //     "projectFiles.completed": "true",
+  // { $or:[ {'_id':objId}, {'name':param}, {'nickname':param} ]}
+  //   {
+  //     $and: [
+  //         { $or: [{a: 1}, {b: 1}] },
+  //         { $or: [{c: 1}, {d: 1}] }
+  //     ]
+  // }
+  myProject.find({}).exec((error, records) => {
     if (error) throw error;
-    res.json(records);
+    // console.log(records);
+    // const x = records.filter((rec) => rec.projectFiles.length == 0);
+    myProject
+      .find({
+        $or: [
+          { "projectFiles.completed": { $ne: true } },
+          {
+            projectFiles: {
+              $elemMatch: {
+                completionPercentage: "100",
+                completed: "false",
+              },
+            },
+          },
+        ],
+      })
+      .exec((err, rec) => {
+        if (error) res.status(500).json(err);
+        // console.table(rec);
+        res.status(200).json(rec);
+      });
   });
 });
 // get not assigned projects
@@ -97,6 +145,38 @@ router.post("/acceptvolunteerproject", (req, res) => {
       if (error) res.status(500).send(error);
       res.status(200).json(records);
     });
+});
+
+router.post("/uploadmilestonefile", (req, res) => {
+  // get project id
+  // add project file in the giver project id
+  // console.log(req.body.fileObj.completionPercentage);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $push: { projectFiles: req.body.fileObj } },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
+});
+
+router.post("/markprojectcompletion", (req, res) => {
+  // console.log(req.body.completed);
+
+  myProject.findOneAndUpdate(
+    {
+      _id: req.body.projectId,
+      "projectFiles._id": req.body.projectFileId,
+    },
+    { $set: { "projectFiles.$.completed": req.body.completed } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.log(rec);
+      res.status(200).json(rec);
+    }
+  );
 });
 
 router.post("/sendemail", async (req, res) => {

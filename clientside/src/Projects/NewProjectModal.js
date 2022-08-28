@@ -54,6 +54,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
         projectName: newProject.projectName,
         projectDescription: newProject.projectDescription,
         projectCost: newProject.projectCost,
+        projectPriority: newProject.priority,
         projectAssignedBy: JSON.parse(localStorage.getItem("user")).username,
         projectAssignedTo: newProject.assignTo,
         projectAssignedToId: newProject.assignToId,
@@ -78,6 +79,10 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
         ],
         completed: "Incompleted",
       };
+      if (!newProject.priority) {
+        myObj.projectPriority = "Normal";
+      }
+      // console.log(myObj);
       //   console.table(myObj);
       axios
         .post("/myProjects/addNewProject", myObj)
@@ -179,15 +184,26 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             className="inputTextFields"
             minDate={new Date()}
           />
-          {/* <input
-            type="text"
-            placeholder="Set Milestones"
-            value={newProject.milestones}
+          <select
+            name=""
+            id=""
+            value={newProject.priority}
             onChange={(e) =>
-              setNewProject({ ...newProject, milestones: e.target.value })
+              setNewProject({ ...newProject, priority: e.target.value })
             }
-            className="inputTextFields"
-          /> */}
+            style={{
+              width: "100%",
+              marginTop: "10px",
+              fontSize: "large",
+              border: "none",
+              borderBottom: "2px solid gray",
+              outline: "none",
+            }}
+          >
+            <option value="Normal">Normal</option>
+            <option value="Important">Important</option>
+            <option value="Critical">Critical</option>
+          </select>
           {newProject.assignTo && (
             <input
               type="text"

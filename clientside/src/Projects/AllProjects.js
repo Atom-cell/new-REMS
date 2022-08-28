@@ -6,6 +6,7 @@ import ProjectCard from "./ProjectCard";
 import NewProjectModal from "./NewProjectModal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import ProjectInfo from "./ProjectInfo";
 // var getProjects = [
 //   {
 //     _id: 1,
@@ -70,12 +71,14 @@ import axios from "axios";
 // ];
 const AllProjects = ({ user }) => {
   const [projects, setProjects] = useState();
+  const [width, setWidth] = useState("0");
   const [newProject, setNewProject] = useState({
     projectName: "",
     projectDescription: "",
     projectCost: "",
     assignTo: "",
     assignToId: "",
+    priority: "",
     // milestones: [
     //   {
     //     completionPercentage: "",
@@ -87,6 +90,7 @@ const AllProjects = ({ user }) => {
 
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [searchInput, setSearchInput] = useState();
+  const [showProjectInfo, setShowProjectInfo] = useState(true);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -99,18 +103,110 @@ const AllProjects = ({ user }) => {
     axios
       .get(`/myprojects/${e.target.value}`)
       .then((records) => {
-        console.log(records.data);
+        // console.log(records.data);
         setProjects(records.data);
       })
       .catch((err) => console.log(err));
   };
 
-  const filterProjects = (category) => {
+  // const filterProjects = (category) => {
+  //   if (category == "All") {
+  //     //   setProjects(getProjects);
+  //     axios
+  //       .get("/myProjects")
+  //       .then((records) => {
+  //         console.log(records.data);
+  //         setProjects(records.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //     return;
+  //   } else if (category == "Completed") {
+  //     axios
+  //       .get("/myProjects/completed")
+  //       .then((records) => {
+  //         setProjects(records.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //     return;
+  //   } else if (category == "Incompleted") {
+  //     axios
+  //       .get("/myProjects/incompleted")
+  //       .then((records) => {
+  //         setProjects(records.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //     return;
+  //   }
+  //   // const newFilterProjects = projects.filter(
+  //   //   (project) => project.completed == category
+  //   // );
+  //   // setProjects(newFilterProjects);
+  // };
+
+  // const filterProjectsDate = () => {
+  //   // const convertStringDatesToDate = projects.map((obj) => {
+  //   //   return { ...obj, dueDate: new Date(obj.dueDate) };
+  //   // });
+
+  //   // Sort in Ascending order (low to high) i-e 2012,2013
+  //   const sortedAsc = projects
+  //     .map((obj) => {
+  //       return { ...obj, dueDate: new Date(obj.dueDate) };
+  //     })
+  //     .sort((a, b) => a.dueDate - b.dueDate);
+  //   // console.log(sortedAsc);
+  //   setProjects(sortedAsc);
+  // };
+
+  // const filterByAssigned = () => {
+  //   axios
+  //     .get("/myprojects/assigned")
+  //     .then((rec) => {
+  //       // console.log(rec);
+  //       setProjects(rec.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  // const filterByPriority = () => {
+  //   axios
+  //     .get("/myprojects")
+  //     .then((rec) => {
+  //       // console.log(rec);
+  //       const order = ["Critical", "Important", "Normal"];
+  //       const filterByPriorityProjects = rec.data.sort(
+  //         (x, y) =>
+  //           order.indexOf(x.projectPriority) - order.indexOf(y.projectPriority)
+  //       );
+  //       console.log(filterByPriorityProjects);
+  //       setProjects(filterByPriorityProjects);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  const handleVolunteerClick = (project) => {
+    axios
+      .post("/myprojects/acceptvolunteerproject", {
+        assignedTo: user.username,
+        assignedToId: user._id,
+        _id: project._id,
+      })
+      .then((rec) => {
+        // remove the project from Projects
+        const newProjects = projects.filter((proj) => proj._id != project._id);
+        setProjects([...newProjects, rec.data]);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFilterChange = (e) => {
+    const category = e.target.value;
     if (category == "All") {
       //   setProjects(getProjects);
       axios
         .get("/myProjects")
         .then((records) => {
+          // console.log(records.data);
           setProjects(records.data);
         })
         .catch((err) => console.log(err));
@@ -127,55 +223,69 @@ const AllProjects = ({ user }) => {
       axios
         .get("/myProjects/incompleted")
         .then((records) => {
+          // console.log(records.data);
           setProjects(records.data);
         })
         .catch((err) => console.log(err));
       return;
+    } else if (category == "Not Assigned") {
+      axios
+        .get("/myprojects/assigned")
+        .then((rec) => {
+          // console.log(rec);
+          setProjects(rec.data);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Sort By Priority") {
+      axios
+        .get("/myprojects")
+        .then((rec) => {
+          // console.log(rec);
+          const order = ["Critical", "Important", "Normal"];
+          const filterByPriorityProjects = rec.data.sort(
+            (x, y) =>
+              order.indexOf(x.projectPriority) -
+              order.indexOf(y.projectPriority)
+          );
+          console.log(filterByPriorityProjects);
+          setProjects(filterByPriorityProjects);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Sort By Date") {
+      // const convertStringDatesToDate = projects.map((obj) => {
+      //   return { ...obj, dueDate: new Date(obj.dueDate) };
+      // });
+
+      // Sort in Ascending order (low to high) i-e 2012,2013
+      const sortedAsc = projects
+        .map((obj) => {
+          return { ...obj, dueDate: new Date(obj.dueDate) };
+        })
+        .sort((a, b) => a.dueDate - b.dueDate);
+      // console.log(sortedAsc);
+      setProjects(sortedAsc);
+      return;
     }
-    // const newFilterProjects = projects.filter(
-    //   (project) => project.completed == category
-    // );
-    // setProjects(newFilterProjects);
   };
 
-  const filterProjectsDate = () => {
-    // const convertStringDatesToDate = projects.map((obj) => {
-    //   return { ...obj, dueDate: new Date(obj.dueDate) };
-    // });
-
-    // Sort in Ascending order (low to high) i-e 2012,2013
-    const sortedAsc = projects
-      .map((obj) => {
-        return { ...obj, dueDate: new Date(obj.dueDate) };
-      })
-      .sort((a, b) => a.dueDate - b.dueDate);
-    // console.log(sortedAsc);
-    setProjects(sortedAsc);
-  };
-
-  const filterByAssigned = () => {
-    axios
-      .get("/myprojects/assigned")
-      .then((rec) => {
-        // console.log(rec);
-        setProjects(rec.data);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const handleVolunteerClick = (project) => {
-    axios
-      .post("/myprojects/acceptvolunteerproject", {
-        assignedTo: user.username,
-        assignedToId: user._id,
-        _id: project._id,
-      })
-      .then((rec) => {
-        // remove the project from Projects
-        const newProjects = projects.filter((proj) => proj._id != project._id);
-        setProjects(newProjects);
-      })
-      .catch((err) => console.log(err));
+  const handleClickOnProject = (project, check, wid) => {
+    setWidth(wid);
+    if (check) {
+      axios
+        .get("/myProjects")
+        .then((records) => {
+          setProjects(records.data);
+          setShowProjectInfo(true);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // console.log(project);
+      // console.log(check);
+      setProjects([project]);
+      setShowProjectInfo(false);
+    }
   };
 
   useEffect(() => {
@@ -189,100 +299,113 @@ const AllProjects = ({ user }) => {
 
   return (
     <div className="projectContainer">
-      <div className="project-header">
-        <div className="search-container">
-          {/* <input
-            type="text"
-            placeholder="Search Project"
-            value={searchInput}
-            onChange={handleSearchChange}
-          /> */}
-          <Form.Control
-            type="search"
-            placeholder="Search Projects"
-            className="me-2"
-            aria-label="Search"
-            value={searchInput}
-            onChange={handleSearchChange}
-            style={{ boxShadow: "#da0d50 !important" }}
-          />
-        </div>
-        <div className="project-button-container">
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => filterProjects("All")}
-          >
-            All
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => filterProjects("Completed")}
-          >
-            Completed
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => filterProjects("Incompleted")}
-          >
-            InCompleted
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={filterByAssigned}
-          >
-            Not Assigned
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={filterProjectsDate}
-          >
-            Sort By Due Date
-          </Button>
-        </div>
-        {role == "Employee" ? null : (
-          <div className="create-project">
-            <Button variant="contained" color="secondary" onClick={handleShow}>
-              Create Project
-            </Button>
+      {showProjectInfo ? (
+        <>
+          <div className="project-header">
+            <div className="search-container">
+              <Form.Control
+                type="search"
+                placeholder="Search Projects"
+                className="me-2"
+                aria-label="Search"
+                value={searchInput}
+                onChange={handleSearchChange}
+                style={{ boxShadow: "#da0d50 !important" }}
+              />
+            </div>
+            <div className="project-button-container">
+              <select className="selectFilter" onChange={handleFilterChange}>
+                <option value="All">All</option>
+                <option value="Completed">Completed</option>
+                <option value="Incompleted">Incompleted</option>
+                <option value="Not Assigned">Not Assigned</option>
+                <option value="Sort By Priority">Sort By Priority</option>
+                <option value="Sort By Date">Sort By Date</option>
+              </select>
+            </div>
+            {role == "Employee" ? null : (
+              <div className="create-project">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleShow}
+                >
+                  Create Project
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div className="allProjects">
-        {projects?.map((project, index) => {
-          if (role == "Employee" && user._id == project.projectAssignedToId) {
-            return (
-              <ProjectCard
-                project={project}
-                role={role}
-                userEmail={user.email}
-              />
-            );
-          } else if (role == "admin") {
-            return <ProjectCard project={project} />;
-          } else if (!project.projectAssignedTo) {
-            return (
-              <ProjectCard
-                project={project}
-                volunteer={false}
-                handleVolunteerClick={handleVolunteerClick}
-              />
-            );
-          }
-        })}
-      </div>
+          {projects?.length < 1 && (
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "10%",
+              }}
+            >
+              <h1>NO PROJECTS TO SHOW</h1>
+            </div>
+          )}
+          <div className="allProjects">
+            {projects?.map((project, index) => {
+              if (
+                role == "Employee" &&
+                user._id == project.projectAssignedToId
+              ) {
+                return (
+                  <ProjectCard
+                    project={project}
+                    setProjects={handleClickOnProject}
+                    role={role}
+                    userEmail={user.email}
+                  />
+                );
+              } else if (role == "admin") {
+                return (
+                  <ProjectCard
+                    project={project}
+                    setProjects={handleClickOnProject}
+                  />
+                );
+              } else if (!project.projectAssignedTo) {
+                return (
+                  <ProjectCard
+                    project={project}
+                    setProjects={handleClickOnProject}
+                    volunteer={false}
+                    handleVolunteerClick={handleVolunteerClick}
+                  />
+                );
+              }
+            })}
+          </div>
 
-      {show && (
-        <NewProjectModal
-          handleClose={handleClose}
-          show={show}
-          newProject={newProject}
-          setNewProject={setNewProject}
-        />
+          {show && (
+            <NewProjectModal
+              handleClose={handleClose}
+              show={show}
+              newProject={newProject}
+              setNewProject={setNewProject}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          {/* <ProjectCard
+            project={projects[0]}
+            setProjects={handleClickOnProject}
+            role={role}
+            userEmail={user.email}
+          /> */}
+          {projects && (
+            <ProjectInfo
+              user={user}
+              project={projects[0]}
+              setProjects={handleClickOnProject}
+              width={width}
+              setWidth={setWidth}
+            />
+          )}
+        </>
       )}
     </div>
   );

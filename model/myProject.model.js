@@ -11,6 +11,9 @@ var myProjectSchema = mongoose.Schema({
   projectCost: {
     type: String,
   },
+  projectPriority: {
+    type: String,
+  },
   projectAssignedBy: {
     type: String,
   },
@@ -39,6 +42,14 @@ var myProjectSchema = mongoose.Schema({
     {
       completionPercentage: String,
       dueDate: String,
+    },
+  ],
+  projectFiles: [
+    {
+      file: String,
+      fileName: String,
+      completionPercentage: String,
+      completed: Boolean,
     },
   ],
   completed: {

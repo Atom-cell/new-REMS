@@ -30,6 +30,7 @@ import io from "socket.io-client";
 import AllProjects from "./Projects/AllProjects";
 import AllBoards from "./Boards/AllBoards";
 import Boards from "./Boards/Boards";
+// import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
 
 const App = () => {
@@ -162,6 +163,7 @@ const App = () => {
           <Route path="/projects" element={<AllProjects user={loggedUser} />} />
           <Route path="/allboards" element={<AllBoards user={loggedUser} />} />
           <Route path="/boards/:bid" element={<Boards user={loggedUser} />} />
+          {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
         </Route>
       </Routes>
       <ToastContainer />

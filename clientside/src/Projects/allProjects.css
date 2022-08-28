@@ -41,3 +41,11 @@
     box-shadow: 0 0 0 0.1rem #da0d50 !important;
     background-color: transparent;
 }
+.selectFilter{
+	/* border: 2px solid grey; */
+	border-radius: 5px;
+	font-size: larger;
+	border: none;
+	border-bottom:2px solid gray;
+	outline: none;
+}
