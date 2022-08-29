@@ -10,8 +10,8 @@ var myCal = require("../model/myCalender.model");
 /* GET My Calendar. */
 // show only the events of the user logged in
 router.get("/", function (req, res, next) {
-  console.log(req.query.name);
-  myCal.find({madeBy:req.query.name}).exec((error, records) => {
+  // console.log(req.query.userId);
+  myCal.find({ madeBy: req.query.userId }).exec((error, records) => {
     if (error) throw error;
     res.json(records);
   });
@@ -30,8 +30,9 @@ router.post("/addNewEvent", function (req, res, next) {
   });
 
   // res.json(newEvent);
-  newEvent.save(function (err) {
+  newEvent.save(function (err, rec) {
     if (err) console.log("error", err);
+    res.status(200).json(rec);
     // saved!
   });
 });
@@ -53,7 +54,7 @@ router.route("/updateEvent").put(function (req, res) {
       if (err) {
         res.send(err);
       } else {
-        res.json(result);
+        res.status(200).json(result);
       }
     }
   );
@@ -62,9 +63,9 @@ router.route("/updateEvent").put(function (req, res) {
 // delete an event
 router.delete("/deleteEvent", function (req, res, next) {
   // console.log(req.body._id);
-  myCal.findOneAndRemove({ _id: req.body._id }, function (err) {
+  myCal.findOneAndRemove({ _id: req.body._id }, function (err, rec) {
     if (err) console.log("Error " + err);
-    console.log("Removed");
+    res.status(200).json(rec);
   });
 });
 

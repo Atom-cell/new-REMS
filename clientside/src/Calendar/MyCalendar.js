@@ -6,15 +6,14 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Modal from "./Modal";
+import AddEventModal from "./AddEventModal";
 import axios from "axios";
 import EditModal from "./EditModal";
-import { Link } from "react-router-dom";
-import moment from "moment";
 import "./mycalendar.css";
+import { toast } from "react-toastify";
 import AddCircleOutlineRoundedIcon from "@material-ui/icons/AddCircleOutlineRounded";
+import MoreEvents from "./MoreEvents";
 const locales = {
   "en-US": enUS,
 };
@@ -49,7 +48,7 @@ const localizer = dateFnsLocalizer({
 //   },
 // ]
 
-const MyCalendar = ({ name }) => {
+const MyCalendar = ({ user }) => {
   const [allEvents, setAllEvents] = useState();
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -57,23 +56,27 @@ const MyCalendar = ({ name }) => {
   const [event, setEvent] = useState(); // handle modal events
   const [calendarData, setCalendarData] = useState(null); // handling filter
   const [newEvent, setNewEvent] = useState({ title: "", start: null });
-  useEffect(() => {
-    const fetchData = async () => {
-      // get the data from the api
-      const res = await axios.get("http://localhost:5000/myCalendar", {
-        params: {
-          name: name,
-        },
-      });
-      // console.log(res.data);
-      setCalendarData(res.data);
-      setAllEvents(res.data);
-    };
 
-    // call the function
-    fetchData()
-      // make sure to catch any error
-      .catch(console.error);
+  const [moreEvents, setMoreEvents] = useState();
+  const [showMoreEvents, setShowMoreEvents] = useState(false);
+
+  const handleCloseMoreEvents = () => setShowMoreEvents(false);
+  const handleShowMoreEvents = () => setShowMoreEvents(true);
+
+  const handleClose = () => setModalOpen(false);
+  const handleShow = () => setModalOpen(true);
+
+  const handleClosee = () => setEditModalOpen(false);
+  const handleShoww = () => setEditModalOpen(true);
+
+  useEffect(() => {
+    axios
+      .get("/myCalendar/", { params: { userId: user._id } })
+      .then((res) => {
+        setCalendarData(res.data);
+        setAllEvents(res.data);
+      })
+      .catch((err) => console.log(err));
   }, [newEvent]);
 
   // function to add a new event
@@ -87,7 +90,7 @@ const MyCalendar = ({ name }) => {
     // console.log(newEvent.start);
     var myObj = {
       // _id: Math.floor(Math.random() * 10000),
-      madeBy: name,
+      madeBy: user._id,
       title: newEvent.title,
       startDate: newEvent.start,
       category: newEvent.category,
@@ -95,9 +98,8 @@ const MyCalendar = ({ name }) => {
     axios
       .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
       .then((res) => {
-        console.log("Event Added: " + res.data);
-        // console.log(res);
-        // console.log(res.data);
+        // console.log("Event Added: " + res.data);
+        toast.success(`${res.data.title} Added`);
       });
     setNewEvent({ title: "", start: null });
     setModalOpen(false);
@@ -141,7 +143,7 @@ const MyCalendar = ({ name }) => {
     // console.log(typeof eventPassed.startDate);
     var myObj = {
       _id: eventPassed._id,
-      madeBy: name,
+      madeBy: user._id,
       title: eventPassed.title,
       startDate: eventPassed.startDate,
       // endDate: eventPassed.endDate,
@@ -152,6 +154,7 @@ const MyCalendar = ({ name }) => {
       .put("http://localhost:5000/myCalendar/updateEvent", myObj)
       .then((res) => {
         console.log("Updated" + res.data);
+        toast.success(`${res.data.title} Updated`);
         // console.log(res);
         // console.log(res.data);
       });
@@ -168,7 +171,8 @@ const MyCalendar = ({ name }) => {
         .delete("http://localhost:5000/myCalendar/deleteEvent", {
           data: { _id: event._id },
         })
-        .then(() => console.log("Deleted"));
+        .then((res) => toast.success(`${res.data.title} Deleted`))
+        .catch((err) => console.log(err));
     }
     setNewEvent({ title: "", start: null });
     setEditModalOpen(false);
@@ -177,65 +181,87 @@ const MyCalendar = ({ name }) => {
   return (
     <div className="calendar-container">
       {modalOpen && (
-        <Modal
-          setModalOpen={setModalOpen}
+        <AddEventModal
           newEvent={newEvent}
           setNewEvent={setNewEvent}
           addNewEvent={addNewEvent}
+          modalOpen={modalOpen}
+          handleClose={handleClose}
         />
       )}
       {editModalOpen && (
         <EditModal
-          setEditModalOpen={setEditModalOpen}
           event={event}
           setEvent={setEvent}
           updateEvent={updateEvent}
           deleteEvent={deleteEvent}
+          editModalOpen={editModalOpen}
+          handleClosee={handleClosee}
         />
       )}
-      {!modalOpen && !editModalOpen && (
-        <div className="calendar">
-          <div className="calendar-header">
-            <div className="calendar-header-button">
-              <button onClick={() => setModalOpen(true)}>
-                <AddCircleOutlineRoundedIcon />
-                <span>Add Events</span>
-              </button>
-            </div>
-            <div className="calendar-header-h2">
-              <h2>{name} Calendar</h2>
-            </div>
-            <div className="selectContainer">
-              <label>Filter Calendar </label>
-              <select
-                id="framework"
-                value={filterOptionValue}
-                onChange={handlefilter}
-              >
-                <option value="All">All</option>
-                <option value="Goal">Goal</option>
-                <option value="Reminder">Reminder</option>
-              </select>
-            </div>
+      {/* {!modalOpen && !editModalOpen && ( */}
+      <div className="calendar-container">
+        {/* <div className="calendar-header">
+          <div className="calendar-header-h2">
+            <h2>{user?.username} Calendar</h2>
           </div>
+          <div className="selectContainer">
+            <button onClick={handleShow}>Add Events</button>
+            <select
+              id="framework"
+              value={filterOptionValue}
+              onChange={handlefilter}
+            >
+              <option value="All">All</option>
+              <option value="Goal">Goal</option>
+              <option value="Reminder">Reminder</option>
+            </select>
+          </div>
+        </div> */}
+        <div className="selectContainer">
+          <button onClick={handleShow}>Add Events</button>
+          <select
+            id="framework"
+            value={filterOptionValue}
+            onChange={handlefilter}
+          >
+            <option value="All">All</option>
+            <option value="Goal">Goal</option>
+            <option value="Reminder">Reminder</option>
+          </select>
+        </div>
+        <div className="calendar">
           <Calendar
             localizer={localizer}
             events={allEvents}
             startAccessor="startDate"
             endAccessor="startDate"
             onSelectEvent={(event) => eventSelected(event)}
+            onShowMore={(me) => {
+              setMoreEvents(me);
+              handleShowMoreEvents();
+            }}
             // defaultView={'day'}
             views={["month", "agenda"]}
             // , "day", "work_week"
-            style={{ height: "400px", margin: "0 50px 0 50px" }}
+            style={{ height: "82vh", margin: "0 20px 0 20px" }}
             eventPropGetter={(event) => {
               const backgroundColor =
-                event.category == "Reminder" ? "#8248de" : "#9c64f5";
+                event.category == "Reminder" ? "#8248de" : "#c28cfc";
               return { style: { backgroundColor } };
             }}
           />
+          {showMoreEvents && (
+            <MoreEvents
+              show={showMoreEvents}
+              handleClose={handleCloseMoreEvents}
+              moreEvents={moreEvents}
+              eventSelected={eventSelected}
+            />
+          )}
         </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   );
 };

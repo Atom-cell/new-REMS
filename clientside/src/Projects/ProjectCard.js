@@ -24,7 +24,6 @@ const ProjectCard = ({
     hoursWorked,
     dueDate,
     milestones,
-    completed,
     helpingMaterial,
     fileName,
   } = project;
@@ -132,21 +131,6 @@ const ProjectCard = ({
           >
             {widthh ? widthh : width}
           </div>
-          {/* {completed == "Completed" ? (
-            <div
-              className="progress-done"
-              style={{ opacity: "1", width: "100%" }}
-            >
-              100%
-            </div>
-          ) : (
-            <div
-              className="progress-done"
-              style={{ opacity: "1", width: "30%" }}
-            >
-              30%
-            </div>
-          )} */}
         </div>
       </div>
     </div>

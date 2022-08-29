@@ -125,7 +125,7 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
           <thead>
             <tr>
               <th>File Name</th>
-              <th>Download</th>
+              <th>File</th>
               <th>Milestone</th>
               {user?.role == "admin" && <th>Mark</th>}
               {user?.role == "Employee" && <th>Completed</th>}

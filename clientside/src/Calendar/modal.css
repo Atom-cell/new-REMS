@@ -77,8 +77,11 @@
     transition: border-color 0.2s;
 }
 .selectContainerModal{
-    margin: 20px 0 20px 0; 
-    padding: 5px;
-    display: flex;
-    align-items: center;
+    margin: 10px 0 10px 0;
+}
+.selectContainerModal select{
+    width: 100%;
+    border-radius: 5px;
+	border: none;
+	outline: none;
 }

@@ -1,49 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import "./modal.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { parseISO, format } from "date-fns";
 const EditModal = ({
-  setEditModalOpen,
   event,
   setEvent,
   updateEvent,
   deleteEvent,
+  editModalOpen,
+  handleClosee,
 }) => {
-  // console.log(date);
-  // const convertDate = str => {
-  //     str = str.toString();
-  //     let parts = str.split(" ");
-  //     let months = {
-  //       Jan: "01",
-  //       Feb: "02",
-  //       Mar: "03",
-  //       Apr: "04",
-  //       May: "05",
-  //       Jun: "06",
-  //       Jul: "07",
-  //       Aug: "08",
-  //       Sep: "09",
-  //       Oct: "10",
-  //       Nov: "11",
-  //       Dec: "12"
-  //     };
-  //     return months[parts[1]] + "-" + parts[2] + "-" + parts[3];
-  //   };
   return (
     <div className="add-new-event-container">
-      <h1>Edit Event</h1>
-      <div className="modalBackground">
-        <div className="modalContainer">
-          <div className="titleCloseBtn">
-            <button
-              onClick={() => {
-                setEditModalOpen(false);
-              }}
-            >
-              X
-            </button>
-          </div>
+      <Modal show={editModalOpen} onHide={handleClosee}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Event</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <div>
             <input
               type="text"
@@ -64,20 +39,6 @@ const EditModal = ({
               className="inputTextFields"
               minDate={new Date()}
             />
-
-            {/* <input type="text" value={event.endDate} className="inputTextFields"  onChange={(e) => setEvent({ ...event, endDate: e.target.value })}/> */}
-            {/* <DatePicker
-            format="yyyy-MM-dd"
-            selected={event.startDate}
-            onChange={(start) => setEvent({ ...event, startDate: start })}
-            className="inputTextFields"
-          />
-          <DatePicker
-            format="yyyy-MM-dd"
-            selected={event.endDate}
-            onChange={(end) => setEvent({ ...event, endDate: end })}
-            className="inputTextFields"
-          /> */}
             <div className="inputTextFields selectContainerModal">
               {/* <label for="framework">Select Event Category</label> */}
               <select
@@ -94,29 +55,19 @@ const EditModal = ({
               </select>
             </div>
           </div>
-          <div className="modal-footer">
-            <button
-              onClick={() => {
-                setEditModalOpen(false);
-              }}
-              id="cancelBtn"
-            >
-              Cancel
-            </button>
-            <button id="cancelBtn" onClick={() => deleteEvent(event)}>
-              Delete Event
-            </button>
-            <button
-              onClick={() => {
-                //   console.log(event);
-                updateEvent(event);
-              }}
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClosee}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={() => deleteEvent(event)}>
+            Delete
+          </Button>
+          <Button variant="primary" onClick={() => updateEvent(event)}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import moment from "moment";
 import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import axios from "axios";
 import "./meeting.css";
 import ReactLoading from "react-loading";
-import SetMeeting from "./SetMeeting";
-import { Table, Button, Dropdown, Spinner } from "react-bootstrap";
+import { Table } from "react-bootstrap";
+import "./allmeetings.css";
 const AllMeetings = () => {
+  const navigate = useNavigate();
   const [allMeetings, setAllMeetings] = useState();
   // const [headers, setHeaders] = useState();
   const [loading, setLoading] = useState(true);
@@ -81,8 +82,16 @@ const AllMeetings = () => {
           <ReactLoading type="spin" color="#fafa" height={667} width={375} />
         </div>
       ) : (
-        <div className="all-meetings-container">
-          <h1 style={{ textAlign: "center" }}>All Meetings</h1>
+        <div
+          className="all-meetings-container"
+          style={{
+            marginRight: "30px",
+            marginLeft: "30px",
+          }}
+        >
+          <div className="all-meetings-button">
+            <button onClick={() => navigate("/setMeeting")}>Set Meeting</button>
+          </div>
           <Table hover bordered className="all-meetings-table">
             <thead>
               <tr>

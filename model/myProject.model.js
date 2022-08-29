@@ -52,9 +52,6 @@ var myProjectSchema = mongoose.Schema({
       completed: Boolean,
     },
   ],
-  completed: {
-    type: String,
-  },
 });
 
 module.exports = myProject = mongoose.model("myProject", myProjectSchema);

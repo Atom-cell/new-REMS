@@ -77,7 +77,6 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             dueDate: milestones100,
           },
         ],
-        completed: "Incompleted",
       };
       if (!newProject.priority) {
         myObj.projectPriority = "Normal";

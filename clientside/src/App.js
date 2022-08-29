@@ -117,9 +117,7 @@ const App = () => {
           <Route path="/log" element={<Log />} />
           <Route
             path="/myCalendar"
-            element={
-              username ? <MyCalendar username={username} /> : console.log("")
-            }
+            element={loggedUser && <MyCalendar user={loggedUser} />}
           />
           <Route
             path="/myTeamCalendar"

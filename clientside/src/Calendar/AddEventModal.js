@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import "./modal.css";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+// import "./modal.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
+const AddEventModal = ({
+  newEvent,
+  setNewEvent,
+  addNewEvent,
+  modalOpen,
+  handleClose,
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const handleSelectedChange = (e) => {
     setNewEvent({ ...newEvent, category: e.target.value });
@@ -11,23 +19,16 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
   };
   return (
     <div className="add-new-event-container">
-      <h1>Add New Event</h1>
-      <div className="modalBackground">
-        <div className="modalContainer">
-          <div className="titleCloseBtn">
-            <button
-              onClick={() => {
-                setModalOpen(false);
-              }}
-            >
-              X
-            </button>
-          </div>
+      <Modal show={modalOpen} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Event</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <div>
             <input
               type="text"
               placeholder="Add Meet Title"
-              value={newEvent.title}
+              value={newEvent?.title}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, title: e.target.value })
               }
@@ -35,7 +36,7 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
             />
             <DatePicker
               placeholderText="Start Date & Time"
-              selected={newEvent.start}
+              selected={newEvent?.start}
               onChange={(start) => setNewEvent({ ...newEvent, start: start })}
               timeInputLabel="Time:"
               dateFormat="MM/dd/yyyy h:mm"
@@ -44,10 +45,9 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               minDate={new Date()}
             />
             <div className="inputTextFields selectContainerModal">
-              {/* <label>Select Event Category</label> */}
               <select
                 id="framework"
-                value={newEvent.category}
+                value={newEvent?.category}
                 onChange={handleSelectedChange}
               >
                 <option value="" selected="selected">
@@ -58,21 +58,18 @@ const Modal = ({ setModalOpen, newEvent, setNewEvent, addNewEvent }) => {
               </select>
             </div>
           </div>
-          <div className="modal-footer">
-            <button
-              onClick={() => {
-                setModalOpen(false);
-              }}
-              id="cancelBtn"
-            >
-              Cancel
-            </button>
-            <button onClick={() => addNewEvent(newEvent)}>Add Event</button>
-          </div>
-        </div>
-      </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => addNewEvent(newEvent)}>
+            Add Event
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
 
-export default Modal;
+export default AddEventModal;
