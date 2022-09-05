@@ -1,0 +1,21 @@
+.user-chat-topbar span{
+    font-size: large;
+}
+.user-chat-nav li{
+    /* margin: 0 10px; */
+    margin-right: 15px;
+}
+.user-chat-nav li svg{
+    /* font-size: 28px; */
+    fill: #51ad70 !important;
+    /* margin-right: 10px; */
+    margin: 0 10px;
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 40px;
+}
+.user-chat-nav li svg:hover{
+    background-color: #4eac6d !important;
+    fill: #edf7f0 !important;
+    cursor: pointer;
+}

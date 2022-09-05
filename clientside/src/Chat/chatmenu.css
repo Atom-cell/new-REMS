@@ -1,0 +1,32 @@
+/* .plus-button-check{
+    background-color: #edf7f0 !important;
+}
+.plus-button-check svg{
+    fill: #51ad70 !important;
+}
+.plus-button-check:hover, .plus-button-check svg:hover{
+    background-color: #4eac6d !important;
+    fill: #edf7f0 !important;
+} */
+.plus-button svg{
+    background-color: #edf7f0 !important;
+    fill: #51ad70 !important;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 35px;
+}
+.plus-button svg:hover{
+    background-color: #4eac6d !important;
+    fill: #edf7f0 !important;
+    cursor: pointer;
+}
+.chat-menu-search-bar input{
+    background-color: #e4f4ec !important;
+}
+.chat-menu-search-bar input:focus{
+    box-shadow: none !important;
+}
+.chatMenuWrapper{
+    background-color: #ffffff;
+    /* border: 2px solid #4eac6d; */
+}

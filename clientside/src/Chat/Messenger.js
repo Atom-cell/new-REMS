@@ -6,51 +6,47 @@ import "./messenger.css";
 import axios from "axios";
 import SearchBar from "../Componentss/SearchBar";
 import Button from "@mui/material/Button";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import SendIcon from "@mui/icons-material/Send";
 import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
+import Alert from "react-bootstrap/Alert";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import io from "socket.io-client";
+import ChatMenu from "./ChatMenu";
+import ChatBoxHeader from "./ChatBoxHeader";
+import FileUpload from "./FileUpload";
 const socket = io.connect("http://localhost:8900");
 
-const Messenger = ({
-  onlineUsers,
-  setOnlineUsers,
-  notify,
-  arrivalMessage,
-  setArrivalMessage,
-}) => {
+const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   const [newMessage, setNewMessage] = useState();
   const [conversations, setConversations] = useState();
   const [messages, setMessages] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const scrollRef = useRef();
-  const [employees, setEmployees] = useState([]);
+  const [showOnlineUsers, setShowOnlineUsers] = useState(true);
   const [friend, setFriend] = useState();
 
-  const [user, setUser] = useState([]);
-
-  const [check, setCheck] = useState();
+  const [file, setFile] = useState();
 
   const getFiles = (files) => {
-    const type = files.base64.split(";")[0].split(":")[1];
-    console.log(type);
-    if (
-      type.includes("image") ||
-      type.includes("video") ||
-      type.includes("pdf")
-    ) {
-      setCheck(files.base64);
-    } else {
-      toast.info("you can only send image or pdf or video");
-    }
+    setFile(files);
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      // console.log(user);
-      setUser(user);
-    }
-  }, []);
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      {showOnlineUsers ? "Hide Online Users" : "Show Online Users"}
+    </Tooltip>
+  );
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   if (user) {
+  //     // console.log(user);
+  //     setUser(user);
+  //   }
+  // }, []);
 
   useEffect(() => {
     arrivalMessage &&
@@ -76,6 +72,7 @@ const Messenger = ({
   const getConversations = async () => {
     // get all conversation of a specific user i-e the one that is logged in Naseer
     // naseer employee id is : 6262243469482d6b557e3b59
+    // console.log(user._id);
     try {
       const res = await axios.get(
         `http://localhost:5000/myConversation/${user._id}`
@@ -112,15 +109,36 @@ const Messenger = ({
     // e.preventDefault();
     // sender is the person that is currently logged in i-e Naseer
     var imageUrl = "";
-    if (check) {
-      imageUrl = check;
+    // const type = files.base64.split(";")[0].split(":")[1];
+    // console.log(type);
+    // if (
+    //   type.includes("image") ||
+    //   type.includes("video") ||
+    //   type.includes("pdf")
+    // ) {
+    //   setCheck(files.base64);
+    // } else {
+    //   toast.info("you can only send image or pdf or video");
+    // }
+    var message = {};
+    // console.log(currentChat);
+    if (file) {
+      message = {
+        sender: user?._id,
+        text: newMessage,
+        conversationId: currentChat._id,
+        Image: {
+          name: file.name,
+          image: file.base64,
+        },
+      };
+    } else {
+      message = {
+        sender: user?._id,
+        text: newMessage,
+        conversationId: currentChat._id,
+      };
     }
-    const message = {
-      sender: user?._id,
-      text: newMessage,
-      conversationId: currentChat._id,
-      image: imageUrl,
-    };
 
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
@@ -131,7 +149,12 @@ const Messenger = ({
       senderName: user.username,
       receiverId,
       text: newMessage,
-      image: imageUrl,
+      Image: file
+        ? {
+            name: file.name,
+            image: file.base64,
+          }
+        : null,
     });
 
     try {
@@ -141,7 +164,7 @@ const Messenger = ({
       );
       setMessages([...messages, res.data]);
       setNewMessage("");
-      setCheck("");
+      setFile("");
     } catch (err) {
       console.log(err);
     }
@@ -155,13 +178,16 @@ const Messenger = ({
   };
 
   // create a new conversation
-  const newConversation = async (friendId, friendUsername) => {
+  const newConversation = async (friendId) => {
     try {
       const res = await axios.post("http://localhost:5000/myConversation/", {
         senderId: user._id,
         recieverId: friendId,
       });
-      getConversations();
+      // console.log(res.data.data);
+      if (res.data.message == "Conversation Exists")
+        handleConvoClick(res.data.data[0]);
+      else getConversations();
     } catch (err) {
       console.log(err);
     }
@@ -169,6 +195,7 @@ const Messenger = ({
   };
 
   const handleConvoClick = (convo) => {
+    // console.log(convo);
     setCurrentChat(convo);
     const friendId = convo.members.find((m) => m != user?._id);
     axios
@@ -181,34 +208,93 @@ const Messenger = ({
         console.log(err);
       });
   };
+  const handleDeleteChat = () => {
+    const confirmBox = window.confirm(
+      "Are you sure you want to delete this chat?"
+    );
+    if (confirmBox) {
+      axios
+        .delete("/myConversation/deleteconversation", {
+          data: { _id: currentChat._id },
+        })
+        .then((rec) => {
+          console.log(rec.data);
+          const fitleredConversations = conversations.filter(
+            (convo) => rec.data._id != convo._id
+          );
+          setCurrentChat();
+          setConversations(fitleredConversations);
+          toast.info("Chat Deleted");
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const getDifference = (array1, array2) => {
+    return array1.filter((object1) => {
+      return array2.some((object2) => {
+        return object1.members.includes(object2._id);
+      });
+    });
+  };
+
+  const handleSearchChange = (e) => {
+    // console.log(conversations);
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value == null || value == "" || value == undefined) {
+        console.log("hello");
+        getConversations();
+      } else {
+        axios
+          .get(`/emp/getuserbyname/${value}`)
+          .then((rec) => {
+            // console.log(rec.data);
+            const filteredConvos = getDifference(conversations, rec.data);
+            setConversations(filteredConvos);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 1000);
+  };
 
   return (
     <div>
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
+            <ChatMenu
+              newConversation={newConversation}
+              user={user}
+              handleSearchChange={handleSearchChange}
+            />
             {/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
-            <SearchBar
+            {/* <SearchBar
               placeholder="Search for friends"
               employees={employees}
               setEmployees={setEmployees}
               newConversation={newConversation}
-            />
+            /> */}
             {/* <Conversation />
             <Conversation /> */}
             {/* Show all conversations of Naseer 6262243469482d6b557e3b59 */}
-            {conversations?.map((convo) => (
-              <div onClick={() => handleConvoClick(convo)}>
-                <Conversation conversation={convo} currentUser={user} />
-              </div>
-            ))}
+            <div className="conversation-container">
+              {conversations?.map((convo) => (
+                <div
+                  className="px-4 pt-2"
+                  onClick={() => handleConvoClick(convo)}
+                >
+                  <Conversation conversation={convo} currentUser={user} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="chatBox">
           <div className="chatBoxWrapper">
             {currentChat ? (
               <>
-                <div
+                {/* <div
                   style={{
                     width: "auto",
                     height: "80px",
@@ -216,14 +302,21 @@ const Messenger = ({
                     display: "flex",
                     marginBottom: "10px",
                   }}
-                >
+                  >
                   <img
-                    className="chatProfileImg"
-                    src={friend?.profilePicture}
-                    alt="No picture"
-                    style={{ height: "fitContent" }}
+                  className="chatProfileImg"
+                  src={friend?.profilePicture}
+                  alt="No picture"
+                  style={{ height: "fitContent" }}
                   />
                   <h1 style={{ color: "FFEFD5" }}>{friend?.username}</h1>
+                </div> */}
+                <div className="chat-box-header-container">
+                  <ChatBoxHeader
+                    profilePicture={friend?.profilePicture}
+                    username={friend?.username}
+                    handleDeleteChat={handleDeleteChat}
+                  />
                 </div>
                 <div className="chatBoxTop">
                   {messages.map((m) => (
@@ -237,25 +330,44 @@ const Messenger = ({
                   ))}
                 </div>
                 <div className="chatBoxBottom">
-                  <textarea
+                  <div className="col">
+                    <div className="position-relative chat-menu-search-bar chat-footer">
+                      <FileUpload file={file} setFile={setFile} />
+                      <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        id="chat-input"
+                        placeholder="Type your message..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={(e) => handleKeyPress(e)}
+                        autoComplete="off"
+                      />
+                      <SendIcon
+                        className="send-message-icon"
+                        onClick={handleSendMessage}
+                      />
+                    </div>
+                  </div>
+                  {/* <textarea
                     className="chatMessageInput"
                     placeholder="write something..."
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => handleKeyPress(e)}
                     value={newMessage}
-                  ></textarea>
-                  <button
+                  ></textarea> */}
+                  {/* <button
                     onClick={handleSendMessage}
                     className="chatSubmitButton"
                   >
                     Send
-                  </button>
+                  </button> */}
                 </div>
                 <div>
-                  <FileBase64 multiple={false} onDone={getFiles} />
-                  {check && (
+                  {/* <FileBase64 multiple={false} onDone={getFiles} /> */}
+                  {/* {file && (
                     <img
-                      src={check}
+                      src={file}
                       alt="No Image"
                       style={{
                         width: "100px",
@@ -263,7 +375,7 @@ const Messenger = ({
                         marginTop: "5px",
                       }}
                     />
-                  )}
+                  )} */}
                 </div>
               </>
             ) : (
@@ -272,20 +384,53 @@ const Messenger = ({
               </span>
             )}
           </div>
+          {file && (
+            <Alert
+              variant="danger"
+              onClose={() => setFile("")}
+              dismissible
+              className="alert-dismiss-custom rounded-pill font-size-12 mb-1 selected-media"
+              closeClassName="selected-media-close"
+            >
+              <p className="">You have Selected a file</p>
+            </Alert>
+          )}
         </div>
-        <div className="chatOnline">
-          <div className="chatOnlineWrapper">
-            {onlineUsers?.length > 0 ? (
-              <ChatOnline
-                onlineUsers={onlineUsers}
-                currentId={user._id}
-                setCurrentChat={setCurrentChat}
-              />
-            ) : (
-              <h2>No Online Users</h2>
-            )}
+        <div className="flex-shrink-0">
+          <div className="left-right-icon-container">
+            <OverlayTrigger
+              placement="bottom"
+              delay={{ show: 250 }}
+              overlay={renderTooltip}
+            >
+              <div
+                className="left-right-icon"
+                onClick={() => setShowOnlineUsers(!showOnlineUsers)}
+              >
+                {showOnlineUsers ? (
+                  <ChevronRightIcon className="btn btn-soft-primary btn-sm" />
+                ) : (
+                  <ChevronLeftIcon className="btn btn-soft-primary btn-sm" />
+                )}
+              </div>
+            </OverlayTrigger>
           </div>
         </div>
+        {showOnlineUsers && (
+          <div className="chatOnline">
+            <div className="chatOnlineWrapper">
+              {onlineUsers?.length > 0 ? (
+                <ChatOnline
+                  onlineUsers={onlineUsers}
+                  currentId={user._id}
+                  setCurrentChat={setCurrentChat}
+                />
+              ) : (
+                <h2>No Online Users</h2>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

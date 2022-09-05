@@ -80,7 +80,7 @@ const SearchBar = ({
                   addEmployeeToMeetingList(wordEntered);
                 }
                 if (newConversation !== undefined) {
-                  newConversation(userId, wordEntered);
+                  newConversation(userId);
                   setFilteredData([]);
                   setWordEntered("");
                 }

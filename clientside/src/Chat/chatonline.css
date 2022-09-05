@@ -37,7 +37,11 @@
 .chatOnline{
   background: linear-gradient(
 		to right,
-		#e2e2e2,
-		#c9d6ff
+		 #f5f7fb,
+     #edf7f0 
 	);
 }
+/* #f5f7fb,
+  #edf7f0 */
+/* #e2e2e2,
+		#c9d6ff */

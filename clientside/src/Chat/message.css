@@ -9,8 +9,8 @@
   }
   
   .messageImg {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
@@ -25,16 +25,21 @@
   }
   
   .messageText{
-      padding: 10px;
+      /* padding: 10px;
       border-radius: 20px;
       background-color: #1877f2;
       color: white;
-      max-width: 300px;
+      max-width: 300px; */
+    padding: 12px 20px;
+    background-color: #ffffff;
+    position: relative;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgb(15 34 58 / 12%);
   }
   
   .messageBottom{
       font-size: 12px;
-      margin-top: 10px;
+      /* margin-top: 3px; */
   }
   
   .message.own{
@@ -42,6 +47,35 @@
   }
   
   .message.own .messageText{
-      background-color: rgb(245, 241, 241);
-      color: black;
+      /* background-color: rgb(245, 241, 241); */
+      background-color: #c9dfd0;
+      color: #5a6368;
+  }
+  .messageFile{
+    border: 1px solid #51ad70;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+  }
+  .messageFile a{
+    text-decoration: none;
+    color: #5a6368;
+  }
+  .attachment-icon, .message-file-name, .download-icon{
+    display: flex;
+    margin: 8px;
+  }
+  .message-file-name a:hover{
+    color: #51ad70;
+  }
+  .attachment-icon svg, .download-icon svg{
+    fill: #51ad70 !important;
+    /* font-size: 33px !important; */
+  }
+  .download-icon svg:hover{
+    background-color: #4eac6d !important;
+    fill: #edf7f0 !important;
+  }
+  .attachment-icon {
+    transform: rotate(135deg);
   }

@@ -62,7 +62,7 @@ const App = () => {
         sender: data.senderId,
         senderName: data.senderName,
         text: data.text,
-        image: data.image,
+        Image: data.Image,
         createdAt: Date.now(),
       });
       if (window.location.href != "http://localhost:3000/myMessenger") {
@@ -151,9 +151,8 @@ const App = () => {
               <Messenger
                 onlineUsers={onlineUsers}
                 setOnlineUsers={setOnlineUsers}
-                notify={notify}
                 arrivalMessage={arrivalMessage}
-                setArrivalMessage={setArrivalMessage}
+                user={loggedUser}
               />
             }
           />

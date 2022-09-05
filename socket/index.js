@@ -184,7 +184,7 @@ io.on("connection", (socket) => {
   //send and get message
   socket.on(
     "sendMessage",
-    ({ senderId, senderName, receiverId, text, image }) => {
+    ({ senderId, senderName, receiverId, text, Image }) => {
       // console.log("REciever ID:" + receiverId);
       // console.log(senderName);
       const user = getUser(receiverId);
@@ -193,7 +193,7 @@ io.on("connection", (socket) => {
         senderId,
         senderName,
         text,
-        image,
+        Image,
       });
     }
   );

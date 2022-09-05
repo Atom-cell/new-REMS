@@ -51,12 +51,10 @@ export default function ChatOnline({
 
   return (
     <div className="chatOnline">
-      <h2>Online Users</h2>
+      <h2>Online</h2>
       {/* onClick={() => callUser != undefined && handleClick(o)} */}
       {onlineFriends?.map((o) => (
         <div className="chatOnlineFriend">
-          {/* {console.log("OnlineFriends Map")} */}
-          {/* {console.log(o)} */}
           <div className="chatOnlineImgContainer">
             <img className="chatOnlineImg" src={o?.profilePicture} alt="" />
             <div className="chatOnlineBadge"></div>

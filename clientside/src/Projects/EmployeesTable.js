@@ -5,18 +5,23 @@ const EmployeesTable = ({
   newProject,
   setNewProject,
   handleClosee,
+  newConversation,
 }) => {
   const handleSelect = (emp) => {
-    setNewProject({
-      ...newProject,
-      assignTo: emp.username,
-      assignToId: emp._id,
-    });
+    if (setNewProject !== undefined) {
+      setNewProject({
+        ...newProject,
+        assignTo: emp.username,
+        assignToId: emp._id,
+      });
+    } else {
+      newConversation(emp._id);
+    }
     // console.log(newProject);
     handleClosee();
   };
   return (
-    <div style={{ height: "50vh", overflow: "scroll" }}>
+    <div className="chatBoxTop" style={{ height: "50vh", overflow: "scroll" }}>
       <Table bordered hover>
         <thead>
           <tr>
@@ -25,7 +30,7 @@ const EmployeesTable = ({
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => {
+          {employees?.map((employee) => {
             return (
               <tr key={employee._id} onClick={() => handleSelect(employee)}>
                 <td>{employee.username}</td>

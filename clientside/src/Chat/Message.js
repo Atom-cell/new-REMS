@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./message.css";
 import { format } from "timeago.js";
+import AttachmentIcon from "@mui/icons-material/Attachment";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const Message = ({ message, own, userPhoto }) => {
   // console.log(own);
   const [extension, setExtension] = useState();
@@ -17,7 +19,7 @@ const Message = ({ message, own, userPhoto }) => {
 
   return (
     <div className={own ? "message" : "message own"}>
-      <div>
+      {/* <div>
         {message.image && extension == "application/pdf" && (
           // <iframe src={message.image}></iframe>
           <object
@@ -28,7 +30,7 @@ const Message = ({ message, own, userPhoto }) => {
           >
             <p>
               Your web browser doesn't have a PDF plugin.
-              {/* <a href={message.image}>click here to download the PDF file.</a> */}
+              <a href={message.image}>click here to download the PDF file.</a>
             </p>
           </object>
         )}
@@ -43,10 +45,31 @@ const Message = ({ message, own, userPhoto }) => {
         {message.image && extension?.includes("video") && (
           <video src={message.image} controls></video>
         )}
-      </div>
+      </div> */}
       <div className="messageTop">
         <img className="messageImg" src={userPhoto} alt="" />
-        <p className="messageText">{message.text}</p>
+        <div className="messageText">
+          {message.Image && (
+            <div className="messageFile">
+              <div className="attachment-icon">
+                <AttachmentIcon />
+              </div>
+              <div className="message-file-name">
+                <a href={message.Image.image} download={message.Image.name}>
+                  {message.Image.name.length > 25
+                    ? `${message.Image.name.substring(0, 25)}....`
+                    : message.Image.name}
+                </a>
+              </div>
+              <div className="download-icon">
+                <a href={message.Image.image} download={message.Image.name}>
+                  <FileDownloadIcon />
+                </a>
+              </div>
+            </div>
+          )}
+          <p>{message.text}</p>
+        </div>
       </div>
       <div className="messageBottom">{format(message.createdAt)}</div>
     </div>
