@@ -30,7 +30,10 @@ var myProjectSchema = mongoose.Schema({
     type: String,
   },
   hoursWorked: {
-    type: String,
+    type: [String],
+  },
+  numOfBreaks: {
+    type: [Number],
   },
   hoursWorkedOn: {
     type: Boolean,

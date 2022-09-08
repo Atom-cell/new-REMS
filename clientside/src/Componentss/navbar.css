@@ -18,7 +18,7 @@
 }
 
 .menu-bars:hover {
-  color: rgba(130,72,222,255);
+  color: rgba(130, 72, 222, 255);
 }
 
 .nav-menu {
@@ -64,7 +64,7 @@
 
 .nav-text a:hover {
   /* background-color: #1a83ff; */
-  background-color: rgba(130,72,222,255);
+  background-color: rgba(130, 72, 222, 255);
   /* border-left: 3px solid transparent; */
   cursor: pointer;
 }
@@ -86,20 +86,24 @@
   margin-left: 16px;
 } */
 
-.activeLink{
+.activeLink {
   background-color: #1a83ff;
   /* background-color: rgba(130,72,222,255); */
 }
-.sub-nav{
+.sub-nav {
   padding: 8px 15px 8px 25px;
 }
-.sub-nav a{
+.sub-nav a {
   font-size: 15px;
 }
-.con{
+.con {
   height: 50px;
   width: 50px;
   display: inline-block;
   margin: 5px;
   background-color: gray;
+}
+
+.timer_wrapper {
+  display: flex;
 }

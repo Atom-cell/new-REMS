@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { ProjectNameContext } from "../Helper/Context";
 import Chart from "./Charts/Chart";
 import FeaturedInfo from "./FeaturedInfo/FeaturedInfo";
 import { userData, productivityData } from "./dummyData";
@@ -8,6 +9,7 @@ import "./dashboard.css";
 import TopUsers from "./Charts/TopUsers";
 import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
+  const { name, setName } = React.useContext(ProjectNameContext);
   let navigate = useNavigate();
 
   // useEffect(() => {
@@ -19,7 +21,7 @@ const Dashboard = () => {
   //     navigate("/");
   //   }
   // }, []);
-  
+
   return (
     <div className="home">
       <FeaturedInfo />

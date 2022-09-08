@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import Timer from "./Timer";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";
@@ -29,9 +30,12 @@ const Navbar = () => {
         <Link to="#" className="menu-bars">
           <MenuIcon onClick={showSidebar} />
         </Link>
-        <Button className="signbtn" type="button" onClick={() => logout()}>
-          Logout
-        </Button>
+        <div className="timer_wrapper">
+          {role !== "admin" ? <Timer /> : null}
+          <Button className="signbtn" type="button" onClick={() => logout()}>
+            Logout
+          </Button>
+        </div>
       </div>
       <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
         <ul className="nav-menu-items">
@@ -60,7 +64,7 @@ const Navbar = () => {
             : SideBarData.links.map((item, index) => {
                 if (
                   item.title === "Activity Log" ||
-                  item.title === "Manange Employee" 
+                  item.title === "Manange Employee"
                   // item.title === "Projects"
                 ) {
                   return null;

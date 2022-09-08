@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { ProjectNameContext } from "../Helper/Context";
+import { TimerContext } from "../Helper/Context";
 import { Button } from "@material-ui/core";
 import axios from "axios";
 import ShareWork from "./ShareWork";
@@ -58,6 +60,9 @@ const ProjectCard = ({
     }
   }, [project]);
 
+  const { name, setName } = React.useContext(ProjectNameContext);
+  const { timer, setTimer } = React.useContext(TimerContext);
+
   return (
     <div className="project-column">
       {volunteer == false && (
@@ -73,6 +78,10 @@ const ProjectCard = ({
       <div
         className="featuredItem"
         onClick={() => {
+          if (!timer) {
+            let a = { id: project._id, name: projectName };
+            setName(a);
+          }
           projectAssignedTo && setProjects(project, check, width);
         }}
       >
