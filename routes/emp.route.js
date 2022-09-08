@@ -82,6 +82,15 @@ router.get("/:userId", (req, res, next) => {
   });
 });
 
+// return all employees except specific employee
+// router.get("/exceptme/:userId", (req, res) => {
+//   // console.log(req.params.userId);
+//   Emp.find({ _id: { $nin: req.body.userId } }, (err, rec) => {
+//     if (err) res.status(500).json(err);
+//     res.status(200).json(rec);
+//   });
+// });
+
 // get all converssations based on a name
 router.get("/getuserbyname/:name", (req, res) => {
   // console.log(req.params.name);

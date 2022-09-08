@@ -10,8 +10,83 @@
     outline: none;
     /* margin-right: 15px; */
     background-color: #e1c5ff;
-    border: 0;
+}
+.all-meetings-button button:focus{
+    box-shadow: none !important;
+    background-color: #e1c5ff;
+    border: none !important;
+    outline: none !important;
 }
 .all-meetings-button button:hover{
     background-color: #8248de;
+}
+.all-meetings-table tbody {
+    height: 400px !important;
+    overflow-y: hidden;
+}
+
+.all-meetings-table thead{
+    position: sticky;
+    top: 0px;
+}
+  
+.all-meetings-table td,
+.all-meetings-table th {
+    width: 1%;
+}
+.all-meetings-table-container{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    height: 70vh;
+    overflow-y: auto;
+}
+.meeting-employees-body{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    height: 30vh;
+    overflow-y: hidden;
+}
+
+.meeting-employees-body:hover{
+    overflow-y: auto;
+}
+
+.all-meetings-table-container::-webkit-scrollbar-thumb, .meeting-employees-body::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.all-meetings-table-container::-webkit-scrollbar, .meeting-employees-body::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.all-meetings-table-container::-webkit-scrollbar:vertical, .meeting-employees-body::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+.all-meetings-table-container::-webkit-scrollbar:horizontal, .meeting-employees-body::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.all-meetings-table-container::-webkit-scrollbar-thumb, .meeting-employees-body::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.all-meetings-table-container::-webkit-scrollbar-track, .meeting-employees-body::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+.all-meeting-row-delete-icon svg{
+    /* font-size: 28px; */
+    fill: #51ad70 !important;
+    /* margin-right: 10px; */
+    margin: 0 10px;
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 40px;
+}
+.all-meeting-row-delete-icon svg:hover{
+    background-color: #4eac6d !important;
+    fill: #edf7f0 !important;
+    cursor: pointer;
 }

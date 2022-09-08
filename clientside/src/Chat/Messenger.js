@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import ChatOnline from "./ChatOnline";
-import Conversation from "./Conversation";
-import Message from "./Message";
-import "./messenger.css";
-import axios from "axios";
-import SearchBar from "../Componentss/SearchBar";
-import Button from "@mui/material/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import SendIcon from "@mui/icons-material/Send";
-import FileBase64 from "react-file-base64";
-import { toast } from "react-toastify";
 import Alert from "react-bootstrap/Alert";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import io from "socket.io-client";
+import ChatOnline from "./ChatOnline";
+import Conversation from "./Conversation";
+import Message from "./Message";
 import ChatMenu from "./ChatMenu";
 import ChatBoxHeader from "./ChatBoxHeader";
 import FileUpload from "./FileUpload";
+import "./messenger.css";
+import axios from "axios";
+import { toast } from "react-toastify";
+import io from "socket.io-client";
 const socket = io.connect("http://localhost:8900");
 
 const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
@@ -54,15 +51,15 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
-  useEffect(() => {
-    socket.emit("addUser", user?._id);
-    socket.on("getUsers", (users) => {
-      setOnlineUsers(users);
-      // setOnlineUsers(
-      //   user.followings.filter((f) => users.some((u) => u.userId === f))
-      // );
-    });
-  }, [user]);
+  // useEffect(() => {
+  //   socket.emit("addUser", user?._id);
+  //   socket.on("getUsers", (users) => {
+  //     setOnlineUsers(users);
+  //     // setOnlineUsers(
+  //     //   user.followings.filter((f) => users.some((u) => u.userId === f))
+  //     // );
+  //   });
+  // }, [user]);
 
   // fetch all messages of the current user
   useEffect(() => {
@@ -313,8 +310,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                 </div> */}
                 <div className="chat-box-header-container">
                   <ChatBoxHeader
-                    profilePicture={friend?.profilePicture}
-                    username={friend?.username}
+                    friend={friend}
                     handleDeleteChat={handleDeleteChat}
                   />
                 </div>
@@ -420,11 +416,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
           <div className="chatOnline">
             <div className="chatOnlineWrapper">
               {onlineUsers?.length > 0 ? (
-                <ChatOnline
-                  onlineUsers={onlineUsers}
-                  currentId={user._id}
-                  setCurrentChat={setCurrentChat}
-                />
+                <ChatOnline onlineUsers={onlineUsers} currentId={user._id} />
               ) : (
                 <h2>No Online Users</h2>
               )}

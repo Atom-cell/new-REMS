@@ -1,0 +1,44 @@
+.videocallModal {
+    min-height: 400px;
+    overflow: hidden;
+    @media (max-width: 575.98px) {
+      min-height: 300px;
+    }
+}
+.videocallModal-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-below-image{
+  background-color: #4eac6d !important;
+}
+  
+.avatar-sm {
+  height: 2.4rem;
+  width: 2.4rem;
+}
+
+.avatar-md {
+  height: 4rem;
+  width: 4rem;
+}
+  
+.avatar-title {
+  align-items: center;
+  background-color: #4eac6d !important;
+  color: #fff !important;
+  display: flex;
+  font-weight: 500;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+.call-end{
+    position: relative;
+    top: 20px;
+}
+.call-end-icon{
+  color: #fafafa !important;
+}

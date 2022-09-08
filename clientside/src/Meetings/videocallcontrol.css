@@ -1,7 +1,6 @@
-.mutestop{
+/* .mutestop{
     background-color: #1C1E20;
     display: flex;
-    /* width: fit-content; */
     width: 54%;
     font-size: 18px;
     padding: 8px;
@@ -37,4 +36,21 @@
 .stop:hover{
     background-color: #343434;
     border-radius: 5px;
+} */
+.videocallcontrols{
+    display: flex;
+    justify-content: space-around;
+    background-color: #1C1E20;
+    padding: 8px;
+}
+.main__mute_button i,.main__video_button i,.end-call i, .main__video_button span, .main__mute_button span, .end-call span{
+	color: #F5F5F5;
+    margin: 5px;
+}
+.stop:hover, .mute:hover, .end-call:hover{
+    background-color: #343434;
+    border-radius: 5px;
+}
+.end-call i{
+    transform: rotate(315deg);
 }

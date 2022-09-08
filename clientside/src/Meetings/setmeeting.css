@@ -8,7 +8,6 @@
     height: 45px;
     margin: 15px;
     border: none;
-    /* background-color: cornflowerblue; */
     background-color: #e1c5ff;
     color: black;
     border-radius: 8px;
@@ -18,13 +17,24 @@
     background-color: #8248de;
     cursor: pointer;
 }
-/* table{
-	margin-top: 20px;
+.selectedEmployeesContainer{ 
+    color: white;
+    /* padding: 10px;   */
+    display: flex;
+    flex-wrap: wrap;
 }
-table, td, th {
-	border: 1px solid;
+.selectedEmployees{
+    background-color: #bf9afa; 
+    border: none;
+    border-radius: 10px;
+    width: fit-content;
+    margin-Right: 15px;
+    margin: 10px;
+    padding: 5px;
 }
-table {
-	width: 100%;
-	border-collapse: collapse;
-} */
+.remove-icon:hover{
+    color: #e1c5ff !important;
+    fill: #e1c5ff !important;
+    /* border: 3px solid #8248de; */
+    cursor: pointer;
+}
