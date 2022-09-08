@@ -72,29 +72,30 @@ const VideoCallControls = ({
     document.querySelector(".main__video_button").innerHTML = html;
   };
   return (
-    <div className="mutestop">
+    <div className="videocallcontrols">
       <div className="mute main__mute_button" onClick={() => muteUnmute()}>
         <i className="fas fa-microphone"></i>
         <span>Mute</span>
       </div>
-      <div className="stop main__video_button" onClick={() => stopVideo()}>
+      <div
+        className="stop main__video_button"
+        color="secondary"
+        onClick={() => stopVideo()}
+      >
         <i className="fas fa-video"></i>
         <span>Stop Video</span>
       </div>
-      <div className="main__controls__button">
-        {/* <Link
-          to="/dashboard"
-          className="leave_meeting"
-          onClick={() => leaveCall()}
-        >
-          Leave
-        </Link> */}
-        {callAccepted && !callEnded && (
-          <Button variant="contained" color="secondary" onClick={leaveCall}>
-            End Call
-          </Button>
-        )}
-      </div>
+      {callAccepted && !callEnded && (
+        <div className="end-call bg-danger" onClick={leaveCall}>
+          <i className="fa-solid fa-phone"></i>
+          <span>End Call</span>
+        </div>
+      )}
+      {/* <div className="main__controls__button">
+        <Button variant="contained" color="secondary" onClick={leaveCall}>
+          End Call
+        </Button>
+      </div> */}
     </div>
   );
 };

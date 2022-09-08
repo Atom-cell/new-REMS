@@ -127,6 +127,12 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("cutCallInBetween", (id, name) => {
+    const user = getUser(id);
+    console.log(user);
+    io.to(user.socketId).emit("cutCallInBetween", name);
+  });
+
   socket.on("answerCall", (data) => {
     // console.log("answerCall");
     // console.log(data.to);
@@ -139,6 +145,14 @@ io.on("connection", (socket) => {
     // const friend = getUser(friendId);
     const user = getUser(userId);
     io.to(friendId).emit("leaveCallId", user, name);
+  });
+
+  socket.on("rejectCall", (friendId, userId, name) => {
+    // console.log(userId);
+    // console.log(friendId);
+    // const friend = getUser(friendId);
+    const user = getUser(userId);
+    io.to(friendId).emit("callRejected", user, name);
   });
 
   // end of one to one video call

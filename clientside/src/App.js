@@ -8,7 +8,7 @@ import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
-import SetMeeting from "./Meetings/SetMeeting";
+// import SetMeeting from "./Meetings/SetMeeting";
 import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
 import AllMeetings from "./Meetings/AllMeetings";
@@ -84,18 +84,6 @@ const App = () => {
     });
   }, [loggedUser]);
 
-  // when new message recieve send alert
-  // useEffect(() => {
-  //   socket.on("getMessage", (data) => {
-  //     notify();
-  //     // setArrivalMessage({
-  //     //   sender: data.senderId,
-  //     //   text: data.text,
-  //     //   createdAt: Date.now(),
-  //     // });
-  //   });
-  // }, []);
-
   return (
     <Router>
       {nav ? <NavBar /> : null}
@@ -144,7 +132,7 @@ const App = () => {
               )
             }
           />
-          <Route exact path="/setMeeting" element={<SetMeeting />} />
+          {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
           <Route
             path="/myMessenger"
             element={

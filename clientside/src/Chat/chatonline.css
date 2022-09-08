@@ -45,3 +45,16 @@
   #edf7f0 */
 /* #e2e2e2,
 		#c9d6ff */
+
+/* .video-call-icon-chat-online{
+  margin-right: 15px;
+} */
+.video-call-icon-chat-online svg{
+  fill: #51ad70 !important;
+  border-radius: 5px;
+}
+.video-call-icon-chat-online svg:hover{
+  background-color: #4eac6d !important;
+  fill: #edf7f0 !important;
+  cursor: pointer;
+}

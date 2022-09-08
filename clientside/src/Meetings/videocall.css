@@ -1,8 +1,8 @@
 .video-call-container-container {
 	display: grid;
-	grid-template-columns: 9fr 1fr;
+	grid-template-columns: 5fr 1fr;
 	background-color: black;
-	height: 120vh;
+	height: fit-content;
 }
 
 .myId {
@@ -51,13 +51,11 @@
 .MuiButton-containedPrimary{
 	margin-right: 10px !important;
 }
-.main__mute_button i, .main__mute_button span{
-	color: #fff;
-}
 .video{
 	/* text-align: center; */
 	margin-left: 10%;
 	margin-top: 3%;
+	width: fit-content;
 }
 .video h3{
 	/* color: black; */
@@ -68,16 +66,46 @@
     font-size: 18px;
     color: #F5F5F5;
     margin-left: 8px;
-	width: 54%;
+	/* width: 54%; */
 	text-align: center;
 	padding: 8px;
 	/* margin-bottom: -8px; */
 }
+.expand{
+	position: absolute;
+	z-index: 20;
+}
+.expand-icon i{
+	font-size: 40px;
+	color: #fff;
+	opacity: 0.5;
+}
+.expand-icon i:hover{
+	font-size: 50px;
+	color: #fff;
+	opacity: 1;
+	cursor: pointer;
+}
+.expand-btm-area {
+	margin-top: 150px;
+	margin-left: 180px;
+	z-index: 30;
+}
 
-/* .videocallContainer { */
-	/* background: #4776e6; fallback for old browsers */
-	/* background: -webkit-linear-gradient(to right, #8e54e9, #4776e6); Chrome 10-25, Safari 5.1-6 */
-	/* background: linear-gradient( to right,	#8e54e9,	#4776e6 */
-	/* ); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-	/* height: 120vh; */
-/* } */
+/* .own-video{
+	margin-left: 10%;
+	margin-top: 3%;
+	background-color: aqua;
+	width: 250px;
+}
+.own-video video{
+	width: 250px;
+}
+.own-video h3{
+	background-color: #1C1E20;
+    font-size: 13px;
+    color: #F5F5F5;
+    margin-left: 8px;
+	text-align: center;
+	padding: 6px;
+} */

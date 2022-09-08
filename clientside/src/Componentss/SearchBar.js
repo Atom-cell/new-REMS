@@ -11,6 +11,7 @@ const SearchBar = ({
   setEmployees,
   addEmployeeToMeeting,
   newConversation,
+  myId,
 }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
@@ -23,7 +24,8 @@ const SearchBar = ({
       // get the data from the api
       const res = await axios.get("http://localhost:5000/emp/");
       //   console.log(res.data);
-      setData(res.data);
+      var withoutMe = res.data.filter((u) => u._id != myId);
+      setData(withoutMe);
     };
 
     // call the function
@@ -62,7 +64,7 @@ const SearchBar = ({
   };
 
   return (
-    <div className="search">
+    <div className="search-bar-container mt-3">
       <div className="searchInputs">
         <input
           type="text"
@@ -70,9 +72,8 @@ const SearchBar = ({
           value={wordEntered}
           onChange={handleFilter}
         />
-        <div className="searchIcon">
-          {wordEntered && <div></div>}
-          {wordEntered && (
+        {/* <div className="search-icon-container"> */}
+        {/* {wordEntered && (
             // <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
             <div
               onClick={() => {
@@ -88,13 +89,17 @@ const SearchBar = ({
             >
               <AddIcon />
             </div>
-          )}
-          {filteredData.length === 0 ? (
-            <SearchIcon />
+          )} */}
+        {/* {filteredData.length === 0 ? (
+            <div className="search-icon">
+              <SearchIcon />
+            </div>
           ) : (
-            <CloseIcon id="clearBtn" onClick={clearInput} />
-          )}
-        </div>
+            <div className="clear-icon">
+              <CloseIcon id="clearBtn" onClick={clearInput} />
+            </div>
+          )} */}
+        {/* </div> */}
       </div>
       {filteredData.length != 0 && (
         <div className="dataResult">
@@ -104,6 +109,7 @@ const SearchBar = ({
                 onClick={() => {
                   handleFilteredDataClick(value.username);
                   setUserId(value?._id);
+                  addEmployeeToMeetingList(value.username);
                 }}
               >
                 {value.username}{" "}

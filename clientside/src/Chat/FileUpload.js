@@ -33,6 +33,7 @@ const FileUpload = ({ file, setFile }) => {
           onChange={(e) => {
             getFiles(e);
           }}
+          onClick={(e) => (e.target.value = null)}
         />
       </span>
     </div>
