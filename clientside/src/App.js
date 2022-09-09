@@ -89,7 +89,6 @@ const App = () => {
   }, [loggedUser]);
 
   return (
-<<<<<<< HEAD
     <>
       <ProjectNameContext.Provider value={{ name, setName }}>
         <TimerContext.Provider value={{ timer, setTimer }}>
@@ -144,7 +143,7 @@ const App = () => {
                     )
                   }
                 />
-                <Route exact path="/setMeeting" element={<SetMeeting />} />
+                {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
                 <Route
                   path="/myMessenger"
                   element={
@@ -177,76 +176,6 @@ const App = () => {
         </TimerContext.Provider>
       </ProjectNameContext.Provider>
     </>
-=======
-    <Router>
-      {nav ? <NavBar /> : null}
-      <Routes>
-        <Route exact path="/" element={<LandPage />} />
-        <Route path="/home" element={<LandPage />} />
-        <Route path="/features" element={<MoreFeatures />} />
-        <Route path="/download" element={<Download />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forget" element={<ResetPassword />} />
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/empDashboard" element={<EmployeeDashboard />} />
-          <Route path="/update" element={<UpdateProfile />} />
-          <Route path="/no" element={<NoMobile />} />
-          <Route path="/empManage" element={<EmpManage />} />
-          <Route path="/moreInfo" element={<MoreInfo />} />
-          <Route path="/log" element={<Log />} />
-          <Route
-            path="/myCalendar"
-            element={loggedUser && <MyCalendar user={loggedUser} />}
-          />
-          <Route
-            path="/myTeamCalendar"
-            element={
-              username ? <MyCalendar username={username} /> : console.log("")
-            }
-          />
-          <Route
-            path="/videoCall"
-            element={
-              <VideoCall
-                onlineUsers={onlineUsers}
-                setOnlineUsers={setOnlineUsers}
-              />
-            }
-          />
-          <Route
-            path="/allMeetings/:roomId"
-            element={
-              username ? (
-                <ConferenceCall username={username} />
-              ) : (
-                console.log("")
-              )
-            }
-          />
-          {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
-          <Route
-            path="/myMessenger"
-            element={
-              <Messenger
-                onlineUsers={onlineUsers}
-                setOnlineUsers={setOnlineUsers}
-                arrivalMessage={arrivalMessage}
-                user={loggedUser}
-              />
-            }
-          />
-          <Route path="/allMeetings" element={<AllMeetings />} />
-          <Route path="/projects" element={<AllProjects user={loggedUser} />} />
-          <Route path="/allboards" element={<AllBoards user={loggedUser} />} />
-          <Route path="/boards/:bid" element={<Boards user={loggedUser} />} />
-          {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
-        </Route>
-      </Routes>
-      <ToastContainer />
-    </Router>
->>>>>>> 18d67dc214c1043260170c1a975e3f5b56ea6275
   );
 };
 
