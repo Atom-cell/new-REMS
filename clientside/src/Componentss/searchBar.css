@@ -64,11 +64,11 @@ input:focus {
     height: 10px;
 }
 
-.dataResult::-webkit-scrollbar-thumb {
+/* .dataResult::-webkit-scrollbar-thumb {
     background-color: rgba(35, 49, 86, 0.8);
     border-radius: 10px;
     border: 2px solid transparent;
-}
+} */
 
 .dataResult::-webkit-scrollbar-track {
     border-radius: 10px;

@@ -12,14 +12,14 @@
     border: 1px solid gray;
   }
   
-  .app {
+  .boards-container {
     width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
   }
   
-  .app_nav {
+  .boards-container-nav {
     /* display: flex */
     padding: 10px;
     box-shadow: 0 1px 20px rgba(56, 40, 40, 0.05);
@@ -28,7 +28,7 @@
     top: 0;
     background-color: #fff;
   }
-  .app_nav_background_button_div{
+  .boards-container-nav-background-button-div{
     position: absolute;
     right: 10px;
     top: 20px;
@@ -71,16 +71,11 @@
   .app_boards_title {
     background-color: transparent;
     color: #000;
-    /* box-shadow: 1px 1px 0 1px rgba(0, 0, 0, 0.12); */
     border-radius: 10px;
     border: none;
-    /* text-align: center; */
-    /* margin-left: auto; */
-    /* margin-right: 25%; */
     margin-left: 20px;
     font-size: 2rem;
     font-weight: bold;
-    /* width: 50%; */
   }
   .board-add-card-edit-title{
     width: 50%;
@@ -96,4 +91,27 @@
     border-radius: 10px;
     padding: 10px;
   }
-  
+.custom-scroll-horizontal {
+  overflow-y: auto;
+}
+
+.custom-scroll-horizontal::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 5px;
+    border: 2px solid transparent;
+}
+
+.custom-scroll-horizontal::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.custom-scroll-horizontal::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+.custom-scroll-horizontal::-webkit-scrollbar:horizontal {
+    height: 13px;
+}
+.custom-scroll-horizontal::-webkit-scrollbar-track {
+    border-radius: 5px;
+}

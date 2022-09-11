@@ -3,17 +3,35 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var myBoard = require("../model/myBoard.model");
 
-router.get("/", (req, res) => {
-  myBoard.find({}).exec((err, rec) => {
+// router.get("/", (req, res) => {
+//   myBoard.find({}).exec((err, rec) => {
+//     if (err) res.status(500).send(err);
+//     res.status(200).send(rec);
+//   });
+// });
+
+router.get("/specificboard", (req, res) => {
+  myBoard.find({ _id: req.query._id }).exec((err, rec) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(rec);
+  });
+});
+
+router.get("/onlymyboards", (req, res) => {
+  // console.log(req.query.empId);
+  myBoard.find({ empId: req.query.empId }).exec((err, rec) => {
     if (err) res.status(500).send(err);
     res.status(200).send(rec);
   });
 });
 
 router.get("/:boardName", (req, res, next) => {
-  //   console.log(req.params.projectName);
+  // console.log(req.params.boardName);
+  // console.log(req.query.empId);
+
   myBoard
     .find({
+      empId: req.query.empId,
       title: {
         $regex: req.params.boardName,
         $options: "i",
@@ -45,7 +63,8 @@ router.post("/createboard", (req, res) => {
 });
 
 router.put("/updateboard", (req, res) => {
-  //   console.log(req.body.bid);
+  console.log("update board");
+  // console.log(req.body.bid);
   //   console.log(req.body.boards);
   var updatedObj = new myBoard({
     _id: req.body.bid,
@@ -53,10 +72,15 @@ router.put("/updateboard", (req, res) => {
     title: req.body.title,
     boards: req.body.boards,
   });
-  myBoard.findOneAndUpdate({ _id: req.body.bid }, updatedObj, (err, rec) => {
-    if (err) res.status(500).send(err);
-    res.status(200).send(rec);
-  });
+  myBoard.findOneAndUpdate(
+    { _id: req.body.bid },
+    updatedObj,
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
 });
 
 router.put("/updatecolor", (req, res) => {

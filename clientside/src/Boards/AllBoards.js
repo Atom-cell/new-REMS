@@ -59,13 +59,29 @@ const AllBoards = ({ user }) => {
     e.preventDefault();
     setSearchInput(e.target.value);
 
-    axios
-      .get(`/myboards/${e.target.value}`)
-      .then((records) => {
-        console.log(records.data);
-        setBoards(records.data);
-      })
-      .catch((err) => console.log(err));
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value == null || value == "" || value == undefined) {
+        axios
+          .get("/myBoards/onlymyboards", {
+            params: { empId: user._id },
+          })
+          .then((rec) => {
+            setBoards(rec.data);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .get(`/myboards/${e.target.value}`, {
+            params: { empId: user._id },
+          })
+          .then((records) => {
+            console.log(records.data);
+            setBoards(records.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 1000);
   };
 
   const handleCreateBoard = () => {
@@ -74,7 +90,7 @@ const AllBoards = ({ user }) => {
       .post("/myboards/createboard", { userId: user._id })
       .then((rec) => {
         console.log(rec.data);
-        navigate(`/boards/${rec.data._id}`, { state: rec.data });
+        navigate(`/boards/${rec.data._id}`);
       })
       .catch((err) => console.log(err));
   };
@@ -102,7 +118,9 @@ const AllBoards = ({ user }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("/myBoards");
+      const res = await axios.get("/myBoards/onlymyboards", {
+        params: { empId: user._id },
+      });
       //   console.log(res.data);
       setBoards(res.data);
     };
@@ -135,7 +153,7 @@ const AllBoards = ({ user }) => {
       </div>
       <div className="allProjects">
         {boards?.map((board, index) => {
-          console.log(board);
+          // console.log(board);
           return (
             <>
               {/* <div style={{ flex: "0.3 1 350px", padding: "10px" }} key={index}> */}
@@ -156,7 +174,7 @@ const AllBoards = ({ user }) => {
                   className="featuredItem"
                   onClick={() => {
                     // const filterBoards = boards.filter((b) => b._id == board._id);
-                    navigate(`/boards/${board._id}`, { state: board });
+                    navigate(`/boards/${board._id}`);
                   }}
                 >
                   <span className="featuredTitle">{board.title}</span>

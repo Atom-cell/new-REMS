@@ -2,17 +2,12 @@ import React, { useEffect, useState } from "react";
 import Board from "./Board/Board";
 import Editable from "./Editabled/Editable";
 import "./boards.css";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "@material-ui/core";
-import Drawer from "@mui/material/Drawer";
-import { AppBar, MenuItem } from "@mui/material";
 import SideMenu from "./SideMenu";
 
 const Boards = ({ user }) => {
-  const location = useLocation();
-  // console.log(location.state.boards);
-  // console.log(location.state);
   const { bid } = useParams();
   const [boards, setBoards] = useState();
   const [openSideNav, setOpenSideNav] = useState(false);
@@ -24,13 +19,23 @@ const Boards = ({ user }) => {
     bid: "",
     cid: "",
   });
+  const [targetBoard, setTargetBoard] = useState();
 
   useEffect(() => {
-    if (location.state) {
-      setBoards(location.state.boards);
-      setCompleteKanban(location.state);
-      setColor(location.state.color);
-    }
+    // if (location.state) {
+    //   setBoards(location.state.boards);
+    //   setCompleteKanban(location.state);
+    //   setColor(location.state.color);
+    // }
+    axios
+      .get("/myboards/specificboard", { params: { _id: bid } })
+      .then((rec) => {
+        // console.log(rec.data);
+        setBoards(rec.data[0].boards);
+        setCompleteKanban(rec.data[0]);
+        setColor(rec.data[0].color);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const addboardHandler = (name) => {
@@ -54,6 +59,7 @@ const Boards = ({ user }) => {
   };
 
   const addCardHandler = (id, title) => {
+    console.log(title);
     const index = boards.findIndex((item) => item._id === id);
     if (index < 0) return;
 
@@ -102,6 +108,11 @@ const Boards = ({ user }) => {
     );
     if (t_cardIndex < 0) return;
 
+    // console.log("Source board Index " + s_boardIndex);
+    // console.log("Source Card Index " + s_cardIndex);
+    // console.log("target board Index " + t_boardIndex);
+    // console.log("target card Index " + t_cardIndex);
+
     const tempBoards = [...boards];
     const sourceCard = tempBoards[s_boardIndex].cards[s_cardIndex];
     tempBoards[s_boardIndex].cards.splice(s_cardIndex, 1);
@@ -116,10 +127,48 @@ const Boards = ({ user }) => {
 
   const dragEntered = (bid, cid) => {
     if (targetCard.cid === cid) return;
+    // console.log(bid);
+    // console.log(targetCard);
     setTargetCard({
       bid,
       cid,
     });
+  };
+
+  const dragEndedBoard = (board) => {
+    // occurs when the user has finished dragging the element
+    // console.log("The target baord is:");
+    // console.log(targetBoard);
+    // console.log("Dragging Board is:");
+    // console.log(board);
+    // find dragging board index
+    let s_boardIndex, t_boardIndex;
+    s_boardIndex = boards.findIndex((item) => item._id === board._id);
+    if (s_boardIndex < 0) return;
+
+    // find target board index
+    t_boardIndex = boards.findIndex((item) => item._id === targetBoard._id);
+    if (t_boardIndex < 0) return;
+
+    // now using index swap
+    const tempBoards = [...boards];
+    tempBoards[s_boardIndex] = tempBoards.splice(
+      t_boardIndex,
+      1,
+      tempBoards[s_boardIndex]
+    )[0];
+    setBoards(tempBoards);
+
+    setTargetBoard();
+  };
+
+  const dragEnteredBoard = (board) => {
+    // occurs when the dragged element enters the drop target
+    // console.log(board);
+    if (targetBoard?._id === board._id) return;
+    // console.log(board);
+    // setTargetCard({ ...targetCard, bid: board._id });
+    setTargetBoard(board);
   };
 
   const updateCard = (bid, cid, card) => {
@@ -143,10 +192,20 @@ const Boards = ({ user }) => {
     setBoards(tempBoards);
   };
 
-  const updateTitle = (value) => {
+  const updateTitle = (bid, value) => {
     // console.log(value);
     // console.log(location.state);
     setCompleteKanban({ ...completeKanban, title: value });
+  };
+
+  const updateBoardTitle = (boardId, value) => {
+    const updatedBoards = boards.map((b) => {
+      if (b._id == boardId) {
+        return { ...b, title: value };
+      }
+      return b;
+    });
+    setBoards(updatedBoards);
   };
 
   useEffect(() => {
@@ -154,7 +213,7 @@ const Boards = ({ user }) => {
     // console.log(boards);
     if (boards?.length > 0) {
       // update using current params id
-      console.log(boards);
+      // console.log(boards);
       // console.log(bid);
       axios
         .put("/myboards/updateboard", {
@@ -185,7 +244,7 @@ const Boards = ({ user }) => {
 
   return (
     <div
-      className="app"
+      className="boards-container"
       style={{
         backgroundColor: color,
         backgroundImage: `url(${color})`,
@@ -194,7 +253,7 @@ const Boards = ({ user }) => {
       }}
     >
       <div
-        className="app_nav"
+        className="boards-container-nav"
         style={{
           backgroundColor: color,
           backgroundImage: `url(${color})`,
@@ -210,7 +269,7 @@ const Boards = ({ user }) => {
           placeholder="Enter Title"
           onSubmit={updateTitle}
         />
-        <div className="app_nav_background_button_div">
+        <div className="boards-container-nav-background-button-div">
           <Button
             variant="contained"
             color="secondary"
@@ -228,7 +287,7 @@ const Boards = ({ user }) => {
           setColor={setColor}
         />
       )}
-      <div className="app_boards_container">
+      <div className="app_boards_container custom-scroll-horizontal">
         <div className="app_boards">
           {boards?.map((item) => (
             <Board
@@ -240,6 +299,9 @@ const Boards = ({ user }) => {
               dragEnded={dragEnded}
               dragEntered={dragEntered}
               updateCard={updateCard}
+              dragEnteredBoard={dragEnteredBoard}
+              dragEndedBoard={dragEndedBoard}
+              updateBoardTitle={updateBoardTitle}
             />
           ))}
           <div className="app_boards_last">

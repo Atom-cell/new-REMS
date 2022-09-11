@@ -59,3 +59,12 @@
   height: 24px;
   width: 24px;
 }
+.app_boards_board_title{
+  background-color: transparent;
+  color: #000;
+  border-radius: 10px;
+  border: none;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  font-weight: normal;
+}

@@ -7,11 +7,27 @@ import Editable from "../Editabled/Editable";
 import "./Board.css";
 
 function Board(props) {
+  const updateTitle = (value) => {
+    props.updateBoardTitle(props.board._id, value);
+  };
   return (
-    <div className="board">
+    <div
+      className="board"
+      draggable
+      onDragEnd={(e) => props.dragEndedBoard(props.board)}
+      onDragEnter={(e) => props.dragEnteredBoard(props.board)}
+    >
       <div className="board_header">
         <p className="board_header_title">
-          {props.board?.title}
+          {/* {props.board?.title} */}
+          <Editable
+            displayClass="app_boards_board_title"
+            editClass="board-add-card-edit-title"
+            defaultValue={props.board?.title}
+            text={props.board?.title}
+            placeholder="Enter Board Title"
+            onSubmit={updateTitle}
+          />
           <span>{props.board?.cards?.length || 0}</span>
         </p>
         <div className="board_header_title_more">

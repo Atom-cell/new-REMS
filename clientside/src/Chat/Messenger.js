@@ -240,7 +240,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
     setTimeout(() => {
       const value = e.target.value;
       if (value == null || value == "" || value == undefined) {
-        console.log("hello");
+        // console.log("hello");
         getConversations();
       } else {
         axios
