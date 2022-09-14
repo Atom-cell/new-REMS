@@ -1,10 +1,10 @@
-import apps from "../img/app-web.PNG";
-import time from "../img/timetrack.PNG";
-import proj from "../img/projectmanage.PNG";
-import bill from "../img/billing.PNG";
-import report from "../img/report.PNG";
-import user from "../img/usermanage.PNG";
-import dashboard from "../img/dashboard.PNG";
+import apps from "../img/app-web.png";
+import time from "../img/timetrack.png";
+import proj from "../img/projectmanage.png";
+import bill from "../img/billing.png";
+import report from "../img/report.png";
+import user from "../img/usermanage.png";
+import dashboard from "../img/dashboard.png";
 import calendar from "../img/calender.PNG";
 let features = [
   {

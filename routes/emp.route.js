@@ -181,10 +181,55 @@ router.post("/login", async (req, res) => {
   const Euser = await Emp.findOne({ email: email });
   const Auser = await Admin.findOne({ email: email });
 
-  /////
-  ////////
-  ///////////
   //////////////
+
+  //update attendance
+
+  const fixTimezoneOffset = (date) => {
+    if (!date) return "";
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
+  };
+
+  let d = new Date();
+  let present = false;
+  // d.toISOString().split("T")[0];
+  console.log("DATE: ", fixTimezoneOffset(d));
+  if (Euser) {
+    if (await bcrypt.compare(req.body.password, Euser.password)) {
+      console.log("ATTendance");
+
+      Euser.attendance.forEach((date) => {
+        // console.log(fixTimezoneOffset(date).slice(0, 10));
+        if (
+          fixTimezoneOffset(date).slice(0, 10) ===
+          fixTimezoneOffset(d).slice(0, 10)
+        ) {
+          console.log("ALREADY");
+          present = false;
+        } else {
+          console.log("not");
+          present = true;
+        }
+      });
+
+      if (present) {
+        Emp.findOneAndUpdate(
+          { email: email },
+          {
+            $addToSet: {
+              attendance: fixTimezoneOffset(d),
+            },
+          }
+        )
+          // $addToSet
+          .then((msg) => {
+            console.log("message ", msg.attendance);
+            // res.json(msg);
+          })
+          .catch((err) => res.status(err));
+      }
+    }
+  }
 
   ///////////// update desktop
   if (Euser) {
@@ -193,6 +238,7 @@ router.post("/login", async (req, res) => {
         { email: Euser.email, role: Euser.role },
         "helloworld"
       );
+
       return res.json({ data: Euser, msg: 1, token: token, auth: true });
     } else return res.json({ data: Euser, msg: 0 });
   }

@@ -9,6 +9,9 @@ import {
   Alert,
 } from "@mui/material";
 import axios from "axios";
+import { Image } from "react-bootstrap";
+import SignUpImg from "../img/SignupImg.gif";
+import AnimatedRoutes from "../AnimatedRoutes";
 
 // import { Form, Button } from "react-bootstrap";
 
@@ -114,84 +117,116 @@ function Signup() {
     setOpen(false);
   };
   return (
-    <div className="container1">
-      {/* //////////// Login mai check if already reistered by finding in mongodb
+    <AnimatedRoutes>
+      <div className="container1">
+        {/* //////////// Login mai check if already reistered by finding in mongodb
       ///////////////// */}
-      <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
-        {resp === 1 ? (
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            sx={{ width: "100%" }}
+        <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+          {resp === 1 ? (
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Account Created Successfully!
+            </Alert>
+          ) : resp === 0 ? (
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              User already exists!
+            </Alert>
+          ) : null}
+        </Snackbar>
+
+        <div style={{ display: "flex", marginTop: "-5em" }}>
+          <Image src={SignUpImg} style={{ width: "50%", marginTop: "2em" }} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            Account Created Successfully!
-          </Alert>
-        ) : resp === 0 ? (
-          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-            User already exists!
-          </Alert>
-        ) : null}
-      </Snackbar>
-      <h2>LOGO</h2>
-      <h2>Sign up to REMS</h2>
-      <div className="formcontainer">
-        <form action="" noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <TextField
-            error={usernameE.error}
-            onChange={(e) => setUsername(e.target.value)}
-            id="standard-basic"
-            helperText={usernameE.msg}
-            label="Full Name"
-            variant="outlined"
-            margin="dense"
-            value={username}
-            type="text"
-            className="ip"
-          />
+            <h2>Sign up to REMS</h2>
+            <form
+              action=""
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
+              <TextField
+                error={usernameE.error}
+                onChange={(e) => setUsername(e.target.value)}
+                id="standard-basic"
+                helperText={usernameE.msg}
+                label="Full Name"
+                variant="outlined"
+                margin="dense"
+                value={username}
+                type="text"
+                className="ip"
+              />
 
-          <TextField
-            error={emailE.error}
-            onChange={(e) => setEmail(e.target.value)}
-            id="standard-basic"
-            onBlur={checkEmail}
-            label="Email"
-            value={email}
-            variant="outlined"
-            helperText={emailE.msg}
-            margin="dense"
-            type="text"
-            className="ip"
-          />
-          <TextField
-            error={passwordE.error}
-            onChange={(e) => setPassword(e.target.value)}
-            id="standard-basic"
-            label="Password"
-            value={password}
-            variant="outlined"
-            margin="dense"
-            helperText={
-              passwordE.error
-                ? passwordE.msg
-                : "Password should be atleast 8 characters."
-            }
-            type="password"
-            className="ip"
-          />
-          <p className="para">
-            If you are an employee, DO NOT register here. Employees will get an
-            invite link to signin.
-          </p>
-          <Button type="submit" variant="contained" className="submitbtn">
-            Create an Admin Account
-          </Button>
-        </form>
+              <TextField
+                error={emailE.error}
+                onChange={(e) => setEmail(e.target.value)}
+                id="standard-basic"
+                onBlur={checkEmail}
+                label="Email"
+                value={email}
+                variant="outlined"
+                helperText={emailE.msg}
+                margin="dense"
+                type="text"
+                className="ip"
+              />
+              <TextField
+                error={passwordE.error}
+                onChange={(e) => setPassword(e.target.value)}
+                id="standard-basic"
+                label="Password"
+                value={password}
+                variant="outlined"
+                margin="dense"
+                helperText={
+                  passwordE.error
+                    ? passwordE.msg
+                    : "Password should be atleast 8 characters."
+                }
+                type="password"
+                className="ip"
+              />
+              <p style={{ color: "grey", marginTop: "1em" }}>
+                If you are an employee, DO NOT register here. Employees will get
+                an invite link to signin.
+              </p>
+              <Button type="submit" variant="contained" className="submitbtn">
+                Create an Admin Account
+              </Button>
+            </form>
 
-        <p className="para">
-          Already have an account? <a href="/login">Login</a>
-        </p>
+            <p style={{ color: "grey", marginTop: "1em" }}>
+              Already have an account? <a href="/login">Login</a>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+      {/* <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 320"
+        style={{ marginTop: "-15em" }}
+      >
+        <path
+          fill="#0099ff"
+          fill-opacity="1"
+          d="M0,160L48,138.7C96,117,192,75,288,80C384,85,480,139,576,181.3C672,224,768,256,864,245.3C960,235,1056,181,1152,181.3C1248,181,1344,235,1392,261.3L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+        ></path>
+      </svg> */}
+    </AnimatedRoutes>
   );
 }
 

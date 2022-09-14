@@ -1,6 +1,7 @@
 import { Drawer, Typography, Divider, Link, Grow } from "@mui/material";
 import Clear from "@material-ui/icons/Clear";
 import React, { useState } from "react";
+import ReactLoading from "react-loading";
 import "./sidemenu.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -42,8 +43,9 @@ const images = [
 ];
 const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
   const { bid } = useParams();
-  const [showColors, setShowColors] = useState(false);
-  const [showImages, setShowImages] = useState(false);
+  const [showMedia, setShowMedia] = useState("");
+
+  // make function to map photos
 
   const handleSelectColor = (color) => {
     // console.log(color);
@@ -91,10 +93,10 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
               backgroundImage: `url(https://images.pexels.com/photos/755726/pexels-photo-755726.jpeg?cs=srgb&dl=astronomy-astrophotography-clouds-colors-755726.jpg&fm=jpg)`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
+              cursor: "pointer",
             }}
             onClick={() => {
-              setShowImages(true);
-              setShowColors(false);
+              setShowMedia("Images");
             }}
           >
             <span style={{ fontSize: "30px" }}>photo</span>
@@ -105,17 +107,17 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
               backgroundImage: `url(https://images.pexels.com/photos/226589/pexels-photo-226589.jpeg?cs=srgb&dl=closeup-photo-of-multi-color-stick-226589.jpg&fm=jpg)`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
+              cursor: "pointer",
             }}
             onClick={() => {
-              setShowColors(true);
-              setShowImages(false);
+              setShowMedia("Colors");
             }}
           >
             <span style={{ fontSize: "30px" }}>color</span>
           </div>
         </div>
-        {showColors ? (
-          <Grow in={showColors}>
+        {showMedia == "Colors" && (
+          <Grow in={showMedia == "Colors"}>
             <div className="optionContainer">
               {colors.map((color, index) => {
                 return (
@@ -129,9 +131,13 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
               })}
             </div>
           </Grow>
-        ) : (
-          <Grow in={showImages}>
-            <div className="menuContainer">
+        )}
+        {showMedia == "Images" && (
+          <Grow in={showMedia == "Images"}>
+            <div
+              style={{ height: showMedia == "Images" ? null : 0 }}
+              className="menuContainer"
+            >
               {images?.map((photo, index) => (
                 <div
                   key={index}

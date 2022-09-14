@@ -15,6 +15,7 @@ import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
 import AllMeetings from "./Meetings/AllMeetings";
 import NavBar from "./Componentss/NavBar";
+import NavigationBar from "./components/NavigationBar";
 
 import LandPage from "./components/LandPage";
 import MoreFeatures from "./components/MoreFeatures";
@@ -37,6 +38,7 @@ const socket = io.connect("http://localhost:8900");
 
 const App = () => {
   const [name, setName] = useState();
+  const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
   const [nav, setNav] = useState(false);
   const [username, setUsername] = useState();
@@ -57,6 +59,11 @@ const App = () => {
     if (localStorage.getItem("email")) {
       socket.emit("addUser", loggedUser?._id);
       setNav(true);
+    }
+    if (localStorage.getItem("role")) {
+      const role = localStorage.getItem("role");
+      console.log("ROLE: ", role);
+      setRole(role);
     }
   }, []);
 
@@ -94,7 +101,15 @@ const App = () => {
         <TimerContext.Provider value={{ timer, setTimer }}>
           <Router>
             {nav ? <NavBar /> : null}
+            {!nav ? <NavigationBar /> : null}
             <Routes>
+              {role === "admin" ? (
+                <Route path="/dashboard" element={<Dashboard />} />
+              ) : role === "Employee" ? (
+                <Route path="/dashboard" element={<Dashboard />} /> // EMP DASHBOARD
+              ) : (
+                <Route exact path="/" element={<LandPage />} />
+              )}
               <Route exact path="/" element={<LandPage />} />
               <Route path="/home" element={<LandPage />} />
               <Route path="/features" element={<MoreFeatures />} />

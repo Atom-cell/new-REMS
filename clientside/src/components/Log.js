@@ -1,15 +1,6 @@
 import React from "react";
-import { Table, Button, Row, Container, Col, Spinner } from "react-bootstrap";
-import {
-  Input,
-  InputLabel,
-  InputAdornment,
-  Snackbar,
-  Alert,
-  MenuItem,
-  FormControl,
-  Select,
-} from "@mui/material";
+import { Table, Button, Spinner } from "react-bootstrap";
+import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import axios from "axios";
 
 function Log() {
@@ -56,6 +47,20 @@ function Log() {
       if (d.email === name) setUsername(d.username);
     });
   };
+
+  const deleteLogData = async () => {
+    if (name) {
+      await axios
+        .delete(`http://localhost:5000/admin/deletelog/${name}`)
+        .then((response) => {
+          console.log("RESPONSE", response.data.data);
+        });
+    } else {
+    }
+
+    getLogData();
+  };
+
   return (
     <div className="cnt">
       <div className="search">
@@ -91,19 +96,20 @@ function Log() {
             Search
           </Button>
         </div>
-        <Button className="submitbtn" onClick={() => getLogData()}>
+        <Button className="submitbtn" onClick={() => deleteLogData()}>
           Refresh
         </Button>
       </div>
       <div>
+        <Button className="submitbtn" onClick={() => deleteLogData()}>
+          CLEAR
+        </Button>
         <h2 style={{ position: "relative", left: "1rem" }}>
-          {username}'s Activity Logs
+          {username ? `${username}'s Activity Logs` : null}
         </h2>
       </div>
       {loading === 0 ? (
-        <div className="spinner">
-          <Spinner animation="border" />
-        </div>
+        <div className="spinner">{/* <Spinner animation="border" /> */}</div>
       ) : loading === 1 ? (
         <Table hover bordered className="table">
           <thead>

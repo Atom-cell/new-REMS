@@ -1,13 +1,12 @@
 .navbar {
-  /* background-color: #060b26; */
-  background-color: #e1c5ff;
-  height: 80px;
+  background-color: #1890ff;
+
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
-  /* position: fixed;
+  position: fixed;
   width: 100%;
-  top: 0; */
+  top: 0;
 }
 
 .menu-bars {
@@ -23,7 +22,7 @@
 
 .nav-menu {
   /* background-color: #060b26; */
-  background-color: #e1c5ff;
+  background-color: #1890ff;
   width: 250px;
   height: 100vh;
   display: flex;
@@ -104,6 +103,34 @@
   background-color: gray;
 }
 
+/* //////////////////////// */
+.dp_toggle::after {
+  display: none !important;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8fb;
+}
+.nav ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+}
+.ul .item {
+  color: rgb(103, 103, 103);
+  margin: 1em 1.5em;
+  margin-bottom: -0.2em;
+}
+.ul li:hover {
+  cursor: pointer;
+  border-bottom: 2px solid #0c53b7;
+  transition: all 2ms;
+}
+#active {
+  border-bottom: 2px solid #0c53b7;
+}
 .timer_wrapper {
   display: flex;
 }

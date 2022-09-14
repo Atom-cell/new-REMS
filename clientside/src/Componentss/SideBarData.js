@@ -13,36 +13,37 @@ import ArrowDropUpRoundedIcon from "@material-ui/icons/ArrowDropUpRounded";
 import GroupIcon from "@material-ui/icons/Group";
 import WorkIcon from "@mui/icons-material/Work";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 export const SideBarData = {
   links: [
     {
       id: 1,
       title: "Dashboard",
       path: "/dashboard",
-      icon: <DashboardRoundedIcon />,
+      icon: <DashboardRoundedIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
     },
     {
       id: 2,
       title: "Calendar",
       cName: "nav-text",
-      icon: <EventAvailableRoundedIcon />,
-      iconClosed: <ArrowDropDownRoundedIcon />,
-      iconOpened: <ArrowDropUpRoundedIcon />,
+      icon: <EventAvailableRoundedIcon style={{ fill: "grey" }} />,
+      iconClosed: <ArrowDropDownRoundedIcon style={{ fill: "grey" }} />,
+      iconOpened: <ArrowDropUpRoundedIcon style={{ fill: "grey" }} />,
       path: "#",
       subNav: [
         {
           id: 3,
           title: "My Calendar",
           path: "/myCalendar",
-          icon: <CalendarTodayIcon />,
+          icon: <CalendarTodayIcon style={{ fill: "grey" }} />,
           cName: "nav-text sub-nav",
         },
         {
           id: 4,
           title: "My Team Calendar",
           path: "/myTeamCalendar",
-          icon: <CalendarMonthIcon />,
+          icon: <CalendarMonthIcon style={{ fill: "grey" }} />,
           cName: "nav-text sub-nav",
         },
       ],
@@ -51,23 +52,23 @@ export const SideBarData = {
     //   id: 5,
     //   title: "Meetings",
     //   cName: "nav-text",
-    //   icon: <MeetingRoomRoundedIcon />,
-    //   iconClosed: <ArrowDropDownRoundedIcon />,
-    //   iconOpened: <ArrowDropUpRoundedIcon />,
+    //   icon: <MeetingRoomRoundedIcon style={{ fill: "grey" }} />,
+    //   iconClosed: <ArrowDropDownRoundedIcon style={{ fill: "grey" }} />,
+    //   iconOpened: <ArrowDropUpRoundedIcon style={{ fill: "grey" }} />,
     //   path: "#",
     //   subNav: [
     //     {
     //       id: 6,
     //       title: "All Meetings",
     //       path: "/allMeetings",
-    //       icon: <GroupIcon />,
+    //       icon: <GroupIcon style={{ fill: "grey" }} />,
     //       cName: "nav-text sub-nav",
     //     },
     //     {
     //       id: 7,
     //       title: "Set Meeting",
     //       path: "/setMeeting",
-    //       icon: <MeetingRoomRoundedIcon />,
+    //       icon: <MeetingRoomRoundedIcon style={{ fill: "grey" }} />,
     //       cName: "nav-text sub-nav",
     //     },
     //   ],
@@ -108,21 +109,21 @@ export const SideBarData = {
       id: 11,
       title: "Activity Log",
       path: "/log",
-      icon: <WorkIcon />,
+      icon: <WorkIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
     },
     {
       id: 12,
       title: "Manange Employee",
       path: "/empManage",
-      icon: <EngineeringIcon />,
+      icon: <EngineeringIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
     },
     {
       id: 13,
       title: "Projects",
       path: "/projects",
-      icon: <EngineeringIcon />,
+      icon: <AssignmentIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
     },
     {

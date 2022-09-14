@@ -8,8 +8,11 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+import { Image } from "react-bootstrap";
 import Visibility from "@mui/icons-material/Visibility";
 import axios from "axios";
+import LoginImg from "../img/Login.gif";
+import AnimatedRoutes from "../AnimatedRoutes";
 
 function Login() {
   React.useEffect(() => {
@@ -125,80 +128,109 @@ function Login() {
       });
   };
   return (
-    <div className="container1">
-      {valid === 0 ? (
-        <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-            Invalid Credentials!
-          </Alert>
-        </Snackbar>
-      ) : data.role === "admin" && !data.verified ? (
-        alert("Please Verify your Credentials")
-      ) : data.role === "admin" && data.verified ? (
-        (window.location = "/dashboard")
-      ) : data.updated === false ? (
-        (window.location = "/update")
-      ) : data.updated ? (
-        (window.location = "/empDashboard")
-      ) : null}
-      <h2>LOGO</h2>
-      <h2>Login to REMS</h2>
-      <div className="formcontainer">
-        <form action="" noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <TextField
-            error={emailE.error}
-            onChange={(e) => setEmail(e.target.value)}
-            id="standard-basic"
-            onBlur={checkEmail}
-            label="Email"
-            variant="outlined"
-            value={email}
-            helperText={emailE.msg}
-            margin="dense"
-            type="text"
-            className="ip"
-          />
-          <TextField
-            error={passwordE.error}
-            onChange={(e) => setPassword(e.target.value)}
-            id="standard-basic"
-            label="Password"
-            variant="outlined"
-            margin="dense"
-            value={password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={showPassword}>
-                    <Visibility />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            helperText={passwordE.msg}
-            type={showPass ? "text" : "password"}
-            className="ip"
-          />
-          <div style={{ width: "100%" }}>
-            <Button type="submit" variant="contained" className="submitbtn">
-              Login
-            </Button>
-          </div>
-        </form>
+    <AnimatedRoutes>
+      <div className="container1">
+        {valid === 0 ? (
+          <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Invalid Credentials!
+            </Alert>
+          </Snackbar>
+        ) : data.role === "admin" && !data.verified ? (
+          alert("Please Verify your Credentials")
+        ) : data.role === "admin" && data.verified ? (
+          (window.location = "/dashboard")
+        ) : data.updated === false ? (
+          (window.location = "/update")
+        ) : data.updated ? (
+          (window.location = "/empDashboard")
+        ) : null}
 
-        <p className="para">
-          <a href="/forget" style={{ fontWeight: "bold" }}>
-            Forgot Password?
-          </a>
-        </p>
+        <div style={{ display: "flex", marginTop: "-2em" }}>
+          <Image src={LoginImg} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h2>Login to REMS</h2>
+            <form
+              action=""
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
+              <TextField
+                error={emailE.error}
+                onChange={(e) => setEmail(e.target.value)}
+                id="standard-basic"
+                onBlur={checkEmail}
+                label="Email"
+                variant="outlined"
+                value={email}
+                helperText={emailE.msg}
+                margin="dense"
+                type="text"
+                className="ip"
+              />
+              <TextField
+                error={passwordE.error}
+                onChange={(e) => setPassword(e.target.value)}
+                id="standard-basic"
+                label="Password"
+                variant="outlined"
+                margin="dense"
+                value={password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={showPassword}>
+                        <Visibility />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                helperText={passwordE.msg}
+                type={showPass ? "text" : "password"}
+                className="ip"
+              />
+              <div style={{ width: "100%" }}>
+                <Button type="submit" variant="contained" className="submitbtn">
+                  Login
+                </Button>
+              </div>
+            </form>
+
+            <p className="para">
+              <a href="/forget" style={{ fontWeight: "bold" }}>
+                Forgot Password?
+              </a>
+            </p>
+            <p className="para">
+              Not yet Registered? <a href="/signup">Signup</a>
+            </p>
+          </div>
+        </div>
       </div>
-      <Button variant="contained" className="submitbtn" onClick={checkAuth}>
-        clicl me
-      </Button>
-      <p className="para">
-        Not yet Registered? <a href="/signup">Signup</a>
-      </p>
-    </div>
+      {/* <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 320"
+        style={{ marginTop: "-13em" }}
+      >
+        <path
+          fill="#0099ff"
+          fill-opacity="1"
+          d="M0,128L48,117.3C96,107,192,85,288,101.3C384,117,480,171,576,197.3C672,224,768,224,864,202.7C960,181,1056,139,1152,144C1248,149,1344,203,1392,229.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+        ></path>
+      </svg> */}
+    </AnimatedRoutes>
   );
 }
 

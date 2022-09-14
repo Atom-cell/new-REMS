@@ -56,6 +56,7 @@ var empSchema = mongoose.Schema({
     },
   ],
   billingId: String, // This is Stripe Customer ID
+  attendance: [Date],
   bankDetails: String,
 });
 

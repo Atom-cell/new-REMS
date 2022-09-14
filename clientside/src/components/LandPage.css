@@ -7,48 +7,61 @@
 }
 .one:hover {
   text-decoration: underline;
+  font-weight: bold;
 }
 .two:hover {
   text-decoration: underline;
+  font-weight: bold;
 }
 .three:hover {
   text-decoration: underline;
+  font-weight: bold;
 }
-.me-auto Nav.Link {
+Nav.Link {
   color: #000000 !important;
 }
 .four:hover {
   text-decoration: underline;
+
+  font-weight: bold;
 }
 .signbtn {
   background-color: transparent !important;
   color: "white" !important;
-  border: 1px solid #663399 !important;
+  border: 1px solid #fff !important;
   padding: 0.7rem 2rem 0.7rem 2rem;
 
   font-weight: bold !important;
   border-radius: 50px;
 }
 .signbtn:hover {
-  background-color: #663399 !important;
+  background-color: #0c53b7 !important;
   color: "white" !important;
-  margin: 0.1rem !important;
 }
 .signbtn2 {
-  background-color: #e1c5ff !important;
+  background-color: #1890ff !important;
   color: "white" !important;
   font-weight: bold !important;
-  border: 1px solid #663399 !important;
+  border: 1px solid #fff !important;
   padding: 0.7rem 2rem 0.7rem 2rem !important;
   margin-top: 2rem !important;
 }
 .signbtn2:hover {
-  background-color: #663399 !important;
+  background-color: #0c53b7 !important;
   color: "white" !important;
   /* margin: 0.1rem !important; */
 }
 
 .headerimg {
+  max-width: 113%;
+  max-height: 115%;
+  /* margin-top: 3rem; */
+  padding-right: 3.7rem;
+  /* position: absolute;
+  right: 0;
+  z-index: -5; */
+}
+.headerimg2 {
   max-width: 113%;
   max-height: 115%;
   margin-top: 3rem;
@@ -98,16 +111,17 @@
   padding-right: 1rem !important;
 }
 .ft1 {
-  margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
   padding: 3rem;
+  /* background-color: steelblue; */
 }
 .ft1 > h1 {
   font-weight: 900;
 }
 
 .footer {
-  background-color: #e1c5ff;
+  background-color: #1890ff;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -125,16 +139,14 @@
 }
 
 .more Button {
-  background-color: #e1c5ff !important;
+  background-color: #1890ff !important;
   color: "white" !important;
-  border: 1px solid #663399 !important;
   padding: 0.7rem 5rem 0.7rem 5rem;
 }
 
 .more Button:hover {
-  background-color: #663399 !important;
+  background-color: #0c53b7 !important;
   color: "white" !important;
-  margin: 0.1rem !important;
 }
 
 .footer {
@@ -145,7 +157,7 @@
 }
 
 .footer Button {
-  background-color: #e1c5ff !important;
+  background-color: #74caff !important;
   color: "white" !important;
   font-weight: bold !important;
   border: 1px solid #663399 !important;
@@ -154,6 +166,22 @@
 }
 
 .footer > Button:hover {
-  background-color: #663399 !important;
+  background-color: #0c53b7 !important;
   color: "white" !important;
+}
+
+@media (max-width: 768px) {
+  .headerimg {
+    display: none;
+  }
+  .ft1img {
+    /* border: 1px solid black !important; */
+    padding-top: 0.1rem !important;
+    padding-bottom: 2rem !important;
+    padding-right: 1rem !important;
+    /* background-color: green; */
+  }
+  .footerbtn {
+    display: none;
+  }
 }

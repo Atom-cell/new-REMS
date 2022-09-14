@@ -13,10 +13,10 @@ h2 {
   color: "#172c56";
 }
 .para a {
-  color: #8248de;
+  color: #0c53b7;
 }
 .para a:hover {
-  color: #8248de;
+  color: #0c53b7;
 }
 .para {
   color: gray;
@@ -25,26 +25,24 @@ h2 {
   /* margin-bottom: 3rem; */
 }
 .formcontainer {
-  border: 2px solid #e1c5ff;
-  /* background-color: gray; */
+  border: 2px solid #74caff;
   padding-top: 2rem;
   padding-bottom: 2rem;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 50%;
-  box-shadow: 5px 5px #d6d6d6;
+  box-shadow: 5px 5px #f0f0f0;
 }
 
 .submitbtn {
-  background-color: #e1c5ff !important;
-  border: 1px solid #8248de !important;
+  background-color: #1890ff !important;
+  border: 1px solid #fff !important;
   margin-top: 0.5rem !important;
 }
 .submitbtn:hover {
-  background-color: #8248de !important;
+  background-color: #0c53b7 !important;
 }
 .ip {
   width: 70% !important;

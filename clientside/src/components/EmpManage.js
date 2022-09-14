@@ -1,27 +1,44 @@
 import React from "react";
 import axios from "axios";
 import "./EmpManage.css";
-import { Table, Button, Dropdown, Spinner } from "react-bootstrap";
+import { Table, Button, Dropdown, Spinner, Badge } from "react-bootstrap";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import {
-  Input,
-  InputLabel,
-  InputAdornment,
-  Snackbar,
-  Alert,
-  ToggleButton,
-} from "@mui/material";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { Input, TextField, Snackbar, Alert, ToggleButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddEmpModal from "./AddEmpModal";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8900");
 
 function Online() {
-  return <p style={{ color: "green" }}>✅Online</p>;
+  return (
+    <p
+    // style={{
+    //   color: "green",
+    //   padding: "0.7em",
+    //   backgroundColor: "lightGreen",
+    //   fontSize: "1rem",
+    // }}
+    >
+      <Badge pill bg="success">
+        Online
+      </Badge>{" "}
+    </p>
+  );
 }
 
 function Offline() {
-  return <p style={{ color: "red" }}>⭕Offline</p>;
+  return (
+    <p>
+      <Badge pill bg="danger">
+        Offline
+      </Badge>{" "}
+    </p>
+  );
 }
 
 function EmpManage() {
@@ -30,11 +47,13 @@ function EmpManage() {
   const [mod, setMod] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [copy, setCopy] = React.useState([...data]);
+  const [copy2, setCopy2] = React.useState([...data]);
   const [search, setSearch] = React.useState("");
   const [loading, setLoading] = React.useState(0);
   const [eNum, setENum] = React.useState(0);
   const [msg, setMsg] = React.useState(9);
   const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState([false]);
 
   React.useEffect(() => {
     getData();
@@ -50,6 +69,7 @@ function EmpManage() {
       .then((response) => {
         console.log(response);
         setData([...response.data.data]);
+        setCopy2([...response.data.data]);
         //console.log([...response.data.data]);
         setLoading(response.data.msg);
         setENum(response.data.data.length);
@@ -100,7 +120,7 @@ function EmpManage() {
   const SearchEmp = () => {
     setCopy([...data]);
     if (search === "") {
-      //setData([...copy]);
+      setData([...copy2]);
     } else {
       console.log([...data]);
       let temp = data.filter((d) => {
@@ -110,6 +130,37 @@ function EmpManage() {
       setData([...temp]);
     }
   };
+  const SearchEmpByType = (a) => {
+    console.log(a);
+    setCopy([...copy2]);
+    if (a === "") {
+      setData([...copy2]);
+    } else {
+      console.log([...copy2]);
+
+      let temp = data.filter((d) => {
+        return d.username.includes(a);
+      });
+      console.log(temp);
+      setData([...temp]);
+    }
+  };
+
+  const Screenshots = (index, email) => {
+    // socket.emit("StartSS", email);
+    if (selected[index] === true) {
+      // socket.emit("StopSS", email);
+      let temp = [...selected];
+      temp[index] = false;
+      setSelected([...temp]);
+    } else {
+      // socket.emit("StartSS", email);
+      let temp = [...selected];
+      temp[index] = true;
+      setSelected([...temp]);
+    }
+  };
+
   return (
     <div className="cnt">
       <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
@@ -134,16 +185,12 @@ function EmpManage() {
 
       <div className="search">
         <div>
-          <Input
-            id="input-with-icon-adornment"
-            placeholder="Employee Name"
-            endAdornment={
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            }
+          <TextField
+            id="outlined-basic"
+            label="Employee Name"
             onChange={(e) => {
               setSearch(e.target.value);
+              SearchEmpByType(e.target.value);
             }}
           />
           <Button
@@ -151,6 +198,7 @@ function EmpManage() {
             onClick={() => SearchEmp()}
             style={{ marginLeft: "10px" }}
           >
+            <SearchIcon style={{ fill: "white" }} />
             Search
           </Button>
         </div>
@@ -159,6 +207,7 @@ function EmpManage() {
           //style={{ marginBottom: "20px" }}
           onClick={() => setMod(true)}
         >
+          <PersonAddIcon style={{ fill: "white", marginRight: "0.5em" }} />
           Add new Employee
         </Button>
       </div>
@@ -168,7 +217,7 @@ function EmpManage() {
           <Spinner animation="border" />
         </div>
       ) : loading === 1 ? (
-        <Table hover bordered className="table">
+        <Table className="table">
           <thead>
             <tr>
               <th className="thead">#</th>
@@ -176,9 +225,9 @@ function EmpManage() {
               <th className="thead">Email</th>
               <th className="thead">Role</th>
               <th className="thead">More Info</th>
-              <th className="thead">Action</th>
+              <th className="thead">Sreenshot</th>
               <th className="thead">Status</th>
-              <th className="thead">SS</th>
+              <th className="thead">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -186,7 +235,7 @@ function EmpManage() {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{data.username} ❌ </td>
+                  <td>{data.username} </td>
                   <td>{data.email}</td>
                   <td>{data.role}</td>
                   <td>
@@ -201,11 +250,31 @@ function EmpManage() {
                     </button>
                   </td>
                   <td>
+                    <ToggleButton
+                      value="check"
+                      selected={selected[index]}
+                      // onChange={() => {
+                      //   setSelected(!selected);
+                      // }}
+                      onClick={() => Screenshots(index, data.email)}
+                      style={{ padding: "0.5em" }}
+                    >
+                      <PhotoCameraIcon />
+                    </ToggleButton>
+                    {/* <Button onClick={() => ScreenshotStart(data.email)}>
+                      SS
+                    </Button>
+                    <Button onClick={() => ScreenshotStop(data.email)}>
+                      SStop
+                    </Button> */}
+                  </td>
+                  <td>{data.desktop ? <Online /> : <Offline />}</td>
+                  <td>
                     <Dropdown>
                       <Dropdown.Toggle
                         style={{ all: "unset", cursor: "pointer" }}
                       >
-                        {/* <MoreVertIcon /> */}
+                        <MoreVertIcon />
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
@@ -217,18 +286,6 @@ function EmpManage() {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                  </td>
-                  <td>{data.desktop ? <Online /> : <Offline />}</td>
-                  <td>
-                    <ToggleButton
-                      value="check"
-                      // selected={selected}
-                      // onChange={() => {
-                      //   setSelected(!selected);
-                      // }}
-                    >
-                      <PhotoCameraIcon />
-                    </ToggleButton>
                   </td>
                 </tr>
               );

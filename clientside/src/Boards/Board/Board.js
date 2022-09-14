@@ -21,7 +21,7 @@ function Board(props) {
         <p className="board_header_title">
           {/* {props.board?.title} */}
           <Editable
-            displayClass="app_boards_board_title"
+            displayClass="app_boards_title"
             editClass="board-add-card-edit-title"
             defaultValue={props.board?.title}
             text={props.board?.title}
