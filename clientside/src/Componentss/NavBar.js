@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import Timer from "./Timer";
+import Timer from "../Projects/Timer";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useStopwatch } from "react-timer-hook";
+import PauseTimer from "./PauseTimer";
 import { TimerContext } from "../Helper/Context";
 import { ProjectNameContext } from "../Helper/Context";
 import { Pause, PlayArrow, Stop } from "@mui/icons-material";
@@ -11,19 +12,27 @@ const Timer = () => {
   stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + 300);
   const { seconds, minutes, hours, isRunning, start, pause, reset } =
     useStopwatch({ autoStart: false });
+
   const secondTime = seconds < 10 ? `0${seconds}` : `${seconds}`;
   const minuteTime = minutes < 10 ? `0${minutes}` : `${minutes}`;
   const hourTime = hours < 10 ? `0${hours}` : `${hours}`;
 
   const { timer, setTimer } = React.useContext(TimerContext);
   const { name, setName } = React.useContext(ProjectNameContext);
-  const [breaks, setBreaks] = React.useState(0);
+  const [breaks, setBreaks] = React.useState([]);
 
   //[pause , play, stop]
   const [btnState, setBtnState] = React.useState([false, false, false]);
 
+  const pauseTime = (h, m, s) => {
+    console.log(h, ":", m, ":", s);
+    let a = [...breaks];
+    a.push(`${h}:${m}:${s}`);
+    setBreaks([...a]);
+    startBtn();
+  };
+
   const startBtn = () => {
-    console.log("PROJECT: ", name);
     if (name) {
       setTimer(true);
       if (btnState[1] === false && btnState[2] === false) {
@@ -50,13 +59,13 @@ const Timer = () => {
   };
 
   const stopBtn = () => {
-    if (name) {
+    if (name && secondTime > 0) {
       alert("aa");
       uploadTime();
     }
 
     setTimer(false);
-    setBreaks(0);
+    setBreaks([]);
     let a = [...btnState];
     a[0] = false;
     a[1] = false; // play
@@ -67,13 +76,16 @@ const Timer = () => {
   };
 
   const pauseBtn = () => {
-    setBreaks((prevState) => prevState + 1);
-    let a = [...btnState];
-    a[0] = true;
-    a[1] = false;
-    a[2] = false; //stop
-    setBtnState([...a]);
-    pause();
+    if (!btnState[0]) {
+      let a = [...btnState];
+      a[0] = true;
+      a[1] = false;
+      a[2] = false; //stop
+      setBtnState([...a]);
+      pause();
+    } else {
+      alert("paused is pressed");
+    }
   };
 
   const uploadTime = () => {
@@ -90,36 +102,42 @@ const Timer = () => {
     setName(null);
   };
   return (
-    <div style={{ fontSize: "1.7rem", textAlign: "center" }}>
-      <span>{name ? name.name : null} </span>
-      <IconButton
-        onClick={pauseBtn}
-        style={btnState[0] ? { backgroundColor: "#fff" } : null}
-      >
-        <Pause />
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          startBtn();
-        }}
-        style={isRunning ? { backgroundColor: "#fff" } : null}
-      >
-        <PlayArrow style={{ fill: "green" }} />
-      </IconButton>
-      <IconButton
-        onClick={() => stopBtn()}
-        style={
-          btnState[2]
-            ? { backgroundColor: "#fff", marginRight: "1em" }
-            : { marginRight: "1em" }
-        }
-      >
-        <Stop style={{ fill: "red" }} />
-      </IconButton>
-      <span style={{ marginRight: "1em" }}>
-        {hourTime} : {minuteTime} : {secondTime}
-      </span>
-    </div>
+    <>
+      {btnState[0] ? (
+        <PauseTimer pauseTime={pauseTime} />
+      ) : (
+        <div style={{ fontSize: "1.7rem", textAlign: "center" }}>
+          <span>{name ? name.name : null} </span>
+          <IconButton
+            onClick={pauseBtn}
+            style={btnState[0] ? { backgroundColor: "#fff" } : null}
+          >
+            <Pause />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              startBtn();
+            }}
+            style={isRunning ? { backgroundColor: "#fff" } : null}
+          >
+            <PlayArrow style={{ fill: "green" }} />
+          </IconButton>
+          <IconButton
+            onClick={() => stopBtn()}
+            style={
+              btnState[2]
+                ? { backgroundColor: "#fff", marginRight: "1em" }
+                : { marginRight: "1em" }
+            }
+          >
+            <Stop style={{ fill: "red" }} />
+          </IconButton>
+          <span style={{ marginRight: "1em" }}>
+            {hourTime} : {minuteTime} : {secondTime}
+          </span>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -33,7 +33,7 @@ var myProjectSchema = mongoose.Schema({
     type: [String],
   },
   numOfBreaks: {
-    type: [Number],
+    type: [[String]],
   },
   hoursWorkedOn: {
     type: Boolean,
