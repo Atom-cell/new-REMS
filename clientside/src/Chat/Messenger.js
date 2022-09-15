@@ -256,7 +256,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   };
 
   return (
-    <div>
+    <div className="messenger-container">
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">

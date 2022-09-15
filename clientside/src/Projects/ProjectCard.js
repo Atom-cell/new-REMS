@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { ProjectNameContext } from "../Helper/Context";
 import { TimerContext } from "../Helper/Context";
-import { Button } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import axios from "axios";
 import ShareWork from "./ShareWork";
 import { useNavigate } from "react-router-dom";
@@ -67,8 +67,7 @@ const ProjectCard = ({
     <div className="project-column">
       {volunteer == false && (
         <Button
-          variant="contained"
-          color="secondary"
+          className="submitbtn"
           style={{ float: "right", marginTop: "25px", marginRight: "50px" }}
           onClick={() => handleVolunteerClick(project)}
         >

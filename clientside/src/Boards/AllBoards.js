@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -134,7 +134,7 @@ const AllBoards = ({ user }) => {
           <Form.Control
             type="search"
             placeholder="Search Kanban Board"
-            className="me-2"
+            className="me-2 search-projects"
             aria-label="Search"
             value={searchInput}
             onChange={handleSearchChange}
@@ -143,8 +143,7 @@ const AllBoards = ({ user }) => {
         </div>
         <div className="create-project">
           <Button
-            variant="contained"
-            color="secondary"
+            style={{ backgroundColor: "#1890ff" }}
             onClick={handleCreateBoard}
           >
             Create Board

@@ -50,11 +50,13 @@
   margin-right: 15px;
 } */
 .video-call-icon-chat-online svg{
-  fill: #51ad70 !important;
+  /* fill: #51ad70 !important; */
+  fill: gray !important;
   border-radius: 5px;
 }
 .video-call-icon-chat-online svg:hover{
-  background-color: #4eac6d !important;
+  /* background-color: #4eac6d !important; */
+  background-color: lightgray  !important;
   fill: #edf7f0 !important;
   cursor: pointer;
 }

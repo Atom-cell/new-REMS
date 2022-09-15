@@ -48,28 +48,43 @@
 .selectContainer{
     position: absolute;
     right: 20%;
+    display: flex;
 }
 .selectContainer button{
     border-radius: 10px;
-	font-size: larger;
+	/* font-size: larger; */
+    color: black;
 	border: none;
 	border-bottom:2px solid gray;
 	outline: none;
     margin-right: 15px;
-    background-color: #e1c5ff;
+    background-color: transparent !important;
     border: 0;
 }
-.selectContainer button:hover{
+/* .selectContainer button:hover{
     background-color: #8248de;
+} */
+/* .every-btn {
+	border: 2px solid #fff !important;
+    border-radius: 10px !important;
+	font-size: 18px !important;
+    margin-right: 15px !important;
 }
+.every-btn:hover {
+	background-color: transparent !important;
+} */
 .selectContainer select{
     border-radius: 10px;
 	font-size: larger;
-	border: none;
-	border-bottom:2px solid gray;
 	outline: none;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+    border: 2px solid #fff !important;
+}
+
+.selectContainer select:hover{
+    box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 18%), 0px 1px 5px 0px rgb(0 0 0 / 18%);
 }
 .selectContainer option, .selectContainer select{
-    background-color: #e1c5ff;
+    /* background-color: #1890ff; */
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }

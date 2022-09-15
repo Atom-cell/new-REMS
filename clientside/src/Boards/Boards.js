@@ -4,7 +4,7 @@ import Editable from "./Editabled/Editable";
 import "./boards.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Button } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import SideMenu from "./SideMenu";
 
 const Boards = ({ user }) => {
@@ -271,9 +271,7 @@ const Boards = ({ user }) => {
         />
         <div className="boards-container-nav-background-button-div">
           <Button
-            variant="contained"
-            color="secondary"
-            className="app_nav_background_button"
+            className="app_nav_background_button submitbtn"
             onClick={() => setOpenSideNav(true)}
           >
             Change Background

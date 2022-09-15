@@ -1,7 +1,7 @@
 .all-meetings-button{
     display: flex;
     justify-content: flex-end;
-    margin: 10px 0px;
+    margin-bottom: 10px;
 }
 .all-meetings-button button{
     border-radius: 10px;
@@ -25,9 +25,14 @@
     overflow-y: hidden;
 }
 
-.all-meetings-table thead{
+.all-meetings-table thead, .meeting-employees-body thead{
     position: sticky;
     top: 0px;
+    background-color: #1890ff;
+}
+  
+.all-meetings-table thead tr th, .meeting-employees-body thead tr th{
+    color: white;
 }
   
 .all-meetings-table td,
@@ -36,7 +41,7 @@
 }
 .all-meetings-table-container{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    height: 70vh;
+    height: 65vh;
     overflow-y: auto;
 }
 .meeting-employees-body{
@@ -78,7 +83,8 @@
 }
 .all-meeting-row-delete-icon svg{
     /* font-size: 28px; */
-    fill: #51ad70 !important;
+    /* fill: #51ad70 !important; */
+    fill: gray !important;
     /* margin-right: 10px; */
     margin: 0 10px;
     padding: 8px;
@@ -86,7 +92,8 @@
     font-size: 40px;
 }
 .all-meeting-row-delete-icon svg:hover{
-    background-color: #4eac6d !important;
+    /* background-color: #4eac6d !important; */
+    background-color: lightgray !important;
     fill: #edf7f0 !important;
     cursor: pointer;
 }

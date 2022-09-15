@@ -12,7 +12,7 @@ import axios from "axios";
 import EditModal from "./EditModal";
 import "./mycalendar.css";
 import { toast } from "react-toastify";
-import AddCircleOutlineRoundedIcon from "@material-ui/icons/AddCircleOutlineRounded";
+import { Button } from "@mui/material";
 import MoreEvents from "./MoreEvents";
 const locales = {
   "en-US": enUS,
@@ -219,16 +219,21 @@ const MyCalendar = ({ user }) => {
           </div>
         </div> */}
         <div className="selectContainer">
-          <button onClick={handleShow}>Add Events</button>
-          <select
-            id="framework"
-            value={filterOptionValue}
-            onChange={handlefilter}
-          >
-            <option value="All">All</option>
-            <option value="Goal">Goal</option>
-            <option value="Reminder">Reminder</option>
-          </select>
+          <Button type="submit" variant="contained" onClick={handleShow}>
+            Add Events
+          </Button>
+          {/* <button onClick={handleShow}>Add Events</button> */}
+          <div className="select-div">
+            <select
+              id="framework"
+              value={filterOptionValue}
+              onChange={handlefilter}
+            >
+              <option value="All">All</option>
+              <option value="Goal">Goal</option>
+              <option value="Reminder">Reminder</option>
+            </select>
+          </div>
         </div>
         <div className="calendar">
           <Calendar
@@ -244,7 +249,7 @@ const MyCalendar = ({ user }) => {
             // defaultView={'day'}
             views={["month", "agenda"]}
             // , "day", "work_week"
-            style={{ height: "82vh", margin: "0 20px 0 20px" }}
+            style={{ height: "75vh", margin: "0 20px 0 20px" }}
             eventPropGetter={(event) => {
               const backgroundColor =
                 event.category == "Reminder" ? "#8248de" : "#c28cfc";

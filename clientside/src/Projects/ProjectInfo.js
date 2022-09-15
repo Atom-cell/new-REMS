@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import FileBase64 from "react-file-base64";
 import ProjectCard from "./ProjectCard";
-import { Button } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import { Table } from "react-bootstrap";
 import axios from "axios";
 import UploadMilestoneFile from "./UploadMilestoneFile";
@@ -78,6 +78,7 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
           width: "70%",
           float: "right",
         }}
+        className="project-info"
       >
         <div className="header">
           <h2>{project?.projectName}</h2>
@@ -88,17 +89,21 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
         {user?.role == "Employee" && (
           <>
             <Button
-              variant="contained"
-              color="secondary"
-              style={{ float: "right", margin: "10px" }}
+              className="submitbtn"
+              style={{
+                float: "right",
+                margin: "10px",
+              }}
               onClick={handleShow}
             >
               Upload MileStone
             </Button>
             <Button
-              variant="contained"
-              color="secondary"
-              style={{ float: "right", margin: "10px" }}
+              className="submitbtn"
+              style={{
+                float: "right",
+                margin: "10px",
+              }}
               onClick={handleShoww}
             >
               Email
@@ -122,13 +127,17 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
         )}
         {/* Show all the pdf uploaded for the given project */}
         <Table striped bordered hover>
-          <thead>
+          <thead style={{ backgroundColor: "#1890ff" }}>
             <tr>
-              <th>File Name</th>
-              <th>File</th>
-              <th>Milestone</th>
-              {user?.role == "admin" && <th>Mark</th>}
-              {user?.role == "Employee" && <th>Completed</th>}
+              <th style={{ color: "white" }}>File Name</th>
+              <th style={{ color: "white" }}>File</th>
+              <th style={{ color: "white" }}>Milestone</th>
+              {user?.role == "admin" && (
+                <th style={{ color: "white" }}>Mark</th>
+              )}
+              {user?.role == "Employee" && (
+                <th style={{ color: "white" }}>Completed</th>
+              )}
             </tr>
           </thead>
           <tbody>

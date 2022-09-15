@@ -81,7 +81,7 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
 
   return (
     <>
-      <Button className="set-meeting-button" onClick={handleShow}>
+      <Button className="submitbtn" onClick={handleShow}>
         Set Meeting
       </Button>
 

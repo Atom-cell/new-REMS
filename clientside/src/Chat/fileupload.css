@@ -19,7 +19,8 @@
     cursor: pointer;
 }
 .btn-file svg{
-  fill: #51ad70 !important;
+  /* fill: #51ad70 !important; */
+  fill: gray !important;
   padding: 8px;
   border-radius: 10px;
   font-size: 40px;

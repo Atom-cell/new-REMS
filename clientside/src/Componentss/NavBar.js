@@ -92,11 +92,50 @@ const Navbar = () => {
                       className="item"
                       key={key}
                       id={location.pathname === item.path ? "active" : ""}
-                      onClick={() => navigate(item.path)}
+                      // onClick={() => navigate(item.path)}
                     >
-                      {item.icon}
-                      <span style={{ paddingRight: "0.4em" }}></span>
-                      {item.title}
+                      <div style={{ display: "flex" }}>
+                        {item.subNav ? (
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              style={{
+                                all: "unset",
+                                cursor: "pointer",
+                                marginLeft: "0.5em",
+                                color: "grey",
+                              }}
+                            >
+                              {item.icon}
+                              <span style={{ paddingRight: "0.2em" }}></span>
+                              {item.title}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                              {item.subNav.map((item, index) => {
+                                return (
+                                  <Dropdown.Item
+                                    onClick={() => navigate(item.path)}
+                                  >
+                                    <span>{item.icon}</span>
+                                    {item.title}
+                                  </Dropdown.Item>
+                                );
+                              })}
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        ) : (
+                          <>
+                            <span
+                              onClick={() => navigate(item.path)}
+                              style={{ color: "grey" }}
+                            >
+                              {item.icon}
+                              <span style={{ paddingRight: "0.2em" }}></span>
+                              {item.title}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </li>
                   );
                 }

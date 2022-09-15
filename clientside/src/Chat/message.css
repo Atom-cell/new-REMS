@@ -14,6 +14,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+    margin-left: 3px;
   }
 
   .chatProfileImg {
@@ -39,6 +40,7 @@
   
   .messageBottom{
       font-size: 12px;
+      margin-left: 3px;
       /* margin-top: 3px; */
   }
   
@@ -52,7 +54,8 @@
       color: #5a6368;
   }
   .messageFile{
-    border: 1px solid #51ad70;
+    /* border: 1px solid #51ad70; */
+    border: 1px solid gray;
     border-radius: 10px;
     padding: 5px;
     display: flex;
@@ -66,14 +69,17 @@
     margin: 8px;
   }
   .message-file-name a:hover{
-    color: #51ad70;
+    /* color: #51ad70; */
+    color: lightgray;
   }
   .attachment-icon svg, .download-icon svg{
-    fill: #51ad70 !important;
+    /* fill: #51ad70 !important; */
+    fill: gray !important;
     /* font-size: 33px !important; */
   }
   .download-icon svg:hover{
-    background-color: #4eac6d !important;
+    /* background-color: #4eac6d !important; */
+    background-color: lightgray !important;
     fill: #edf7f0 !important;
   }
   .attachment-icon {

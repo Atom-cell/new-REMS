@@ -1,7 +1,6 @@
-import { Drawer, Typography, Divider, Link, Grow } from "@mui/material";
+import { Drawer, Typography, Divider, Grow } from "@mui/material";
 import Clear from "@material-ui/icons/Clear";
 import React, { useState } from "react";
-import ReactLoading from "react-loading";
 import "./sidemenu.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -77,12 +76,15 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
         anchor={"right"}
         onClose={() => setOpenSideNav(false)}
         PaperProps={{
-          sx: { width: "400px", backgroundColor: "#e1c5ff" },
+          sx: { width: "400px", backgroundColor: "#1890ff" },
         }}
       >
         <div className="titleContainer">
           <Typography className="title">Change Background</Typography>
-          <Clear onClick={() => setOpenSideNav(false)} />
+          <Clear
+            onClick={() => setOpenSideNav(false)}
+            style={{ cursor: "pointer", fill: "white" }}
+          />
         </div>
         <Divider />
 
@@ -99,7 +101,7 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
               setShowMedia("Images");
             }}
           >
-            <span style={{ fontSize: "30px" }}>photo</span>
+            <span style={{ fontSize: "30px", color: "white" }}>photo</span>
           </div>
           <div
             className="menu"
@@ -113,7 +115,7 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
               setShowMedia("Colors");
             }}
           >
-            <span style={{ fontSize: "30px" }}>color</span>
+            <span style={{ fontSize: "30px", color: "white" }}>color</span>
           </div>
         </div>
         {showMedia == "Colors" && (

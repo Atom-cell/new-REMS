@@ -7,13 +7,14 @@ import CalendarMonthIcon from "@material-ui/icons/TodayRounded";
 import VideoCallRoundedIcon from "@material-ui/icons/VideoCallRounded";
 import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
 import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
-import MeetingRoomRoundedIcon from "@material-ui/icons/MeetingRoomRounded";
 import ArrowDropDownRoundedIcon from "@material-ui/icons/ArrowDropDownRounded";
 import ArrowDropUpRoundedIcon from "@material-ui/icons/ArrowDropUpRounded";
 import GroupIcon from "@material-ui/icons/Group";
 import WorkIcon from "@mui/icons-material/Work";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import { Trello } from "react-feather";
 export const SideBarData = {
   links: [
     {
@@ -77,7 +78,7 @@ export const SideBarData = {
       id: 8,
       title: "Collaboration",
       cName: "nav-text",
-      icon: <MailOutlineRoundedIcon />,
+      icon: <MailOutlineRoundedIcon style={{ fill: "grey" }} />,
       iconClosed: <ArrowDropDownRoundedIcon />,
       iconOpened: <ArrowDropUpRoundedIcon />,
       path: "#",
@@ -86,14 +87,14 @@ export const SideBarData = {
           id: 9,
           title: "My Messenger",
           path: "/myMessenger",
-          icon: <EmailRoundedIcon />,
+          icon: <EmailRoundedIcon style={{ fill: "grey" }} />,
           cName: "nav-text sub-nav",
         },
         {
           id: 10,
           title: "Video Call",
           path: "/videoCall",
-          icon: <VideoCallRoundedIcon />,
+          icon: <VideoCallRoundedIcon style={{ fill: "grey" }} />,
           cName: "nav-text sub-nav",
         },
       ],
@@ -102,7 +103,7 @@ export const SideBarData = {
       id: 6,
       title: "All Meetings",
       path: "/allMeetings",
-      icon: <GroupIcon />,
+      icon: <GroupIcon style={{ fill: "grey" }} />,
       cName: "nav-text sub-nav",
     },
     {
@@ -122,17 +123,42 @@ export const SideBarData = {
     {
       id: 13,
       title: "Projects",
-      path: "/projects",
       icon: <AssignmentIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
+      iconClosed: <ArrowDropDownRoundedIcon />,
+      iconOpened: <ArrowDropUpRoundedIcon />,
+      path: "#",
+      subNav: [
+        {
+          id: 14,
+          title: "My Projects",
+          path: "/projects",
+          icon: <AssignmentTurnedInIcon style={{ fill: "grey" }} />,
+          cName: "nav-text",
+        },
+        {
+          id: 15,
+          title: "My Boards",
+          path: "/allboards",
+          icon: <Trello stroke="gray" />,
+          cName: "nav-text",
+        },
+      ],
     },
-    {
-      id: 14,
-      title: "All Boards",
-      path: "/allboards",
-      icon: <EngineeringIcon />,
-      cName: "nav-text",
-    },
+    // {
+    //   id: 13,
+    //   title: "Projects",
+    //   path: "/projects",
+    //   icon: <AssignmentIcon style={{ fill: "grey" }} />,
+    //   cName: "nav-text",
+    // },
+    // {
+    //   id: 14,
+    //   title: "All Boards",
+    //   path: "/allboards",
+    //   icon: <EngineeringIcon />,
+    //   cName: "nav-text",
+    // },
   ],
   activeLink: 1,
 };

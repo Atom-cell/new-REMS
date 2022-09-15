@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import React, { useEffect } from "react";
 
 import { useState } from "react";
@@ -163,7 +163,7 @@ const AllProjects = ({ user }) => {
               <Form.Control
                 type="search"
                 placeholder="Search Projects"
-                className="me-2"
+                className="me-2 search-projects"
                 aria-label="Search"
                 value={searchInput}
                 onChange={handleSearchChange}
@@ -183,8 +183,7 @@ const AllProjects = ({ user }) => {
             {role == "Employee" ? null : (
               <div className="create-project">
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  style={{ backgroundColor: "#1890ff" }}
                   onClick={handleShow}
                 >
                   Create Project

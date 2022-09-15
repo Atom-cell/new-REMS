@@ -16,8 +16,10 @@
 }
 
 .progress-done {
-	background: linear-gradient(to left, #F2709C, #FF9472);
-	box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px #F2709C;
+	/* background: linear-gradient(to left, #F2709C, #FF9472); */
+	background: rgb(7,0,134);
+background: linear-gradient(90deg, rgb(19, 10, 197) 0%, rgba(27,113,193,1) 51%, rgba(0,132,254,0.6727065826330532) 100%);
+	box-shadow: 0 3px 3px -5px rgba(0,132,254,0.6727065826330532), 0 2px 5px rgb(19, 10, 197);
 	border-radius: 20px;
 	color: #fff;
 	display: flex;
@@ -36,16 +38,35 @@
 .project-button-container Button{
     margin-left: 10px;
 }
-.form-control:focus{
+/* .form-control:focus{
     border: none;
     box-shadow: 0 0 0 0.1rem #da0d50 !important;
     background-color: transparent;
-}
-.selectFilter{
-	/* border: 2px solid grey; */
+} */
+/* .selectFilter{
 	border-radius: 5px;
 	font-size: larger;
 	border: none;
 	border-bottom:2px solid gray;
 	outline: none;
+} */
+
+.selectFilter{
+    border-radius: 10px;
+	font-size: larger;
+	outline: none;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+    border: 2px solid #fff !important;
+}
+
+.selectFilter:hover{
+    box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 18%), 0px 1px 5px 0px rgb(0 0 0 / 18%);
+}
+.selectFilter option, .selectFilter{
+    /* background-color: #1890ff; */
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+.search-projects:focus{
+	box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 18%), 0px 1px 5px 0px rgb(0 0 0 / 18%) !important;
+	border-color: gray !important;
 }

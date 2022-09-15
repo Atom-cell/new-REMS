@@ -1,10 +1,10 @@
 .messenger {
-    height: calc(96vh - 70px);
+    height: 78vh;
     display: flex;
   }
   
   .chatMenu {
-    flex: 3;
+    flex: 2.7;
   }
   
   .chatMenuInput {
@@ -15,7 +15,7 @@
   }
   
   .chatBox {
-    flex: 6.5;
+    flex: 7.3;
     /* background-image: url("https://image.shutterstock.com/image-vector/mobile-apps-pattern-musicchatgalleryspeaking-bubbleemailmagnifying-600w-249638665.jpg"); */
     background-color: #edf7f0;
     
@@ -58,9 +58,18 @@
     overflow-y: scroll;
     padding-right: 10px;
   }
+.chatBoxTop thead{
+  position: sticky;
+  top: 0px;
+  background-color: #1890ff;
+}
+  
+.chatBoxTop thead tr th{
+    color: white;
+}
 
   .conversation-container{
-    height: calc(75vh - 70px);
+    height: 57vh;
     overflow-y: hidden;
   }
   .conversation-container:hover{
@@ -134,8 +143,8 @@
   }
   
   .chatOnline {
-    flex: 2.5;
-    height: calc(98vh - 70px);
+    flex: 2;
+    height: 78vh;
     overflow: hidden;
     /* animation: fade-right 500ms ease-in; */
   }
@@ -158,10 +167,12 @@
   } */
   
   .chatMenuWrapper,
-  .chatBoxWrapper,
   .chatOnlineWrapper {
     padding: 10px;
     height: 100%;
+  }
+  .chatBoxWrapper{
+    height: 97%;
   }
   
   .noConversationText {
@@ -192,11 +203,13 @@
   }
 .send-message-icon{
   background-color: #edf7f0 !important;
-  fill: #51ad70 !important;
+  /* fill: #51ad70 !important; */
+  fill: gray !important;
   font-size: 33px !important;
 }
 .send-message-icon:hover, .send-message-icon svg:hover{
-  background-color: #4eac6d !important;
+  /* background-color: #4eac6d !important; */
+  background-color: lightgray !important;
   fill: #edf7f0 !important;
 }
 /* .alert-dismiss-custom {
@@ -259,13 +272,15 @@
 }
 .left-right-icon svg{
   background-color: transparent !important;
-  fill: #51ad70 !important;
+  /* fill: #51ad70 !important; */
+  fill: gray !important;
   padding: 8px;
   border-radius: 5px;
   font-size: 40px;
 }
 .left-right-icon svg:hover{
-  background-color: #4eac6d !important;
+  /* background-color: #4eac6d !important; */
+  background-color: lightgray !important;
   fill: #edf7f0 !important;
   cursor: pointer;
 }
