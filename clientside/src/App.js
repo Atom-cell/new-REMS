@@ -37,7 +37,7 @@ import Boards from "./Boards/Boards";
 const socket = io.connect("http://localhost:8900");
 
 const App = () => {
-  const [name, setName] = useState();
+  const [name, setName] = useState(null);
   const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
   const [nav, setNav] = useState(false);

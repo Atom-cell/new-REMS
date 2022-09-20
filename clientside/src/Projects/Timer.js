@@ -106,7 +106,13 @@ const Timer = () => {
       {btnState[0] ? (
         <PauseTimer pauseTime={pauseTime} />
       ) : (
-        <div style={{ fontSize: "1.7rem", textAlign: "center" }}>
+        <div
+          style={{
+            fontSize: "1.7rem",
+            textAlign: "center",
+            marginTop: "0.2em",
+          }}
+        >
           <span>{name ? name.name : null} </span>
           <IconButton
             onClick={pauseBtn}

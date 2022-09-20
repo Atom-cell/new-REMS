@@ -186,15 +186,15 @@ router.post("/hoursWorked", (req, res, next) => {
   console.log("Breaks: ", req.body.breaks);
   console.log(req.body._id);
 
-  myProject.findOneAndUpdate(
-    { _id: req.body._id },
-    { $push: { hoursWorked: req.body.time, numOfBreaks: req.body.breaks } },
+  // myProject.findOneAndUpdate(
+  //   { _id: req.body._id },
+  //   { $push: { hoursWorked: req.body.time, numOfBreaks: req.body.breaks } },
 
-    (err, rec) => {
-      if (err) res.status(500).json(err);
-      res.status(200).json(rec);
-    }
-  );
+  //   (err, rec) => {
+  //     if (err) res.status(500).json(err);
+  //     res.status(200).json(rec);
+  //   }
+  // );
 });
 
 router.post("/sendemail", async (req, res) => {

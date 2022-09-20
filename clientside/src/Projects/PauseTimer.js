@@ -95,6 +95,8 @@ const PauseTimer = ({ pauseTime }) => {
       style={{
         fontSize: "1.7rem",
         textAlign: "center",
+
+        marginTop: "0.2em",
       }}
     >
       <span>{name ? name.name : null} </span>

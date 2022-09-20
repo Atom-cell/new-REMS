@@ -31,7 +31,7 @@ export const SideBarData = {
       icon: <EventAvailableRoundedIcon style={{ fill: "grey" }} />,
       iconClosed: <ArrowDropDownRoundedIcon style={{ fill: "grey" }} />,
       iconOpened: <ArrowDropUpRoundedIcon style={{ fill: "grey" }} />,
-      path: "#",
+      path: "/myCalendar",
       subNav: [
         {
           id: 3,
@@ -81,7 +81,7 @@ export const SideBarData = {
       icon: <MailOutlineRoundedIcon style={{ fill: "grey" }} />,
       iconClosed: <ArrowDropDownRoundedIcon />,
       iconOpened: <ArrowDropUpRoundedIcon />,
-      path: "#",
+      path: "/myMessenger",
       subNav: [
         {
           id: 9,
@@ -127,7 +127,7 @@ export const SideBarData = {
       cName: "nav-text",
       iconClosed: <ArrowDropDownRoundedIcon />,
       iconOpened: <ArrowDropUpRoundedIcon />,
-      path: "#",
+      path: "/projects",
       subNav: [
         {
           id: 14,

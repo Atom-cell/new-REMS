@@ -9,6 +9,7 @@ import { Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { Dropdown } from "react-bootstrap";
+import { ProjectNameContext } from "../Helper/Context";
 import Timer from "../Projects/Timer";
 
 const Navbar = () => {
@@ -25,6 +26,7 @@ const Navbar = () => {
 
   const [role, setRole] = useState("");
   const [pic, setPic] = useState("");
+  const { name, setName } = React.useContext(ProjectNameContext);
 
   const logout = () => {
     localStorage.clear();
@@ -54,28 +56,25 @@ const Navbar = () => {
           (profile menu) logout
         </Button> */}
         <div className="timer_wrapper">
-          {role !== "admin" ? <Timer /> : null}
-          {/* <Button className="signbtn" type="button" onClick={() => logout()}>
-            Logout
-          </Button> */}
-        </div>
-        <Dropdown>
-          <Dropdown.Toggle
-            style={{ all: "unset", cursor: "pointer", marginRight: "1em" }}
-            className="dp_toggle"
-          >
-            {pic === " " ? (
-              <Avatar sx={{ width: 50, height: 50 }}>H</Avatar>
-            ) : (
-              <Avatar src={pic} sx={{ width: 50, height: 50 }} />
-            )}
-          </Dropdown.Toggle>
+          {role !== "admin" && name !== null ? <Timer /> : null}
+          <Dropdown>
+            <Dropdown.Toggle
+              style={{ all: "unset", cursor: "pointer", marginRight: "1em" }}
+              className="dp_toggle"
+            >
+              {pic === " " ? (
+                <Avatar sx={{ width: 50, height: 50 }}>H</Avatar>
+              ) : (
+                <Avatar src={pic} sx={{ width: 50, height: 50 }} />
+              )}
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item>Profile</Dropdown.Item>
-            <Dropdown.Item onClick={() => logout()}>Logout</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item>Profile</Dropdown.Item>
+              <Dropdown.Item onClick={() => logout()}>Logout</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
       <div className="nav">
         <ul className="ul">
@@ -91,7 +90,7 @@ const Navbar = () => {
                     <li
                       className="item"
                       key={key}
-                      id={location.pathname === item.path ? "active" : ""}
+                      id={location.pathname === item.path ? "active" : null}
                       // onClick={() => navigate(item.path)}
                     >
                       <div style={{ display: "flex" }}>
@@ -106,7 +105,10 @@ const Navbar = () => {
                               }}
                             >
                               {item.icon}
-                              <span style={{ paddingRight: "0.2em" }}></span>
+                              {/* <span
+                                id="d"
+                                style={{ paddingRight: "0.2em" }}
+                              ></span> */}
                               {item.title}
                             </Dropdown.Toggle>
 
@@ -130,7 +132,7 @@ const Navbar = () => {
                               style={{ color: "grey" }}
                             >
                               {item.icon}
-                              <span style={{ paddingRight: "0.2em" }}></span>
+                              {/* <span style={{ paddingRight: "0.2em" }}></span> */}
                               {item.title}
                             </span>
                           </>
@@ -169,7 +171,14 @@ const Navbar = () => {
                               }}
                             >
                               {item.icon}
-                              <span style={{ paddingRight: "0.2em" }}></span>
+                              <span
+                                // style={{ paddingRight: "0.2em" }}
+                                id={
+                                  location.pathname === item.path
+                                    ? "active"
+                                    : ""
+                                }
+                              ></span>
                               {item.title}
                             </Dropdown.Toggle>
 
@@ -193,7 +202,7 @@ const Navbar = () => {
                               style={{ color: "grey" }}
                             >
                               {item.icon}
-                              <span style={{ paddingRight: "0.2em" }}></span>
+                              {/* <span style={{ paddingRight: "0.2em" }}></span> */}
                               {item.title}
                             </span>
                           </>
