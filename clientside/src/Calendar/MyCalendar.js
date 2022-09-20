@@ -252,7 +252,7 @@ const MyCalendar = ({ user }) => {
             style={{ height: "75vh", margin: "0 20px 0 20px" }}
             eventPropGetter={(event) => {
               const backgroundColor =
-                event.category == "Reminder" ? "#8248de" : "#c28cfc";
+                event.category == "Reminder" ? "#1890ff" : "#74caff";
               return { style: { backgroundColor } };
             }}
           />

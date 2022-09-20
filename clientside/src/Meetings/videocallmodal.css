@@ -12,7 +12,8 @@
 }
 
 .modal-below-image{
-  background-color: #4eac6d !important;
+  /* background-color: #4eac6d !important; */
+  background-color: #1890ff !important;
 }
   
 .avatar-sm {
@@ -27,7 +28,8 @@
   
 .avatar-title {
   align-items: center;
-  background-color: #4eac6d !important;
+  /* background-color: #4eac6d !important; */
+  background-color: #1890ff !important;
   color: #fff !important;
   display: flex;
   font-weight: 500;

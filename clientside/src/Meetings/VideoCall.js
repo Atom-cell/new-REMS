@@ -1,6 +1,7 @@
 import Button from "@material-ui/core/Button";
 import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import Peer from "simple-peer";
 // import io from "socket.io-client";
@@ -206,18 +207,16 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
   return (
     <div className="videocallContainer">
       <div className="video-call-container-container">
-        <div className="video-container">
-          <div className="video">
-            <div>
-              <h3>{user?.username}</h3>
-              {/* <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleFullScreen}
-              >
-                Enter Full screen
-              </Button> */}
-            </div>
+        <div
+          className={`${
+            callAccepted && !callEnded
+              ? "call-video-container"
+              : "video-container"
+          }`}
+        >
+          <div
+            className={`${callAccepted && !callEnded ? "call-video" : "video"}`}
+          >
             {stream && (
               <div>
                 <div
@@ -234,27 +233,21 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                 </div>
                 <video
                   id="own-video"
-                  style={{ pointerEvents: "none" }}
+                  style={{ pointerEvents: "none", transition: "all 0.5s" }}
                   playsInline
                   muted
                   ref={myVideo}
                   autoPlay
                 />
+                <div className="video-name">
+                  <h3>{user?.username}</h3>
+                </div>
               </div>
             )}
-            <VideoCallControls
-              leaveCall={leaveCall}
-              mystream={stream}
-              callAccepted={callAccepted}
-              callEnded={callEnded}
-            />
           </div>
-          <div className="video">
+          <div className="friend-video">
             {callAccepted && !callEnded ? (
               <>
-                <div>
-                  <h3>{callerName}</h3>
-                </div>
                 <div>
                   <div
                     className="expand"
@@ -273,13 +266,12 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                     playsInline
                     ref={userVideo}
                     autoPlay
-                    style={{ pointerEvents: "none" }}
+                    style={{ pointerEvents: "none", transition: "all 0.5s" }}
                   />
+                  <div className="video-name">
+                    <h3>{callerName}</h3>
+                  </div>
                 </div>
-                {/* <VideoCallControls
-                  leaveCall={leaveCall}
-                  mystream={userStream}
-                /> */}
               </>
             ) : null}
           </div>
@@ -291,8 +283,31 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
           callAccepted={callAccepted}
           callEnded={callEnded}
         />
-        <div>
-          {receivingCall && !callAccepted ? (
+        <div className="video-call-controls-container">
+          <VideoCallControls
+            leaveCall={leaveCall}
+            mystream={stream}
+            callAccepted={callAccepted}
+            callEnded={callEnded}
+          />
+        </div>
+        <Modal show={receivingCall && !callAccepted}>
+          <Modal.Header>
+            <Modal.Title>
+              <h1>{callerName} is calling...</h1>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button variant="contained" color="primary" onClick={answerCall}>
+              Answer
+            </Button>
+            <Button variant="contained" color="secondary" onClick={rejectCall}>
+              Decline
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        {/* {receivingCall && !callAccepted ? (
+          <div>
             <div className="caller">
               <h1>{callerName} is calling...</h1>
               <Button variant="contained" color="primary" onClick={answerCall}>
@@ -306,8 +321,8 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                 Decline
               </Button>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null} */}
       </div>
       {isOpenVideoModal && (
         <VideoCallModal

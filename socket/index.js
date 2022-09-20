@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
     // when someone joins the room we need to tell all the users that another user has joined the room
     // Here is the user id that has connected
 
-    console.log(conferenceCallUsers);
+    // console.log(conferenceCallUsers);
     // socket.to(roomId).emit("all-users", conferenceCallUsers);
 
     socket.to(roomId).emit("user-connected", userId, username);

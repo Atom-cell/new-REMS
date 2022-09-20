@@ -1,28 +1,66 @@
+.conference-call-container{
+    height: fit-content;
+    overflow: auto;
+    background-color: #032b47;
+}
 #video-grid{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    height: 50vh;
+    overflow: hidden;
  }
+ #video-grid:hover{
+    overflow: auto;
+ }
+ .main__chat_window {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.main__chat_window:hover{
+    overflow-y: auto;
+}
+ #video-grid::-webkit-scrollbar-thumb, .main__chat_window::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+#video-grid::-webkit-scrollbar, .main__chat_window::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+#video-grid::-webkit-scrollbar:vertical, .main__chat_window::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+#video-grid::-webkit-scrollbar:horizontal, .main__chat_window::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+#video-grid::-webkit-scrollbar-track, .main__chat_window::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
  #video-grid-video h3{
-	background-color: #1C1E20;
-    /* display: flex; */
-    /* width: fit-content; */
+	/* background-color: #1C1E20; */
     font-size: 18px;
     color: #F5F5F5;
-    /* margin-left: 8px; */
-	/* width: 54%; */
-	text-align: center;
-	padding: 8px;
-	/* margin-bottom: -8px; */
+	/* text-align: center; */
+	/* padding: 8px; */
+    position: relative;
+    bottom: 45px;
+    left: 15px;
+    text-transform: capitalize;
 }
- video{
+.main__videos video{
     height: 300px;
     width: 400px;
     object-fit: cover;
     padding: 8px;
+    background-color: #032b47;
  }
  .main {
-    height: 88vh;
+    height: 79.7vh;
     display: flex;
 }
 
@@ -38,7 +76,7 @@
 
 .main__videos {
     flex-grow: 1;
-    background-color: black;
+    background-color: #032b47;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,14 +86,15 @@
 .main__right, .main-participants {
     background-color: #242324;
     border-left: 1px solid #3D3D42;
+    background-color: #edf7f0;
 }
 
 .main__controls {
-    background-color: #1C1E20;
+    /* background-color: #1C1E20; */
+    background-color: #032b47;
     color: #D2D2D2;
     display: flex;
-    justify-content: space-between;
-    padding: 5px;
+    justify-content: center;
 }
 
 .main__controls__block {
@@ -67,7 +106,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px 10px;
+    /* padding: 8px 10px; */
     min-width: 80px;
     cursor: pointer;
 }
@@ -84,7 +123,7 @@
 }
 
 .main__controls__button i {
-    font-size: 24px;
+    font-size: large;
 }
 
 .main__right {
@@ -94,39 +133,55 @@
 
 .main__header {
     padding-top: 5px;
-    color: #F5F5F5;
+    /* color: #F5F5F5; */
+    color: black;
     text-align: center;
 }
 .main__header h2{
-    color: #F5F5F5;
-}
-
-.main__chat_window {
-    flex-grow: 1;
-    overflow-y: auto;
+    /* color: #F5F5F5; */
+    color: black;
 }
 
 .messages{
-    color: white;
+    /* color: white; */
+    color: black;
     list-style: none;
+    margin-left: -20px;
 }
 .messages li{
-    color: white;
+    /* color: white; */
+    color: black;
+    padding: 12px 10px;
+    background-color: #ffffff;
+    position: relative;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgb(15 34 58 / 12%);
+}
+.messages .my-message{
+    position: relative;
+    left: 15px;
+    background-color: #c9dfd0 !important;
+    color: #5a6368;
 }
 .messages b{
-    color: white;
+    /* color: white; */
+    color: black;
 }
 
 .main__message_container {
-    padding: 22px 12px;
+    padding: 12px;
     display: flex;
 }
 
 .main__message_container input {
     flex-grow: 1;
     background-color: transparent;
-    border: none;
-    color: #F5F5F5;
+    /* border: none; */
+    color: black;
+}
+.main__message_container input:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .leave_meeting {
@@ -135,6 +190,19 @@
 
 .unmute, .stop {
     color: #CC3B33;
+}
+/* .hidden-participants{
+    transform: translateX(-100%);
+    transition: all 1s ease-in-out;
+}
+.shown-participants{
+    transform: translateX(0);
+} */
+.main-participants{
+    transition: all 0.5s;
+}
+.main-participants li{
+    margin-left: -10px;
 }
 .participants-li{
     font-size: large;

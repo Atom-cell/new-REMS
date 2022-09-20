@@ -87,12 +87,16 @@ const ConferenceCall = ({ username }) => {
         const messageBox = document.getElementById("unorderedListMessage");
         // messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
         const msgItem = document.createElement("li");
-        const boldItem = document.createElement("b");
-        msgItem.setAttribute("class", "message");
-        boldItem.innerHTML = friendUsername;
-        msgItem.innerHTML = message;
-        messageBox.appendChild(boldItem);
-        messageBox.append(msgItem);
+        // const boldItem = document.createElement("b");
+        if (friendUsername == username)
+          msgItem.setAttribute("class", "message my-message");
+        else msgItem.setAttribute("class", "message");
+        msgItem.innerHTML = `<b>${friendUsername}</b>${message}`;
+        messageBox.appendChild(msgItem);
+        // console.log(msgItem);
+        // boldItem.innerHTML = friendUsername;
+        // msgItem.innerHTML = message;
+        // messageBox.appendChild(boldItem);
 
         // scrollToBottom()
         // alert(message);
@@ -156,16 +160,16 @@ const ConferenceCall = ({ username }) => {
   const setMuteButton = () => {
     const html = `
       <i class="fas fa-microphone"></i>
-      <span>Mute</span>
-    `;
+      `;
+    // <span>Mute</span>
     document.querySelector(".main__mute_button").innerHTML = html;
   };
 
   const setUnmuteButton = () => {
     const html = `
       <i class="unmute fas fa-microphone-slash"></i>
-      <span>Unmute</span>
-    `;
+      `;
+    // <span>Unmute</span>
     document.querySelector(".main__mute_button").innerHTML = html;
   };
 
@@ -185,16 +189,16 @@ const ConferenceCall = ({ username }) => {
   const setStopVideo = () => {
     const html = `
       <i class="fas fa-video"></i>
-      <span>Stop Video</span>
-    `;
+      `;
+    // <span>Stop Video</span>
     document.querySelector(".main__video_button").innerHTML = html;
   };
 
   const setPlayVideo = () => {
     const html = `
-    <i class="stop fas fa-video-slash"></i>
-      <span>Play Video</span>
+    <i class="fas fa-video-slash"></i>
     `;
+    // <span>Play Video</span>
     document.querySelector(".main__video_button").innerHTML = html;
   };
 
@@ -237,77 +241,77 @@ const ConferenceCall = ({ username }) => {
   };
 
   return (
-    <div className="main">
-      <div className="main-participants">
-        {showParticipants && (
-          <>
-            <div className="main__header">
-              <h2>{participants ? "Participants" : "No Participants"}</h2>
-            </div>
-            <ul className="messages">
-              {participants &&
-                participants.map((p) => {
-                  return <li className="participants-li">{p.username}</li>;
-                })}
-            </ul>
-          </>
-        )}
-      </div>
-      <div className="main__left">
-        <div className="main__videos">
-          <div id="video-grid">
-            <div id="video-grid-video">
-              {/* <h3>{username}</h3> */}
-              {mystream && (
-                <video
-                  className="myVideo"
-                  playsInline
-                  muted
-                  ref={myVideo}
-                  autoPlay
-                  style={{ width: "300px" }}
-                />
-              )}
-            </div>
-          </div>
+    <div className="conference-call-container">
+      <div className="main">
+        <div
+          className="main-participants"
+          style={{
+            transform: showParticipants ? "translateX(0)" : "translateX(-100%)",
+          }}
+        >
+          {showParticipants && (
+            <>
+              <div className="main__header">
+                <h2>{participants ? "Participants" : "No Participants"}</h2>
+              </div>
+              <ul className="messages">
+                {participants &&
+                  participants.map((p) => {
+                    return <li className="participants-li">{p.username}</li>;
+                  })}
+              </ul>
+            </>
+          )}
         </div>
-        <div className="main__controls">
-          <div className="main__controls__block">
-            <div
-              onClick={() => muteUnmute()}
-              className="main__controls__button main__mute_button"
-            >
-              <i className="fas fa-microphone"></i>
-              <span>Mute</span>
-            </div>
-            <div
-              onClick={() => stopVideo()}
-              className="main__controls__button main__video_button"
-            >
-              <i className="fas fa-video"></i>
-              <span>Stop Video</span>
+        <div className="main__left">
+          <div className="main__videos">
+            <div id="video-grid">
+              <div id="video-grid-video">
+                {/* <h3>{username}</h3> */}
+                {mystream && (
+                  <video
+                    className="myVideo"
+                    playsInline
+                    muted
+                    ref={myVideo}
+                    autoPlay
+                  />
+                )}
+              </div>
             </div>
           </div>
-          <div className="main__controls__block">
-            {/* <div className="main__controls__button">
-              <i className="fas fa-shield-alt"></i>
-              <span>Security</span>
-            </div> */}
-            <div
-              onClick={handleClickParticipants}
-              className="main__controls__button"
-            >
-              <i className="fas fa-user-friends"></i>
-              <span>
+          <div className="main__controls">
+            <div className="main__controls__block">
+              <div
+                onClick={() => muteUnmute()}
+                className="main__controls__button main__mute_button"
+              >
+                <i className="fas fa-microphone"></i>
+                {/* <span>Mute</span> */}
+              </div>
+              <div
+                onClick={() => stopVideo()}
+                className="main__controls__button main__video_button"
+              >
+                <i className="fas fa-video"></i>
+                {/* <span>Stop Video</span> */}
+              </div>
+              <div
+                onClick={handleClickParticipants}
+                className="main__controls__button"
+              >
+                <i className="fas fa-user-friends"></i>
+                {/* <span>
                 {showParticipants ? "Hide Participants" : "Show Participants"}
-              </span>
+              </span> */}
+              </div>
+              <div className="main__controls__button end-call">
+                <Link to="/allMeetings" onClick={() => handleLeave()}>
+                  <i className="fa-solid fa-phone"></i>
+                </Link>
+              </div>
             </div>
-            {/* <div className="main__controls__button">
-              <i className="fas fa-comment-alt"></i>
-              <span>Chat</span>
-            </div> */}
-          </div>
-          <div className="main__controls__block">
+            {/* <div className="main__controls__block">
             <div className="main__controls__button">
               <Link
                 to="/allMeetings"
@@ -317,30 +321,38 @@ const ConferenceCall = ({ username }) => {
                 Leave Meeting
               </Link>
             </div>
+          </div> */}
           </div>
         </div>
-      </div>
-      <div className="main__right">
-        <div className="main__header">
-          <h2>Chat</h2>
-        </div>
-        <div className="main__chat_window">
-          <ul className="messages" id="unorderedListMessage"></ul>
-        </div>
-        <div className="main__message_container">
-          <input
-            id="chat_message"
-            type="text"
-            placeholder="Type message here..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyPress={(e) => handleKeyPress(e)}
-          />
-          <SendIcon
-            style={{ fill: "#fff", fontSize: "30px" }}
-            onClick={() => handleSendMessage(text)}
-          />
-          {/* <button onClick={() => handleSendMessage(text)}>Send Message</button> */}
+        <div className="main__right">
+          <div className="main__header">
+            <h2>Chat</h2>
+          </div>
+          <div className="main__chat_window">
+            <ul className="messages" id="unorderedListMessage">
+              {/* <li className="message my-message">
+                <b>Naseer</b>Hello
+              </li> */}
+            </ul>
+          </div>
+          <div className="main__message_container">
+            <input
+              id="chat_message"
+              className="form-control"
+              type="text"
+              placeholder="Type message here..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e)}
+              autoComplete="off"
+            />
+            <SendIcon
+              style={{ fill: "black", fontSize: "25px", marginLeft: "3px" }}
+              className="send-message-icon"
+              onClick={() => handleSendMessage(text)}
+            />
+            {/* <button onClick={() => handleSendMessage(text)}>Send Message</button> */}
+          </div>
         </div>
       </div>
     </div>

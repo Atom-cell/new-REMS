@@ -104,6 +104,18 @@ router.get("/getuserbyname/:name", (req, res) => {
   );
 });
 
+// get all converssations based on a name
+router.get("/getallusersbyname/:name", (req, res) => {
+  // console.log(req.params.name);
+  Emp.find(
+    { username: { $regex: req.params.name, $options: "i" } },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
+});
+
 router.post("/register", verifyJWT, async (req, res, next) => {
   console.log("In Register");
   let { email } = req.body;

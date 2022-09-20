@@ -204,6 +204,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
       .catch((err) => {
         console.log(err);
       });
+    getConversations();
   };
   const handleDeleteChat = () => {
     const confirmBox = window.confirm(
