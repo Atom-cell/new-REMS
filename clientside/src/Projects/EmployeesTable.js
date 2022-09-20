@@ -2,6 +2,7 @@ import React from "react";
 import Table from "react-bootstrap/Table";
 const EmployeesTable = ({
   employees,
+  fetchData,
   newProject,
   setNewProject,
   handleClosee,
@@ -19,6 +20,7 @@ const EmployeesTable = ({
     }
     // console.log(newProject);
     handleClosee();
+    fetchData();
   };
   return (
     <div className="chatBoxTop" style={{ height: "50vh", overflow: "scroll" }}>

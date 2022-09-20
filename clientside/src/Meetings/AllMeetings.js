@@ -3,7 +3,6 @@ import { Nav } from "react-bootstrap";
 import moment from "moment";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import axios from "axios";
-import "./meeting.css";
 import ReactLoading from "react-loading";
 import { Table } from "react-bootstrap";
 import "./allmeetings.css";
@@ -86,7 +85,7 @@ const AllMeetings = () => {
       </div> */}
       {loading ? (
         <div className="loading">
-          <ReactLoading type="spin" color="#fafa" height={667} width={375} />
+          <ReactLoading type="spin" color="#1890ff" height={667} width={375} />
         </div>
       ) : (
         <div
@@ -118,35 +117,8 @@ const AllMeetings = () => {
                   <th>Delete</th>
                 </tr>
               </thead>
-              {/* {headers?.map((header) => {
-                  // console.log(header);
-                  if (
-                    header != "_id" &&
-                    header != "employees" &&
-                    header != "__v"
-                  ) {
-                    return <th className="header">{header}</th>;
-                  }
-                  if (header == "__v") {
-                    return (
-                      <>
-                        <th className="header">Time</th>
-                        <th className="header">Delete</th>
-                      </>
-                    );
-                  }
-                })} */}
-              {/* All headers */}
-              {/* <th className="header">Room URL</th>
-                <th className="header">Hosted By</th>
-                <th className="header">Title</th>
-                <th className="header">Description</th>
-                <th className="header">Date</th>
-                <th className="header">Time</th>
-                <th className="header">Delete</th> */}
-              {/* </tr> */}
               <tbody>
-                {allMeetings.length != 0 ? (
+                {allMeetings.length != 0 &&
                   allMeetings?.map((myObj, key) => {
                     var time = moment.utc(myObj.startDate).format("HH:mm");
                     time = formatAMPM(time);
@@ -160,7 +132,7 @@ const AllMeetings = () => {
                         {/* <td className="row">{myObj.roomUrl}</td> */}
                         <td className="all-meeting-row">{myObj.hostedBy}</td>
                         <td className="all-meeting-row">{myObj.title}</td>
-                        <td className="all-meeting-row all-meeting-row-delete-icon">
+                        <td className="all-meeting-row all-meeting-row-delete-icon read-more-cell">
                           {myObj.agenda.length > 30 ? (
                             <>
                               <ReadMore data={myObj.agenda} />
@@ -190,15 +162,15 @@ const AllMeetings = () => {
                         )}
                       </tr>
                     );
-                  })
-                ) : (
-                  <div className="no-meetings">
-                    <h1>No Meetings</h1>
-                  </div>
-                )}
+                  })}
               </tbody>
             </Table>
           </div>
+          {allMeetings.length == 0 && (
+            <div className="no-meetings">
+              <h1>No Meetings</h1>
+            </div>
+          )}
         </div>
       )}
     </div>

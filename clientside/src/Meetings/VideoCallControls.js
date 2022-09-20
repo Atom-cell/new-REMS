@@ -1,6 +1,4 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 import "./videocallcontrol.css";
 
 const VideoCallControls = ({
@@ -28,16 +26,16 @@ const VideoCallControls = ({
   const setMuteButton = () => {
     const html = `
             <i class="fas fa-microphone"></i>
-            <span>Mute</span>
-          `;
+            `;
+    // <span>Mute</span>
     document.querySelector(".main__mute_button").innerHTML = html;
   };
 
   const setUnmuteButton = () => {
     const html = `
             <i class="unmute fas fa-microphone-slash"></i>
-            <span>Unmute</span>
-          `;
+            `;
+    // <span>Unmute</span>
     document.querySelector(".main__mute_button").innerHTML = html;
   };
 
@@ -58,24 +56,24 @@ const VideoCallControls = ({
   const setStopVideo = () => {
     const html = `
             <i class="fas fa-video"></i>
-            <span>Stop Video</span>
-          `;
+            `;
+    // <span>Stop Video</span>
     document.querySelector(".main__video_button").innerHTML = html;
   };
 
   const setPlayVideo = () => {
     //   console.log("Hello");
     const html = `
-          <i class="stop fas fa-video-slash"></i>
-            <span>Play Video</span>
+          <i class="fas fa-video-slash"></i>
           `;
+    // <span>Play Video</span>
     document.querySelector(".main__video_button").innerHTML = html;
   };
   return (
     <div className="videocallcontrols">
       <div className="mute main__mute_button" onClick={() => muteUnmute()}>
         <i className="fas fa-microphone"></i>
-        <span>Mute</span>
+        {/* <span>Mute</span> */}
       </div>
       <div
         className="stop main__video_button"
@@ -83,19 +81,21 @@ const VideoCallControls = ({
         onClick={() => stopVideo()}
       >
         <i className="fas fa-video"></i>
-        <span>Stop Video</span>
+        {/* <span>Stop Video</span> */}
       </div>
+      {/* <div
+        className="main__share_button"
+        color="secondary"
+        onClick={() => stopVideo()}
+      >
+        <i className="bi bi-tv"></i>
+      </div> */}
       {callAccepted && !callEnded && (
-        <div className="end-call bg-danger" onClick={leaveCall}>
+        <div className="end-call" onClick={leaveCall}>
           <i className="fa-solid fa-phone"></i>
-          <span>End Call</span>
+          {/* <span>End Call</span> */}
         </div>
       )}
-      {/* <div className="main__controls__button">
-        <Button variant="contained" color="secondary" onClick={leaveCall}>
-          End Call
-        </Button>
-      </div> */}
     </div>
   );
 };

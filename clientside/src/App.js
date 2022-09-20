@@ -131,13 +131,7 @@ const App = () => {
                 />
                 <Route
                   path="/myTeamCalendar"
-                  element={
-                    username ? (
-                      <MyCalendar username={username} />
-                    ) : (
-                      console.log("")
-                    )
-                  }
+                  element={loggedUser && <MyCalendar user={loggedUser} />}
                 />
                 <Route
                   path="/videoCall"

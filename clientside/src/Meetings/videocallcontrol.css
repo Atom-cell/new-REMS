@@ -1,56 +1,24 @@
-/* .mutestop{
-    background-color: #1C1E20;
-    display: flex;
-    width: 54%;
-    font-size: 18px;
-    padding: 8px;
-    color: #F5F5F5;
-    margin-left: 8px;
-}
-.mute{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #F5F5F5;
-    margin: 5px;
-}
-.mute:hover{
-    background-color: #343434;
-    border-radius: 5px;
-}
-.stop{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #F5F5F5;
-    margin: 5px;
-}
-.stop span{
-    color: #F5F5F5;
-}
-.stop i{
-    color: #F5F5F5;
-}
-.stop:hover{
-    background-color: #343434;
-    border-radius: 5px;
-} */
 .videocallcontrols{
     display: flex;
-    justify-content: space-around;
-    background-color: #1C1E20;
+    justify-content: center;
+    /* background-color: #1C1E20; */
     padding: 8px;
 }
-.main__mute_button i,.main__video_button i,.end-call i, .main__video_button span, .main__mute_button span, .end-call span{
-	color: #F5F5F5;
-    margin: 5px;
+.main__mute_button i,.main__video_button i,.end-call i,.main__controls__button i, .main__video_button span, .main__mute_button span, .end-call span, .main__controls__button span{
+    color: #F5F5F5;
+    background-color: #00aef1;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: large;
+}
+.end-call i{
+    background-color: red;
 }
 .stop:hover, .mute:hover, .end-call:hover{
     background-color: #343434;
     border-radius: 5px;
 }
 .end-call i{
-    transform: rotate(315deg);
+    transform: rotate(135deg);
 }

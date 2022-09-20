@@ -1,3 +1,6 @@
+.all-meetings-container{
+    overflow: hidden;
+}
 .all-meetings-button{
     display: flex;
     justify-content: flex-end;
@@ -20,10 +23,13 @@
 .all-meetings-button button:hover{
     background-color: #8248de;
 }
+/* .all-meetings-table thead tr th {
+  position: sticky;
+  top: 0;
+}
 .all-meetings-table tbody {
     height: 400px !important;
-    overflow-y: hidden;
-}
+} */
 
 .all-meetings-table thead, .meeting-employees-body thead{
     position: sticky;
@@ -41,8 +47,8 @@
 }
 .all-meetings-table-container{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    height: 65vh;
-    overflow-y: auto;
+    height: 400px;
+    overflow: auto;
 }
 .meeting-employees-body{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -96,4 +102,23 @@
     background-color: lightgray !important;
     fill: #edf7f0 !important;
     cursor: pointer;
+}
+.loading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.no-meetings{
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    top: 50%;
+    margin-left: auto; 
+    margin-right: auto;
+    width: fit-content;
+}
+.read-more-cell svg{
+    margin: 0;
+    padding: 0;
+    font-size: 35px;
 }
