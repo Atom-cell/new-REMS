@@ -5,7 +5,7 @@ var myProject = require("../model/myProject.model");
 var Admin = require("../model/Admin.model");
 const nodemailer = require("nodemailer");
 
-// Get all Projects
+// Get all Projects For Employee
 router.get("/", (req, res, next) => {
   Admin.find({ employees: req.query.userId }, { username: 1 }, (err, rec) => {
     if (err) res.status(500).json(err);
@@ -51,6 +51,24 @@ router.get("/completed", (req, res, next) => {
     });
 });
 
+// Get Completed Projects Admin
+router.get("/completedadmin", (req, res, next) => {
+  myProject
+    .find({
+      projectAssignedBy: req.query.name,
+      projectFiles: {
+        $elemMatch: {
+          completionPercentage: "100",
+          completed: "true",
+        },
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
+});
+
 // Get Incompleted Projects
 router.get("/incompleted", (req, res, next) => {
   myProject
@@ -74,6 +92,31 @@ router.get("/incompleted", (req, res, next) => {
       res.status(200).json(rec);
     });
 });
+
+// Get Incompleted Projects Admin
+router.get("/incompletedadmin", (req, res, next) => {
+  myProject
+    .find({
+      projectAssignedBy: req.query.name,
+      $or: [
+        { "projectFiles.completed": { $ne: true } },
+        {
+          projectFiles: {
+            $elemMatch: {
+              completionPercentage: "100",
+              completed: "false",
+            },
+          },
+        },
+      ],
+    })
+    .exec((err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.table(rec);
+      res.status(200).json(rec);
+    });
+});
+
 // get not assigned projects
 router.get("/notassigned", (req, res, next) => {
   Admin.find({ employees: req.query._id }, { username: 1 }, (err, rec) => {
@@ -87,20 +130,46 @@ router.get("/notassigned", (req, res, next) => {
   });
 });
 
-// Get Specific Projects
-router.get("/:projectName", (req, res, next) => {
-  //   console.log(req.params.projectName);
+// get not assigned projects admin
+router.get("/notassignedadmin", (req, res, next) => {
   myProject
-    .find({
-      projectName: {
-        $regex: req.params.projectName,
-        $options: "i",
-      },
-    })
+    .find({ projectAssignedBy: req.query.name, projectAssignedTo: "" })
     .exec((error, records) => {
       if (error) throw error;
-      res.json(records);
+      res.status(200).json(records);
     });
+});
+
+// Get Specific Projects
+router.get("/searchproject/:projectName", (req, res, next) => {
+  // console.log(req.params.projectName);
+  if (req.query._id) {
+    myProject
+      .find({
+        projectAssignedToId: req.query._id,
+        projectName: {
+          $regex: req.params.projectName,
+          $options: "i",
+        },
+      })
+      .exec((error, records) => {
+        if (error) throw error;
+        res.json(records);
+      });
+  } else {
+    myProject
+      .find({
+        projectAssignedBy: req.query.name,
+        projectName: {
+          $regex: req.params.projectName,
+          $options: "i",
+        },
+      })
+      .exec((error, records) => {
+        if (error) throw error;
+        res.json(records);
+      });
+  }
 });
 
 router.post("/addNewProject", async (req, res) => {

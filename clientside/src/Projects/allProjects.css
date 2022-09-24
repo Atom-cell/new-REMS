@@ -35,8 +35,11 @@ background: linear-gradient(90deg, rgb(19, 10, 197) 0%, rgba(27,113,193,1) 51%, 
     justify-content: space-between;
     margin: 10px;
 }
+.project-button-container{
+    display: flex;
+}
 .project-button-container Button{
-    margin-left: 10px;
+    margin-left: 20px;
 }
 /* .form-control:focus{
     border: none;

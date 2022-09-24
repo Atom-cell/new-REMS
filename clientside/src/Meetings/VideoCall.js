@@ -211,8 +211,6 @@ const VideoCall = ({
                     </div>
                   </div>
                 </div>
-                {console.log("myVideo")}
-                {console.log(myVideo)}
                 <video
                   id="own-video"
                   style={{ pointerEvents: "none", transition: "all 0.5s" }}

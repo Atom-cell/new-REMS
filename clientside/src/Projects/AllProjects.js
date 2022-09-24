@@ -32,13 +32,31 @@ const AllProjects = ({ user }) => {
     e.preventDefault();
     setSearchInput(e.target.value);
 
-    axios
-      .get(`/myprojects/${e.target.value}`)
-      .then((records) => {
-        // console.log(records.data);
-        setProjects(records.data);
-      })
-      .catch((err) => console.log(err));
+    if (e.target.value) {
+      if (role == "Employee") {
+        axios
+          .get(`/myprojects/searchproject/${e.target.value}`, {
+            params: { _id: user._id },
+          })
+          .then((records) => {
+            // console.log(records.data);
+            setProjects(records.data);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .get(`/myprojects/searchproject/${e.target.value}`, {
+            params: { name: user.username },
+          })
+          .then((records) => {
+            // console.log(records.data);
+            setProjects(records.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    } else {
+      fetchData().catch(console.error);
+    }
   };
 
   const handleVolunteerClick = (project) => {
@@ -56,7 +74,7 @@ const AllProjects = ({ user }) => {
       .catch((err) => console.log(err));
   };
 
-  const handleFilterChange = (e) => {
+  const handleFilterChangeEmployee = (e) => {
     const category = e.target.value;
     if (category == "All") {
       fetchData().catch(console.error);
@@ -118,16 +136,77 @@ const AllProjects = ({ user }) => {
     }
   };
 
+  const handleFilterChangeAdmin = (e) => {
+    const category = e.target.value;
+    if (category == "All") {
+      fetchData().catch(console.error);
+      return;
+    } else if (category == "Completed") {
+      axios
+        .get("/myProjects/completedadmin", { params: { name: user.username } })
+        .then((records) => {
+          setProjects(records.data);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Incompleted") {
+      axios
+        .get("/myProjects/incompletedadmin", {
+          params: { name: user.username },
+        })
+        .then((records) => {
+          // console.log(records.data);
+          setProjects(records.data);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Not Assigned") {
+      axios
+        .get("/myprojects/notassignedadmin", {
+          params: { name: user.username },
+        })
+        .then((rec) => {
+          // console.log(rec);
+          setProjects(rec.data);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Sort By Priority") {
+      axios
+        .get("/myprojects//organizationprojects", {
+          params: { name: user.username },
+        })
+        .then((rec) => {
+          // console.log(rec);
+          const order = ["Critical", "Important", "Normal"];
+          const filterByPriorityProjects = rec.data.sort(
+            (x, y) =>
+              order.indexOf(x.projectPriority) -
+              order.indexOf(y.projectPriority)
+          );
+          // console.log(filterByPriorityProjects);
+          setProjects(filterByPriorityProjects);
+        })
+        .catch((err) => console.log(err));
+      return;
+    } else if (category == "Sort By Date") {
+      // Sort in Ascending order (low to high) i-e 2012,2013
+      const sortedAsc = projects
+        .map((obj) => {
+          return { ...obj, dueDate: new Date(obj.dueDate) };
+        })
+        .sort((a, b) => a.dueDate - b.dueDate);
+      // console.log(sortedAsc);
+      setProjects(sortedAsc);
+      return;
+    }
+  };
+
   const handleClickOnProject = (project, check, wid) => {
     setWidth(wid);
     if (check) {
-      axios
-        .get("/myProjects")
-        .then((records) => {
-          setProjects(records.data);
-          setShowProjectInfo(true);
-        })
-        .catch((err) => console.log(err));
+      fetchData().catch(console.error);
+      setShowProjectInfo(true);
     } else {
       // console.log(project);
       // console.log(check);
@@ -172,7 +251,14 @@ const AllProjects = ({ user }) => {
               />
             </div>
             <div className="project-button-container">
-              <select className="selectFilter" onChange={handleFilterChange}>
+              <select
+                className="selectFilter"
+                onChange={
+                  user.role == "Employee"
+                    ? handleFilterChangeEmployee
+                    : handleFilterChangeAdmin
+                }
+              >
                 <option value="All">All</option>
                 <option value="Completed">Completed</option>
                 <option value="Incompleted">Incompleted</option>
@@ -180,17 +266,17 @@ const AllProjects = ({ user }) => {
                 <option value="Sort By Priority">Sort By Priority</option>
                 <option value="Sort By Date">Sort By Date</option>
               </select>
+              {role == "Employee" ? null : (
+                <div className="create-project">
+                  <Button
+                    style={{ backgroundColor: "#1890ff" }}
+                    onClick={handleShow}
+                  >
+                    Create Project
+                  </Button>
+                </div>
+              )}
             </div>
-            {role == "Employee" ? null : (
-              <div className="create-project">
-                <Button
-                  style={{ backgroundColor: "#1890ff" }}
-                  onClick={handleShow}
-                >
-                  Create Project
-                </Button>
-              </div>
-            )}
           </div>
           {projects?.length < 1 && (
             <div

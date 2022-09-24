@@ -109,13 +109,15 @@
     justify-content: center;
 }
 .no-meetings{
-    position: absolute; 
+    /* position: absolute; 
     left: 0; 
     right: 0; 
     top: 50%;
     margin-left: auto; 
     margin-right: auto;
-    width: fit-content;
+    width: fit-content; */
+    margin-left: 30%;
+    margin-top: 10%;
 }
 .read-more-cell svg{
     margin: 0;

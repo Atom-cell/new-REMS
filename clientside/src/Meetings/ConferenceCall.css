@@ -152,16 +152,18 @@
     /* color: white; */
     color: black;
     padding: 12px 10px;
-    background-color: #ffffff;
+    background-color: #c9dfd0 !important;
+    position: relative;
+    left: 15px;
     position: relative;
     border-radius: 3px;
     box-shadow: 0 2px 4px rgb(15 34 58 / 12%);
 }
 .messages .my-message{
     position: relative;
-    left: 15px;
-    background-color: #c9dfd0 !important;
+    left: 2px;
     color: #5a6368;
+    background-color: #ffffff !important;
 }
 .messages b{
     /* color: white; */

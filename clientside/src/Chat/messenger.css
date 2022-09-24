@@ -144,7 +144,7 @@
   
   .chatOnline {
     flex: 2;
-    height: 79.5vh;
+    height: 79vh;
     overflow: hidden;
     /* animation: fade-right 500ms ease-in; */
   }

@@ -417,7 +417,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
           <div className="chatOnline">
             <div className="chatOnlineWrapper">
               {onlineUsers?.length > 0 ? (
-                <ChatOnline onlineUsers={onlineUsers} currentId={user._id} />
+                <ChatOnline onlineUsers={onlineUsers} currentId={user?._id} />
               ) : (
                 <h2>No Online Users</h2>
               )}

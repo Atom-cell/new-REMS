@@ -165,12 +165,12 @@ const AllMeetings = () => {
                   })}
               </tbody>
             </Table>
+            {allMeetings.length == 0 && (
+              <div className="no-meetings">
+                <h1>No Meetings Scheduled</h1>
+              </div>
+            )}
           </div>
-          {allMeetings.length == 0 && (
-            <div className="no-meetings">
-              <h1>No Meetings</h1>
-            </div>
-          )}
         </div>
       )}
     </div>

@@ -14,7 +14,10 @@ export default function ChatOnline({
 
   useEffect(() => {
     const getFriends = async () => {
-      const res = await axios.get("http://localhost:5000/emp/");
+      const res = await axios.get(
+        "http://localhost:5000/emp/getcompanyemployees",
+        { params: { _id: JSON.parse(localStorage.getItem("user"))._id } }
+      );
       setFriends(res.data);
     };
 

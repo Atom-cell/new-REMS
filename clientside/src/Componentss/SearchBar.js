@@ -22,7 +22,12 @@ const SearchBar = ({
   useEffect(() => {
     const fetchData = async () => {
       // get the data from the api
-      const res = await axios.get("http://localhost:5000/emp/");
+      const res = await axios.get(
+        "http://localhost:5000/emp/getcompanyemployees",
+        {
+          params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+        }
+      );
       //   console.log(res.data);
       var withoutMe = res.data.filter((u) => u._id != myId);
       setData(withoutMe);
