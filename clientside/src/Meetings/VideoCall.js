@@ -12,7 +12,29 @@ import ChatOnline from "../Chat/ChatOnline";
 import io from "socket.io-client";
 import VideoCallModal from "./VideoCallModal";
 const socket = io.connect("http://localhost:8900");
-const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
+const VideoCall = ({
+  onlineUsers,
+  setOnlineUsers,
+  receivingCall,
+  setReceivingCall,
+  callAccepted,
+  setCallAccepted,
+  callerName,
+  setCallerName,
+  stream,
+  userVideo,
+  connectionRef,
+  caller,
+  setCaller,
+  both,
+  user,
+  setUser,
+  setStream,
+  setCallerSignal,
+  setBoth,
+  answerCall,
+  rejectCall,
+}) => {
   const navigate = useNavigate();
   const [me, setMe] = useState("");
   const [idToCall, setIdToCall] = useState();
@@ -20,20 +42,9 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
   const [name, setName] = useState("");
   const [userStream, setUserStream] = useState();
 
-  const [receivingCall, setReceivingCall] = useState(false);
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [callerName, setCallerName] = useState("");
-  const [caller, setCaller] = useState("");
-  const [both, setBoth] = useState();
-  const [callerSignal, setCallerSignal] = useState();
-  const [stream, setStream] = useState();
-
-  const connectionRef = useRef();
-  const userVideo = useRef();
   const myVideo = useRef();
   // allows to disconnect the call
 
-  const [user, setUser] = useState();
   const [friend, setFriend] = useState();
 
   const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
@@ -64,6 +75,7 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
     });
     socket.on("callAccepted", (signal, name) => {
       setCallAccepted(true);
+      setReceivingCall(false);
       setCallerName(name);
       peer.signal(signal);
       handleClose();
@@ -72,43 +84,10 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
     connectionRef.current = peer;
   };
 
-  const answerCall = () => {
-    setCallAccepted(true);
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
-    });
-    peer.on("signal", (data) => {
-      // console.log("Signal");
-      // console.log(data);
-      socket.emit("answerCall", {
-        signal: data,
-        to: caller,
-        name: user.username,
-      });
-    });
-    peer.on("stream", (stream) => {
-      userVideo.current.srcObject = stream;
-    });
-
-    peer.signal(callerSignal);
-    connectionRef.current = peer;
-  };
-
-  const rejectCall = () => {
-    // receivingCall && !callAccepted ?
-    setReceivingCall(false);
-    setCallAccepted(false);
-    let otherId = "";
-    if (!caller) {
-      otherId = both.find((usr) => usr != user._id);
-      socket.emit("rejectCall", otherId, user._id, name);
-    } else socket.emit("rejectCall", caller, user._id, name);
-  };
-
   const leaveCall = () => {
     setCallEnded(true);
+    setCallAccepted(false);
+    setReceivingCall(false);
     connectionRef.current.destroy();
     let otherId = "";
     if (!caller) {
@@ -188,6 +167,7 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
       // console.log(name);
       toast.info(`${name} Ended the call`);
       // window.location.reload();
+      setCallAccepted(false);
       navigate("/dashboard");
     });
 
@@ -231,6 +211,8 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                     </div>
                   </div>
                 </div>
+                {console.log("myVideo")}
+                {console.log(myVideo)}
                 <video
                   id="own-video"
                   style={{ pointerEvents: "none", transition: "all 0.5s" }}
@@ -261,6 +243,8 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
                       </div>
                     </div>
                   </div>
+                  {console.log("userVideo")}
+                  {console.log(userVideo)}
                   <video
                     id="friend-video"
                     playsInline
@@ -291,21 +275,6 @@ const VideoCall = ({ onlineUsers, setOnlineUsers }) => {
             callEnded={callEnded}
           />
         </div>
-        <Modal show={receivingCall && !callAccepted}>
-          <Modal.Header>
-            <Modal.Title>
-              <h1>{callerName} is calling...</h1>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Footer>
-            <Button variant="contained" color="primary" onClick={answerCall}>
-              Answer
-            </Button>
-            <Button variant="contained" color="secondary" onClick={rejectCall}>
-              Decline
-            </Button>
-          </Modal.Footer>
-        </Modal>
         {/* {receivingCall && !callAccepted ? (
           <div>
             <div className="caller">

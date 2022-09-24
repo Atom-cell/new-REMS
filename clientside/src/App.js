@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ProjectNameContext } from "./Helper/Context";
 import { TimerContext } from "./Helper/Context";
 import { CssBaseline } from "@mui/material";
@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoutes from "./ProtectedRoutes";
 import VideoCall from "./Meetings/VideoCall";
 import MyCalendar from "./Calendar/MyCalendar";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
 // import SetMeeting from "./Meetings/SetMeeting";
@@ -33,10 +33,13 @@ import io from "socket.io-client";
 import AllProjects from "./Projects/AllProjects";
 import AllBoards from "./Boards/AllBoards";
 import Boards from "./Boards/Boards";
+import CallNotification from "./CallNotification";
+import Peer from "simple-peer";
 // import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
 
 const App = () => {
+  // const navigate = useNavigate();
   const [name, setName] = useState(null);
   const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
@@ -47,6 +50,57 @@ const App = () => {
   );
   const [onlineUsers, setOnlineUsers] = useState();
   const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  // video call use states
+  const [receivingCall, setReceivingCall] = useState(false);
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [callerName, setCallerName] = useState("");
+
+  const [stream, setStream] = useState();
+  const [caller, setCaller] = useState("");
+  const [user, setUser] = useState();
+  const userVideo = useRef();
+  const [callerSignal, setCallerSignal] = useState();
+  const connectionRef = useRef();
+  const [both, setBoth] = useState();
+
+  const answerCall = () => {
+    setCallAccepted(true);
+    // window.history.pushState({}, null, "http://localhost:3000/videoCall");
+    setReceivingCall(false);
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      // console.log("Signal");
+      socket.emit("answerCall", {
+        signal: data,
+        to: caller,
+        name: user.username,
+      });
+    });
+    peer.on("stream", (stream) => {
+      userVideo.current.srcObject = stream;
+    });
+
+    peer.signal(callerSignal);
+    connectionRef.current = peer;
+    // navigate("/videoCall");
+  };
+
+  const rejectCall = () => {
+    // receivingCall && !callAccepted ?
+    setReceivingCall(false);
+    setCallAccepted(false);
+    setReceivingCall(false);
+    let otherId = "";
+    if (!caller) {
+      otherId = both.find((usr) => usr != user._id);
+      socket.emit("rejectCall", otherId, user._id, name);
+    } else socket.emit("rejectCall", caller, user._id, name);
+  };
 
   const notify = (name) => {
     toast(`${name} sent you a new Message`);
@@ -102,6 +156,44 @@ const App = () => {
           <Router>
             {nav ? <NavBar /> : null}
             {!nav ? <NavigationBar /> : null}
+            <CallNotification
+              callAccepted={callAccepted}
+              callerName={callerName}
+              answerCall={answerCall}
+              rejectCall={rejectCall}
+              receivingCall={receivingCall}
+            />
+            {callAccepted && (
+              <>
+                {window.location.href.indexOf(
+                  "http://localhost:3000/videoCall"
+                ) > -1 ? null : (
+                  <VideoCall
+                    onlineUsers={onlineUsers}
+                    setOnlineUsers={setOnlineUsers}
+                    receivingCall={receivingCall}
+                    setReceivingCall={setReceivingCall}
+                    callAccepted={callAccepted}
+                    setCallAccepted={setCallAccepted}
+                    callerName={callerName}
+                    setCallerName={setCallerName}
+                    answerCall={answerCall}
+                    rejectCall={rejectCall}
+                    stream={stream}
+                    userVideo={userVideo}
+                    connectionRef={connectionRef}
+                    caller={caller}
+                    setCaller={setCaller}
+                    both={both}
+                    user={user}
+                    setUser={setUser}
+                    setStream={setStream}
+                    setCallerSignal={setCallerSignal}
+                    setBoth={setBoth}
+                  />
+                )}
+              </>
+            )}
             <Routes>
               {role === "admin" ? (
                 <Route path="/dashboard" element={<Dashboard />} />
@@ -139,6 +231,25 @@ const App = () => {
                     <VideoCall
                       onlineUsers={onlineUsers}
                       setOnlineUsers={setOnlineUsers}
+                      receivingCall={receivingCall}
+                      setReceivingCall={setReceivingCall}
+                      callAccepted={callAccepted}
+                      setCallAccepted={setCallAccepted}
+                      callerName={callerName}
+                      setCallerName={setCallerName}
+                      answerCall={answerCall}
+                      rejectCall={rejectCall}
+                      stream={stream}
+                      userVideo={userVideo}
+                      connectionRef={connectionRef}
+                      caller={caller}
+                      setCaller={setCaller}
+                      both={both}
+                      user={user}
+                      setUser={setUser}
+                      setStream={setStream}
+                      setCallerSignal={setCallerSignal}
+                      setBoth={setBoth}
                     />
                   }
                 />
