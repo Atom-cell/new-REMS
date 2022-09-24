@@ -72,6 +72,22 @@ router.get("/", (req, res, next) => {
   });
 });
 
+router.get("/getcompanyemployees", (req, res) => {
+  // find admin of the respective employee
+
+  Admin.find({ employees: req.query._id }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    Emp.find(
+      { _id: { $in: rec[0].employees } },
+      { _id: 1, username: 1, email: 1 },
+      (errr, recc) => {
+        if (errr) res.status(500).json(err);
+        res.status(200).json(recc);
+      }
+    );
+  });
+});
+
 // search specific Employee
 router.get("/:userId", (req, res, next) => {
   console.log(req.params.userId);
@@ -105,16 +121,29 @@ router.get("/getuserbyname/:name", (req, res) => {
 });
 
 // get all converssations based on a name
-router.get("/getuserbyname/:name", (req, res) => {
-  // console.log(req.params.name);
-  Emp.find(
-    { username: { $regex: req.params.name, $options: "i" } },
-    { _id: true },
-    (err, rec) => {
-      if (err) res.status(500).json(err);
-      res.status(200).json(rec);
-    }
-  );
+router.get("/getallusersbyname/:name", (req, res) => {
+  // Emp.find(
+  //   { username: { $regex: req.params.name, $options: "i" } },
+  //   (err, rec) => {
+  //     if (err) res.status(500).json(err);
+  //     res.status(200).json(rec);
+  //   }
+  // );
+
+  Admin.find({ employees: req.query._id }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    Emp.find(
+      {
+        _id: { $in: rec[0].employees },
+        username: { $regex: req.params.name, $options: "i" },
+      },
+      { _id: 1, username: 1, email: 1 },
+      (errr, recc) => {
+        if (errr) res.status(500).json(err);
+        res.status(200).json(recc);
+      }
+    );
+  });
 });
 
 router.post("/register", verifyJWT, async (req, res, next) => {

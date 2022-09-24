@@ -59,18 +59,11 @@ const AllProjects = ({ user }) => {
   const handleFilterChange = (e) => {
     const category = e.target.value;
     if (category == "All") {
-      //   setProjects(getProjects);
-      axios
-        .get("/myProjects")
-        .then((records) => {
-          // console.log(records.data);
-          setProjects(records.data);
-        })
-        .catch((err) => console.log(err));
+      fetchData().catch(console.error);
       return;
     } else if (category == "Completed") {
       axios
-        .get("/myProjects/completed")
+        .get("/myProjects/completed", { params: { _id: user._id } })
         .then((records) => {
           setProjects(records.data);
         })
@@ -78,7 +71,7 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category == "Incompleted") {
       axios
-        .get("/myProjects/incompleted")
+        .get("/myProjects/incompleted", { params: { _id: user._id } })
         .then((records) => {
           // console.log(records.data);
           setProjects(records.data);
@@ -87,7 +80,7 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category == "Not Assigned") {
       axios
-        .get("/myprojects/assigned")
+        .get("/myprojects/notassigned", { params: { _id: user._id } })
         .then((rec) => {
           // console.log(rec);
           setProjects(rec.data);
@@ -96,7 +89,9 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category == "Sort By Priority") {
       axios
-        .get("/myprojects")
+        .get("/myProjects", {
+          params: { userId: user._id },
+        })
         .then((rec) => {
           // console.log(rec);
           const order = ["Critical", "Important", "Normal"];
@@ -105,16 +100,12 @@ const AllProjects = ({ user }) => {
               order.indexOf(x.projectPriority) -
               order.indexOf(y.projectPriority)
           );
-          console.log(filterByPriorityProjects);
+          // console.log(filterByPriorityProjects);
           setProjects(filterByPriorityProjects);
         })
         .catch((err) => console.log(err));
       return;
     } else if (category == "Sort By Date") {
-      // const convertStringDatesToDate = projects.map((obj) => {
-      //   return { ...obj, dueDate: new Date(obj.dueDate) };
-      // });
-
       // Sort in Ascending order (low to high) i-e 2012,2013
       const sortedAsc = projects
         .map((obj) => {
@@ -145,12 +136,22 @@ const AllProjects = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get("/myProjects");
+  const fetchData = async () => {
+    if (user.role == "Employee") {
+      const res = await axios.get("/myProjects", {
+        params: { userId: user._id },
+      });
       // console.log(res.data);
       setProjects(res.data);
-    };
+    } else {
+      const res = await axios.get("/myProjects/organizationprojects", {
+        params: { name: user.username },
+      });
+      // console.log(res.data);
+      setProjects(res.data);
+    }
+  };
+  useEffect(() => {
     fetchData().catch(console.error);
   }, [newProject]);
 

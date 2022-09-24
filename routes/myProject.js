@@ -7,26 +7,37 @@ const nodemailer = require("nodemailer");
 
 // Get all Projects
 router.get("/", (req, res, next) => {
+  Admin.find({ employees: req.query.userId }, { username: 1 }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    myProject
+      .find({
+        $or: [
+          { projectAssignedBy: rec[0].username, projectAssignedTo: "" },
+          { projectAssignedToId: req.query.userId },
+        ],
+      })
+      .exec((error, records) => {
+        if (error) throw error;
+        res.status(200).json(records);
+      });
+  });
+});
+
+// Get all Projects under one organiziation
+router.get("/organizationprojects", (req, res, next) => {
+  // we need projectAssignedBy
   // console.log(req.query.name);
-  myProject.find({}).exec((error, records) => {
-    if (error) throw error;
-    res.json(records);
+  myProject.find({ projectAssignedBy: req.query.name }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    res.status(200).json(rec);
   });
 });
 
 // Get Completed Projects
 router.get("/completed", (req, res, next) => {
-  // console.log(req.query.name);
-  // find project
-  // search in project files that if completionPercentage==100 and completed==true then return
-  // "projectFiles._id": req.body.projectFileId,
-  // {
-  //   "projectFiles.completionPercentage": "100",
-  //   "projectFiles.completed": "true",
-  // }
-  // {$elemMatch: {description:"8989", zone:"front"}}
   myProject
     .find({
+      projectAssignedToId: req.query._id,
       projectFiles: {
         $elemMatch: {
           completionPercentage: "100",
@@ -42,49 +53,37 @@ router.get("/completed", (req, res, next) => {
 
 // Get Incompleted Projects
 router.get("/incompleted", (req, res, next) => {
-  // console.log(req.query.name);
-  // get all projects whose completion percentage is 100 and completed is false
-  // also get all projects that does not have any completion percentage
-  // "projectFiles.completionPercentage": "100",
-  //     "projectFiles.completed": "true",
-  // { $or:[ {'_id':objId}, {'name':param}, {'nickname':param} ]}
-  //   {
-  //     $and: [
-  //         { $or: [{a: 1}, {b: 1}] },
-  //         { $or: [{c: 1}, {d: 1}] }
-  //     ]
-  // }
-  myProject.find({}).exec((error, records) => {
-    if (error) throw error;
-    // console.log(records);
-    // const x = records.filter((rec) => rec.projectFiles.length == 0);
-    myProject
-      .find({
-        $or: [
-          { "projectFiles.completed": { $ne: true } },
-          {
-            projectFiles: {
-              $elemMatch: {
-                completionPercentage: "100",
-                completed: "false",
-              },
+  myProject
+    .find({
+      projectAssignedToId: req.query._id,
+      $or: [
+        { "projectFiles.completed": { $ne: true } },
+        {
+          projectFiles: {
+            $elemMatch: {
+              completionPercentage: "100",
+              completed: "false",
             },
           },
-        ],
-      })
-      .exec((err, rec) => {
-        if (error) res.status(500).json(err);
-        // console.table(rec);
-        res.status(200).json(rec);
-      });
-  });
+        },
+      ],
+    })
+    .exec((err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.table(rec);
+      res.status(200).json(rec);
+    });
 });
 // get not assigned projects
-router.get("/assigned", (req, res, next) => {
-  // console.log(req.query.name);
-  myProject.find({ projectAssignedTo: "" }).exec((error, records) => {
-    if (error) throw error;
-    res.json(records);
+router.get("/notassigned", (req, res, next) => {
+  Admin.find({ employees: req.query._id }, { username: 1 }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    myProject
+      .find({ projectAssignedBy: rec[0].username, projectAssignedTo: "" })
+      .exec((error, records) => {
+        if (error) throw error;
+        res.status(200).json(records);
+      });
   });
 });
 

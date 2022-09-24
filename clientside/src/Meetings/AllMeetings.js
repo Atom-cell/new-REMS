@@ -85,7 +85,7 @@ const AllMeetings = () => {
       </div> */}
       {loading ? (
         <div className="loading">
-          <ReactLoading type="spin" color="#1890ff" height={667} width={375} />
+          <ReactLoading type="spin" color="black" height={100} width={100} />
         </div>
       ) : (
         <div

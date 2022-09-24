@@ -17,20 +17,43 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
     </Tooltip>
   );
   //   Get All Employees
+  const fetchData = async () => {
+    // get the data from the api
+    const res = await axios.get(
+      "http://localhost:5000/emp/getcompanyemployees",
+      { params: { _id: user._id } }
+    );
+    //   console.log(res.data);
+    var withoutMe = res.data.filter((emp) => emp._id != user._id);
+    setEmployees(withoutMe);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      // get the data from the api
-      const res = await axios.get("http://localhost:5000/emp/");
-      //   console.log(res.data);
-      var withoutMe = res.data.filter((emp) => emp._id != user._id);
-      setEmployees(withoutMe);
-    };
-
     // call the function
     fetchData()
       // make sure to catch any error
       .catch(console.error);
   }, []);
+
+  const handleSearchEmployees = (e) => {
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value == null || value == "" || value == undefined) {
+        // console.log("hello");
+        fetchData();
+      } else {
+        axios
+          .get(`/emp/getallusersbyname/${value}`, {
+            params: { _id: user._id },
+          })
+          .then((rec) => {
+            // console.log(rec.data);
+            var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+            setEmployees(withoutMe);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 1000);
+  };
   return (
     <div>
       <div className="px-4 pt-4">
@@ -66,7 +89,7 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
               type="text"
               //   className="form-control bg-light border-0 pe-0 chat-search"
               className="form-control bg-light border-0 pe-0"
-              placeholder="Search here.."
+              placeholder="Search Conversations.."
               aria-label="Example text with button addon"
               aria-describedby="searchbtn-addon"
               onChange={handleSearchChange}
@@ -79,20 +102,26 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
           <Modal.Title>Add New Chat</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <Form>
+            <div className="input-group mb-3 chat-menu-search-bar">
+              <input
+                type="text"
+                //   className="form-control bg-light border-0 pe-0 chat-search"
+                className="form-control bg-light border-0 pe-0"
+                placeholder="Search Employee.."
+                aria-label="Example text with button addon"
+                aria-describedby="searchbtn-addon"
+                onChange={handleSearchEmployees}
+              />
+            </div>
+          </Form>
           <EmployeesTable
             employees={employees}
+            fetchData={fetchData}
             handleClosee={handleClose}
             newConversation={newConversation}
           />
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer> */}
       </Modal>
     </div>
   );

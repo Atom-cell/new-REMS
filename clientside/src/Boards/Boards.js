@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Board from "./Board/Board";
+import BoardList from "./BoardList/BoardList";
 import Editable from "./Editabled/Editable";
 import "./boards.css";
 import { useParams } from "react-router-dom";
@@ -288,7 +288,7 @@ const Boards = ({ user }) => {
       <div className="app_boards_container custom-scroll-horizontal">
         <div className="app_boards">
           {boards?.map((item) => (
-            <Board
+            <BoardList
               key={item._id}
               board={item}
               addCard={addCardHandler}
@@ -306,9 +306,9 @@ const Boards = ({ user }) => {
             <Editable
               displayClass="app_boards_add-board"
               editClass="app_boards_add-board_edit"
-              placeholder="Enter Board Name"
-              text="Add Board"
-              buttonText="Add Board"
+              placeholder="Enter List Name"
+              text="Add Another List"
+              buttonText="Add List"
               onSubmit={addboardHandler}
             />
           </div>

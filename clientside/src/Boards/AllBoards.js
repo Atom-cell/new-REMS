@@ -151,47 +151,60 @@ const AllBoards = ({ user }) => {
         </div>
       </div>
       <div className="allProjects">
-        {boards?.map((board, index) => {
-          // console.log(board);
-          return (
-            <>
-              {/* <div style={{ flex: "0.3 1 350px", padding: "10px" }} key={index}> */}
-              <div className="project-column" key={index}>
-                <div
-                  style={{
-                    float: "right",
-                    marginRight: "25px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Trash
-                    className="trash"
-                    onClick={() => handleDeleteBoard(board)}
-                  />
-                </div>
-                <div
-                  className="featuredItem"
-                  onClick={() => {
-                    // const filterBoards = boards.filter((b) => b._id == board._id);
-                    navigate(`/boards/${board._id}`);
-                  }}
-                >
-                  <span className="featuredTitle">{board.title}</span>
-                  <div className="assigned-by">
-                    <span className="featuredSub">Total Boards: </span>
-                    <span className="featuredTitle">
-                      {board.boards?.length || 0}
-                    </span>
-                  </div>
-                  {/* <div className="assigned-to">
+        {boards?.length > 0 ? (
+          <>
+            {boards?.map((board, index) => {
+              // console.log(board);
+              return (
+                <>
+                  {/* <div style={{ flex: "0.3 1 350px", padding: "10px" }} key={index}> */}
+                  <div className="project-column" key={index}>
+                    <div
+                      style={{
+                        float: "right",
+                        marginRight: "25px",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <Trash
+                        className="trash"
+                        onClick={() => handleDeleteBoard(board)}
+                      />
+                    </div>
+                    <div
+                      className="featuredItem"
+                      onClick={() => {
+                        // const filterBoards = boards.filter((b) => b._id == board._id);
+                        navigate(`/boards/${board._id}`);
+                      }}
+                    >
+                      <span className="featuredTitle">{board.title}</span>
+                      <div className="assigned-by">
+                        <span className="featuredSub">Total Boards: </span>
+                        <span className="featuredTitle">
+                          {board.boards?.length || 0}
+                        </span>
+                      </div>
+                      {/* <div className="assigned-to">
                     <span className="featuredSub">Related To: </span>
                     <span className="featuredTitle">Project Name</span>
                   </div> */}
-                </div>
-              </div>
-            </>
-          );
-        })}
+                    </div>
+                  </div>
+                </>
+              );
+            })}
+          </>
+        ) : (
+          <h1
+            style={{
+              marginLeft: "30%",
+              marginTop: "10%",
+            }}
+          >
+            No Boards Created So Far
+          </h1>
+        )}
       </div>
     </div>
   );

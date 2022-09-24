@@ -69,7 +69,7 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
 router.delete("/deleteconversation", (req, res) => {
   //delete conversation
   // then in message model delete all messages that has given conversation id
-  console.log(req.body._id);
+  // console.log(req.body._id);
   Conversation.findByIdAndRemove({ _id: req.body._id }, (err, rec) => {
     if (err) res.status(500).json(err);
     Message.deleteMany({ conversationId: req.body._id }, (errr, recc) => {

@@ -76,7 +76,7 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
         anchor={"right"}
         onClose={() => setOpenSideNav(false)}
         PaperProps={{
-          sx: { width: "400px", backgroundColor: "#1890ff" },
+          sx: { width: "350px", backgroundColor: "#1890ff" },
         }}
       >
         <div className="titleContainer">

@@ -78,11 +78,14 @@
     font-weight: bold;
   }
   .board-add-card-edit-title{
-    width: 50%;
+    width: 30%;
     border-radius: 10px;
-    /* text-align: center; */
-    /* margin-left: auto; */
-    /* margin-right: 25%; */
+    margin-left: 20px;
+    
+  }
+  .board-list-edit-title{
+    width: 70%;
+    border-radius: 10px;
     margin-left: 20px;
     
   }

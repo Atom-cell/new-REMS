@@ -17,10 +17,10 @@ const EmployeesTable = ({
       });
     } else {
       newConversation(emp._id);
+      fetchData();
     }
     // console.log(newProject);
     handleClosee();
-    fetchData();
   };
   return (
     <div className="chatBoxTop" style={{ height: "50vh", overflow: "scroll" }}>

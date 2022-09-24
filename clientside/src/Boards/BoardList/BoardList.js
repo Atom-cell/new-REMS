@@ -4,9 +4,9 @@ import { Trash } from "react-feather";
 import Card from "../Card/Card";
 import Editable from "../Editabled/Editable";
 
-import "./Board.css";
+import "./BoardList.css";
 
-function Board(props) {
+function BoardList(props) {
   const updateTitle = (value) => {
     props.updateBoardTitle(props.board._id, value);
   };
@@ -22,10 +22,10 @@ function Board(props) {
           {/* {props.board?.title} */}
           <Editable
             displayClass="app_boards_title"
-            editClass="board-add-card-edit-title"
+            editClass="board-list-edit-title"
             defaultValue={props.board?.title}
             text={props.board?.title}
-            placeholder="Enter Board Title"
+            placeholder="Enter List Title"
             onSubmit={updateTitle}
           />
           <span>{props.board?.cards?.length || 0}</span>
@@ -58,4 +58,4 @@ function Board(props) {
   );
 }
 
-export default Board;
+export default BoardList;
