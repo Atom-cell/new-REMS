@@ -10,7 +10,14 @@ const Conversation = ({ conversation, currentUser }) => {
       try {
         // get user information using id
         const res = await axios.get(`http://localhost:5000/emp/${friendId}`);
-        setUser(res.data);
+        if (res.data) setUser(res.data);
+        else {
+          const response = await axios.get(
+            `http://localhost:5000/emp/getadmindetails`,
+            { params: { _id: friendId } }
+          );
+          setUser(response.data[0]);
+        }
       } catch (err) {
         console.log(err);
       }

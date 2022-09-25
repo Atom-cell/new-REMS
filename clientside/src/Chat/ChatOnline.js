@@ -14,11 +14,27 @@ export default function ChatOnline({
 
   useEffect(() => {
     const getFriends = async () => {
-      const res = await axios.get(
-        "http://localhost:5000/emp/getcompanyemployees",
-        { params: { _id: JSON.parse(localStorage.getItem("user"))._id } }
-      );
-      setFriends(res.data);
+      if (localStorage.getItem("role") == "Employee") {
+        const res = await axios.get(
+          "http://localhost:5000/emp/getcompanyemployees",
+          { params: { _id: JSON.parse(localStorage.getItem("user"))._id } }
+        );
+        const response = await axios.get(
+          "http://localhost:5000/emp/getmyadmin",
+          {
+            params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+          }
+        );
+        setFriends([...res.data, response.data[0]]);
+      } else {
+        const res = await axios.get(
+          "http://localhost:5000/emp/getmyemployees",
+          {
+            params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+          }
+        );
+        setFriends(res.data);
+      }
     };
 
     getFriends();

@@ -75,6 +75,20 @@ export const SideBarData = {
     //   ],
     // },
     {
+      id: 11,
+      title: "Activity Log",
+      path: "/log",
+      icon: <WorkIcon style={{ fill: "grey" }} />,
+      cName: "nav-text",
+    },
+    {
+      id: 12,
+      title: "Manage Employee",
+      path: "/empManage",
+      icon: <EngineeringIcon style={{ fill: "grey" }} />,
+      cName: "nav-text",
+    },
+    {
       id: 8,
       title: "Collaboration",
       cName: "nav-text",
@@ -98,20 +112,6 @@ export const SideBarData = {
           cName: "nav-text sub-nav",
         },
       ],
-    },
-    {
-      id: 11,
-      title: "Activity Log",
-      path: "/log",
-      icon: <WorkIcon style={{ fill: "grey" }} />,
-      cName: "nav-text",
-    },
-    {
-      id: 12,
-      title: "Manage Employee",
-      path: "/empManage",
-      icon: <EngineeringIcon style={{ fill: "grey" }} />,
-      cName: "nav-text",
     },
     {
       id: 6,

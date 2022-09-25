@@ -101,6 +101,18 @@ router.get("/getmyadmin", (req, res) => {
   );
 });
 
+router.get("/getadmindetails", (req, res) => {
+  Admin.find(
+    { _id: req.query._id },
+    { _id: 1, username: 1, email: 1 },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.log(rec);
+      res.status(200).json(rec);
+    }
+  );
+});
+
 router.get("/getmyemployees", (req, res) => {
   // console.log(req.query._id);
   Admin.find({ _id: req.query._id }, (err, rec) => {
@@ -155,6 +167,23 @@ router.get("/getallusersbyname/:name", (req, res) => {
   // );
 
   Admin.find({ employees: req.query._id }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    Emp.find(
+      {
+        _id: { $in: rec[0].employees },
+        username: { $regex: req.params.name, $options: "i" },
+      },
+      { _id: 1, username: 1, email: 1 },
+      (errr, recc) => {
+        if (errr) res.status(500).json(err);
+        res.status(200).json(recc);
+      }
+    );
+  });
+});
+
+router.get("/getallmyusersbyname/:name", (req, res) => {
+  Admin.find({ _id: req.query._id }, (err, rec) => {
     if (err) res.status(500).json(err);
     Emp.find(
       {

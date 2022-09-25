@@ -85,7 +85,8 @@ const Navbar = () => {
                   item.title === "Activity Log" ||
                   item.title === "Manage Employee" ||
                   item.title === "Dashboard" ||
-                  item.title === "All Meetings"
+                  item.title === "All Meetings" ||
+                  item.title === "Collaboration"
                 ) {
                   return (
                     <li

@@ -19,13 +19,24 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
   //   Get All Employees
   const fetchData = async () => {
     // get the data from the api
-    const res = await axios.get(
-      "http://localhost:5000/emp/getcompanyemployees",
-      { params: { _id: user._id } }
-    );
-    //   console.log(res.data);
-    var withoutMe = res.data.filter((emp) => emp._id != user._id);
-    setEmployees(withoutMe);
+    if (localStorage.getItem("role") == "Employee") {
+      const res = await axios.get(
+        "http://localhost:5000/emp/getcompanyemployees",
+        { params: { _id: user._id } }
+      );
+      //   console.log(res.data);
+      const response = await axios.get("http://localhost:5000/emp/getmyadmin", {
+        params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+      });
+      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      setEmployees([...withoutMe, response.data[0]]);
+    } else {
+      const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
+        params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+      });
+      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      setEmployees(withoutMe);
+    }
   };
   useEffect(() => {
     // call the function
@@ -41,16 +52,29 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
         // console.log("hello");
         fetchData();
       } else {
-        axios
-          .get(`/emp/getallusersbyname/${value}`, {
-            params: { _id: user._id },
-          })
-          .then((rec) => {
-            // console.log(rec.data);
-            var withoutMe = rec.data.filter((emp) => emp._id != user._id);
-            setEmployees(withoutMe);
-          })
-          .catch((err) => console.log(err));
+        if (localStorage.getItem("role") == "Employee") {
+          axios
+            .get(`/emp/getallusersbyname/${value}`, {
+              params: { _id: user._id },
+            })
+            .then((rec) => {
+              // console.log(rec.data);
+              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              setEmployees(withoutMe);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          axios
+            .get(`/emp/getallmyusersbyname/${value}`, {
+              params: { _id: user._id },
+            })
+            .then((rec) => {
+              // console.log(rec.data);
+              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              setEmployees(withoutMe);
+            })
+            .catch((err) => console.log(err));
+        }
       }
     }, 1000);
   };
