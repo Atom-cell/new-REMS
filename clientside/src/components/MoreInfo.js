@@ -118,7 +118,7 @@ function MoreInfo() {
     <div className="cnt">
       <Breadcrumb>
         <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
-        <Breadcrumb.Item href="/empManage">Manange Employee</Breadcrumb.Item>
+        <Breadcrumb.Item href="/empManage">Manage Employee</Breadcrumb.Item>
         <Breadcrumb.Item active>More Information</Breadcrumb.Item>
       </Breadcrumb>
       <div className="btn_grouop">

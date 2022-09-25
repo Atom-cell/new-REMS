@@ -46,7 +46,7 @@ const AllMeetings = () => {
       const res = await axios.get(
         `http://localhost:5000/myVideo/getMyMeetings/${username}`
       );
-      console.log(res.data);
+      // console.log(res.data);
       setAllMeetings(res.data);
       setLoading(false);
       // console.log(Object.keys(res.data[0]));

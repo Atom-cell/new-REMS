@@ -83,8 +83,9 @@ const Navbar = () => {
                 if (
                   item.title === "Projects" ||
                   item.title === "Activity Log" ||
-                  item.title === "Manange Employee" ||
-                  item.title === "Dashboard"
+                  item.title === "Manage Employee" ||
+                  item.title === "Dashboard" ||
+                  item.title === "All Meetings"
                 ) {
                   return (
                     <li
@@ -145,7 +146,7 @@ const Navbar = () => {
             : SideBarData.links.map((item, key) => {
                 if (
                   item.title === "Activity Log" ||
-                  item.title === "Manange Employee"
+                  item.title === "Manage Employee"
                 ) {
                   return null;
                 } else {

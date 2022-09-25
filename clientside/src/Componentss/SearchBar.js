@@ -22,15 +22,31 @@ const SearchBar = ({
   useEffect(() => {
     const fetchData = async () => {
       // get the data from the api
-      const res = await axios.get(
-        "http://localhost:5000/emp/getcompanyemployees",
-        {
-          params: { _id: JSON.parse(localStorage.getItem("user"))._id },
-        }
-      );
-      //   console.log(res.data);
-      var withoutMe = res.data.filter((u) => u._id != myId);
-      setData(withoutMe);
+      if (localStorage.getItem("role") == "Employee") {
+        const res = await axios.get(
+          "http://localhost:5000/emp/getcompanyemployees",
+          {
+            params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+          }
+        );
+
+        const response = await axios.get(
+          "http://localhost:5000/emp/getmyadmin",
+          {
+            params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+          }
+        );
+        var withoutMe = res.data.filter((u) => u._id != myId);
+        setData([...withoutMe, response.data[0]]);
+      } else {
+        const res = await axios.get(
+          "http://localhost:5000/emp/getmyemployees",
+          {
+            params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+          }
+        );
+        setData(res.data);
+      }
     };
 
     // call the function
@@ -77,34 +93,6 @@ const SearchBar = ({
           value={wordEntered}
           onChange={handleFilter}
         />
-        {/* <div className="search-icon-container"> */}
-        {/* {wordEntered && (
-            // <div onClick={() => addEmployeeToMeetingList(wordEntered)}>
-            <div
-              onClick={() => {
-                if (addEmployeeToMeeting !== undefined) {
-                  addEmployeeToMeetingList(wordEntered);
-                }
-                if (newConversation !== undefined) {
-                  newConversation(userId);
-                  setFilteredData([]);
-                  setWordEntered("");
-                }
-              }}
-            >
-              <AddIcon />
-            </div>
-          )} */}
-        {/* {filteredData.length === 0 ? (
-            <div className="search-icon">
-              <SearchIcon />
-            </div>
-          ) : (
-            <div className="clear-icon">
-              <CloseIcon id="clearBtn" onClick={clearInput} />
-            </div>
-          )} */}
-        {/* </div> */}
       </div>
       {filteredData.length != 0 && (
         <div className="dataResult">

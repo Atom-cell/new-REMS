@@ -100,13 +100,6 @@ export const SideBarData = {
       ],
     },
     {
-      id: 6,
-      title: "All Meetings",
-      path: "/allMeetings",
-      icon: <GroupIcon style={{ fill: "grey" }} />,
-      cName: "nav-text sub-nav",
-    },
-    {
       id: 11,
       title: "Activity Log",
       path: "/log",
@@ -115,10 +108,17 @@ export const SideBarData = {
     },
     {
       id: 12,
-      title: "Manange Employee",
+      title: "Manage Employee",
       path: "/empManage",
       icon: <EngineeringIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
+    },
+    {
+      id: 6,
+      title: "All Meetings",
+      path: "/allMeetings",
+      icon: <GroupIcon style={{ fill: "grey" }} />,
+      cName: "nav-text sub-nav",
     },
     {
       id: 13,
