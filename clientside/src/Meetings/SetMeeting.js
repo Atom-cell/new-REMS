@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import DatePicker from "react-datepicker";
@@ -10,15 +10,20 @@ import DeleteIcon from "@material-ui/icons/DeleteForeverSharp";
 import moment from "moment";
 import "./setmeeting.css";
 import { toast } from "react-toastify";
+import EmployeesTable from "../Projects/EmployeesTable";
+import MeetingEmployeesTable from "./MeetingEmployeesTable";
 const { v4: uuidV4 } = require("uuid");
 
 const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
   const [show, setShow] = useState(false);
+  const [showEmployeesTable, setShowEmployeesTable] = useState(false);
 
   const [employees, setEmployees] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleCloseEmployeesTable = () => setShowEmployeesTable(false);
+  const handleShowEmployeesTable = () => setShowEmployeesTable(true);
 
   const fixTimezoneOffset = (date) => {
     if (!date) return "";
@@ -66,18 +71,18 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
     }
   };
 
-  const addEmployeeToMeeting = (word) => {
-    if (employees.includes(word)) {
-      toast.info(`${word} already selected`);
-    } else {
-      setEmployees([...employees, word]);
-    }
-  };
+  // const addEmployeeToMeeting = (word) => {
+  //   if (employees.includes(word)) {
+  //     toast.info(`${word} already selected`);
+  //   } else {
+  //     setEmployees([...employees, word]);
+  //   }
+  // };
 
-  const handleRemoveEmployee = (emp) => {
-    // remove employee from list
-    setEmployees(employees.filter((item) => item !== emp));
-  };
+  // const handleRemoveEmployee = (emp) => {
+  //   // remove employee from list
+  //   setEmployees(employees.filter((item) => item !== emp));
+  // };
 
   return (
     <>
@@ -87,7 +92,13 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Set Meeting</Modal.Title>
+          <Modal.Title>
+            Set Meeting{" "}
+            {employees.length > 0 && employees.length < 2 && (
+              <>With {employees.length} Employee</>
+            )}
+            {employees.length > 1 && <>With {employees.length} Employees</>}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>
@@ -119,15 +130,22 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
               className="inputTextFields"
               minDate={new Date()}
             />
-            <SearchBar
+            {/* <SearchBar
               placeholder="Search Employees"
               employees={employees}
               setEmployees={setEmployees}
               addEmployeeToMeeting={addEmployeeToMeeting}
               myId={userId}
+            /> */}
+            <MeetingEmployeesTable
+              showEmployeesTable={showEmployeesTable}
+              handleShowEmployeesTable={handleShowEmployeesTable}
+              handleCloseEmployeesTable={handleCloseEmployeesTable}
+              selectedEmployees={employees}
+              setSelectedEmployees={setEmployees}
             />
             {/* Show Selected Employees */}
-            <div className="selectedEmployeesContainer">
+            {/* <div className="selectedEmployeesContainer">
               {employees.map((entry) => (
                 <div className="selectedEmployees" style={{ display: "flex" }}>
                   {entry}{" "}
@@ -140,7 +158,7 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </Modal.Body>
         <Modal.Footer>

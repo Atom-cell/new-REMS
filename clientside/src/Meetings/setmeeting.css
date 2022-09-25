@@ -43,3 +43,20 @@
     /* border: 3px solid #8248de; */
     cursor: pointer;
 }
+.selected-employees-alert {
+    margin-top: 10px;
+    width: fit-content;
+    opacity: 0.5;
+    height: 0.6em;
+    color: #494a54 !important;
+    background-color: #e4e5e8 !important;
+    border-color: #d7d8dd !important;
+  }
+  .selected-employees-alert p{
+    position: relative;
+    top: -12px;
+  }
+  .selected-employees-alert button{
+    padding: 8px 1rem !important;
+    color: #000 !important;
+  }
