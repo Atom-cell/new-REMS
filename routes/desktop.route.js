@@ -119,4 +119,67 @@ router.post("/SS", (req, res) => {
     console.log(e.message);
   }
 });
+
+router.post("/daytimes", (req, res) => {
+  console.log("In DAY TIME");
+  const { email, activeDayTime, idleDayTime } = req.body;
+
+  console.log(activeDayTime);
+  console.log(idleDayTime);
+
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         dayTime: {
+  //           date: Date.now(),
+  //           idleDay: activeDayTime,
+  //           activeDay: idleDayTime,
+  //         },
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error);
+  //       } else {
+  //         console.log("");
+  //       }
+  //     }
+  //   );
+  // router.post("/apptime", (req, res) => {
+  //   }
+});
+
+router.post("/separate", (req, res) => {
+  console.log("Sepaaete tiems");
+  const { email, activeArray, idleArray } = req.body;
+
+  console.log(activeArray);
+  console.log(idleArray);
+
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         separateTime: {
+  //           date: Date.now(),
+  //           idle: activeArray,
+  //           active: idleArray,
+  //         },
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error);
+  //       } else {
+  //         console.log("");
+  //       }
+  //     }
+  //   );
+  // } catch (e) {
+  //   res.send(e);
+  // }
+});
 module.exports = router;

@@ -357,12 +357,12 @@ router.delete("/deleteEmp/:id", verifyJWT, (req, res) => {
 
   //6287ffd800aa0f2419e224df
 
-  Admin.findOneAndUpdate(
-    { email: req.userEmail },
-    { $pull: { employees: req.params.id } }
-  ).then((response) => console.log(response));
+  // Admin.findOneAndUpdate(
+  //   { email: req.userEmail },
+  //   { $pull: { employees: req.params.id } }
+  // ).then((response) => console.log(response));
 
-  Emp.findByIdAndDelete(req.params.id).then((response) =>
+  Emp.findByIdAndUpdate(req.params.id,{active:false}).then((response) =>
     console.log(response)
   );
 });

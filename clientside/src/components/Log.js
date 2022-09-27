@@ -1,6 +1,12 @@
 import React from "react";
 import { Table, Button, Spinner } from "react-bootstrap";
-import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import {
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Pagination,
+} from "@mui/material";
 import axios from "axios";
 
 function Log() {
@@ -9,6 +15,9 @@ function Log() {
   const [loading, setLoading] = React.useState(0);
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [postsPerPage, setPostsPerPage] = React.useState(10);
 
   React.useEffect(() => {
     getData();
@@ -26,6 +35,7 @@ function Log() {
         setData([...response.data.data]);
       });
   };
+
   const handleChange = (event) => {
     setName(event.target.value);
   };
@@ -47,6 +57,11 @@ function Log() {
       if (d.email === name) setUsername(d.username);
     });
   };
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = log.slice(indexOfFirstPost, indexOfLastPost);
+  console.log("current: ", currentPosts);
 
   const deleteLogData = async () => {
     if (name) {
@@ -111,27 +126,36 @@ function Log() {
       {loading === 0 ? (
         <div className="spinner">{/* <Spinner animation="border" /> */}</div>
       ) : loading === 1 ? (
-        <Table hover bordered className="table">
-          <thead>
-            <tr>
-              <th className="thead">#</th>
-              <th className="thead">Activity</th>
-              <th className="thead">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {log.map(function (d, index) {
-              console.log(d);
-              return (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{d.app}</td>
-                  <td>{d.time}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+        <>
+          <Table hover bordered className="table">
+            <thead>
+              <tr>
+                <th className="thead">#</th>
+                <th className="thead">Activity</th>
+                <th className="thead">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentPosts.map(function (d, index) {
+                //console.log(d);
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{d.app}</td>
+                    <td>{d.time}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <Pagination
+            count={Math.ceil(log.length / postsPerPage)}
+            variant="outlined"
+            color="primary"
+            onChange={(event, pageNumber) => setCurrentPage(pageNumber)}
+            sx={{ float: "right" }}
+          />
+        </>
       ) : null}
     </div>
   );

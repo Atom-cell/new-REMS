@@ -1,3 +1,4 @@
+import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
 import { Avatar, IconButton } from "@mui/material";
 import {
@@ -19,21 +20,15 @@ import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-////////////////////////////////////////////////////////////////////////
-// import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
-import enUS from "date-fns/locale/en-US";
-
 function TableDate({ date }) {
+  // alert("k");
   return <h4 style={{ fontWeight: "bold" }}>{date}</h4>;
 }
 function MoreInfo() {
   const [allEvents, setAllEvents] = React.useState([]);
   const [value, onChange] = React.useState(new Date());
 
+  const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
   const [data, setData] = React.useState({});
   const [totalTime, setTotalTime] = React.useState([]);
   const [totalTimeCopy, setTotalTimeCopy] = React.useState([]);
@@ -51,18 +46,20 @@ function MoreInfo() {
   }, []);
 
   const loadData = async () => {
-    let a = await JSON.parse(localStorage.getItem("info"));
-    console.log(a);
+    let contextData = moreInfo;
+    console.log("CONTEXT: ", contextData);
+    let a = contextData;
+    //console.log(a);
     // if (a.screenshot && a.appTime && a.totalTime) {
 
-    console.log(a.totalTime);
+    //console.log(a.totalTime);
     setLoading(false);
     setData(a);
     setTotalTime(a.totalTime);
     setTotalTimeCopy(a.totalTime);
     setAllEvents([...a.attendance]);
     setApps(a.appTime);
-    console.log("Data: " + data);
+    //console.log("Data: " + data);
 
     // }
   };
@@ -176,10 +173,10 @@ function MoreInfo() {
                         x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
                     )
                   ) {
-                    console.log(
-                      "ERROR: ",
-                      fixTimezoneOffset(date).slice(0, 10)
-                    );
+                    // console.log(
+                    //   "ERROR: ",
+                    //   fixTimezoneOffset(date).slice(0, 10)
+                    // );
                     return "present";
                   }
                 }}
@@ -360,28 +357,64 @@ function MoreInfo() {
                 </tr>
               </thead>
               <tbody>
-                {apps?.map(function (time) {
-                  return Object.entries(time.apps).map(function (
+                {apps.map(function (time) {
+                  console.log("time: ", time.apps);
+                  return Object.entries(time.apps || {}).map(function (
                     [key, value],
                     index
                   ) {
-                    return (
-                      <tr key={index}>
-                        <td>{timeConvert(value) == "00:00:00" ? "" : index}</td>
-                        <td>
-                          {key != "" ? (
-                            key
-                          ) : (
-                            <TableDate date={time.date.slice(0, 10)} />
-                          )}
-                        </td>
-                        <td>
-                          {timeConvert(value) == "00:00:00"
-                            ? ""
-                            : timeConvert(value)}
-                        </td>
-                      </tr>
-                    );
+                    if (index === 0) {
+                      return (
+                        <>
+                          {/* FOR DATE */}
+                          <tr key={index}>
+                            <td></td>
+                            <td>
+                              <TableDate date={time.date.slice(0, 10)} />
+                            </td>
+                            <td></td>
+                          </tr>
+                          {/* FOR DATA */}
+                          <tr key={index}>
+                            <td>
+                              {timeConvert(value) == "00:00:00" ? "" : index}
+                            </td>
+                            <td>
+                              {key != "" ? (
+                                key
+                              ) : (
+                                <TableDate date={time.date.slice(0, 10)} />
+                              )}
+                            </td>
+                            <td>
+                              {timeConvert(value) == "00:00:00"
+                                ? ""
+                                : timeConvert(value)}
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    } else {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            {timeConvert(value) == "00:00:00" ? "" : index}
+                          </td>
+                          <td>
+                            {key != "" ? (
+                              key
+                            ) : (
+                              <TableDate date={time.date.slice(0, 10)} />
+                            )}
+                          </td>
+                          <td>
+                            {timeConvert(value) == "00:00:00"
+                              ? ""
+                              : timeConvert(value)}
+                          </td>
+                        </tr>
+                      );
+                    }
                   });
                 })}
               </tbody>
