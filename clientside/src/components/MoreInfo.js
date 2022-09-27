@@ -34,6 +34,21 @@ function MoreInfo() {
   const [totalTimeCopy, setTotalTimeCopy] = React.useState([]);
   const [apps, setApps] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [presents, setPresents] = React.useState(0);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const [btnOption, setBtnOption] = React.useState("info");
 
@@ -111,6 +126,25 @@ function MoreInfo() {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
   };
 
+  const totalPresents = () => {
+    console.log("MONTH", value.getMonth() + 1);
+    let month = "";
+    setPresents(0);
+    if (value.getMonth() + 1 < 10) {
+      month = `0${value.getMonth() + 1}`;
+    } else {
+      month = value.getMonth() + 1;
+    }
+
+    let a = 0;
+    allEvents.forEach((x, index) => {
+      if (x.slice(5, 7) === month) {
+        a++;
+      }
+    });
+    setPresents(a);
+  };
+
   return (
     <div className="cnt">
       <Breadcrumb>
@@ -164,7 +198,16 @@ function MoreInfo() {
             <div style={{ marginRight: "2em" }}>
               <h4>Attendance</h4>
               <Calendar
-                onChange={onChange}
+                onChange={(value) => {
+                  let a = 0;
+                  allEvents.forEach((x) => {
+                    if (x.slice(5, 7) === `0${value.getMonth() + 1}`) {
+                      a++;
+                    }
+                  });
+                  setPresents(a);
+                  onChange(value);
+                }}
                 value={value}
                 tileClassName={({ date }) => {
                   if (
@@ -181,6 +224,8 @@ function MoreInfo() {
                   }
                 }}
               />
+              <p>Month : {monthNames[value.getMonth()]}</p>
+              <p>Total Presents : {presents}</p>
             </div>
           </div>
           {/* <h1>Selected date: {value.toJSON().slice(0, 10)}</h1>
