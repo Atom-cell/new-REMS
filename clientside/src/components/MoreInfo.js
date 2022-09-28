@@ -1,6 +1,6 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar, IconButton, Divider } from "@mui/material";
 import {
   Table,
   Button,
@@ -35,6 +35,9 @@ function MoreInfo() {
   const [apps, setApps] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [presents, setPresents] = React.useState(0);
+  const [dayTime, setDayTime] = React.useState([]);
+  const [dayTimeCopy, setDayTimeCopy] = React.useState([]);
+  const [SS, setSS] = React.useState([]);
   const monthNames = [
     "January",
     "February",
@@ -64,19 +67,16 @@ function MoreInfo() {
     let contextData = moreInfo;
     console.log("CONTEXT: ", contextData);
     let a = contextData;
-    //console.log(a);
-    // if (a.screenshot && a.appTime && a.totalTime) {
 
-    //console.log(a.totalTime);
     setLoading(false);
     setData(a);
     setTotalTime(a.totalTime);
     setTotalTimeCopy(a.totalTime);
+    setDayTime(a.separateTime);
+    setDayTimeCopy(a.separateTime);
     setAllEvents([...a.attendance]);
     setApps(a.appTime);
-    //console.log("Data: " + data);
-
-    // }
+    setSS([...a.screenshot]);
   };
 
   const timeConvert = (s) => {
@@ -106,7 +106,20 @@ function MoreInfo() {
       })
     );
 
-    console.log("temp", totalTime);
+    setDayTime(
+      data.separateTime.filter((tt) => {
+        return tt.date.slice(0, 10) >= newFrom && tt.date.slice(0, 10) <= newTo;
+      })
+    );
+
+    setSS(
+      data?.screenshot.filter((tt) => {
+        console.log(tt);
+        return tt.date.slice(0, 10) >= newFrom && tt.date.slice(0, 10) <= newTo;
+      })
+    );
+
+    console.log("SSSSS", SS);
   };
 
   const openBase64InNewTab = (data, mimeType) => {
@@ -172,7 +185,7 @@ function MoreInfo() {
         <div className="user_infoWrapper">
           <div className="user_heading">
             <Avatar
-              src={data.profilePicture}
+              src={data?.profilePicture}
               // src="https://unsplash.com/photos/jzY0KRJopEI"
               sx={{ width: 100, height: 100, marginBottom: "2em" }}
             />
@@ -187,11 +200,11 @@ function MoreInfo() {
                 <h6>Bank Details:</h6>
               </div>
               <div className="box2">
-                <h6>{data.username}</h6>
-                <h6>{data.email}</h6>
-                <h6>{data.role}</h6>
-                <h6>{data.contact ? data.contact : "-"}</h6>
-                <h6>{data.bankDetails ? data.bankDetails : "-"}</h6>
+                <h6>{data?.username}</h6>
+                <h6>{data?.email}</h6>
+                <h6>{data?.role}</h6>
+                <h6>{data?.contact ? data.contact : "-"}</h6>
+                <h6>{data?.bankDetails ? data.bankDetails : "-"}</h6>
               </div>
             </div>
 
@@ -289,12 +302,12 @@ function MoreInfo() {
                     padding: 0,
                   }}
                 >
-                  {data.screenshot?.map((i, index) => {
+                  {SS?.map((i, index) => {
                     return (
                       <Carousel.Item>
                         <img
                           style={{ cursor: "pointer", width: "100%" }}
-                          src={`data:image/jpeg;base64,${i}`}
+                          src={`data:image/jpeg;base64,${i.img}`}
                           onClick={() => openBase64InNewTab(i, "image/png")}
                         />
                       </Carousel.Item>
@@ -318,23 +331,57 @@ function MoreInfo() {
                 <Table hover bordered className="table">
                   <thead>
                     <tr>
-                      <th>Date</th>
+                      <th style={{ width: "20%" }}>Date</th>
+                      <th style={{ width: "20%" }}>Time</th>
                       <th>Time</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {totalTime?.map(function (time, index) {
+                    {totalTime.map(function (time, index) {
                       if (index > 5);
                       else {
                         return (
                           <tr>
-                            <td>{time.date.slice(0, 10)}</td>
-                            <td>
+                            <td style={{ width: "20%" }}>
+                              {time.date.slice(0, 10)}
+                            </td>
+                            <td style={{ width: "20%" }}>
                               {time.activetime.Hours +
                                 " : " +
                                 time.activetime.Minutes +
                                 " : " +
                                 time.activetime.Seconds}
+                            </td>
+                            <td>
+                              {dayTime.map((day) => {
+                                return day.activeDay.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
+                              <Divider />
+                              {dayTime.map((day) => {
+                                return day.active.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
                             </td>
                           </tr>
                         );
@@ -345,6 +392,7 @@ function MoreInfo() {
               )}
             </>
           </h5>
+
           <h5>
             <h4 style={{ fontWeight: "bold", margin: "1em 0em 1em 0em" }}>
               Idle Time:
@@ -358,7 +406,8 @@ function MoreInfo() {
                 <Table hover bordered className="table">
                   <thead>
                     <tr>
-                      <th>Date</th>
+                      <th style={{ width: "20%" }}>Date</th>
+                      <th style={{ width: "20%" }}>Time</th>
                       <th>Time</th>
                     </tr>
                   </thead>
@@ -368,13 +417,46 @@ function MoreInfo() {
                       else {
                         return (
                           <tr>
-                            <td>{time.date.slice(0, 10)}</td>
-                            <td>
+                            <td style={{ width: "20%" }}>
+                              {time.date.slice(0, 10)}
+                            </td>
+                            <td style={{ width: "20%" }}>
                               {time.idletime.Hours +
                                 " : " +
                                 time.idletime.Minutes +
                                 " : " +
                                 time.idletime.Seconds}
+                            </td>
+                            <td>
+                              {dayTime.map((day) => {
+                                return day.idleDay.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
+                              <Divider />
+                              {dayTime.map((day) => {
+                                return day.idle.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
                             </td>
                           </tr>
                         );
@@ -403,7 +485,7 @@ function MoreInfo() {
               </thead>
               <tbody>
                 {apps.map(function (time) {
-                  console.log("time: ", time.apps);
+                  // console.log("time: ", time.apps);
                   return Object.entries(time.apps || {}).map(function (
                     [key, value],
                     index

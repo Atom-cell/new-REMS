@@ -40,6 +40,12 @@ var empSchema = mongoose.Schema({
     default: false,
   },
   status: Boolean,
+  screenshot: [
+    {
+      date: Date,
+      img: String,
+    },
+  ],
   totalTime: [
     {
       date: Date,
@@ -54,17 +60,24 @@ var empSchema = mongoose.Schema({
     },
   ],
 
-  // separateTime: [
-  //   {
-  //     date: Date,
-  //     idle: {
-  //       type: Array,
-  //     },
-  //     active: {
-  //       type: Array,
-  //     },
-  //   },
-  // ],
+  separateTime: [
+    {
+      date: Date,
+      idle: {
+        type: Array,
+      },
+      active: {
+        type: Array,
+      },
+      // 11 pm
+      idleDay: {
+        type: Array,
+      },
+      activeDay: {
+        type: Array,
+      },
+    },
+  ],
   // dayTime: [
   //   {
   //     date: Date,
@@ -77,11 +90,7 @@ var empSchema = mongoose.Schema({
   //   },
   // ],
   flag: String,
-  screenshot: [
-    {
-      type: String,
-    },
-  ],
+
   billingId: String, // This is Stripe Customer ID
   attendance: [Date],
   bankDetails: String,

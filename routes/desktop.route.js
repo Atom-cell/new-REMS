@@ -41,7 +41,9 @@ router.post("/logout", async function (req, res) {
   }
 });
 router.post("/times", (req, res) => {
+  console.log("Times");
   const { email, active_time, idle_time } = req.body;
+  console.log(active_time, idle_time);
   try {
     Emp.findOneAndUpdate(
       { email: email },
@@ -58,7 +60,7 @@ router.post("/times", (req, res) => {
         if (error) {
           console.log(error);
         } else {
-          console.log(data);
+          console.log("");
         }
       }
     );
@@ -68,74 +70,18 @@ router.post("/times", (req, res) => {
 });
 
 router.post("/apptime", (req, res) => {
+  console.log("APp time");
   const { email, tt } = req.body;
-  console.log(email, tt);
-
-  try {
-    Emp.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          appTime: {
-            date: Date.now(),
-            apps: JSON.parse(tt),
-          },
-        },
-      },
-      function (error, data) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(data);
-        }
-      }
-    );
-  } catch (e) {
-    res.send(e);
-  }
-});
-
-router.post("/SS", (req, res) => {
-  console.log("In SS");
-  const { email, img } = req.body;
-
-  try {
-    Emp.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          screenshot: img,
-        },
-      },
-      function (error, data) {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log(data);
-        }
-      }
-    );
-  } catch (e) {
-    console.log(e.message);
-  }
-});
-
-router.post("/daytimes", (req, res) => {
-  console.log("In DAY TIME");
-  const { email, activeDayTime, idleDayTime } = req.body;
-
-  console.log(activeDayTime);
-  console.log(idleDayTime);
+  //console.log(email, tt);
 
   // try {
   //   Emp.findOneAndUpdate(
   //     { email: email },
   //     {
   //       $push: {
-  //         dayTime: {
+  //         appTime: {
   //           date: Date.now(),
-  //           idleDay: activeDayTime,
-  //           activeDay: idleDayTime,
+  //           apps: JSON.parse(tt),
   //         },
   //       },
   //     },
@@ -143,10 +89,73 @@ router.post("/daytimes", (req, res) => {
   //       if (error) {
   //         console.log(error);
   //       } else {
-  //         console.log("");
+  //         console.log(data);
   //       }
   //     }
   //   );
+  // } catch (e) {
+  //   res.send(e);
+  // }
+});
+
+router.post("/SS", (req, res) => {
+  console.log("In SS");
+  const { email, img } = req.body;
+
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         screenshot: img,
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error.message);
+  //       } else {
+  //         console.log(data);
+  //       }
+  //     }
+  //   );
+  // } catch (e) {
+  //   console.log(e.message);
+  // }
+});
+
+router.post("/daytimes", (req, res) => {
+  console.log("In DAY TIME");
+  const { email, activeDayTime, idleDayTime, activeArray, idleArray } =
+    req.body;
+
+  console.log(activeDayTime);
+  console.log(idleDayTime);
+
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          separateTime: {
+            date: Date.now(),
+            idleDay: idleDayTime,
+            activeDay: activeDayTime,
+            idle: idleArray,
+            active: activeArray,
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log("");
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
   // router.post("/apptime", (req, res) => {
   //   }
 });
@@ -158,28 +167,28 @@ router.post("/separate", (req, res) => {
   console.log(activeArray);
   console.log(idleArray);
 
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         separateTime: {
-  //           date: Date.now(),
-  //           idle: activeArray,
-  //           active: idleArray,
-  //         },
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error);
-  //       } else {
-  //         console.log("");
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   res.send(e);
-  // }
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          separateTime: {
+            date: Date.now(),
+            idle: idleArray,
+            active: activeArray,
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log("");
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
 });
 module.exports = router;
