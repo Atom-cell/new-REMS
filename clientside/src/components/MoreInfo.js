@@ -1,16 +1,8 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
-import { Avatar, IconButton, Divider } from "@mui/material";
-import {
-  Table,
-  Button,
-  Row,
-  Container,
-  Col,
-  Spinner,
-  Carousel,
-  Breadcrumb,
-} from "react-bootstrap";
+import InfoCard from "./InfoCard";
+import { Avatar, Divider } from "@mui/material";
+import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -38,6 +30,7 @@ function MoreInfo() {
   const [dayTime, setDayTime] = React.useState([]);
   const [dayTimeCopy, setDayTimeCopy] = React.useState([]);
   const [SS, setSS] = React.useState([]);
+  const [showCal, setShowCal] = React.useState(false);
   const monthNames = [
     "January",
     "February",
@@ -171,14 +164,14 @@ function MoreInfo() {
           onClick={() => setBtnOption("info")}
           id={btnOption === "info" ? "activeBtn" : ""}
         >
-          User Information
+          Employee Information
         </button>
         <button
           className="btn_userAct"
           onClick={() => setBtnOption("activity")}
           id={btnOption === "activity" ? "activeBtn" : ""}
         >
-          User Activity
+          Employee Activity
         </button>
       </div>
       {btnOption === "info" ? (
@@ -187,64 +180,133 @@ function MoreInfo() {
             <Avatar
               src={data?.profilePicture}
               // src="https://unsplash.com/photos/jzY0KRJopEI"
-              sx={{ width: 100, height: 100, marginBottom: "2em" }}
+              sx={{
+                width: 150,
+                height: 150,
+                marginBottom: "2em",
+                marginLeft: "3em",
+              }}
             />
+            <button
+              className="btn_userInfo"
+              onClick={() => setShowCal(!showCal)}
+              id={showCal ? "activeBtn" : ""}
+            >
+              Attendance
+            </button>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div className="text_wrapper">
-              <div className="box1">
-                <h6>Username:</h6>
-                <h6>Email:</h6>
-                <h6>Role:</h6>
-                <h6>Contact:</h6>
-                <h6>Bank Details:</h6>
-              </div>
-              <div className="box2">
-                <h6>{data?.username}</h6>
-                <h6>{data?.email}</h6>
-                <h6>{data?.role}</h6>
-                <h6>{data?.contact ? data.contact : "-"}</h6>
-                <h6>{data?.bankDetails ? data.bankDetails : "-"}</h6>
-              </div>
-            </div>
-
-            <div style={{ marginRight: "2em" }}>
-              <h4>Attendance</h4>
-              <Calendar
-                onChange={(value) => {
-                  let a = 0;
-                  allEvents.forEach((x) => {
-                    if (x.slice(5, 7) === `0${value.getMonth() + 1}`) {
-                      a++;
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            {showCal ? (
+              <div style={{ marginLeft: "2em", marginTop: "2em" }}>
+                <h4>Attendance</h4>
+                <Calendar
+                  onChange={(value) => {
+                    let a = 0;
+                    allEvents.forEach((x) => {
+                      if (x.slice(5, 7) === `0${value.getMonth() + 1}`) {
+                        a++;
+                      }
+                    });
+                    setPresents(a);
+                    onChange(value);
+                  }}
+                  value={value}
+                  tileClassName={({ date }) => {
+                    if (
+                      allEvents.find(
+                        (x) =>
+                          x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
+                      )
+                    ) {
+                      // console.log(
+                      //   "ERROR: ",
+                      //   fixTimezoneOffset(date).slice(0, 10)
+                      // );
+                      return "present";
                     }
-                  });
-                  setPresents(a);
-                  onChange(value);
+                  }}
+                />
+                <p>Month : {monthNames[value.getMonth()]}</p>
+                <p>Total Presents : {presents}</p>
+              </div>
+            ) : null}
+            <div className="text_wrapper">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "80%",
+                  marginLeft: "3em",
                 }}
-                value={value}
-                tileClassName={({ date }) => {
-                  if (
-                    allEvents.find(
-                      (x) =>
-                        x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
-                    )
-                  ) {
-                    // console.log(
-                    //   "ERROR: ",
-                    //   fixTimezoneOffset(date).slice(0, 10)
-                    // );
-                    return "present";
-                  }
+              >
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Username:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.username}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Email:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.email}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Role:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.role} </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Contact:</h6>
+                  <h6 style={{ flex: "50%" }}>
+                    {data?.contact ? data.contact : "-"}{" "}
+                  </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Bank Details:</h6>
+                  <h6 style={{ flex: "50%" }}>
+                    {data?.bankDetails ? data.bankDetails : "-"}
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="text_wrapper">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
                 }}
-              />
-              <p>Month : {monthNames[value.getMonth()]}</p>
-              <p>Total Presents : {presents}</p>
+              >
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Manager:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.username}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Teams:</h6>
+                  <h6 style={{ flex: "50%" }}>
+                    Teams k liye avatar initials when hover shows the name
+                  </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Projects:</h6>
+                  <h6 style={{ flex: "50%" }}>From project data</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>
+                    Current Project:
+                  </h6>
+                  <h6 style={{ flex: "50%" }}>From project data</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Zone:</h6>
+                  <h6 style={{ flex: "50%" }}>Green</h6>
+                </div>
+              </div>
             </div>
           </div>
-          {/* <h1>Selected date: {value.toJSON().slice(0, 10)}</h1>
-          {allEvents.map((e) => {
-            return <p>{e}</p>;
-          })} */}
         </div>
       ) : (
         <>
