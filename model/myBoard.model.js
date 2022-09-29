@@ -19,6 +19,12 @@ var myBoardSchema = mongoose.Schema({
           ],
           desc: String,
           date: String,
+          tasks: [
+            {
+              task: String,
+              completed: Boolean,
+            },
+          ],
         },
       ],
     },

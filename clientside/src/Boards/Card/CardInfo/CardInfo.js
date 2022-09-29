@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   Calendar,
+  CheckSquare,
   List,
   Tag,
+  Trash,
   Type,
   X,
 } from "react-feather";
@@ -56,6 +58,47 @@ function CardInfo(props) {
     });
   };
 
+  const addTask = (value) => {
+    const task = {
+      task: value,
+      completed: false,
+    };
+    setValues({
+      ...values,
+      tasks: [...values.tasks, task],
+    });
+  };
+
+  const removeTask = (id) => {
+    const tasks = [...values.tasks];
+
+    const tempTasks = tasks.filter((item) => item._id !== id);
+    setValues({
+      ...values,
+      tasks: tempTasks,
+    });
+  };
+
+  const updateTask = (id, value) => {
+    const tasks = [...values.tasks];
+
+    const index = tasks.findIndex((item) => item._id === id);
+    if (index < 0) return;
+
+    tasks[index].completed = value;
+
+    setValues({
+      ...values,
+      tasks,
+    });
+  };
+
+  const calculatePercent = () => {
+    if (!values.tasks?.length) return 0;
+    const completed = values.tasks?.filter((item) => item.completed)?.length;
+    return (completed / values.tasks?.length) * 100;
+  };
+
   const updateDate = (date) => {
     if (!date) return;
 
@@ -74,6 +117,9 @@ function CardInfo(props) {
     }
   }, [values]);
 
+  {
+    console.log(props.card);
+  }
   return (
     <Modal onClose={props.onClose}>
       <div className="cardinfo">
@@ -148,6 +194,41 @@ function CardInfo(props) {
             onSubmit={(value) =>
               addLabel({ color: selectedColor, text: value })
             }
+          />
+        </div>
+        <div className="cardinfo_box">
+          <div className="cardinfo_box_title">
+            <CheckSquare />
+            <p>Tasks</p>
+          </div>
+          <div className="cardinfo_box_progress-bar">
+            <div
+              className="cardinfo_box_progress"
+              style={{
+                width: `${calculatePercent()}%`,
+                backgroundColor: calculatePercent() === 100 ? "limegreen" : "",
+              }}
+            />
+          </div>
+          <div className="cardinfo_box_task_list">
+            {values?.tasks?.map((item) => (
+              <div key={item.id} className="cardinfo_box_task_checkbox">
+                <input
+                  type="checkbox"
+                  defaultChecked={item.completed}
+                  onChange={(event) =>
+                    updateTask(item._id, event.target.checked)
+                  }
+                />
+                <p className={item.completed ? "completed" : ""}>{item.task}</p>
+                <Trash onClick={() => removeTask(item._id)} />
+              </div>
+            ))}
+          </div>
+          <Editable
+            text={"Add a Task"}
+            placeholder="Enter task"
+            onSubmit={addTask}
           />
         </div>
       </div>

@@ -106,9 +106,9 @@ const MeetingEmployeesTable = ({
 
   return (
     <div>
-      {handleInvite != undefined && (
+      {/* {handleInvite != undefined && (
         <ShowBoardMembers bid={bid} selectedEmployees={selectedEmployees} />
-      )}
+      )} */}
       {empId == JSON.parse(localStorage.getItem("user"))._id && (
         <Button
           variant="primary"

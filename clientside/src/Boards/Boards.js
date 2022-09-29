@@ -313,26 +313,6 @@ const Boards = ({ user }) => {
           </Button>
         </div>
       </div>
-      {/* <Modal show={showInviteModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <h3>Invite Members</h3>
-            <h7 className="boards-below-title">
-              New members will gain access to the current board and will be able
-              to create,edit,update,delete this board
-            </h7>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
       {openSideNav && (
         <SideMenu
           openSideNav={openSideNav}

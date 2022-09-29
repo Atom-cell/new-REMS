@@ -36,6 +36,7 @@ function Card(props) {
 
   return (
     <>
+      {console.log(props.card)}
       {showModal && (
         <CardInfo
           onClose={() => setShowModal(false)}
@@ -85,8 +86,10 @@ function Card(props) {
               {formatDate(date)}
             </p>
           )}
+          {console.log(tasks)}
           {tasks && tasks?.length > 0 && (
             <p className="card_footer_item">
+              {console.log(tasks)}
               <CheckSquare className="card_footer_icon" />
               {tasks?.filter((item) => item.completed)?.length}/{tasks?.length}
             </p>

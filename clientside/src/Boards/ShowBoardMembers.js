@@ -1,14 +1,21 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 
 const ShowBoardMembers = ({ bid, selectedEmployees }) => {
   const [show, setShow] = useState(false);
+  const [members, setMembers] = useState();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  useEffect(() => {
+    axios
+      .get("/myBoards//getsharewith/employees", { params: { bid: bid } })
+      .then((res) => setMembers(res.data[0].sharewith))
+      .catch((err) => console.log(err));
+  }, [selectedEmployees]);
 
   return (
     <>
@@ -34,8 +41,7 @@ const ShowBoardMembers = ({ bid, selectedEmployees }) => {
                 </tr>
               </thead>
               <tbody>
-                {selectedEmployees?.map((nam, index) => {
-                  console.log(nam);
+                {members?.map((nam, index) => {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
