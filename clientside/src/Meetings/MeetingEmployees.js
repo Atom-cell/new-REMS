@@ -25,6 +25,7 @@ const MeetingEmployees = ({ employees, title }) => {
           <Table striped bordered hover>
             <thead>
               <tr>
+                <th>#</th>
                 <th>Name</th>
               </tr>
             </thead>
@@ -32,6 +33,7 @@ const MeetingEmployees = ({ employees, title }) => {
               {employees?.map((name, index) => {
                 return (
                   <tr key={index}>
+                    <td>{index + 1}</td>
                     <td>{name}</td>
                   </tr>
                 );

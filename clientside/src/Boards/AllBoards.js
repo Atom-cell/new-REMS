@@ -2,6 +2,7 @@ import Button from "react-bootstrap/Button";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
 import ProjectCard from "../Projects//ProjectCard";
 import Form from "react-bootstrap/Form";
 import { Trash } from "react-feather";
@@ -96,24 +97,33 @@ const AllBoards = ({ user }) => {
   };
 
   const handleDeleteBoard = (board) => {
-    const confirmBox = window.confirm(
-      "Are you sure you want to delete this Board?"
-    );
-    if (confirmBox) {
-      axios
-        .delete("/myboards/deleteboard", {
-          data: { _id: board._id },
-        })
-        .then((rec) => {
-          //   console.log(rec.data);
-          const newBoards = boards.filter(
-            (newBoard) => newBoard._id != rec.data._id
-          );
-          setBoards(newBoards);
-          toast.info(`${rec.data.title} is Deleted`);
-        })
-        .catch((err) => console.log(err));
-    }
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the Board?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("/myboards/deleteboard", {
+                data: { _id: board._id },
+              })
+              .then((rec) => {
+                //   console.log(rec.data);
+                const newBoards = boards.filter(
+                  (newBoard) => newBoard._id != rec.data._id
+                );
+                setBoards(newBoards);
+                toast.success(`${rec.data.title} is Deleted`);
+              })
+              .catch((err) => console.log(err));
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
 
   const handleFilterChange = (e) => {

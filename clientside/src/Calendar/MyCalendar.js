@@ -7,6 +7,7 @@ import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { confirmAlert } from "react-confirm-alert";
 import AddEventModal from "./AddEventModal";
 import axios from "axios";
 import EditModal from "./EditModal";
@@ -164,18 +165,33 @@ const MyCalendar = ({ user }) => {
 
   //Clicking an existing event allows you to remove it
   const deleteEvent = (event) => {
-    const r = window.confirm("Would you like to remove this event?");
-    if (r === true) {
-      // console.log(event);
-      axios
-        .delete("http://localhost:5000/myCalendar/deleteEvent", {
-          data: { _id: event._id },
-        })
-        .then((res) => toast.success(`${res.data.title} Deleted`))
-        .catch((err) => console.log(err));
-    }
-    setNewEvent({ title: "", start: null });
     setEditModalOpen(false);
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the event?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("http://localhost:5000/myCalendar/deleteEvent", {
+                data: { _id: event._id },
+              })
+              .then((res) => {
+                toast.success(`${res.data.title} Deleted`);
+                setNewEvent({ title: "", start: null });
+              })
+              .catch((err) => console.log(err));
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            setEditModalOpen(true);
+          },
+        },
+      ],
+    });
   };
 
   return (
