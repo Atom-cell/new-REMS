@@ -49,8 +49,9 @@ const AddEventModal = ({
                 id="framework"
                 value={newEvent?.category}
                 onChange={handleSelectedChange}
+                className={!newEvent?.category && "empty"}
               >
-                <option value="" selected="selected">
+                <option value="" selected="selected" hidden>
                   Select Event Category
                 </option>
                 <option value="Goal">Goal</option>
