@@ -1,0 +1,31 @@
+.meeting-employees-table {
+    height: 200px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    overflow-y: hidden;
+}
+.meeting-employees-table:hover{
+    overflow-y: auto;
+}
+
+.meeting-employees-table::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.meeting-employees-table::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.meeting-employees-table::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+.meeting-employees-table::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.meeting-employees-table::-webkit-scrollbar-track {
+    border-radius: 10px;
+}

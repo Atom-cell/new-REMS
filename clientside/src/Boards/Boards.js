@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import BoardList from "./BoardList/BoardList";
 import Editable from "./Editabled/Editable";
+import MeetingEmployeesTable from "../Meetings/MeetingEmployeesTable";
 import "./boards.css";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import SideMenu from "./SideMenu";
+import { toast } from "react-toastify";
 
 const Boards = ({ user }) => {
   const { bid } = useParams();
+  const { state } = useLocation();
   const [boards, setBoards] = useState();
   const [openSideNav, setOpenSideNav] = useState(false);
   const [color, setColor] = useState("");
@@ -20,6 +24,12 @@ const Boards = ({ user }) => {
     cid: "",
   });
   const [targetBoard, setTargetBoard] = useState();
+
+  const [employees, setEmployees] = useState([]);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+
+  const handleClose = () => setShowInviteModal(false);
+  const handleShow = () => setShowInviteModal(true);
 
   useEffect(() => {
     // if (location.state) {
@@ -192,8 +202,9 @@ const Boards = ({ user }) => {
     setBoards(tempBoards);
   };
 
-  const updateTitle = (bid, value) => {
+  const updateTitle = (value) => {
     // console.log(value);
+    // console.log(completeKanban);
     // console.log(location.state);
     setCompleteKanban({ ...completeKanban, title: value });
   };
@@ -208,17 +219,26 @@ const Boards = ({ user }) => {
     setBoards(updatedBoards);
   };
 
+  const handleInvite = (emps) => {
+    axios
+      .post("/myboards/shareboardwith", { bid: bid, sharewith: emps })
+      .then((res) => toast.success("Board Shared"))
+      .catch((err) => console.log(err));
+    // find the current board for that we need id of the board
+    // then add another field sharedwith in that board
+  };
+
   useEffect(() => {
     // localStorage.setItem("prac-kanban", JSON.stringify(boards));
     // console.log(boards);
     if (boards?.length > 0) {
       // update using current params id
       // console.log(boards);
-      // console.log(bid);
+      // console.log(completeKanban);
       axios
         .put("/myboards/updateboard", {
           bid: bid,
-          uid: user._id,
+          // uid: user._id,
           boards: boards,
         })
         // .then((rec) => console.log(rec.data))
@@ -229,11 +249,11 @@ const Boards = ({ user }) => {
   useEffect(() => {
     // localStorage.setItem("prac-kanban", JSON.stringify(boards));
     if (boards?.length > 0) {
-      // console.log(boards);
+      // console.log(completeKanban);
       axios
-        .put("/myboards/updateboard", {
+        .put("/myboards/updateboardtitle", {
           bid: bid,
-          uid: user._id,
+          // uid: user._id,
           title: completeKanban.title,
           boards: boards,
         })
@@ -269,15 +289,50 @@ const Boards = ({ user }) => {
           placeholder="Enter Title"
           onSubmit={updateTitle}
         />
-        <div className="boards-container-nav-background-button-div">
+        <div
+          className="boards-container-nav-background-button-div"
+          style={{ display: "flex" }}
+        >
+          <MeetingEmployeesTable
+            showEmployeesTable={showInviteModal}
+            handleShowEmployeesTable={handleShow}
+            handleCloseEmployeesTable={handleClose}
+            selectedEmployees={employees}
+            setSelectedEmployees={setEmployees}
+            handleInvite={handleInvite}
+            bid={bid}
+            empId={state?.empId}
+          />
           <Button
-            className="app_nav_background_button submitbtn"
+            variant="primary"
+            className=""
+            style={{ marginTop: "10px", marginLeft: "0.5rem", height: "40px" }}
             onClick={() => setOpenSideNav(true)}
           >
             Change Background
           </Button>
         </div>
       </div>
+      {/* <Modal show={showInviteModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h3>Invite Members</h3>
+            <h7 className="boards-below-title">
+              New members will gain access to the current board and will be able
+              to create,edit,update,delete this board
+            </h7>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
       {openSideNav && (
         <SideMenu
           openSideNav={openSideNav}

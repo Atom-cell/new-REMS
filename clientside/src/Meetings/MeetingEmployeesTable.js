@@ -4,13 +4,17 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { Alert, Form } from "react-bootstrap";
-
+import "./meetingemployeestable.css";
+import ShowBoardMembers from "../Boards/ShowBoardMembers";
 const MeetingEmployeesTable = ({
   showEmployeesTable,
   handleCloseEmployeesTable,
   handleShowEmployeesTable,
   selectedEmployees,
   setSelectedEmployees,
+  handleInvite,
+  bid,
+  empId,
 }) => {
   const [tableEmployees, setTableEmployees] = useState();
 
@@ -84,16 +88,46 @@ const MeetingEmployeesTable = ({
   useEffect(() => {
     fetchData().catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (
+      handleInvite != undefined &&
+      empId == JSON.parse(localStorage.getItem("user"))._id
+    ) {
+      axios
+        .get("/myboards/getsharewith/employees", { params: { bid: bid } })
+        .then((res) => {
+          // console.log(res.data[0].sharewith);
+          setSelectedEmployees(res.data[0].sharewith);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+
   return (
     <div>
-      <Button
-        variant="primary"
-        onClick={handleShowEmployeesTable}
-        style={{ marginTop: "10px" }}
-      >
-        Set Meeting With
-      </Button>
-      {selectedEmployees?.length > 0 && (
+      {handleInvite != undefined && (
+        <ShowBoardMembers bid={bid} selectedEmployees={selectedEmployees} />
+      )}
+      {empId == JSON.parse(localStorage.getItem("user"))._id && (
+        <Button
+          variant="primary"
+          onClick={handleShowEmployeesTable}
+          style={{ marginTop: "10px", height: "40px" }}
+        >
+          {handleInvite != undefined && "Share Board"}
+        </Button>
+      )}
+      {handleInvite == undefined && (
+        <Button
+          variant="primary"
+          onClick={handleShowEmployeesTable}
+          style={{ marginTop: "10px", height: "40px" }}
+        >
+          Set Meeting With
+        </Button>
+      )}
+      {selectedEmployees?.length > 0 && handleInvite == undefined && (
         <Alert
           variant="danger"
           onClose={() => setSelectedEmployees([])}
@@ -110,7 +144,19 @@ const MeetingEmployeesTable = ({
 
       <Modal show={showEmployeesTable} onHide={handleCloseEmployeesTable}>
         <Modal.Header closeButton>
-          <Modal.Title>Employees</Modal.Title>
+          <Modal.Title>
+            {handleInvite != undefined ? (
+              <>
+                <h3>Invite Members</h3>
+                <h7 className="boards-below-title">
+                  New members will gain access to the current board and will be
+                  able to create,edit,update,delete this board
+                </h7>
+              </>
+            ) : (
+              "Employees"
+            )}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -126,59 +172,73 @@ const MeetingEmployeesTable = ({
               />
             </div>
           </Form>
-          <Table bordered hover>
-            <thead>
-              <tr>
-                <th>Select</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableEmployees?.map((employee) => {
-                return (
-                  <tr key={employee._id}>
-                    {selectedEmployees.includes(employee.username) ? (
-                      <td>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value={employee.username}
-                          onChange={handleChange}
-                          checked={true}
-                        />
-                      </td>
-                    ) : (
-                      <td>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value={employee.username}
-                          onChange={handleChange}
-                        />
-                      </td>
-                    )}
-                    <td>{employee.username}</td>
-                    <td>{employee.email}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
+          <div className="meeting-employees-table">
+            <Table bordered hover>
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableEmployees?.map((employee) => {
+                  return (
+                    <tr key={employee._id}>
+                      {selectedEmployees.includes(employee.username) ? (
+                        <td>
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value={employee.username}
+                            onChange={handleChange}
+                            checked={true}
+                          />
+                        </td>
+                      ) : (
+                        <td>
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value={employee.username}
+                            onChange={handleChange}
+                          />
+                        </td>
+                      )}
+                      <td>{employee.username}</td>
+                      <td>{employee.email}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseEmployeesTable}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              setSelectedEmployees(tableEmployees.map((emp) => emp.username));
-              handleCloseEmployeesTable();
-            }}
-          >
-            Select All Employees
-          </Button>
+          {handleInvite != undefined ? (
+            <Button
+              variant="primary"
+              onClick={() => {
+                handleInvite(selectedEmployees);
+                handleCloseEmployeesTable();
+              }}
+            >
+              Invite
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setSelectedEmployees(tableEmployees.map((emp) => emp.username));
+                handleCloseEmployeesTable();
+              }}
+            >
+              Select All Employees
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </div>

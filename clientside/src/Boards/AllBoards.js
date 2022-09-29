@@ -116,14 +116,27 @@ const AllBoards = ({ user }) => {
     }
   };
 
+  const handleFilterChange = (e) => {
+    const category = e.target.value;
+    if (category == "myboards") fetchData().catch(console.error);
+    else {
+      axios
+        .get("/myBoards//boardsshared/withme", {
+          params: { username: user.username },
+        })
+        .then((res) => setBoards(res.data))
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const fetchData = async () => {
+    const res = await axios.get("/myBoards/onlymyboards", {
+      params: { empId: user._id },
+    });
+    //   console.log(res.data);
+    setBoards(res.data);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get("/myBoards/onlymyboards", {
-        params: { empId: user._id },
-      });
-      //   console.log(res.data);
-      setBoards(res.data);
-    };
     fetchData().catch(console.error);
   }, []);
 
@@ -142,6 +155,10 @@ const AllBoards = ({ user }) => {
           />
         </div>
         <div className="create-project">
+          <select className="selectFilter mx-2" onChange={handleFilterChange}>
+            <option value="myboards">My Boards</option>
+            <option value="sharedwithme">Shared With Me</option>
+          </select>
           <Button
             style={{ backgroundColor: "#1890ff" }}
             onClick={handleCreateBoard}
@@ -175,7 +192,9 @@ const AllBoards = ({ user }) => {
                       className="featuredItem"
                       onClick={() => {
                         // const filterBoards = boards.filter((b) => b._id == board._id);
-                        navigate(`/boards/${board._id}`);
+                        navigate(`/boards/${board._id}`, {
+                          state: { empId: board.empId },
+                        });
                       }}
                     >
                       <span className="featuredTitle">{board.title}</span>
@@ -202,7 +221,7 @@ const AllBoards = ({ user }) => {
               marginTop: "10%",
             }}
           >
-            No Boards Created So Far
+            No boards to show
           </h1>
         )}
       </div>

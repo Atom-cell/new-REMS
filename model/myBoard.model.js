@@ -23,6 +23,7 @@ var myBoardSchema = mongoose.Schema({
       ],
     },
   ],
+  sharewith: [String],
 });
 
 module.exports = mongoose.model("myBoard", myBoardSchema);

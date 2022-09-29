@@ -11,8 +11,8 @@ function Editable(props) {
   const submission = (e) => {
     e.preventDefault();
     if (inputText && props.onSubmit) {
-      setInputText("");
       props.onSubmit(inputText);
+      setInputText("");
     }
     setIsEditable(false);
   };

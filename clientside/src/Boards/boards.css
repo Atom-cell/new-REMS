@@ -118,3 +118,7 @@
 .custom-scroll-horizontal::-webkit-scrollbar-track {
     border-radius: 5px;
 }
+.boards-below-title{
+  font-weight: 100;
+  font-size: 1rem;
+}
