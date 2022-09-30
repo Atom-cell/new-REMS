@@ -25,7 +25,7 @@ function Log() {
 
   const getData = async () => {
     await axios
-      .get("http://localhost:5000/admin/allEmps", {
+      .get("http://localhost:5000/admin/getLogEmps", {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
@@ -33,6 +33,7 @@ function Log() {
       .then((response) => {
         // console.log(response.data.data);
         setData([...response.data.data]);
+        setLoading(1);
       });
   };
 
@@ -123,6 +124,11 @@ function Log() {
           {username ? `${username}'s Activity Logs` : null}
         </h2>
       </div>
+      {loading === 0 ? (
+        <div className="spinner">
+          <Spinner animation="border" />
+        </div>
+      ) : null}
       {loading === 0 ? (
         <div className="spinner">{/* <Spinner animation="border" /> */}</div>
       ) : loading === 1 ? (

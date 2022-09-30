@@ -14,6 +14,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import GroupsIcon from "@mui/icons-material/Groups";
 import { Trello } from "react-feather";
 export const SideBarData = {
   links: [
@@ -111,13 +112,20 @@ export const SideBarData = {
           icon: <VideoCallRoundedIcon style={{ fill: "grey" }} />,
           cName: "nav-text sub-nav",
         },
+        {
+          id: 10,
+          title: "Teams",
+          path: "/team",
+          icon: <GroupIcon style={{ fill: "grey" }} />,
+          cName: "nav-text sub-nav",
+        },
       ],
     },
     {
       id: 6,
       title: "All Meetings",
       path: "/allMeetings",
-      icon: <GroupIcon style={{ fill: "grey" }} />,
+      icon: <GroupsIcon style={{ fill: "grey" }} />,
       cName: "nav-text sub-nav",
     },
     {

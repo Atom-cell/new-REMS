@@ -9,6 +9,7 @@ require("dotenv").config();
 const Admin = require("../model/Admin.model");
 const Emp = require("../model/Emp.model");
 const Activity = require("../model/Activity.model");
+const Project = require("../model/myProject.model");
 
 const verifyJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];
@@ -104,13 +105,42 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   try {
     Admin.find({ email: req.userEmail })
       .populate("employees")
-      .exec(function (err, data) {
+      .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data[0].employees });
       });
   } catch (err) {
     console.log(err.message);
   }
+});
+
+router.get("/getLogEmps", verifyJWT, async (req, res) => {
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    attendance: 0,
+    password: 0,
+    profilePicture: 0,
+    bankDetails: 0,
+  };
+  try {
+    Admin.find({ email: req.userEmail })
+      .populate({ path: "employees", select: v })
+      .exec((err, data) => {
+        if (err) console.log(err.message);
+        res.json({ msg: 1, data: data[0].employees });
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+router.get("/projectInfo/:id", (req, res) => {
+  Project.find({ projectAssignedToId: req.params.id }).then((response) => {
+    res.json(response);
+  });
 });
 
 router.get("/logs/:email", verifyJWT, async (req, res) => {
@@ -120,6 +150,7 @@ router.get("/logs/:email", verifyJWT, async (req, res) => {
     res.json({ data: response });
   });
 });
+
 router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");
 });

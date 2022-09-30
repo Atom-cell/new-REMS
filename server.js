@@ -36,18 +36,19 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // all routers
-var myCalendarRouter = require("./routes/myCalendar");
-var myHomeRouter = require("./routes/myHome");
-var myVideoRouter = require("./routes/myVideo");
-var myEmployeeRouter = require("./routes/myEmployee");
-var myEmployerRouter = require("./routes/myEmployer");
-var myMessagesRouter = require("./routes/myMessages");
-var myConversationRouter = require("./routes/myConversation");
+const myCalendarRouter = require("./routes/myCalendar");
+const myHomeRouter = require("./routes/myHome");
+const myVideoRouter = require("./routes/myVideo");
+const myEmployeeRouter = require("./routes/myEmployee");
+const myEmployerRouter = require("./routes/myEmployer");
+const myMessagesRouter = require("./routes/myMessages");
+const myConversationRouter = require("./routes/myConversation");
 const myProjectRouter = require("./routes/myProject");
 const myBoardRouter = require("./routes/myBoards");
 const adminRouter = require("./routes/admin.route");
 const empRouter = require("./routes/emp.route");
 const desktopRouter = require("./routes/desktop.route");
+const teamRouter = require("./routes/team.route");
 
 // mount point for routers
 app.use("/", myHomeRouter);
@@ -62,6 +63,7 @@ app.use("/myBoards", myBoardRouter);
 app.use("/admin", adminRouter);
 app.use("/emp", empRouter);
 app.use("/desk", desktopRouter);
+app.use("/team", teamRouter);
 
 // from web visit this route, then on utility it will emit. front se email send. idher email se sock mai se id nikalo or emit krdo usko
 app.get("/start/:mail", (req, res) => {

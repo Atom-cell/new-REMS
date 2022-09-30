@@ -21,7 +21,7 @@ var myProjectSchema = mongoose.Schema({
     type: String,
   },
   projectAssignedToId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
   },
   helpingMaterial: {
     type: String,

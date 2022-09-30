@@ -29,6 +29,9 @@ import NoMobile from "./components/NoMobile";
 import EmpManage from "./components/EmpManage";
 import MoreInfo from "./components/MoreInfo";
 import Log from "./components/Log";
+import Teams from "./Team/Teams";
+import CreateTeam from "./Team/CreateTeam";
+import TeamInfo from "./Team/TeamInfo";
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
 import AllProjects from "./Projects/AllProjects";
@@ -220,6 +223,9 @@ const App = () => {
                   <Route path="/empManage" element={<EmpManage />} />
                   <Route path="/moreInfo" element={<MoreInfo />} />
                   <Route path="/log" element={<Log />} />
+                  <Route path="/team" element={<Teams />} />
+                  <Route path="/createTeam" element={<CreateTeam />} />
+                  <Route path="/teamInfo" element={<TeamInfo />} />
                   <Route
                     path="/myCalendar"
                     element={loggedUser && <MyCalendar user={loggedUser} />}

@@ -1,9 +1,9 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
-import InfoCard from "./InfoCard";
 import { Avatar, Divider } from "@mui/material";
 import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -31,6 +31,7 @@ function MoreInfo() {
   const [dayTimeCopy, setDayTimeCopy] = React.useState([]);
   const [SS, setSS] = React.useState([]);
   const [showCal, setShowCal] = React.useState(false);
+  const [proj, setProj] = React.useState([]);
   const monthNames = [
     "January",
     "February",
@@ -58,7 +59,7 @@ function MoreInfo() {
 
   const loadData = async () => {
     let contextData = moreInfo;
-    console.log("CONTEXT: ", contextData);
+    //console.log("CONTEXT: ", contextData);
     let a = contextData;
 
     setLoading(false);
@@ -70,6 +71,20 @@ function MoreInfo() {
     setAllEvents([...a.attendance]);
     setApps(a.appTime);
     setSS([...a.screenshot]);
+
+    await getProjectInfo(a._id);
+  };
+
+  const getProjectInfo = (id) => {
+    axios
+      .get(`http://localhost:5000/admin/projectInfo/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setProj(response.data);
+      });
   };
 
   const timeConvert = (s) => {
@@ -290,7 +305,17 @@ function MoreInfo() {
                 <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Projects:</h6>
-                  <h6 style={{ flex: "50%" }}>From project data</h6>
+                  {proj ? (
+                    <h6 style={{ flex: "50%" }}>
+                      {proj.map((p) => {
+                        return (
+                          <p>{`${p.projectName} - ${p.projectDescription}`}</p>
+                        );
+                      })}
+                    </h6>
+                  ) : (
+                    <Spinner animation="border" />
+                  )}
                 </div>
                 <Divider />
                 <div className="infoRow">

@@ -76,7 +76,7 @@ function EmpManage() {
         },
       })
       .then((response) => {
-        console.log("response from server ", response);
+        console.log("response from server ", response.data.data);
         setData([...response.data.data]);
         setCopy2([...response.data.data]);
         //console.log([...response.data.data]);
