@@ -102,7 +102,7 @@ function MoreInfo() {
     setApps(a.appTime);
     setSS([...a.screenshot]);
 
-    await getProjectInfo(a._id);
+    getProjectInfo(a._id);
     getTeamInfo(a._id);
   };
 

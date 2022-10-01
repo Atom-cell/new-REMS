@@ -1,3 +1,5 @@
+import { MoreInfoContext } from "../Helper/Context";
+import axios from "axios";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
@@ -14,6 +16,7 @@ const TeamInfo = () => {
   console.log(team);
 
   const [role, setRole] = React.useState("");
+  const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
 
   React.useEffect(() => {
     if (localStorage.getItem("role")) {
@@ -22,14 +25,33 @@ const TeamInfo = () => {
       setRole(role);
     }
   }, []);
+
+  const getEmpData = (id) => {
+    if (role === "admin") {
+      axios
+        .get(`http://localhost:5000/emp/getEmp/${id}`, {
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          console.log("Emp DATA: ", response.data);
+          if (response.data) {
+            setMoreInfo(response.data);
+            navigate("/moreInfo");
+          }
+        });
+    }
+  };
   return (
     <div style={{ margin: "2em" }}>
       <Breadcrumb>
+        <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
         <Breadcrumb.Item href="/team">Teams</Breadcrumb.Item>
         <Breadcrumb.Item active>{team.teamName}</Breadcrumb.Item>
       </Breadcrumb>
       <div className="team_create">
-        <h1>{team.teamName}</h1>
+        <h1 style={{ borderBottom: "1px solid black" }}>{team.teamName}</h1>
         {role !== "Employee" ? (
           <IconButton
             onClick={() => navigate("/createTeam", { state: { team: team } })}
@@ -41,6 +63,7 @@ const TeamInfo = () => {
       <p>{team.teamDesp}</p>
 
       <h3>Team Lead </h3>
+
       <Table className="table">
         <thead>
           <tr>
@@ -51,11 +74,24 @@ const TeamInfo = () => {
         </thead>
         <tbody>
           <tr>
-            <td>
+            <td
+              style={{ cursor: "pointer" }}
+              onClick={() => getEmpData(team.teamLead._id)}
+            >
               <Avatar src={team.teamLead.profilePicture} />
             </td>
-            <td>{team.teamLead.username}</td>
-            <td>{team.teamLead.email}</td>
+            <td
+              style={{ cursor: "pointer" }}
+              onClick={() => getEmpData(team.teamLead._id)}
+            >
+              {team.teamLead.username}
+            </td>
+            <td
+              style={{ cursor: "pointer" }}
+              onClick={() => getEmpData(team.teamLead._id)}
+            >
+              {team.teamLead.email}
+            </td>
           </tr>
         </tbody>
       </Table>
@@ -73,12 +109,30 @@ const TeamInfo = () => {
           {team.members.map((m, index) => {
             return (
               <tr>
-                <td>{index}</td>
-                <td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => getEmpData(m._id)}
+                >
+                  {index}
+                </td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => getEmpData(m._id)}
+                >
                   <Avatar src={m.profilePicture} />
                 </td>
-                <td>{m.username}</td>
-                <td>{m.email}</td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => getEmpData(m._id)}
+                >
+                  {m.username}
+                </td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => getEmpData(m._id)}
+                >
+                  {m.email}
+                </td>
               </tr>
             );
           })}

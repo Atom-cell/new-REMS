@@ -267,6 +267,11 @@ router.post("/register", verifyJWT, async (req, res, next) => {
   } catch (e) {}
 });
 
+router.get("/getEmp/:id", verifyJWT, (req, res, next) => {
+  Emp.findById(req.params.id).then((response) => {
+    res.json(response);
+  });
+});
 //for emp + admin
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
@@ -362,7 +367,7 @@ router.delete("/deleteEmp/:id", verifyJWT, (req, res) => {
   //   { $pull: { employees: req.params.id } }
   // ).then((response) => console.log(response));
 
-  Emp.findByIdAndUpdate(req.params.id,{active:false}).then((response) =>
+  Emp.findByIdAndUpdate(req.params.id, { active: false }).then((response) =>
     console.log(response)
   );
 });

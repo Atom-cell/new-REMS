@@ -3,13 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AdminTeam from "./AdminTeam";
 import EmpTeam from "./EmpTeam";
 import axios from "axios";
-import Avatar from "@mui/material/Avatar";
 import { Spinner } from "react-bootstrap";
-import IconButton from "@mui/material/IconButton";
-import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import "./Team.css";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { confirmAlert } from "react-confirm-alert"; // Import
 
 function stringToColor(string) {
@@ -121,12 +116,12 @@ const Teams = () => {
     <div style={{ margin: "1em 3em 1em 3em" }}>
       {role !== "Employee" ? (
         loading ? (
-          <Spinner animation="border" />
+          <Spinner animation="border" style={{ margin: "auto" }} />
         ) : (
           <AdminTeam teams={teams} confirm={confirm} />
         )
       ) : loading ? (
-        <Spinner animation="border" />
+        <Spinner animation="border" style={{ margin: "auto" }} />
       ) : (
         <EmpTeam teams={teams} />
       )}
