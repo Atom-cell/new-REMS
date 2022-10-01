@@ -32,9 +32,9 @@ import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
 const CreateTeam = () => {
   let navigate = useNavigate();
   const {
-    state: { project },
+    state: { team },
   } = useLocation();
-  //   console.log(project);
+  //   console.log(team);
 
   const [teamName, setTeamName] = React.useState("");
   const [teamDesp, setTeamDesp] = React.useState("");
@@ -46,7 +46,7 @@ const CreateTeam = () => {
 
   React.useEffect(() => {
     getEmps();
-    if (project) {
+    if (team) {
       autoFillData();
     }
   }, []);
@@ -66,11 +66,11 @@ const CreateTeam = () => {
   };
 
   const autoFillData = () => {
-    setTeamName(project.teamName);
-    setTeamDesp(project.teamDesp);
-    setTeamLead(project.teamLead._id);
+    setTeamName(team.teamName);
+    setTeamDesp(team.teamDesp);
+    setTeamLead(team.teamLead._id);
 
-    const { members } = project;
+    const { members } = team;
     const array = members.map((x) => x._id);
 
     setMembers([...array]);
@@ -112,7 +112,7 @@ const CreateTeam = () => {
       a[0] = false;
       a[1] = false;
       setError(a);
-      if (project) {
+      if (team) {
         uploadEditData();
       } else {
         uploadData();
@@ -155,7 +155,7 @@ const CreateTeam = () => {
 
   const uploadEditData = () => {
     console.log("EDITE: ", {
-      id: project._id,
+      id: team._id,
       teamName: teamName,
       teamDesp: teamDesp,
       teamLead,
@@ -172,7 +172,7 @@ const CreateTeam = () => {
         .put(
           "http://localhost:5000/team/updateTeam",
           {
-            id: project._id,
+            id: team._id,
             teamName: teamName,
             teamDesp: teamDesp,
             teamLead,
@@ -263,7 +263,7 @@ const CreateTeam = () => {
             </FormControl>
 
             <div style={{ width: "100%" }}>
-              {project ? (
+              {team ? (
                 <Button
                   type="submit"
                   variant="contained"
@@ -302,8 +302,8 @@ const CreateTeam = () => {
               <tbody>
                 {/* <FormGroup> */}
                 {data.map((data, index) => {
-                  if (project !== null) {
-                    const { members } = project;
+                  if (team !== null) {
+                    const { members } = team;
                     const array = members.map((x) => x._id);
 
                     if (array.includes(data._id)) {
@@ -313,7 +313,7 @@ const CreateTeam = () => {
                             {
                               <FormControlLabel
                                 key={index}
-                                //control={<BPCheckbox pro={project} id={data._id} />}
+                                //control={<BPCheckbox pro={team} id={data._id} />}
                                 control={<Checkbox defaultChecked />}
                                 value={data._id}
                                 onChange={(e) => handleChange(e)}
@@ -331,7 +331,7 @@ const CreateTeam = () => {
                             {
                               <FormControlLabel
                                 key={index}
-                                //control={<BPCheckbox pro={project} id={data._id} />}
+                                //control={<BPCheckbox pro={team} id={data._id} />}
                                 control={<Checkbox />}
                                 value={data._id}
                                 onChange={(e) => handleChange(e)}
@@ -350,7 +350,7 @@ const CreateTeam = () => {
                           {
                             <FormControlLabel
                               key={index}
-                              //control={<BPCheckbox pro={project} id={data._id} />}
+                              //control={<BPCheckbox pro={team} id={data._id} />}
                               control={<Checkbox />}
                               value={data._id}
                               onChange={(e) => handleChange(e)}

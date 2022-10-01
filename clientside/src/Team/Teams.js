@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import AdminTeam from "./AdminTeam";
+import EmpTeam from "./EmpTeam";
 import axios from "axios";
 import Avatar from "@mui/material/Avatar";
-import { Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import IconButton from "@mui/material/IconButton";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import "./Team.css";
@@ -46,13 +48,24 @@ function stringAvatar(name) {
 const Teams = () => {
   let navigate = useNavigate();
 
-  const [projects, setProjects] = React.useState();
+  const [teams, setTeams] = React.useState();
+  const [role, setRole] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    getData();
+    if (localStorage.getItem("role")) {
+      const role = localStorage.getItem("role");
+      const id = localStorage.getItem("id");
+      if (role !== "Employee") {
+        getAdminData();
+      } else {
+        getEmpData(id);
+      }
+      setRole(role);
+    }
   }, []);
 
-  const getData = () => {
+  const getAdminData = () => {
     axios
       .get("http://localhost:5000/team/getTeams", {
         headers: {
@@ -60,8 +73,23 @@ const Teams = () => {
         },
       })
       .then((response) => {
+        console.log("Team DATA: ", response.data.data);
+        setTeams([...response.data.data]);
+        setLoading(false);
+      });
+  };
+
+  const getEmpData = (id) => {
+    axios
+      .get(`http://localhost:5000/team/getMyTeam/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
         console.log("PROJECSTS DATA: ", response.data.data);
-        setProjects([...response.data.data]);
+        setTeams([...response.data.data]);
+        setLoading(false);
       });
   };
   const confirm = (id) => {
@@ -87,51 +115,21 @@ const Teams = () => {
       },
     });
 
-    getData();
+    getAdminData();
   };
   return (
     <div style={{ margin: "1em 3em 1em 3em" }}>
-      <div className="team_create">
-        <h1>Teams</h1>
-        <Button
-          className="submitbtn"
-          onClick={() => navigate("/createTeam", { state: { project: null } })}
-        >
-          <GroupAddOutlinedIcon
-            style={{ marginRight: "0.5em", fill: "white" }}
-          />
-          Create a Team
-        </Button>
-      </div>
-      <div className="team_wrapper">
-        {projects?.map((p, index) => {
-          if (p.active) {
-            return (
-              <div
-                key={index}
-                className="team_show_div"
-                onClick={() => navigate("/teamInfo", { state: { project: p } })}
-              >
-                <div className="delete_div">
-                  <IconButton
-                    sx={{ margin: 0, padding: 0 }}
-                    onClick={() => confirm(p._id)}
-                  >
-                    <DeleteOutlineOutlinedIcon sx={{ marginLeft: "-1em" }} />
-                  </IconButton>
-                  <span style={{ marginRight: "-1em" }}>
-                    <GroupOutlinedIcon />
-                    {p.members.length}
-                  </span>
-                </div>
-                <Avatar {...stringAvatar(p.teamName)} />
-                <h2>{p.teamName}</h2>
-                <p style={{ color: "grey", marginTop: "1em" }}>{p.teamDesp}</p>
-              </div>
-            );
-          }
-        })}
-      </div>
+      {role !== "Employee" ? (
+        loading ? (
+          <Spinner animation="border" />
+        ) : (
+          <AdminTeam teams={teams} confirm={confirm} />
+        )
+      ) : loading ? (
+        <Spinner animation="border" />
+      ) : (
+        <EmpTeam teams={teams} />
+      )}
     </div>
   );
 };

@@ -9,30 +9,56 @@ import EditIcon from "@mui/icons-material/Edit";
 const TeamInfo = () => {
   const navigate = useNavigate();
   const {
-    state: { project },
+    state: { team },
   } = useLocation();
-  console.log(project);
+  console.log(team);
+
+  const [role, setRole] = React.useState("");
+
+  React.useEffect(() => {
+    if (localStorage.getItem("role")) {
+      const role = localStorage.getItem("role");
+
+      setRole(role);
+    }
+  }, []);
   return (
     <div style={{ margin: "2em" }}>
       <Breadcrumb>
         <Breadcrumb.Item href="/team">Teams</Breadcrumb.Item>
-        <Breadcrumb.Item active>{project.teamName}</Breadcrumb.Item>
+        <Breadcrumb.Item active>{team.teamName}</Breadcrumb.Item>
       </Breadcrumb>
       <div className="team_create">
-        <h1>{project.teamName}</h1>
-        <IconButton
-          onClick={() =>
-            navigate("/createTeam", { state: { project: project } })
-          }
-        >
-          <EditIcon />
-        </IconButton>
+        <h1>{team.teamName}</h1>
+        {role !== "Employee" ? (
+          <IconButton
+            onClick={() => navigate("/createTeam", { state: { team: team } })}
+          >
+            <EditIcon />
+          </IconButton>
+        ) : null}
       </div>
-      <p>{project.teamDesp}</p>
+      <p>{team.teamDesp}</p>
 
       <h3>Team Lead </h3>
-      <p>{project.teamLead.username}</p>
-      <p>{project.teamLead.email}</p>
+      <Table className="table">
+        <thead>
+          <tr>
+            <th className="thead">Picture</th>
+            <th className="thead">Name</th>
+            <th className="thead">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <Avatar src={team.teamLead.profilePicture} />
+            </td>
+            <td>{team.teamLead.username}</td>
+            <td>{team.teamLead.email}</td>
+          </tr>
+        </tbody>
+      </Table>
       <h3>Members</h3>
       <Table className="table">
         <thead>
@@ -44,7 +70,7 @@ const TeamInfo = () => {
           </tr>
         </thead>
         <tbody>
-          {project.members.map((m, index) => {
+          {team.members.map((m, index) => {
             return (
               <tr>
                 <td>{index}</td>

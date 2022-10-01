@@ -69,6 +69,7 @@ function Login() {
             localStorage.setItem("email", response.data.data.email);
             localStorage.setItem("user", JSON.stringify(response.data.data));
             localStorage.setItem("role", response.data.data.role);
+            localStorage.setItem("id", response.data.data._id);
             setData(response.data.data);
           })
           .catch(function (error) {
