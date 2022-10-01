@@ -299,19 +299,26 @@ router.post("/login", async (req, res) => {
       console.log("ATTendance");
 
       Euser.attendance.forEach((date) => {
-        // console.log(fixTimezoneOffset(date).slice(0, 10));
+        console.log(
+          " ARRAY ",
+          fixTimezoneOffset(date).slice(0, 10),
+          " TOday, ",
+          fixTimezoneOffset(d).slice(0, 10)
+        );
+        console.log();
         if (
           fixTimezoneOffset(date).slice(0, 10) ===
           fixTimezoneOffset(d).slice(0, 10)
         ) {
-          console.log("ALREADY");
+          //console.log("ALREADY");
           present = false;
         } else {
-          console.log("not");
+          //console.log("not");
           present = true;
         }
       });
 
+      console.log(present);
       if (present) {
         Emp.findOneAndUpdate(
           { email: email },

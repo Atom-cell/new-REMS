@@ -261,7 +261,11 @@ function MoreInfo() {
                   onChange={(value) => {
                     let a = 0;
                     allEvents.forEach((x) => {
-                      if (x.slice(5, 7) === `0${value.getMonth() + 1}`) {
+                      // console.log(x, " + ", `${value.getMonth() + 1}`);
+                      if (
+                        x.slice(5, 7) === `${value.getMonth() + 1}` ||
+                        x.slice(5, 7) === `0${value.getMonth() + 1}`
+                      ) {
                         a++;
                       }
                     });
