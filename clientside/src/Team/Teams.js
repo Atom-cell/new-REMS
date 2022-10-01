@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import IconButton from "@mui/material/IconButton";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import "./Team.css";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { confirmAlert } from "react-confirm-alert"; // Import
 
@@ -92,7 +93,10 @@ const Teams = () => {
     <div style={{ margin: "1em 3em 1em 3em" }}>
       <div className="team_create">
         <h1>Teams</h1>
-        <Button className="submitbtn" onClick={() => navigate("/createTeam")}>
+        <Button
+          className="submitbtn"
+          onClick={() => navigate("/createTeam", { state: { project: null } })}
+        >
           <GroupAddOutlinedIcon
             style={{ marginRight: "0.5em", fill: "white" }}
           />
@@ -105,19 +109,20 @@ const Teams = () => {
             return (
               <div
                 key={index}
-                className="team_container"
+                className="team_show_div"
                 onClick={() => navigate("/teamInfo", { state: { project: p } })}
               >
-                <div
-                  style={{
-                    width: "100%",
-                    marginLeft: "-3em",
-                    marginTop: "-1em",
-                  }}
-                >
-                  <IconButton onClick={() => confirm(p._id)}>
-                    <DeleteOutlineOutlinedIcon />
+                <div className="delete_div">
+                  <IconButton
+                    sx={{ margin: 0, padding: 0 }}
+                    onClick={() => confirm(p._id)}
+                  >
+                    <DeleteOutlineOutlinedIcon sx={{ marginLeft: "-1em" }} />
                   </IconButton>
+                  <span style={{ marginRight: "-1em" }}>
+                    <GroupOutlinedIcon />
+                    {p.members.length}
+                  </span>
                 </div>
                 <Avatar {...stringAvatar(p.teamName)} />
                 <h2>{p.teamName}</h2>

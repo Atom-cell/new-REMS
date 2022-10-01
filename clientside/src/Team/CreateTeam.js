@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import "./Team.css";
 import {
@@ -14,8 +14,27 @@ import {
   MenuItem,
 } from "@mui/material";
 import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
+
+// function BPCheckbox({ pro, id }) {
+//   if (pro !== null) {
+//     const { members } = pro;
+//     console.log(members, id);
+//     let a = false;
+//     members.forEach((m) => {
+//       if (m._id === id) a = true;
+//       else {
+//       }
+//     });
+//     if (a) return <Checkbox defaultChecked />;
+//     else return <Checkbox />;
+//   } else return <Checkbox />;
+// }
 const CreateTeam = () => {
   let navigate = useNavigate();
+  const {
+    state: { project },
+  } = useLocation();
+  //   console.log(project);
 
   const [teamName, setTeamName] = React.useState("");
   const [teamDesp, setTeamDesp] = React.useState("");
@@ -27,6 +46,9 @@ const CreateTeam = () => {
 
   React.useEffect(() => {
     getEmps();
+    if (project) {
+      autoFillData();
+    }
   }, []);
 
   const getEmps = async () => {
@@ -41,6 +63,17 @@ const CreateTeam = () => {
         setData([...response.data.data]);
         setLoading(false);
       });
+  };
+
+  const autoFillData = () => {
+    setTeamName(project.teamName);
+    setTeamDesp(project.teamDesp);
+    setTeamLead(project.teamLead._id);
+
+    const { members } = project;
+    const array = members.map((x) => x._id);
+
+    setMembers([...array]);
   };
 
   const handleChange = (e) => {
@@ -79,7 +112,11 @@ const CreateTeam = () => {
       a[0] = false;
       a[1] = false;
       setError(a);
-      uploadData();
+      if (project) {
+        uploadEditData();
+      } else {
+        uploadData();
+      }
     }
     e.preventDefault();
   };
@@ -98,6 +135,46 @@ const CreateTeam = () => {
             teamName: teamName,
             teamDesp: teamDesp,
             teamLead,
+            members: members,
+          },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then(function (response) {})
+        .catch(function (error) {
+          console.log(error);
+        });
+      navigate("/team");
+    } else {
+      alert("Fill all the fields");
+    }
+  };
+
+  const uploadEditData = () => {
+    console.log("EDITE: ", {
+      id: project._id,
+      teamName: teamName,
+      teamDesp: teamDesp,
+      teamLead,
+      members: members,
+    });
+
+    if (
+      error[0] === false &&
+      error[1] === false &&
+      teamLead !== "" &&
+      members.length !== 0
+    ) {
+      axios
+        .put(
+          "http://localhost:5000/team/updateTeam",
+          {
+            id: project._id,
+            teamName: teamName,
+            teamDesp: teamDesp,
             teamLead,
             members: members,
           },
@@ -168,7 +245,7 @@ const CreateTeam = () => {
             />
 
             <FormControl sx={{ width: "50%", marginTop: "2em" }}>
-              <InputLabel id="demo-simple-select-label">Team Leads</InputLabel>
+              <InputLabel id="demo-simple-select-label">Team Lead</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -186,14 +263,25 @@ const CreateTeam = () => {
             </FormControl>
 
             <div style={{ width: "100%" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                className="submitbtn"
-                style={{ color: "white" }}
-              >
-                Create
-              </Button>
+              {project ? (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="submitbtn"
+                  style={{ color: "white" }}
+                >
+                  Save Changes
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="submitbtn"
+                  style={{ color: "white" }}
+                >
+                  Create
+                </Button>
+              )}
             </div>
           </form>
         </div>
@@ -214,22 +302,66 @@ const CreateTeam = () => {
               <tbody>
                 {/* <FormGroup> */}
                 {data.map((data, index) => {
-                  return (
-                    <tr>
-                      <td>
-                        {
-                          <FormControlLabel
-                            key={index}
-                            control={<Checkbox />}
-                            value={data._id}
-                            onChange={(e) => handleChange(e)}
-                          />
-                        }
-                      </td>
-                      <td>{data.username}</td>
-                      <td>{data.email}</td>
-                    </tr>
-                  );
+                  if (project !== null) {
+                    const { members } = project;
+                    const array = members.map((x) => x._id);
+
+                    if (array.includes(data._id)) {
+                      return (
+                        <tr>
+                          <td>
+                            {
+                              <FormControlLabel
+                                key={index}
+                                //control={<BPCheckbox pro={project} id={data._id} />}
+                                control={<Checkbox defaultChecked />}
+                                value={data._id}
+                                onChange={(e) => handleChange(e)}
+                              />
+                            }
+                          </td>
+                          <td>{data.username}</td>
+                          <td>{data.email}</td>
+                        </tr>
+                      );
+                    } else {
+                      return (
+                        <tr>
+                          <td>
+                            {
+                              <FormControlLabel
+                                key={index}
+                                //control={<BPCheckbox pro={project} id={data._id} />}
+                                control={<Checkbox />}
+                                value={data._id}
+                                onChange={(e) => handleChange(e)}
+                              />
+                            }
+                          </td>
+                          <td>{data.username}</td>
+                          <td>{data.email}</td>
+                        </tr>
+                      );
+                    }
+                  } else {
+                    return (
+                      <tr>
+                        <td>
+                          {
+                            <FormControlLabel
+                              key={index}
+                              //control={<BPCheckbox pro={project} id={data._id} />}
+                              control={<Checkbox />}
+                              value={data._id}
+                              onChange={(e) => handleChange(e)}
+                            />
+                          }
+                        </td>
+                        <td>{data.username}</td>
+                        <td>{data.email}</td>
+                      </tr>
+                    );
+                  }
                 })}
 
                 {/* </FormGroup> */}

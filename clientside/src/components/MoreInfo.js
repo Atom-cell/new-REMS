@@ -1,6 +1,6 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
-import { Avatar, Divider } from "@mui/material";
+import { Avatar, Divider, Tooltip } from "@mui/material";
 import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
 import axios from "axios";
@@ -12,6 +12,35 @@ import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+      marginRight: "0.5em",
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
 function TableDate({ date }) {
   // alert("k");
   return <h4 style={{ fontWeight: "bold" }}>{date}</h4>;
@@ -32,6 +61,7 @@ function MoreInfo() {
   const [SS, setSS] = React.useState([]);
   const [showCal, setShowCal] = React.useState(false);
   const [proj, setProj] = React.useState([]);
+  const [team, setTeam] = React.useState([]);
   const monthNames = [
     "January",
     "February",
@@ -73,6 +103,7 @@ function MoreInfo() {
     setSS([...a.screenshot]);
 
     await getProjectInfo(a._id);
+    getTeamInfo(a._id);
   };
 
   const getProjectInfo = (id) => {
@@ -84,6 +115,18 @@ function MoreInfo() {
       })
       .then((response) => {
         setProj(response.data);
+      });
+  };
+
+  const getTeamInfo = (id) => {
+    axios
+      .get(`http://localhost:5000/team/getMyTeam/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setTeam([...response.data.data]);
       });
   };
 
@@ -250,7 +293,7 @@ function MoreInfo() {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "80%",
+                  width: "45%",
                   marginLeft: "3em",
                 }}
               >
@@ -289,6 +332,7 @@ function MoreInfo() {
                 style={{
                   display: "flex",
                   flexDirection: "column",
+                  width: "60%",
                 }}
               >
                 <div className="infoRow">
@@ -298,8 +342,14 @@ function MoreInfo() {
                 <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Teams:</h6>
-                  <h6 style={{ flex: "50%" }}>
-                    Teams k liye avatar initials when hover shows the name
+                  <h6 style={{ flex: "50%", display: "flex" }}>
+                    {team.map((t, index) => {
+                      return (
+                        <Tooltip key={index} title={t.teamName}>
+                          <Avatar {...stringAvatar(t.teamName)} />
+                        </Tooltip>
+                      );
+                    })}
                   </h6>
                 </div>
                 <Divider />

@@ -64,7 +64,7 @@ router.post("/createTeam", verifyJWT, (req, res) => {
     .then((data) => res.status(200).json({ data: data, msg: 1 }))
     .catch((err) => res.status(err));
 
-  console.log(newTeam);
+  console.log();
 });
 
 router.get("/getTeams", (req, res) => {
@@ -89,7 +89,7 @@ router.get("/getTeams", (req, res) => {
   }
 });
 
-router.get("/getMyTeam", (req, res) => {
+router.get("/getMyTeam/:id", (req, res) => {
   console.log("my teams");
   const id = "6287e83b145d25be6a314702";
 
@@ -100,7 +100,7 @@ router.get("/getMyTeam", (req, res) => {
     separateTime: 0,
     attendance: 0,
   };
-  Team.find({ members: { $in: id } }, v)
+  Team.find({ members: { $in: req.params.id } }, v)
     .populate({ path: "teamLead", select: v })
     .populate({ path: "members", select: v })
     .exec((err, data) => {
@@ -117,6 +117,24 @@ router.delete("/deleteTeam/:id", verifyJWT, (req, res) => {
   Team.findByIdAndUpdate(req.params.id, { active: false }).then((response) =>
     console.log()
   );
+});
+
+router.put("/updateTeam", async (req, res) => {
+  let { id, teamName, teamDesp, teamLead, members } = req.body;
+
+  Team.findOneAndUpdate(
+    { _id: id },
+    {
+      teamName,
+      teamDesp,
+      teamLead,
+      members,
+    }
+  )
+    .then((data) => {
+      res.json({ data: data, msg: 1 });
+    })
+    .catch((err) => res.status(err));
 });
 
 module.exports = router;

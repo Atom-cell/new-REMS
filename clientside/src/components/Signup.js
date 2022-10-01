@@ -151,7 +151,7 @@ function Signup() {
               justifyContent: "center",
             }}
           >
-            <h2>Sign up to REMS</h2>
+            <h2 style={{ textAlign: "center" }}>Sign up to REMS</h2>
             <form
               action=""
               noValidate
