@@ -41,6 +41,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/register", async (req, res, next) => {
+  console.log("In REgisters");
   let { username, email, password } = req.body;
 
   //check user already exists or not
@@ -86,6 +87,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+//delete the email token ehich shows it is verififed
 router.get("/verify", async (req, res) => {
   let token = req.query.token;
   const admin = await Admin.findOne({ emailToken: token });
@@ -104,7 +106,10 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   //console.log("In all Empps");
   try {
     Admin.find({ email: req.userEmail })
-      .populate("employees")
+      .populate({
+        path: "employees",
+        match: { active: true },
+      })
       .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data[0].employees });
@@ -127,7 +132,7 @@ router.get("/getLogEmps", verifyJWT, async (req, res) => {
   };
   try {
     Admin.find({ email: req.userEmail })
-      .populate({ path: "employees", select: v })
+      .populate({ path: "employees", select: v, match: { active: true } })
       .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data[0].employees });
@@ -147,6 +152,18 @@ router.get("/logs/:email", verifyJWT, async (req, res) => {
   console.log("In Logs", req.params.email);
 
   Activity.find({ email: req.params.email }).then((response) => {
+    res.json({ data: response });
+  });
+});
+
+router.get("/aa", async (req, res) => {
+  res.redirect("http://localhost:3000/home");
+});
+
+router.delete("/deletelog/:email", (req, res) => {
+  console.log("In delte Logs", req.params.email);
+
+  Activity.deleteMany({ email: req.params.email }).then((response) => {
     res.json({ data: response });
   });
 });

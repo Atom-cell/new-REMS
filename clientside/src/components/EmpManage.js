@@ -256,34 +256,34 @@ function EmpManage() {
             </thead>
             <tbody>
               {currentPosts.map(function (data, index) {
-                if (data.active) {
-                  return (
-                    <tr key={index}>
-                      <td
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setInfo(data)}
-                      >
-                        {index + 1}
-                      </td>
-                      <td
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setInfo(data)}
-                      >
-                        {data.username}{" "}
-                      </td>
-                      <td
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setInfo(data)}
-                      >
-                        {data.email}
-                      </td>
-                      <td
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setInfo(data)}
-                      >
-                        {data.role}
-                      </td>
-                      {/* <td>
+                // if (data.active) {
+                return (
+                  <tr key={index}>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.username}{" "}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.email}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.role}
+                    </td>
+                    {/* <td>
                         <button
                           style={{ all: "unset", cursor: "pointer" }}
                           onClick={() => {
@@ -294,47 +294,51 @@ function EmpManage() {
                           Click for more Info
                         </button>
                       </td> */}
-                      <td>
-                        <ToggleButton
-                          value="check"
-                          selected={selected[index]}
-                          // onChange={() => {
-                          //   setSelected(!selected);
-                          // }}
-                          onClick={() => Screenshots(index, data.email)}
-                          style={{ padding: "0.5em" }}
-                        >
-                          <PhotoCameraIcon />
-                        </ToggleButton>
-                        {/* <Button onClick={() => ScreenshotStart(data.email)}>
+                    <td>
+                      <ToggleButton
+                        value="check"
+                        selected={selected[index]}
+                        // onChange={() => {
+                        //   setSelected(!selected);
+                        // }}
+                        onClick={() =>
+                          data.desktop
+                            ? Screenshots(index, data.email)
+                            : alert("User is not online")
+                        }
+                        style={{ padding: "0.5em" }}
+                      >
+                        <PhotoCameraIcon />
+                      </ToggleButton>
+                      {/* <Button onClick={() => ScreenshotStart(data.email)}>
                       SS
                     </Button>
                     <Button onClick={() => ScreenshotStop(data.email)}>
                       SStop
                     </Button> */}
-                      </td>
-                      <td>{data.desktop ? <Online /> : <Offline />}</td>
-                      <td>
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            style={{ all: "unset", cursor: "pointer" }}
-                          >
-                            <MoreVertIcon />
-                          </Dropdown.Toggle>
+                    </td>
+                    <td>{data.desktop ? <Online /> : <Offline />}</td>
+                    <td>
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          style={{ all: "unset", cursor: "pointer" }}
+                        >
+                          <MoreVertIcon />
+                        </Dropdown.Toggle>
 
-                          <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => alert("action")}>
-                              Edit
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => submit(data._id)}>
-                              Delete
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </td>
-                    </tr>
-                  );
-                }
+                        <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => alert("action")}>
+                            Edit
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => submit(data._id)}>
+                            Delete
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                );
+                // }
               })}
             </tbody>
           </Table>

@@ -276,9 +276,15 @@ router.get("/getEmp/:id", verifyJWT, (req, res, next) => {
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
   console.log("LOGIN: ", email, password);
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+  };
 
   //check user already exists or not
-  const Euser = await Emp.findOne({ email: email });
+  const Euser = await Emp.findOne({ email: email }).select(v);
   const Auser = await Admin.findOne({ email: email });
 
   //////////////
@@ -340,15 +346,22 @@ router.post("/login", async (req, res) => {
 
   ///////////// update desktop
   if (Euser) {
-    if (await bcrypt.compare(req.body.password, Euser.password)) {
-      const token = jwt.sign(
-        { email: Euser.email, role: Euser.role },
-        "helloworld"
-      );
+    if (Euser.active) {
+      if (await bcrypt.compare(req.body.password, Euser.password)) {
+        const token = jwt.sign(
+          { email: Euser.email, role: Euser.role },
+          "helloworld"
+        );
 
-      return res.json({ data: Euser, msg: 1, token: token, auth: true });
-    } else return res.json({ data: Euser, msg: 0 });
+        return res.json({ data: Euser, msg: 1, token: token, auth: true });
+      } else {
+        return res.json({ data: null, msg: 0 });
+      }
+    } else if (!Euser.active) {
+      return res.json({ data: null, msg: 0 });
+    }
   }
+
   if (Auser) {
     if (await bcrypt.compare(password, Auser.password)) {
       const token = jwt.sign(

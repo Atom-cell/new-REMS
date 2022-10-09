@@ -17,11 +17,13 @@ router.post("/login", async (req, res) => {
   const Euser = await Emp.findOne({ email: email });
 
   if (Euser) {
-    if (await bcrypt.compare(req.body.password, Euser.password)) {
-      Euser.desktop = true;
-      Euser.save();
-      res.send("sanoppi");
-    } else res.send("NOT OK");
+    if (Euser.active) {
+      if (await bcrypt.compare(req.body.password, Euser.password)) {
+        Euser.desktop = true;
+        Euser.save();
+        res.send("sanoppi");
+      } else res.send("NOT OK");
+    }
   } else {
     res.send("NOT OK");
   }
@@ -44,29 +46,29 @@ router.post("/times", (req, res) => {
   console.log("Times");
   const { email, active_time, idle_time } = req.body;
   console.log(active_time, idle_time);
-  try {
-    Emp.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          totalTime: {
-            date: Date.now(),
-            activetime: active_time,
-            idletime: idle_time,
-          },
-        },
-      },
-      function (error, data) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("");
-        }
-      }
-    );
-  } catch (e) {
-    res.send(e);
-  }
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         totalTime: {
+  //           date: Date.now(),
+  //           activetime: active_time,
+  //           idletime: idle_time,
+  //         },
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error);
+  //       } else {
+  //         console.log("");
+  //       }
+  //     }
+  //   );
+  // } catch (e) {
+  //   res.send(e);
+  // }
 });
 
 router.post("/apptime", (req, res) => {
@@ -131,31 +133,31 @@ router.post("/daytimes", (req, res) => {
   console.log(activeDayTime);
   console.log(idleDayTime);
 
-  try {
-    Emp.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          separateTime: {
-            date: Date.now(),
-            idleDay: idleDayTime,
-            activeDay: activeDayTime,
-            idle: idleArray,
-            active: activeArray,
-          },
-        },
-      },
-      function (error, data) {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log("");
-        }
-      }
-    );
-  } catch (e) {
-    res.send(e);
-  }
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         separateTime: {
+  //           date: Date.now(),
+  //           idleDay: idleDayTime,
+  //           activeDay: activeDayTime,
+  //           idle: idleArray,
+  //           active: activeArray,
+  //         },
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error.message);
+  //       } else {
+  //         console.log("");
+  //       }
+  //     }
+  //   );
+  // } catch (e) {
+  //   res.send(e);
+  // }
   // router.post("/apptime", (req, res) => {
   //   }
 });
@@ -167,28 +169,28 @@ router.post("/separate", (req, res) => {
   console.log(activeArray);
   console.log(idleArray);
 
-  try {
-    Emp.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          separateTime: {
-            date: Date.now(),
-            idle: idleArray,
-            active: activeArray,
-          },
-        },
-      },
-      function (error, data) {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log("");
-        }
-      }
-    );
-  } catch (e) {
-    res.send(e);
-  }
+  // try {
+  //   Emp.findOneAndUpdate(
+  //     { email: email },
+  //     {
+  //       $push: {
+  //         separateTime: {
+  //           date: Date.now(),
+  //           idle: idleArray,
+  //           active: activeArray,
+  //         },
+  //       },
+  //     },
+  //     function (error, data) {
+  //       if (error) {
+  //         console.log(error.message);
+  //       } else {
+  //         console.log("");
+  //       }
+  //     }
+  //   );
+  // } catch (e) {
+  //   res.send(e);
+  // }
 });
 module.exports = router;

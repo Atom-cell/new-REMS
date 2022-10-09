@@ -60,6 +60,7 @@ const Teams = () => {
     }
   }, []);
 
+  //for admin, his created teams will be shown
   const getAdminData = () => {
     axios
       .get("http://localhost:5000/team/getTeams", {
@@ -74,6 +75,7 @@ const Teams = () => {
       });
   };
 
+  //for emp when he logs, his teams will be shown
   const getEmpData = (id) => {
     axios
       .get(`http://localhost:5000/team/getMyTeam/${id}`, {
@@ -90,7 +92,7 @@ const Teams = () => {
   const confirm = (id) => {
     confirmAlert({
       title: "Confirm to Delete",
-      message: "Do you want to delete this employee?",
+      message: "Do you want to delete this team?",
       buttons: [
         {
           label: "Yes",

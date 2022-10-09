@@ -8,6 +8,7 @@ import {
   Pagination,
 } from "@mui/material";
 import axios from "axios";
+import { confirmAlert } from "react-confirm-alert"; // Import
 
 function Log() {
   const [log, setLog] = React.useState([]);
@@ -64,15 +65,25 @@ function Log() {
   const currentPosts = log.slice(indexOfFirstPost, indexOfLastPost);
   console.log("current: ", currentPosts);
 
-  const deleteLogData = async () => {
-    if (name) {
-      await axios
-        .delete(`http://localhost:5000/admin/deletelog/${name}`)
-        .then((response) => {
-          console.log("RESPONSE", response.data.data);
-        });
-    } else {
-    }
+  const confirm = () => {
+    confirmAlert({
+      title: "Do you want to delete all logs?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => deleteLogData(),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
+  const deleteLogData = () => {
+    axios
+      .delete(`http://localhost:5000/admin/deletelog/${name}`)
+      .then((response) => {});
 
     getLogData();
   };
@@ -112,12 +123,12 @@ function Log() {
             Search
           </Button>
         </div>
-        <Button className="submitbtn" onClick={() => deleteLogData()}>
+        <Button className="submitbtn" onClick={() => getLogData()}>
           Refresh
         </Button>
       </div>
       <div>
-        <Button className="submitbtn" onClick={() => deleteLogData()}>
+        <Button className="submitbtn" onClick={() => confirm()}>
           CLEAR
         </Button>
         <h2 style={{ position: "relative", left: "1rem" }}>
@@ -142,7 +153,7 @@ function Log() {
               </tr>
             </thead>
             <tbody>
-              {currentPosts.map(function (d, index) {
+              {log.map(function (d, index) {
                 //console.log(d);
                 return (
                   <tr key={index}>

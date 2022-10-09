@@ -40,7 +40,7 @@ router.get("/getEmps", verifyJWT, (req, res) => {
   };
   try {
     Admin.find({ email: req.userEmail })
-      .populate({ path: "employees", select: v })
+      .populate({ path: "employees", select: v, match: { active: true } })
       .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data[0].employees });
@@ -67,7 +67,9 @@ router.post("/createTeam", verifyJWT, (req, res) => {
   console.log();
 });
 
-router.get("/getTeams", (req, res) => {
+//admin
+router.get("/getTeams", verifyJWT, (req, res) => {
+  console.log(req.userEmail);
   console.log("GEtting teams");
   const v = {
     screenshot: 0,
@@ -77,9 +79,9 @@ router.get("/getTeams", (req, res) => {
     attendance: 0,
   };
   try {
-    Team.find({ email: req.userEmail }, v)
-      .populate({ path: "teamLead", select: v })
-      .populate({ path: "members", select: v })
+    Team.find({ createdBy: req.userEmail, active: true }, v)
+      .populate({ path: "teamLead", select: v, match: { active: true } })
+      .populate({ path: "members", select: v, match: { active: true } })
       .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data });
@@ -89,9 +91,9 @@ router.get("/getTeams", (req, res) => {
   }
 });
 
-router.get("/getMyTeam/:id", (req, res) => {
+//EMP
+router.get("/getMyTeam/:id", verifyJWT, (req, res) => {
   console.log("my teams");
-  const id = "6287e83b145d25be6a314702";
 
   const v = {
     screenshot: 0,
@@ -101,8 +103,8 @@ router.get("/getMyTeam/:id", (req, res) => {
     attendance: 0,
   };
   Team.find({ members: { $in: req.params.id } }, v)
-    .populate({ path: "teamLead", select: v })
-    .populate({ path: "members", select: v })
+    .populate({ path: "teamLead", select: v, match: { active: true } })
+    .populate({ path: "members", select: v, match: { active: true } })
     .exec((err, data) => {
       if (err) console.log(err.message);
       res.json({ msg: 1, data: data });
@@ -111,15 +113,15 @@ router.get("/getMyTeam/:id", (req, res) => {
 });
 
 router.delete("/deleteTeam/:id", verifyJWT, (req, res) => {
-  console.log("In Delete");
+  console.log("In team Delete");
   console.log(req.params.id);
 
   Team.findByIdAndUpdate(req.params.id, { active: false }).then((response) =>
-    console.log()
+    res.json(response)
   );
 });
 
-router.put("/updateTeam", async (req, res) => {
+router.put("/updateTeam", verifyJWT, async (req, res) => {
   let { id, teamName, teamDesp, teamLead, members } = req.body;
 
   Team.findOneAndUpdate(
