@@ -3,7 +3,16 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var myProject = require("../model/myProject.model");
 var Admin = require("../model/Admin.model");
+var employee = require("../model/Emp.model");
 const nodemailer = require("nodemailer");
+
+router.get("/getmyproject", (req, res) => {
+  // console.log(req.query);
+  myProject.find({ _id: req.query.projectId }, (err, rec) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(rec);
+  });
+});
 
 // Get all Projects For Employee
 router.get("/", (req, res, next) => {
@@ -27,10 +36,22 @@ router.get("/", (req, res, next) => {
 router.get("/organizationprojects", (req, res, next) => {
   // we need projectAssignedBy
   // console.log(req.query.name);
-  myProject.find({ projectAssignedBy: req.query.name }, (err, rec) => {
+  myProject.find({ projectAssignedBy: req.query._id }, (err, rec) => {
     if (err) res.status(500).json(err);
     res.status(200).json(rec);
   });
+});
+
+// Get all Projects for an employee
+router.get("/employeeprojects", (req, res, next) => {
+  // console.log(req.query);
+  myProject.find(
+    { projectAssignedTo: { $in: req.query.userId } },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
 });
 
 // Get Completed Projects
@@ -143,33 +164,33 @@ router.get("/notassignedadmin", (req, res, next) => {
 // Get Specific Projects
 router.get("/searchproject/:projectName", (req, res, next) => {
   // console.log(req.params.projectName);
-  if (req.query._id) {
-    myProject
-      .find({
-        projectAssignedToId: req.query._id,
-        projectName: {
-          $regex: req.params.projectName,
-          $options: "i",
-        },
-      })
-      .exec((error, records) => {
-        if (error) throw error;
-        res.json(records);
-      });
-  } else {
-    myProject
-      .find({
-        projectAssignedBy: req.query.name,
-        projectName: {
-          $regex: req.params.projectName,
-          $options: "i",
-        },
-      })
-      .exec((error, records) => {
-        if (error) throw error;
-        res.json(records);
-      });
-  }
+  // if (req.query._id) {
+  // myProject
+  //   .find({
+  //     projectAssignedToId: req.query._id,
+  //     projectName: {
+  //       $regex: req.params.projectName,
+  //       $options: "i",
+  //     },
+  //   })
+  //   .exec((error, records) => {
+  //     if (error) throw error;
+  //     res.json(records);
+  //   });
+  // } else {
+  myProject
+    .find({
+      projectAssignedBy: req.query._id,
+      projectName: {
+        $regex: req.params.projectName,
+        $options: "i",
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
+  // }
 });
 
 router.post("/addNewProject", async (req, res) => {
@@ -263,6 +284,92 @@ router.post("/hoursWorked", (req, res, next) => {
   //     res.status(200).json(rec);
   //   }
   // );
+});
+
+router.put("/updateprojectname", (req, res) => {
+  // console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $set: { projectName: req.body.name } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+router.put("/updateprojectdescription", (req, res) => {
+  // console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $set: { projectDescription: req.body.description } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+router.put("/updateprojectduedate", (req, res) => {
+  // console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $set: { dueDate: req.body.dueDate } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+router.put("/updateprojectstatus", (req, res) => {
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $set: { status: req.body.status } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+router.post("/updateroles", (req, res) => {
+  console.log(req.body);
+  // "bookmarks.title": { $ne: "new title" }
+  myProject
+    .findOneAndUpdate(
+      { _id: req.body.projectId },
+      {
+        $push: {
+          projectroles: {
+            type: req.body.myObj.type,
+            employeeId: req.body.myObj.id,
+          },
+        },
+      },
+      { new: true }
+    )
+    .exec((err, rec) => {
+      console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    });
+});
+
+router.post("/addmemberstoproject", (req, res) => {
+  // console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $set: { projectAssignedTo: req.body.emps } },
+    { new: true },
+    (err, rec) => {
+      console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
 });
 
 router.post("/sendemail", async (req, res) => {

@@ -17,6 +17,14 @@ router.get("/specificboard", (req, res) => {
   });
 });
 
+// get project boards
+router.get("/getprojectboard", (req, res) => {
+  myBoard.find({ projectId: req.query.projectId }).exec((err, rec) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(rec);
+  });
+});
+
 router.get("/onlymyboards", (req, res) => {
   // console.log(req.query.empId);
   myBoard.find({ empId: req.query.empId }).exec((err, rec) => {
@@ -62,19 +70,55 @@ router.post("/createboard", (req, res) => {
   });
 });
 
-router.put("/updateboard", (req, res) => {
+router.post("/createboardwithproject", (req, res) => {
+  //   console.log(req.body.userId);
+  var newBoard = new myBoard({
+    empId: req.body.userId,
+    title: "Title Not Set",
+    color: "#fff",
+    boards: [
+      {
+        title: "To-Do",
+        cards: [],
+      },
+    ],
+    projectId: req.body.projectId,
+  });
+  newBoard.save((err) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(newBoard);
+  });
+});
+
+router.post("/updateboard", (req, res) => {
   console.log("update board");
-  // console.log(req.body.bid);
+  // console.log(req.body.boards);
+  myBoard.findOneAndUpdate(
+    { _id: req.body.bid },
+    { $set: { boards: req.body.boards } },
+    { new: true },
+    (err, rec) => {
+      console.log("hrl");
+      console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+router.put("/updateboardtitle", (req, res) => {
+  // console.log("update board Title");
+  // console.log(req.body);
   //   console.log(req.body.boards);
   var updatedObj = new myBoard({
     _id: req.body.bid,
-    empId: req.body.uid,
+    // empId: req.body.uid,
     title: req.body.title,
     boards: req.body.boards,
   });
   myBoard.findOneAndUpdate(
     { _id: req.body.bid },
-    updatedObj,
+    { $set: { title: req.body.title } },
     { new: true },
     (err, rec) => {
       if (err) res.status(500).send(err);
@@ -103,6 +147,37 @@ router.delete("/deleteboard", (req, res) => {
     if (err) res.status(500).send(err);
     res.status(200).send(rec);
   });
+});
+
+router.get("/boardsshared/withme", (req, res) => {
+  // console.log(req.query.username);
+  myBoard.find({ sharewith: { $in: [req.query.username] } }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    // console.log(rec);
+    res.status(200).json(rec);
+  });
+});
+
+router.get("/getsharewith/employees", (req, res) => {
+  console.log(req.query.bid);
+  // find the respective board and return its employees
+
+  myBoard.find({ _id: req.query.bid }, { sharewith: 1 }, (err, rec) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(rec);
+  });
+});
+
+router.post("/shareboardwith", (req, res) => {
+  myBoard.findOneAndUpdate(
+    { _id: req.body.bid },
+    { $set: { sharewith: req.body.sharewith } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
 });
 
 module.exports = router;

@@ -9,6 +9,7 @@ import "./allmeetings.css";
 import SetMeeting from "./SetMeeting";
 import MeetingEmployees from "./MeetingEmployees";
 import ReadMore from "./ReadMore";
+import { confirmAlert } from "react-confirm-alert";
 const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
   const [loading, setLoading] = useState(true);
@@ -63,18 +64,31 @@ const AllMeetings = () => {
   const handleDeleteMeeting = (meeting) => {
     // delete a meeting
     // console.log(meeting);
-    const r = window.confirm("Would you like to remove this event?");
-    if (r === true) {
-      axios
-        .delete("http://localhost:5000/myVideo/DeleteMeeting", {
-          data: { _id: meeting._id },
-        })
-        .then(() => {
-          // console.log("Deleted");
-          // console.log(allMeetings.filter((data) => data._id != meeting._id));
-          setAllMeetings(allMeetings.filter((data) => data._id != meeting._id));
-        });
-    }
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the Meeting?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("http://localhost:5000/myVideo/DeleteMeeting", {
+                data: { _id: meeting._id },
+              })
+              .then(() => {
+                // console.log("Deleted");
+                // console.log(allMeetings.filter((data) => data._id != meeting._id));
+                setAllMeetings(
+                  allMeetings.filter((data) => data._id != meeting._id)
+                );
+              });
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
   return (
     <div className="all-meetings-container">

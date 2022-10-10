@@ -114,7 +114,7 @@ router.get("/getadmindetails", (req, res) => {
 });
 
 router.get("/getmyemployees", (req, res) => {
-  // console.log(req.query._id);
+  console.log(req.query._id);
   Admin.find({ _id: req.query._id }, (err, rec) => {
     if (err) res.status(500).json(err);
     Emp.find({ _id: { $in: rec[0].employees } }, (errr, recc) => {

@@ -39,6 +39,7 @@ import AllBoards from "./Boards/AllBoards";
 import Boards from "./Boards/Boards";
 import CallNotification from "./CallNotification";
 import Peer from "simple-peer";
+import SpecificProject from "./Projects/SpecificProject";
 // import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
 
@@ -288,6 +289,10 @@ const App = () => {
                   <Route
                     path="/projects"
                     element={<AllProjects user={loggedUser} />}
+                  />
+                  <Route
+                    path="/myproject/:pid"
+                    element={<SpecificProject user={loggedUser} />}
                   />
                   <Route
                     path="/allboards"

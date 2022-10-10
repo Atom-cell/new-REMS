@@ -12,6 +12,9 @@ const SearchBar = ({
   addEmployeeToMeeting,
   newConversation,
   myId,
+  projectRole,
+  setProjectRole,
+  setMemberId,
 }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
@@ -78,14 +81,32 @@ const SearchBar = ({
     setFilteredData([]);
   };
 
-  const addEmployeeToMeetingList = (word) => {
-    addEmployeeToMeeting(word);
-    setFilteredData([]);
-    setWordEntered("");
+  // const addEmployeeToMeetingList = (word) => {
+  //   addEmployeeToMeeting(word);
+  //   setFilteredData([]);
+  //   setWordEntered("");
+  // };
+
+  const handleSelectedChange = (e) => {
+    setProjectRole(e.target.value);
   };
 
   return (
     <div className="search-bar-container mt-3">
+      <div className="inputTextFields selectContainerModal">
+        <select
+          id="framework"
+          value={projectRole}
+          onChange={handleSelectedChange}
+          className={!projectRole && "empty"}
+        >
+          <option value="" selected="selected" hidden>
+            Select Role
+          </option>
+          <option value="projectlead">Project Lead</option>
+          <option value="projectmanager">Project Manager</option>
+        </select>
+      </div>
       <div className="searchInputs">
         <input
           type="text"
@@ -102,7 +123,8 @@ const SearchBar = ({
                 onClick={() => {
                   handleFilteredDataClick(value.username);
                   setUserId(value?._id);
-                  addEmployeeToMeetingList(value.username);
+                  // addEmployeeToMeetingList(value.username);
+                  setMemberId(value?._id);
                 }}
               >
                 {value.username}{" "}

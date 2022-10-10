@@ -4,6 +4,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import SendIcon from "@mui/icons-material/Send";
 import Alert from "react-bootstrap/Alert";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { confirmAlert } from "react-confirm-alert";
 import ChatOnline from "./ChatOnline";
 import Conversation from "./Conversation";
 import Message from "./Message";
@@ -207,25 +208,34 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
     getConversations();
   };
   const handleDeleteChat = () => {
-    const confirmBox = window.confirm(
-      "Are you sure you want to delete this chat?"
-    );
-    if (confirmBox) {
-      axios
-        .delete("/myConversation/deleteconversation", {
-          data: { _id: currentChat._id },
-        })
-        .then((rec) => {
-          console.log(rec.data);
-          const fitleredConversations = conversations.filter(
-            (convo) => rec.data._id != convo._id
-          );
-          setCurrentChat();
-          setConversations(fitleredConversations);
-          toast.info("Chat Deleted");
-        })
-        .catch((err) => console.log(err));
-    }
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the chat?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("/myConversation/deleteconversation", {
+                data: { _id: currentChat._id },
+              })
+              .then((rec) => {
+                console.log(rec.data);
+                const fitleredConversations = conversations.filter(
+                  (convo) => rec.data._id != convo._id
+                );
+                setCurrentChat();
+                setConversations(fitleredConversations);
+                toast.success("Chat Deleted");
+              })
+              .catch((err) => console.log(err));
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
 
   const getDifference = (array1, array2) => {

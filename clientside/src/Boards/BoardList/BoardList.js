@@ -26,6 +26,7 @@ function BoardList(props) {
             defaultValue={props.board?.title}
             text={props.board?.title}
             placeholder="Enter List Title"
+            type={"text"}
             onSubmit={updateTitle}
           />
           <span>{props.board?.cards?.length || 0}</span>
@@ -51,6 +52,7 @@ function BoardList(props) {
           placeholder="Enter Card Title"
           displayClass="board_add-card"
           editClass="board_add-card_edit"
+          type={"text"}
           onSubmit={(value) => props.addCard(props.board?._id, value)}
         />
       </div>

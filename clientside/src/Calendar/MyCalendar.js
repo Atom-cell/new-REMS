@@ -7,6 +7,7 @@ import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { confirmAlert } from "react-confirm-alert";
 import AddEventModal from "./AddEventModal";
 import axios from "axios";
 import EditModal from "./EditModal";
@@ -83,26 +84,27 @@ const MyCalendar = ({ user }) => {
   const addNewEvent = (newEvent) => {
     // console.log(newEvent);
     // set event category default value if category is not selected
-    if (!newEvent.category) {
-      newEvent.category = "Goal";
+    if (newEvent.title && newEvent.start && newEvent.category) {
+      // const formatted = moment(newEvent.start).toDate();
+      // console.log(newEvent.start);
+      var myObj = {
+        // _id: Math.floor(Math.random() * 10000),
+        madeBy: user._id,
+        title: newEvent.title,
+        startDate: newEvent.start,
+        category: newEvent.category,
+      };
+      axios
+        .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
+        .then((res) => {
+          // console.log("Event Added: " + res.data);
+          toast.success(`${res.data.title} Added`);
+        });
+      setNewEvent({ title: "", start: null });
+      setModalOpen(false);
+    } else {
+      alert("Please fill all required fields");
     }
-    // const formatted = moment(newEvent.start).toDate();
-    // console.log(newEvent.start);
-    var myObj = {
-      // _id: Math.floor(Math.random() * 10000),
-      madeBy: user._id,
-      title: newEvent.title,
-      startDate: newEvent.start,
-      category: newEvent.category,
-    };
-    axios
-      .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
-      .then((res) => {
-        // console.log("Event Added: " + res.data);
-        toast.success(`${res.data.title} Added`);
-      });
-    setNewEvent({ title: "", start: null });
-    setModalOpen(false);
   };
 
   // show that category that is selected on filter
@@ -164,18 +166,33 @@ const MyCalendar = ({ user }) => {
 
   //Clicking an existing event allows you to remove it
   const deleteEvent = (event) => {
-    const r = window.confirm("Would you like to remove this event?");
-    if (r === true) {
-      // console.log(event);
-      axios
-        .delete("http://localhost:5000/myCalendar/deleteEvent", {
-          data: { _id: event._id },
-        })
-        .then((res) => toast.success(`${res.data.title} Deleted`))
-        .catch((err) => console.log(err));
-    }
-    setNewEvent({ title: "", start: null });
     setEditModalOpen(false);
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the event?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("http://localhost:5000/myCalendar/deleteEvent", {
+                data: { _id: event._id },
+              })
+              .then((res) => {
+                toast.success(`${res.data.title} Deleted`);
+                setNewEvent({ title: "", start: null });
+              })
+              .catch((err) => console.log(err));
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            setEditModalOpen(true);
+          },
+        },
+      ],
+    });
   };
 
   return (

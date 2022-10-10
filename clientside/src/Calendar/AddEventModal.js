@@ -11,6 +11,7 @@ const AddEventModal = ({
   addNewEvent,
   modalOpen,
   handleClose,
+  category,
 }) => {
   const [startDate, setStartDate] = useState(new Date());
   const handleSelectedChange = (e) => {
@@ -21,13 +22,13 @@ const AddEventModal = ({
     <div className="add-new-event-container">
       <Modal show={modalOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add New Event</Modal.Title>
+          <Modal.Title>{category ? "Add Goal" : "Add New Event"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>
             <input
               type="text"
-              placeholder="Add Meet Title"
+              placeholder="Add Event Title"
               value={newEvent?.title}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, title: e.target.value })
@@ -44,19 +45,22 @@ const AddEventModal = ({
               className="inputTextFields"
               minDate={new Date()}
             />
-            <div className="inputTextFields selectContainerModal">
-              <select
-                id="framework"
-                value={newEvent?.category}
-                onChange={handleSelectedChange}
-              >
-                <option value="" selected="selected">
-                  Select Event Category
-                </option>
-                <option value="Goal">Goal</option>
-                <option value="Reminder">Reminder</option>
-              </select>
-            </div>
+            {category == undefined && (
+              <div className="inputTextFields selectContainerModal">
+                <select
+                  id="framework"
+                  value={newEvent?.category}
+                  onChange={handleSelectedChange}
+                  className={!newEvent?.category && "empty"}
+                >
+                  <option value="" selected="selected" hidden>
+                    Select Event Category
+                  </option>
+                  <option value="Goal">Goal</option>
+                  <option value="Reminder">Reminder</option>
+                </select>
+              </div>
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -64,7 +68,7 @@ const AddEventModal = ({
             Close
           </Button>
           <Button variant="primary" onClick={() => addNewEvent(newEvent)}>
-            Add Event
+            {category ? "Add Goal" : "Add New Event"}
           </Button>
         </Modal.Footer>
       </Modal>

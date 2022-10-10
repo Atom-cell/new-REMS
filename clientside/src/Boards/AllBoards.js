@@ -2,6 +2,7 @@ import Button from "react-bootstrap/Button";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
 import ProjectCard from "../Projects//ProjectCard";
 import Form from "react-bootstrap/Form";
 import { Trash } from "react-feather";
@@ -96,34 +97,56 @@ const AllBoards = ({ user }) => {
   };
 
   const handleDeleteBoard = (board) => {
-    const confirmBox = window.confirm(
-      "Are you sure you want to delete this Board?"
-    );
-    if (confirmBox) {
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete the Board?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("/myboards/deleteboard", {
+                data: { _id: board._id },
+              })
+              .then((rec) => {
+                //   console.log(rec.data);
+                const newBoards = boards.filter(
+                  (newBoard) => newBoard._id != rec.data._id
+                );
+                setBoards(newBoards);
+                toast.success(`${rec.data.title} is Deleted`);
+              })
+              .catch((err) => console.log(err));
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
+  const handleFilterChange = (e) => {
+    const category = e.target.value;
+    if (category == "myboards") fetchData().catch(console.error);
+    else {
       axios
-        .delete("/myboards/deleteboard", {
-          data: { _id: board._id },
+        .get("/myBoards//boardsshared/withme", {
+          params: { username: user.username },
         })
-        .then((rec) => {
-          //   console.log(rec.data);
-          const newBoards = boards.filter(
-            (newBoard) => newBoard._id != rec.data._id
-          );
-          setBoards(newBoards);
-          toast.info(`${rec.data.title} is Deleted`);
-        })
+        .then((res) => setBoards(res.data))
         .catch((err) => console.log(err));
     }
   };
 
+  const fetchData = async () => {
+    const res = await axios.get("/myBoards/onlymyboards", {
+      params: { empId: user._id },
+    });
+    //   console.log(res.data);
+    setBoards(res.data);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get("/myBoards/onlymyboards", {
-        params: { empId: user._id },
-      });
-      //   console.log(res.data);
-      setBoards(res.data);
-    };
     fetchData().catch(console.error);
   }, []);
 
@@ -142,6 +165,10 @@ const AllBoards = ({ user }) => {
           />
         </div>
         <div className="create-project">
+          <select className="selectFilter mx-2" onChange={handleFilterChange}>
+            <option value="myboards">My Boards</option>
+            <option value="sharedwithme">Shared With Me</option>
+          </select>
           <Button
             style={{ backgroundColor: "#1890ff" }}
             onClick={handleCreateBoard}
@@ -175,7 +202,9 @@ const AllBoards = ({ user }) => {
                       className="featuredItem"
                       onClick={() => {
                         // const filterBoards = boards.filter((b) => b._id == board._id);
-                        navigate(`/boards/${board._id}`);
+                        navigate(`/boards/${board._id}`, {
+                          state: { empId: board.empId },
+                        });
                       }}
                     >
                       <span className="featuredTitle">{board.title}</span>
@@ -202,7 +231,7 @@ const AllBoards = ({ user }) => {
               marginTop: "10%",
             }}
           >
-            No Boards Created So Far
+            No boards to show
           </h1>
         )}
       </div>

@@ -8,7 +8,9 @@ import NewProjectModal from "./NewProjectModal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import ProjectInfo from "./ProjectInfo";
+import { useNavigate } from "react-router-dom";
 const AllProjects = ({ user }) => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState();
   const [width, setWidth] = useState("0");
   const [newProject, setNewProject] = useState({
@@ -33,27 +35,27 @@ const AllProjects = ({ user }) => {
     setSearchInput(e.target.value);
 
     if (e.target.value) {
-      if (role == "Employee") {
-        axios
-          .get(`/myprojects/searchproject/${e.target.value}`, {
-            params: { _id: user._id },
-          })
-          .then((records) => {
-            // console.log(records.data);
-            setProjects(records.data);
-          })
-          .catch((err) => console.log(err));
-      } else {
-        axios
-          .get(`/myprojects/searchproject/${e.target.value}`, {
-            params: { name: user.username },
-          })
-          .then((records) => {
-            // console.log(records.data);
-            setProjects(records.data);
-          })
-          .catch((err) => console.log(err));
-      }
+      // if (role == "Employee") {
+      //   axios
+      //     .get(`/myprojects/searchproject/${e.target.value}`, {
+      //       params: { _id: user._id },
+      //     })
+      //     .then((records) => {
+      //       // console.log(records.data);
+      //       setProjects(records.data);
+      //     })
+      //     .catch((err) => console.log(err));
+      // } else {
+      axios
+        .get(`/myprojects/searchproject/${e.target.value}`, {
+          params: { _id: user._id },
+        })
+        .then((records) => {
+          // console.log(records.data);
+          setProjects(records.data);
+        })
+        .catch((err) => console.log(err));
+      // }
     } else {
       fetchData().catch(console.error);
     }
@@ -202,37 +204,48 @@ const AllProjects = ({ user }) => {
     }
   };
 
-  const handleClickOnProject = (project, check, wid) => {
-    setWidth(wid);
-    if (check) {
-      fetchData().catch(console.error);
-      setShowProjectInfo(true);
-    } else {
-      // console.log(project);
-      // console.log(check);
-      setProjects([project]);
-      setShowProjectInfo(false);
-    }
+  const handleClickOnProject = (project) => {
+    // setWidth(wid);
+    navigate(`/myproject/${project._id}`, {
+      state: {
+        project: project,
+        // width: width,
+      },
+    });
+    // user={user}
+    //           project={projects[0]}
+    //           setProjects={handleClickOnProject}
+    //           width={width}
+    //           setWidth={setWidth}
+    // if (check) {
+    //   fetchData().catch(console.error);
+    //   setShowProjectInfo(true);
+    // } else {
+    //   // console.log(project);
+    //   // console.log(check);
+    //   setProjects([project]);
+    //   setShowProjectInfo(false);
+    // }
   };
 
   const fetchData = async () => {
     if (user.role == "Employee") {
-      const res = await axios.get("/myProjects", {
+      const res = await axios.get("/myProjects/employeeprojects", {
         params: { userId: user._id },
       });
-      // console.log(res.data);
+      console.log(res.data);
       setProjects(res.data);
     } else {
       const res = await axios.get("/myProjects/organizationprojects", {
-        params: { name: user.username },
+        params: { _id: user._id },
       });
-      // console.log(res.data);
+      console.log(res.data);
       setProjects(res.data);
     }
   };
   useEffect(() => {
     fetchData().catch(console.error);
-  }, [newProject]);
+  }, []);
 
   return (
     <div className="projectContainer">
@@ -290,35 +303,41 @@ const AllProjects = ({ user }) => {
           )}
           <div className="allProjects">
             {projects?.map((project, index) => {
-              if (
-                role == "Employee" &&
-                user._id == project.projectAssignedToId
-              ) {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                    role={role}
-                    userEmail={user.email}
-                  />
-                );
-              } else if (role == "admin") {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                  />
-                );
-              } else if (!project.projectAssignedTo) {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                    volunteer={false}
-                    handleVolunteerClick={handleVolunteerClick}
-                  />
-                );
-              }
+              return (
+                <ProjectCard
+                  project={project}
+                  setProjects={handleClickOnProject}
+                />
+              );
+              // if (
+              //   role == "Employee" &&
+              //   user._id == project.projectAssignedToId
+              // ) {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //       role={role}
+              //       userEmail={user.email}
+              //     />
+              //   );
+              // } else if (role == "admin") {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //     />
+              //   );
+              // } else if (!project.projectAssignedTo) {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //       volunteer={false}
+              //       handleVolunteerClick={handleVolunteerClick}
+              //     />
+              //   );
+              // }
             })}
           </div>
 

@@ -17,6 +17,14 @@ router.get("/", function (req, res, next) {
   });
 });
 
+router.get("/getmyprojectgoal", function (req, res, next) {
+  // console.log(req.query.userId);
+  myCal.find({ projectId: req.query.projectId }).exec((error, records) => {
+    if (error) throw error;
+    res.json(records);
+  });
+});
+
 //add new Event
 router.post("/addNewEvent", function (req, res, next) {
   // console.log(req.body.startDate);
@@ -27,6 +35,7 @@ router.post("/addNewEvent", function (req, res, next) {
     title: req.body.title,
     startDate: new Date(req.body.startDate),
     category: req.body.category,
+    projectId: req.body.projectId,
   });
 
   // res.json(newEvent);

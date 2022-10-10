@@ -1,0 +1,552 @@
+.project-overview-status-container{
+    display: flex;
+}
+.project-overview-container{
+    flex: 6;
+    padding-left: 5%;
+    padding-top: 1em;
+}
+.project-status-container {
+    border-color: #edeae9;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #f9f8f8;
+    box-sizing: border-box;
+    flex: 0 0 398px;
+    min-width: 398px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+.overview-text{
+    font-size: 20px;
+    font-weight: 500;
+}
+.overview-text input{
+    width: 50%;
+}
+.overview-text input, .overview-text textarea{
+    border: none;
+    margin-bottom: 12px;
+    color: black;
+    border-radius: 10px;
+}
+/* .overview-text input:hover{
+    border: 1px solid gray;
+}
+.overview-text input:focus{
+    border: 1px solid blue;
+} */
+.overview-text input::placeholder{
+    color: black;
+    font-size: 1.5rem;
+}
+.ProjectOverviewSection:not(:last-of-type) {
+    margin-bottom: 48px;
+}
+.ProjectOverviewSection {
+    flex: 1 1 auto;
+}
+.ProjectOverviewSection-headingContainer {
+    align-items: center;
+    display: flex;
+    margin-bottom: 8px;
+}
+.Typography--h4.Typography {
+    font-size: 20px;
+    line-height: 28px;
+}
+.Typography--fontWeightMedium {
+    font-weight: 500;
+}
+.Typography--colorDarkGray3 {
+    color: #1e1f21;
+}
+.Typography {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.ProjectOverviewSection-headingExtraContent {
+    margin-left: 4px;
+}
+.ProjectOverviewMembersSection-membersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(181px, 1fr));
+    justify-content: space-between;
+    gap: 8px;
+}
+.SubtleButtonCard.ThemeableInteractiveCardPresentation--isNotSelected.ThemeableInteractiveCardPresentation--isEnabled.ThemeableCardPresentation.ThemeableCardPresentation--isValid {
+    border-color: transparent;
+    border: 1px solid green;
+}
+.ThemeableCardPresentation {
+    border-radius: 6px;
+}
+.ThemeableInteractiveCardPresentation.ThemeableInteractiveCardPresentation--isEnabled {
+    cursor: pointer;
+}
+.ProjectOverviewMembersSection-addMemberButton {
+    cursor: pointer;
+    display: flex;
+    padding: 8px;
+}
+.ThemeableInteractiveCardPresentation {
+    outline: none;
+}
+.ThemeableCardPresentation {
+    box-shadow: none;
+    box-sizing: border-box;
+    transition-duration: 200ms;
+    border: 1px solid #edeae9;
+    border-radius: 8px;
+}
+.ProjectOverviewMembersSection-addMemberButtonPlusIcon {
+    align-items: center;
+    display: flex;
+    fill:#6d6e6f;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 33px;
+    justify-content: center;
+    margin-right: 8px;
+    width: 33px;
+    border: 1px dashed #6d6e6f;
+    border-radius: 50%;
+}
+
+.addMemberButtonTextContainer {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+}
+.Typography--h6.Typography {
+    font-size: 14px;
+    line-height: 20px;
+    border: none;
+}
+.ProjectOverviewMembersSection-addMemberButtonText {
+    color: #6d6e6f;
+}
+.Typography--fontWeightMedium {
+    font-weight: 500;
+}
+.Typography--colorWeak {
+    color: #6d6e6f;
+}
+.Typography {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.SubtleButtonCard.ThemeableInteractiveCardPresentation--isNotSelected.ThemeableInteractiveCardPresentation--isEnabled.ThemeableCardPresentation.ThemeableCardPresentation--isValid {
+    border-color: transparent;
+}
+.SubtleButtonCard.ThemeableCardPresentation {
+    border-radius: 6px;
+}
+.ThemeableInteractiveCardPresentation.ThemeableInteractiveCardPresentation--isEnabled {
+    cursor: pointer;
+}
+.ProjectOverviewMember {
+    display: flex;
+    border-radius: 6px;
+    padding: 8px;
+}
+.ThemeableInteractiveCardPresentation {
+    outline: none;
+}
+.ThemeableCardPresentation {
+    box-shadow: none;
+    box-sizing: border-box;
+    transition-duration: 200ms;
+    background: #fff;
+    border: 1px solid #edeae9;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ThemeableCardPresentation:hover {
+    background-color: #f5f6f8;
+}
+.ProjectOverviewMember-avatar {
+    align-items: center;
+    display: flex;
+    margin-right: 8px;
+    flex: 0 1 0%;
+}
+.AvatarPhoto--color3.AvatarPhoto {
+    background-color: #fc979a;
+    color: #1e1f21;
+}
+.Avatar {
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 0px 1px inset;
+    box-sizing: border-box;
+    color: rgb(255, 255, 255);
+    display: inline-flex;
+    justify-content: center;
+    position: relative;
+    vertical-align: top;
+    background: center/cover #cfcbcb;
+    border-radius: 50%;
+}
+.AvatarPhoto--large {
+    font-size: 14px;
+    height: 36px;
+    line-height: 36px;
+    min-width: 36px;
+    width: 36px;
+}
+.AvatarPhoto--default {
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 0px 1px inset;
+    box-sizing: border-box;
+    color: #1e1f21;
+    background: center/cover #c7c4c4;
+    border-radius: 50%;
+}
+.AvatarPhoto {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    position: relative;
+    vertical-align: top;
+}
+.Typography--overflowTruncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.Typography--colorDarkGray1 {
+    color: #6d6e6f;
+}
+.Typography {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.ProjectOverviewMember-downIcon {
+    align-items: center;
+    fill: #6d6e6f;
+    margin-left: 4px;
+    flex: 0 1 0%;
+}
+.MiniIcon {
+    height: 12px;
+    width: 12px;
+    flex: 0 0 auto;
+}
+.ProjectOverviewMembersSection-addMemberButtonTextContainer{
+    border: none;
+}
+.ProjectOverviewMember-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.Typography--s.Typography {
+    font-size: 12px;
+    margin-top: -10px;
+}
+.ProjectOverviewGoalsEmptyState {
+    display: flex;
+}
+.ProjectOverviewGoalsEmptyState-body {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 748px;
+    min-height: 160px;
+    min-width: 458px;
+    width: 100%;
+    border: 1px solid #edeae9;
+    border-radius: 8px;
+}
+.ProjectOverviewGoalsEmptyState-illustrationContainer {
+    display: flex;
+    justify-content: center;
+    min-width: 160px;
+    width: 160px;
+}
+.Illustration.Illustration--small.Illustration--spot {
+    min-width: 96px;
+    width: 96px;
+}
+.Illustration.Illustration--small {
+    height: 96px;
+    min-height: 96px;
+}
+.Illustration {
+    border-width: 0px;
+    border-style: initial;
+    border-color: initial;
+    border-image: initial;
+}
+.ProjectOverviewGoalsEmptyState-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 320px;
+    padding: 24px 12px 12px;
+}
+.ProjectOverviewGoalsEmptyState-addGoalButton {
+    margin-top: 12px;
+    min-height: 48px;
+    width: 100%;
+}
+.SubtleButton.SubtleButton--standardTheme.ThemeableRectangularButtonPresentation {
+    color: #6d6e6f;
+    fill: #6d6e6f;
+}
+.SubtleButton.SubtleButton--isCompact.ThemeableRectangularButtonPresentation--large {
+    padding: 0px 4px;
+}
+.SubtleButton.ThemeableRectangularButtonPresentation--large {
+    font-weight: 500;
+}
+.ThemeableRectangularButtonPresentation.ThemeableRectangularButtonPresentation--large {
+    font-size: 14px;
+    padding: 0px 12px;
+    border: none;
+}
+.ThemeableRectangularButtonPresentation.ThemeableRectangularButtonPresentation--large:hover {
+    background-color: #f5f6f8;
+    color: #3c3d3d;   
+    fill: #3c3d3d;   
+}
+.ThemeableRectangularButtonPresentation.ThemeableRectangularButtonPresentation--isEnabled {
+    cursor: pointer;
+}
+.ThemeableRectangularButtonPresentation {
+    align-items: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-shrink: 0;
+    justify-content: center;
+    transition-duration: 0.2s;
+    user-select: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: initial;
+    border-image: initial;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.ThemeableRectangularButtonPresentation-leftIcon {
+    margin-right: 4px;
+}
+.ProjectOverviewKeyResourcesEmptyState {
+    margin-left: auto;
+    margin-right: auto;
+}
+.ProjectOverviewKeyResourcesEmptyState {
+    display: flex;
+}
+.ProjectOverviewKeyResourcesEmptyState-withoutBrief {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 748px;
+    min-width: 458px;
+    width: 100%;
+    border: 1px solid #edeae9;
+    border-radius: 8px;
+}
+.ProjectOverviewKeyResourcesEmptyState-content--flagEnabled {
+    max-width: 320px;
+    padding: 12px;
+}
+.ProjectOverviewKeyResourcesEmptyState-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 350px;
+    padding: 12px 12px 12px 4px;
+}
+.ProjectOverviewKeyResourcesEmptyState-buttons{
+    display: flex;
+}
+.BriefIcon{
+    fill: gray !important;
+    height: 30px;
+}
+.GoalSimpleIcon{
+    height: 30px;
+}
+.ProjectOverviewActivityFeedPublishedReportSection-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.StopLightButton--isNotPressed.StopLightButton--green.ThemeableRectangularButtonPresentation {
+    background: #fff;
+    border-color: #cfcbcb;
+    color: #1e1f21;
+    fill: #58a182;
+}
+
+.ThemeableRectangularButtonPresentation.ThemeableRectangularButtonPresentation--large {
+    font-size: 14px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 12px;
+}
+.ThemeableRectangularButtonPresentation.ThemeableRectangularButtonPresentation--isEnabled {
+    cursor: pointer;
+}
+.ProjectOverviewActivityFeedPublishedReportSection-stopLightButton {
+    margin-right: 8px;
+}
+.ProjectOverviewActivityFeedPublishedReportSection-moreActionsDropdownButton, .ProjectOverviewActivityFeedPublishedReportSection-stopLightButton {
+    margin-bottom: 4px;
+    vertical-align: middle;
+}
+.ThemeableRectangularButtonPresentation {
+    align-items: center;
+    border: 1px solid;
+    border-radius: 6px;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-shrink: 0;
+    justify-content: center;
+    overflow: hidden;
+    transition-duration: .2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.ProgressStatusUpdateBadgeButton-statusContainer {
+    align-items: center;
+    display: flex;
+}
+.StatusBadge {
+    align-items: center;
+    display: flex;
+    color: #1e1f21;
+}
+.StatusBadge.StatusBadge--green .StatusBadge-dot {
+    background: #58a182;
+}
+.StatusBadge-dot {
+    border-radius: 6px;
+    display: inline-block;
+    flex: 0 0 auto;
+    height: 12px;
+    width: 12px;
+    margin-right: 6px;
+}
+.project-due-date-container{
+    margin-top: 30px;
+    display: flex;
+}
+.milestones-container{
+    margin-bottom: 10%;
+}
+/* .specific-project-menu-dropdown{
+    display: flex;
+    flex-direction: column;
+}
+.edit-remove-project-description{
+    border: 1px solid black;
+    position: relative;
+    top: 3em;
+} */
+.project-members-container:hover{
+    cursor: pointer;
+}
+.project-created-container{
+    display: flex;
+    margin-top: 12px;
+}
+.project-created-container-info-time-ago{
+    display: flex;
+}
+.ontrack:hover{
+    border: green;
+    background-color: rgb(238, 247, 238);
+}
+.badge-container {
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 6px;
+    display: inline-flex;
+    flex-shrink: 0;
+    justify-content: center;
+    margin: 12px 12px 12px 0;
+    padding: 5px;
+    background-color: #fff;
+}
+.badge-container-green:hover{
+    /* background-color: fade(#58a182,20%); */
+    background-color: rgba(224,244,236,255);
+    border: 1px solid #58a182;
+    cursor: pointer;
+}
+.badge-dot {
+    border-radius: 6px;
+    display: inline-block;
+    flex: 0 0 auto;
+    height: 12px;
+    width: 12px;
+    margin-right: 6px;
+}
+.green-dot{
+    background: #58a182;
+}
+.at-risk-dot{
+    background: #f1bd6c;
+}
+.badge-container-at-risk:hover{
+    background-color: #ffecda;
+    border: 1px solid #b58e53;
+    cursor: pointer;
+}
+.off-track-dot{
+    background: #de5f73;
+}
+.badge-container-off-track:hover{
+    background-color: #fcdadc;
+    border: 1px solid #e37281;
+    cursor: pointer;
+}
+.completed-dot{
+    background: rgb(43, 233, 43);
+}
+.badge-container-completed:hover{
+    background-color: #e4fcda;
+    border: 1px solid #46f594;
+    cursor: pointer;
+}
+.dropdown-status{
+    display: flex;
+    float: right;
+    margin-right: 5px;
+}
+.dropdown-role button{
+    background-color: transparent;
+    border: none;
+}
+.dropdown-role button:focus{
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.dropdown-role button:hover{
+    background-color: transparent;
+    border: none;
+}
+.dropdown-toggle:empty:after{
+    color: gray;
+}
+.project-column-specific-project{
+    display: flex;
+    flex-wrap: wrap;
+}
+.featuredItem-specific-project{
+    margin-top: 20px;
+}
+.specific-project-trash-container{
+    display: flex;
+    float: right;
+}
