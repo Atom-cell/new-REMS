@@ -22,6 +22,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddEmpModal from "./AddEmpModal";
 import io from "socket.io-client";
+import { baseURL } from "../Request";
 const socket = io.connect("http://localhost:8900");
 
 function Online() {
@@ -70,7 +71,7 @@ function EmpManage() {
 
   const getData = async () => {
     await axios
-      .get("http://localhost:5000/admin/allEmps", {
+      .get(`${baseURL}/admin/allEmps`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
@@ -107,7 +108,7 @@ function EmpManage() {
   };
 
   const deleteEmp = (id) => {
-    axios.delete(`http://localhost:5000/emp/deleteEmp/${id}`, {
+    axios.delete(`${baseURL}/emp/deleteEmp/${id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },

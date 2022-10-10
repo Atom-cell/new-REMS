@@ -2,9 +2,10 @@ import { MoreInfoContext } from "../Helper/Context";
 import axios from "axios";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
+import { Breadcrumb, Table } from "react-bootstrap";
 import { Avatar } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import { baseURL } from "../Request";
 
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -29,7 +30,7 @@ const TeamInfo = () => {
   const getEmpData = (id) => {
     if (role === "admin") {
       axios
-        .get(`http://localhost:5000/emp/getEmp/${id}`, {
+        .get(`${baseURL}/emp/getEmp/${id}`, {
           headers: {
             "x-access-token": localStorage.getItem("token"),
           },

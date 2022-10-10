@@ -8,6 +8,7 @@ import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import "./Team.css";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { confirmAlert } from "react-confirm-alert"; // Import
 
 function stringToColor(string) {
@@ -66,11 +67,7 @@ const AdminTeam = ({ teams, confirm }) => {
             console.log("team: ", p);
             if (p.teamLead !== null) {
               return (
-                <div
-                  key={index}
-                  className="team_show_div"
-                  onClick={() => navigate("/teamInfo", { state: { team: p } })}
-                >
+                <div key={index} className="team_show_div">
                   <div className="delete_div">
                     <IconButton
                       sx={{ margin: 0, padding: 0 }}
@@ -88,6 +85,16 @@ const AdminTeam = ({ teams, confirm }) => {
                   <p style={{ color: "grey", marginTop: "1em" }}>
                     {p.teamDesp}
                   </p>
+                  <span>
+                    <IconButton
+                      sx={{ margin: 0, padding: 0 }}
+                      onClick={() =>
+                        navigate("/teamInfo", { state: { team: p } })
+                      }
+                    >
+                      <ArrowForwardIcon sx={{ marginLeft: "-1em" }} />
+                    </IconButton>
+                  </span>
                 </div>
               );
             }

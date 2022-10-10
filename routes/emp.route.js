@@ -297,8 +297,8 @@ router.post("/login", async (req, res) => {
   };
 
   let d = new Date();
-  let present = false;
-  // d.toISOString().split("T")[0];
+  let present = true;
+
   console.log("DATE: ", fixTimezoneOffset(d));
   if (Euser) {
     if (await bcrypt.compare(req.body.password, Euser.password)) {
@@ -330,7 +330,7 @@ router.post("/login", async (req, res) => {
           { email: email },
           {
             $addToSet: {
-              attendance: fixTimezoneOffset(d),
+              attendance: d,
             },
           }
         )
@@ -344,7 +344,8 @@ router.post("/login", async (req, res) => {
     }
   }
 
-  ///////////// update desktop
+  /////////////
+  ////////////
   if (Euser) {
     if (Euser.active) {
       if (await bcrypt.compare(req.body.password, Euser.password)) {

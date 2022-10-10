@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import "./Team.css";
 import {
@@ -147,6 +148,7 @@ const CreateTeam = () => {
         .catch(function (error) {
           console.log(error);
         });
+      // toast.info("Team Created Successfully")
       navigate("/team");
     } else {
       alert("Fill all the fields");

@@ -6,6 +6,8 @@ import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import "./Team.css";
 import { confirmAlert } from "react-confirm-alert"; // Import
+import { baseURL } from "../Request";
+import { toast } from "react-toastify";
 
 function stringToColor(string) {
   let hash = 0;
@@ -63,7 +65,7 @@ const Teams = () => {
   //for admin, his created teams will be shown
   const getAdminData = () => {
     axios
-      .get("http://localhost:5000/team/getTeams", {
+      .get(`${baseURL}/team/getTeams`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
@@ -78,7 +80,7 @@ const Teams = () => {
   //for emp when he logs, his teams will be shown
   const getEmpData = (id) => {
     axios
-      .get(`http://localhost:5000/team/getMyTeam/${id}`, {
+      .get(`${baseURL}/team/getMyTeam/${id}`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
@@ -106,12 +108,12 @@ const Teams = () => {
   };
 
   const deleteTeam = (id) => {
-    axios.delete(`http://localhost:5000/team/deleteTeam/${id}`, {
+    axios.delete(`${baseURL}/team/deleteTeam/${id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     });
-
+    //toast.info("Team deleted!");
     getAdminData();
   };
   return (

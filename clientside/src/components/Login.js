@@ -13,6 +13,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import axios from "axios";
 import LoginImg from "../img/Login.gif";
 import AnimatedRoutes from "../AnimatedRoutes";
+import { baseURL } from "../Request";
 
 function Login() {
   React.useEffect(() => {
@@ -56,7 +57,7 @@ function Login() {
       if (!emailE.error && !passwordE.error) {
         //alert("dd");
         await axios
-          .post("http://localhost:5000/emp/login", {
+          .post(`${baseURL}/emp/login`, {
             email: email,
             password: password,
           })
