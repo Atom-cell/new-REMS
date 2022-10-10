@@ -22,7 +22,7 @@ const EditModal = ({
           <div>
             <input
               type="text"
-              placeholder="Add Meet Title"
+              placeholder="Add Event Title"
               value={event.title}
               onChange={(e) => setEvent({ ...event, title: e.target.value })}
               className="inputTextFields"

@@ -84,26 +84,27 @@ const MyCalendar = ({ user }) => {
   const addNewEvent = (newEvent) => {
     // console.log(newEvent);
     // set event category default value if category is not selected
-    if (!newEvent.category) {
-      newEvent.category = "Goal";
+    if (newEvent.title && newEvent.start && newEvent.category) {
+      // const formatted = moment(newEvent.start).toDate();
+      // console.log(newEvent.start);
+      var myObj = {
+        // _id: Math.floor(Math.random() * 10000),
+        madeBy: user._id,
+        title: newEvent.title,
+        startDate: newEvent.start,
+        category: newEvent.category,
+      };
+      axios
+        .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
+        .then((res) => {
+          // console.log("Event Added: " + res.data);
+          toast.success(`${res.data.title} Added`);
+        });
+      setNewEvent({ title: "", start: null });
+      setModalOpen(false);
+    } else {
+      alert("Please fill all required fields");
     }
-    // const formatted = moment(newEvent.start).toDate();
-    // console.log(newEvent.start);
-    var myObj = {
-      // _id: Math.floor(Math.random() * 10000),
-      madeBy: user._id,
-      title: newEvent.title,
-      startDate: newEvent.start,
-      category: newEvent.category,
-    };
-    axios
-      .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
-      .then((res) => {
-        // console.log("Event Added: " + res.data);
-        toast.success(`${res.data.title} Added`);
-      });
-    setNewEvent({ title: "", start: null });
-    setModalOpen(false);
   };
 
   // show that category that is selected on filter

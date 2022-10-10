@@ -132,6 +132,7 @@ function CardInfo(props) {
             defaultValue={values.title}
             text={values.title}
             placeholder="Enter Title"
+            type={"text"}
             onSubmit={updateTitle}
           />
         </div>
@@ -145,6 +146,7 @@ function CardInfo(props) {
             defaultValue={values.desc}
             text={values.desc || "Add a Description"}
             placeholder="Enter description"
+            type={"text"}
             onSubmit={updateDesc}
           />
         </div>
@@ -191,6 +193,7 @@ function CardInfo(props) {
           <Editable
             text="Add Label"
             placeholder="Enter label text"
+            type={"text"}
             onSubmit={(value) =>
               addLabel({ color: selectedColor, text: value })
             }
@@ -228,6 +231,7 @@ function CardInfo(props) {
           <Editable
             text={"Add a Task"}
             placeholder="Enter task"
+            type={"text"}
             onSubmit={addTask}
           />
         </div>

@@ -7,7 +7,9 @@ import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
 import axios from "axios";
 import EmployeesTable from "./EmployeesTable";
+import { useNavigate } from "react-router-dom";
 const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
+  const navigate = useNavigate();
   const [check, setCheck] = useState();
   const [fileName, setFileName] = useState();
   //   const [type, setType] = useState();
@@ -41,42 +43,38 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
 
   const handleCreateProject = () => {
     // console.log(newProject);
-    if (!check) {
-      toast.error("Please Select a Pdf file");
-    } else if (
-      newProject.projectName &&
-      newProject.projectDescription &&
-      newProject.projectCost &&
-      milestones100
-    ) {
+    // if (!check) {
+    //   toast.error("Please Select a Pdf file");
+    // } else
+    if (newProject.projectName && newProject.projectCost && milestones100) {
       // create new project
       const myObj = {
         projectName: newProject.projectName,
-        projectDescription: newProject.projectDescription,
+        // projectDescription: newProject.projectDescription,
         projectCost: newProject.projectCost,
         projectPriority: newProject.priority,
-        projectAssignedBy: JSON.parse(localStorage.getItem("user")).username,
-        projectAssignedTo: newProject.assignTo,
-        projectAssignedToId: newProject.assignToId,
-        helpingMaterial: check,
-        fileName: fileName,
-        hoursWorked: "3",
-        hoursWorkedOn: "false",
+        projectAssignedBy: JSON.parse(localStorage.getItem("user"))._id,
+        // projectAssignedTo: newProject.assignTo,
+        // projectAssignedToId: newProject.assignToId,
+        // helpingMaterial: check,
+        // fileName: fileName,
+        // hoursWorked: "3",
+        // hoursWorkedOn: "false",
         dueDate: milestones100,
-        milestones: [
-          {
-            completionPercentage: "30%",
-            dueDate: milestones30,
-          },
-          {
-            completionPercentage: "60%",
-            dueDate: milestones60,
-          },
-          {
-            completionPercentage: "100%",
-            dueDate: milestones100,
-          },
-        ],
+        // milestones: [
+        //   {
+        //     completionPercentage: "30%",
+        //     dueDate: milestones30,
+        //   },
+        //   {
+        //     completionPercentage: "60%",
+        //     dueDate: milestones60,
+        //   },
+        //   {
+        //     completionPercentage: "100%",
+        //     dueDate: milestones100,
+        //   },
+        // ],
       };
       if (!newProject.priority) {
         myObj.projectPriority = "Normal";
@@ -86,8 +84,13 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
       axios
         .post("/myProjects/addNewProject", myObj)
         .then((res) => {
-          console.log(res);
-          toast.info(`${res.data.projectName} Created`);
+          // console.log(res.data);
+          toast.success(`${res.data.projectName} Created`);
+          navigate(`/myproject/${res.data._id}`, {
+            state: {
+              project: res.data,
+            },
+          });
           setNewProject({
             projectName: "",
             projectDescription: "",
@@ -136,7 +139,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             }
             className="inputTextFields"
           />
-          <input
+          {/* <input
             type="text"
             placeholder="Enter Project Description"
             value={newProject.projectDescription}
@@ -147,10 +150,10 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
               })
             }
             className="inputTextFields"
-          />
+          /> */}
           <input
             type="number"
-            placeholder="Enter Project Cost"
+            placeholder="Enter Project Cost in $"
             value={newProject.projectCost}
             onChange={(e) =>
               setNewProject({
@@ -160,8 +163,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             }
             className="inputTextFields"
           />
-          {/* Milestones */}
-          <DatePicker
+          {/* <DatePicker
             placeholderText="30% due Date"
             selected={milestones30}
             onChange={(start) => setMilestones30(start)}
@@ -179,6 +181,14 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
           />
           <DatePicker
             placeholderText="100% due Date"
+            selected={milestones100}
+            onChange={(start) => setMilestones100(start)}
+            dateFormat="MM/dd/yyyy"
+            className="inputTextFields"
+            minDate={new Date()}
+          /> */}
+          <DatePicker
+            placeholderText="Due Date"
             selected={milestones100}
             onChange={(start) => setMilestones100(start)}
             dateFormat="MM/dd/yyyy"
@@ -205,7 +215,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             <option value="Important">Important</option>
             <option value="Critical">Critical</option>
           </select>
-          {newProject.assignTo && (
+          {/* {newProject.assignTo && (
             <input
               type="text"
               placeholder="Assign Project"
@@ -213,15 +223,15 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
               editable={false}
               className="inputTextFields"
             />
-          )}
+          )} */}
 
-          <div style={{ margin: "10px 0 10px 0" }}>
+          {/* <div style={{ margin: "10px 0 10px 0" }}>
             <Button variant="primary" onClick={handleShoww}>
               Assign Project To
             </Button>
-          </div>
+          </div> */}
 
-          <Modal show={showw} onHide={handleClosee}>
+          {/* <Modal show={showw} onHide={handleClosee}>
             <Modal.Header closeButton>
               <Modal.Title>My Employees</Modal.Title>
             </Modal.Header>
@@ -233,21 +243,10 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
                 handleClosee={handleClosee}
               />
             </Modal.Body>
-          </Modal>
-          <div>
+          </Modal> */}
+          {/* <div>
             <FileBase64 multiple={false} onDone={getFiles} />
-            {/* {check && type.includes("image") && (
-              <img
-                src={check}
-                alt="No Image"
-                style={{
-                  width: "100px",
-                  height: "60px",
-                  marginTop: "5px",
-                }}
-              />
-            )} */}
-          </div>
+          </div> */}
         </div>
       </Modal.Body>
       <Modal.Footer>

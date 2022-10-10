@@ -24,7 +24,7 @@ const AddCalendarEvent = ({
         <div>
           <input
             type="text"
-            placeholder="Add Meet Title"
+            placeholder="Add Event Title"
             value={newEvent?.title}
             onChange={(e) =>
               setNewEvent({ ...newEvent, title: e.target.value })

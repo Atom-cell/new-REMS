@@ -14,6 +14,7 @@ var myCalendarSchema = mongoose.Schema({
   category: {
     type: String,
   },
+  projectId: { type: mongoose.Schema.Types.ObjectId, ref: "myProject" },
 });
 
 module.exports = myCal = mongoose.model("myCalendar", myCalendarSchema);

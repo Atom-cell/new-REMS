@@ -287,6 +287,7 @@ const Boards = ({ user }) => {
           defaultValue={completeKanban?.title}
           text={completeKanban?.title}
           placeholder="Enter Title"
+          type={"text"}
           onSubmit={updateTitle}
         />
         <div
@@ -344,6 +345,7 @@ const Boards = ({ user }) => {
               placeholder="Enter List Name"
               text="Add Another List"
               buttonText="Add List"
+              type={"text"}
               onSubmit={addboardHandler}
             />
           </div>

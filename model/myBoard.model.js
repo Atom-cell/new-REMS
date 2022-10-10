@@ -29,7 +29,8 @@ var myBoardSchema = mongoose.Schema({
       ],
     },
   ],
-  sharewith: [String],
+  sharewith: [{ type: mongoose.Schema.Types.ObjectId, ref: "employee" }],
+  projectId: { type: mongoose.Schema.Types.ObjectId, ref: "myProject" },
 });
 
 module.exports = mongoose.model("myBoard", myBoardSchema);

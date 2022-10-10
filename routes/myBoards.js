@@ -17,6 +17,14 @@ router.get("/specificboard", (req, res) => {
   });
 });
 
+// get project boards
+router.get("/getprojectboard", (req, res) => {
+  myBoard.find({ projectId: req.query.projectId }).exec((err, rec) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(rec);
+  });
+});
+
 router.get("/onlymyboards", (req, res) => {
   // console.log(req.query.empId);
   myBoard.find({ empId: req.query.empId }).exec((err, rec) => {
@@ -55,6 +63,26 @@ router.post("/createboard", (req, res) => {
         cards: [],
       },
     ],
+  });
+  newBoard.save((err) => {
+    if (err) res.status(500).send(err);
+    res.status(200).send(newBoard);
+  });
+});
+
+router.post("/createboardwithproject", (req, res) => {
+  //   console.log(req.body.userId);
+  var newBoard = new myBoard({
+    empId: req.body.userId,
+    title: "Title Not Set",
+    color: "#fff",
+    boards: [
+      {
+        title: "To-Do",
+        cards: [],
+      },
+    ],
+    projectId: req.body.projectId,
   });
   newBoard.save((err) => {
     if (err) res.status(500).send(err);

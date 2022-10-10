@@ -24,13 +24,28 @@ function Editable(props) {
           className={`editable_edit ${props.editClass ? props.editClass : ""}`}
           onSubmit={submission}
         >
-          <input
-            type="text"
-            value={inputText}
-            placeholder={props.placeholder || props.text}
-            onChange={(event) => setInputText(event.target.value)}
-            autoFocus
-          />
+          {props.type == "textarea" ? (
+            <textarea
+              name=""
+              id=""
+              cols="70"
+              rows="3"
+              placeholder={props.placeholder}
+            ></textarea>
+          ) : (
+            <input
+              type={props.type}
+              value={inputText}
+              placeholder={props.placeholder || props.text}
+              onChange={(event) => setInputText(event.target.value)}
+              autoFocus
+              min={
+                props.type == "date"
+                  ? new Date().toISOString().split("T")[0]
+                  : ""
+              }
+            />
+          )}
           <div className="editable_edit_footer">
             <button type="submit">{props.buttonText || "Add"}</button>
             <X onClick={() => setIsEditable(false)} className="closeIcon" />
@@ -43,7 +58,7 @@ function Editable(props) {
           }`}
           onClick={() => setIsEditable(true)}
         >
-          {props.text}
+          {props.text ? props.text : props.placeholder}
         </p>
       )}
     </div>

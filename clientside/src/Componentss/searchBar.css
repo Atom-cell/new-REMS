@@ -77,3 +77,6 @@ input:focus {
 #clearBtn {
     cursor: pointer;
 }
+.searchbar-one-line-container{
+    display: flex;
+}
