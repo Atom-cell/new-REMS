@@ -75,11 +75,22 @@ const ProjectMembers = ({
   const fetchData = async () => {
     // get the data from the api
     var userId = JSON.parse(localStorage.getItem("user"))._id;
-    const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
-      params: { _id: userId },
-    });
-    var withoutMe = res.data.filter((emp) => emp._id != userId);
-    setTableEmployees(withoutMe);
+    if (localStorage.getItem("role") == "Employee") {
+      const res = await axios.get(
+        "http://localhost:5000/emp/getcompanyemployees",
+        {
+          params: { _id: userId },
+        }
+      );
+      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      setTableEmployees(withoutMe);
+    } else {
+      const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
+        params: { _id: userId },
+      });
+      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      setTableEmployees(withoutMe);
+    }
   };
 
   useEffect(() => {

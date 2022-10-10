@@ -49,7 +49,7 @@ const SpecificProject = ({ user }) => {
   const updateProjectName = (value) => {
     axios
       .put("/myprojects/updateprojectname", {
-        projectId: myProject._id,
+        projectId: location.state.project._id,
         name: value,
       })
       .then((res) => {

@@ -48,12 +48,12 @@ const ProjectCard = ({
   //   }
   // }, [project]);
 
-  const { name, setName } = React.useContext(ProjectNameContext);
-  const { timer, setTimer } = React.useContext(TimerContext);
+  // const { name, setName } = React.useContext(ProjectNameContext);
+  // const { timer, setTimer } = React.useContext(TimerContext);
 
   return (
     <div className="project-column">
-      {volunteer == false && (
+      {/* {volunteer == false && (
         <Button
           className="submitbtn"
           style={{ float: "right", marginTop: "25px", marginRight: "50px" }}
@@ -61,14 +61,14 @@ const ProjectCard = ({
         >
           Volunteer
         </Button>
-      )}
+      )} */}
       <div
         className="featuredItem"
         onClick={() => {
-          if (!timer) {
-            let a = { id: project._id, name: projectName };
-            setName(a);
-          }
+          // if (!timer) {
+          //   let a = { id: project._id, name: projectName };
+          //   setName(a);
+          // }
           setProjects(project);
         }}
       >

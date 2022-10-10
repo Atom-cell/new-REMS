@@ -90,21 +90,16 @@ router.post("/createboardwithproject", (req, res) => {
   });
 });
 
-router.put("/updateboard", (req, res) => {
-  // console.log("update board");
-  // console.log(req.body);
-  //   console.log(req.body.boards);
-  // var updatedObj = new myBoard({
-  //   _id: req.body.bid,
-  //   // empId: req.body.uid,
-  //   title: req.body.title,
-  //   boards: req.body.boards,
-  // });
+router.post("/updateboard", (req, res) => {
+  console.log("update board");
+  // console.log(req.body.boards);
   myBoard.findOneAndUpdate(
     { _id: req.body.bid },
     { $set: { boards: req.body.boards } },
     { new: true },
     (err, rec) => {
+      console.log("hrl");
+      console.log(rec);
       if (err) res.status(500).send(err);
       res.status(200).send(rec);
     }

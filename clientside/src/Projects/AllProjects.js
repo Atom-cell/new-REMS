@@ -230,16 +230,16 @@ const AllProjects = ({ user }) => {
 
   const fetchData = async () => {
     if (user.role == "Employee") {
-      const res = await axios.get("/myProjects", {
+      const res = await axios.get("/myProjects/employeeprojects", {
         params: { userId: user._id },
       });
-      // console.log(res.data);
+      console.log(res.data);
       setProjects(res.data);
     } else {
       const res = await axios.get("/myProjects/organizationprojects", {
         params: { _id: user._id },
       });
-      // console.log(res.data);
+      console.log(res.data);
       setProjects(res.data);
     }
   };
@@ -303,35 +303,41 @@ const AllProjects = ({ user }) => {
           )}
           <div className="allProjects">
             {projects?.map((project, index) => {
-              if (
-                role == "Employee" &&
-                user._id == project.projectAssignedToId
-              ) {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                    role={role}
-                    userEmail={user.email}
-                  />
-                );
-              } else if (role == "admin") {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                  />
-                );
-              } else if (!project.projectAssignedTo) {
-                return (
-                  <ProjectCard
-                    project={project}
-                    setProjects={handleClickOnProject}
-                    volunteer={false}
-                    handleVolunteerClick={handleVolunteerClick}
-                  />
-                );
-              }
+              return (
+                <ProjectCard
+                  project={project}
+                  setProjects={handleClickOnProject}
+                />
+              );
+              // if (
+              //   role == "Employee" &&
+              //   user._id == project.projectAssignedToId
+              // ) {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //       role={role}
+              //       userEmail={user.email}
+              //     />
+              //   );
+              // } else if (role == "admin") {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //     />
+              //   );
+              // } else if (!project.projectAssignedTo) {
+              //   return (
+              //     <ProjectCard
+              //       project={project}
+              //       setProjects={handleClickOnProject}
+              //       volunteer={false}
+              //       handleVolunteerClick={handleVolunteerClick}
+              //     />
+              //   );
+              // }
             })}
           </div>
 

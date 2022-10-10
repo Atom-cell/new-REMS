@@ -234,9 +234,10 @@ const Boards = ({ user }) => {
     if (boards?.length > 0) {
       // update using current params id
       // console.log(boards);
-      // console.log(completeKanban);
+      console.log("completeKanban");
+      console.log(boards);
       axios
-        .put("/myboards/updateboard", {
+        .post("/myboards/updateboard", {
           bid: bid,
           // uid: user._id,
           boards: boards,

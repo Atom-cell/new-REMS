@@ -36,7 +36,6 @@ function Card(props) {
 
   return (
     <>
-      {console.log(props.card)}
       {showModal && (
         <CardInfo
           onClose={() => setShowModal(false)}
@@ -86,7 +85,6 @@ function Card(props) {
               {formatDate(date)}
             </p>
           )}
-          {console.log(tasks)}
           {tasks && tasks?.length > 0 && (
             <p className="card_footer_item">
               {console.log(tasks)}

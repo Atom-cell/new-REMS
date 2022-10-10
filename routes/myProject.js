@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var myProject = require("../model/myProject.model");
 var Admin = require("../model/Admin.model");
+var employee = require("../model/Emp.model");
 const nodemailer = require("nodemailer");
 
 router.get("/getmyproject", (req, res) => {
@@ -39,6 +40,18 @@ router.get("/organizationprojects", (req, res, next) => {
     if (err) res.status(500).json(err);
     res.status(200).json(rec);
   });
+});
+
+// Get all Projects for an employee
+router.get("/employeeprojects", (req, res, next) => {
+  // console.log(req.query);
+  myProject.find(
+    { projectAssignedTo: { $in: req.query.userId } },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
 });
 
 // Get Completed Projects
@@ -323,12 +336,19 @@ router.put("/updateprojectstatus", (req, res) => {
 });
 
 router.post("/updateroles", (req, res) => {
-  console.log(req.body.myObj.type);
+  console.log(req.body);
   // "bookmarks.title": { $ne: "new title" }
   myProject
     .findOneAndUpdate(
       { _id: req.body.projectId },
-      { $set: { projectroles: req.body.myObj } },
+      {
+        $push: {
+          projectroles: {
+            type: req.body.myObj.type,
+            employeeId: req.body.myObj.id,
+          },
+        },
+      },
       { new: true }
     )
     .exec((err, rec) => {
