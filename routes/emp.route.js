@@ -72,6 +72,13 @@ router.get("/", (req, res, next) => {
   });
 });
 
+router.get("/getemployeeinformation", (req, res) => {
+  Emp.find({ _id: req.query._id }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    res.status(200).json(rec);
+  });
+});
+
 router.get("/getcompanyemployees", (req, res) => {
   // first find admin of the respective employee
   // console.log(req.query._id);

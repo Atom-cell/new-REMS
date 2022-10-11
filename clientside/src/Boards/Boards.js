@@ -70,17 +70,21 @@ const Boards = ({ user }) => {
 
   const addCardHandler = (id, title) => {
     console.log(title);
+    console.log(id);
     const index = boards.findIndex((item) => item._id === id);
+    console.log("index");
+    console.log(index);
     if (index < 0) return;
 
     const tempBoards = [...boards];
     tempBoards[index].cards.push({
-      _id: Date.now() + Math.random() * 2,
+      // _id: Date.now() + Math.random() * 2,
       title,
       labels: [],
       date: "",
       tasks: [],
     });
+    console.log(tempBoards);
     setBoards(tempBoards);
   };
 
@@ -184,7 +188,6 @@ const Boards = ({ user }) => {
   const updateCard = (bid, cid, card) => {
     // console.log(bid);
     // console.log(cid);
-    // console.log(boards);
     const index = boards.findIndex((item) => item._id === bid);
     if (index < 0) return;
 
@@ -197,9 +200,12 @@ const Boards = ({ user }) => {
     if (cardIndex < 0) return;
 
     tempBoards[index].cards[cardIndex] = card;
-    // console.log(tempBoards);
 
     setBoards(tempBoards);
+  };
+
+  const updateCardAssignedTo = (bid, cid, card) => {
+    console.log(card);
   };
 
   const updateTitle = (value) => {
@@ -233,17 +239,17 @@ const Boards = ({ user }) => {
     // console.log(boards);
     if (boards?.length > 0) {
       // update using current params id
-      // console.log(boards);
-      console.log("completeKanban");
       console.log(boards);
+      // console.log("completeKanban");
+      // console.log(boards);
       axios
         .post("/myboards/updateboard", {
           bid: bid,
           // uid: user._id,
           boards: boards,
         })
-        // .then((rec) => console.log(rec.data))
-        .catch((err) => console.log(err));
+        .then((rec) => console.log(rec.data))
+        .catch((err) => console.log(err + "Boards 252"));
     }
   }, [boards]);
 
@@ -259,7 +265,7 @@ const Boards = ({ user }) => {
           boards: boards,
         })
         // .then((rec) => console.log(rec.data))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err + "Boards 268"));
     }
   }, [completeKanban]);
 
@@ -337,6 +343,7 @@ const Boards = ({ user }) => {
               dragEnteredBoard={dragEnteredBoard}
               dragEndedBoard={dragEndedBoard}
               updateBoardTitle={updateBoardTitle}
+              updateCardAssignedTo={updateCardAssignedTo}
             />
           ))}
           <div className="app_boards_last">

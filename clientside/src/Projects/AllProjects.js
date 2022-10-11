@@ -175,7 +175,7 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category == "Sort By Priority") {
       axios
-        .get("/myprojects//organizationprojects", {
+        .get("/myprojects/organizationprojects", {
           params: { name: user.username },
         })
         .then((rec) => {

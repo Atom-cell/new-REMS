@@ -25,6 +25,7 @@ var myBoardSchema = mongoose.Schema({
               completed: Boolean,
             },
           ],
+          assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
         },
       ],
     },

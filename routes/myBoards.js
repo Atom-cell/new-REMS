@@ -98,8 +98,47 @@ router.post("/updateboard", (req, res) => {
     { $set: { boards: req.body.boards } },
     { new: true },
     (err, rec) => {
-      console.log("hrl");
-      console.log(rec);
+      // console.log("hrl");
+      // console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+// assign task
+router.post("/assigntask", async (req, res) => {
+  console.log("assign task");
+  console.log(req.body.emp);
+  console.log(req.body.card._id);
+  // const tempBoard = await myBoard.findOneAndUpdate(
+  //   { _id: req.body.bid },
+  //   { $set: { "boards.$[e1].cards.$[e2].desc": "req.body.card" } },
+  //   {
+  //     arrayFilters: [
+  //       { "e1._id": req.body.boardId },
+  //       { "e2._id": req.body.card._id },
+  //     ],
+  //   }
+  // );
+  myBoard.findOneAndUpdate(
+    { _id: req.body.bid },
+    {
+      $set: {
+        "boards.$.cards.$[j].desc": "req.body.emp",
+      },
+    },
+    {
+      arrayFilters: [
+        {
+          "j._id": {
+            $eq: req.body.card._id,
+          },
+        },
+      ],
+    },
+    (err, rec) => {
+      // console.log("hrl");
+      // console.log(rec.boards.cards);
       if (err) res.status(500).send(err);
       res.status(200).send(rec);
     }
