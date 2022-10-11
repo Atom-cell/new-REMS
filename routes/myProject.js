@@ -337,25 +337,26 @@ router.put("/updateprojectstatus", (req, res) => {
 
 router.post("/updateroles", (req, res) => {
   console.log(req.body);
-  // "bookmarks.title": { $ne: "new title" }
-  myProject
-    .findOneAndUpdate(
-      { _id: req.body.projectId },
-      {
-        $push: {
-          projectroles: {
-            type: req.body.myObj.type,
-            employeeId: req.body.myObj.id,
-          },
+  // {
+  //   projectId: '6345482bc36d090ea4ceab2c',
+  //   myObj: { type: 'projectlead', id: '628600c5bfaa78c7d2eb29d4' }
+  // }
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    {
+      $push: {
+        projectroles: {
+          type: "projectlead",
+          employeeId: req.body.myObj.id,
         },
       },
-      { new: true }
-    )
-    .exec((err, rec) => {
+    },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
       console.log(rec);
-      if (err) res.status(500).send(err);
-      res.status(200).send(rec);
-    });
+      res.status(200).json(rec);
+    }
+  );
 });
 
 router.post("/addmemberstoproject", (req, res) => {
@@ -368,6 +369,42 @@ router.post("/addmemberstoproject", (req, res) => {
       console.log(rec);
       if (err) res.status(500).send(err);
       res.status(200).send(rec);
+    }
+  );
+});
+
+router.post("/uploadfile", (req, res) => {
+  console.log("hell");
+  console.log(req.body.projectId);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    {
+      $push: {
+        projectFiles: {
+          file: req.body.file.base64,
+          fileName: req.body.file.name,
+        },
+      },
+    },
+    { new: true },
+    (err, rec) => {
+      // console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+// delete an event
+router.delete("/deleteprojectfile", function (req, res, next) {
+  // console.log(req.body._id);
+  myProject.findOneAndUpdate(
+    { _id: req.body._id },
+    { $pull: { projectFiles: { _id: req.body.fileId } } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
     }
   );
 });
