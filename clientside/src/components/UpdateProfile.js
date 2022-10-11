@@ -39,6 +39,7 @@ function UpdateProfile() {
       username &&
       /[0-9]{4}-[0-9]{7}/.test(contact)
     ) {
+      console.log("send Update req ");
       axios
         .put("http://localhost:5000/emp/update", {
           email: localStorage.getItem("email"),
@@ -63,14 +64,17 @@ function UpdateProfile() {
       setpasswordE({ error: false, msg: "" });
       setcontactE({ error: false, msg: "" });
 
-      localStorage.clear();
+      logout();
 
       setTimeout(function () {
-        navigate("/");
+        window.location.href = "/home";
       }, 2000);
     }
   };
 
+  const logout = () => {
+    localStorage.clear();
+  };
   const checkContact = () => {
     if (/[0-9]{4}-[0-9]{7}/.test(contact)) {
       setcontactE({ error: false, msg: "" });

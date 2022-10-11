@@ -1,5 +1,6 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar, Divider, Tooltip } from "@mui/material";
 import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
@@ -46,6 +47,7 @@ function TableDate({ date }) {
   return <h4 style={{ fontWeight: "bold" }}>{date}</h4>;
 }
 function MoreInfo() {
+  const navigate = useNavigate();
   const [allEvents, setAllEvents] = React.useState([]);
   const [value, onChange] = React.useState(new Date());
 
@@ -174,7 +176,7 @@ function MoreInfo() {
   };
 
   const openBase64InNewTab = (data, mimeType) => {
-    var byteCharacters = atob(data);
+    var byteCharacters = window.atob(data);
     var byteNumbers = new Array(byteCharacters.length);
     for (var i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -277,7 +279,8 @@ function MoreInfo() {
                     if (
                       allEvents.find(
                         (x) =>
-                          x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
+                          x.slice(0, 10) ===
+                          fixTimezoneOffset(date).slice(0, 10)
                       )
                     ) {
                       // console.log(
@@ -350,7 +353,10 @@ function MoreInfo() {
                     {team.map((t, index) => {
                       return (
                         <Tooltip key={index} title={t.teamName}>
-                          <Avatar {...stringAvatar(t.teamName)} />
+                          <Avatar
+                            {...stringAvatar(t.teamName)}
+                            onClick={() => navigate("/team")}
+                          />
                         </Tooltip>
                       );
                     })}
@@ -449,7 +455,7 @@ function MoreInfo() {
                         <img
                           style={{ cursor: "pointer", width: "100%" }}
                           src={`data:image/jpeg;base64,${i.img}`}
-                          onClick={() => openBase64InNewTab(i, "image/png")}
+                          //onClick={() => openBase64InNewTab(i, "image/png")}
                         />
                       </Carousel.Item>
                     );
@@ -473,7 +479,8 @@ function MoreInfo() {
                   <thead>
                     <tr>
                       <th style={{ width: "20%" }}>Date</th>
-                      <th style={{ width: "20%" }}>Time</th>
+                      <th style={{ width: "20%" }}>Total Time</th>
+                      <th>Day Time</th>
                       <th>Time</th>
                     </tr>
                   </thead>
@@ -487,11 +494,7 @@ function MoreInfo() {
                               {time.date.slice(0, 10)}
                             </td>
                             <td style={{ width: "20%" }}>
-                              {time.activetime.Hours +
-                                " : " +
-                                time.activetime.Minutes +
-                                " : " +
-                                time.activetime.Seconds}
+                              {timeConvert(time.activetime.Seconds)}
                             </td>
                             <td>
                               {dayTime.map((day) => {
@@ -508,7 +511,9 @@ function MoreInfo() {
                                   );
                                 });
                               })}
-                              <Divider />
+                              {/* <Divider /> */}
+                            </td>
+                            <td>
                               {dayTime.map((day) => {
                                 return day.active.map((d) => {
                                   return (
@@ -548,8 +553,9 @@ function MoreInfo() {
                   <thead>
                     <tr>
                       <th style={{ width: "20%" }}>Date</th>
-                      <th style={{ width: "20%" }}>Time</th>
-                      <th>Time</th>
+                      <th style={{ width: "20%" }}>Total Time</th>
+                      <th>Day Time</th>
+                      <th>Time </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -562,11 +568,7 @@ function MoreInfo() {
                               {time.date.slice(0, 10)}
                             </td>
                             <td style={{ width: "20%" }}>
-                              {time.idletime.Hours +
-                                " : " +
-                                time.idletime.Minutes +
-                                " : " +
-                                time.idletime.Seconds}
+                              {timeConvert(time.idletime.Seconds)}
                             </td>
                             <td>
                               {dayTime.map((day) => {
@@ -583,7 +585,9 @@ function MoreInfo() {
                                   );
                                 });
                               })}
-                              <Divider />
+                              {/* <Divider /> */}
+                            </td>
+                            <td>
                               {dayTime.map((day) => {
                                 return day.idle.map((d) => {
                                   return (
@@ -643,40 +647,41 @@ function MoreInfo() {
                             <td></td>
                           </tr>
                           {/* FOR DATA */}
-                          <tr key={index}>
-                            <td>
-                              {timeConvert(value) == "00:00:00" ? "" : index}
-                            </td>
-                            <td>
-                              {key != "" ? (
-                                key
-                              ) : (
-                                <TableDate date={time.date.slice(0, 10)} />
-                              )}
-                            </td>
-                            <td>
-                              {timeConvert(value) == "00:00:00"
-                                ? ""
-                                : timeConvert(value)}
-                            </td>
-                          </tr>
+                          {key !== "" ? (
+                            <tr key={index}>
+                              <td>
+                                {timeConvert(value) === "00:00:00" ? "" : index}
+                              </td>
+                              <td>
+                                {
+                                  key !== "" ? key : null
+                                  // <TableDate date={time.date.slice(0, 10)} />
+                                }
+                              </td>
+                              <td>
+                                {timeConvert(value) === "00:00:00"
+                                  ? ""
+                                  : timeConvert(value)}
+                              </td>
+                            </tr>
+                          ) : null}
                         </>
                       );
                     } else {
                       return (
                         <tr key={index}>
                           <td>
-                            {timeConvert(value) == "00:00:00" ? "" : index}
+                            {timeConvert(value) === "00:00:00" ? "" : index}
                           </td>
                           <td>
-                            {key != "" ? (
+                            {key !== "" ? (
                               key
                             ) : (
                               <TableDate date={time.date.slice(0, 10)} />
                             )}
                           </td>
                           <td>
-                            {timeConvert(value) == "00:00:00"
+                            {timeConvert(value) === "00:00:00"
                               ? ""
                               : timeConvert(value)}
                           </td>

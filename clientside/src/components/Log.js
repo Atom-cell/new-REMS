@@ -153,7 +153,7 @@ function Log() {
               </tr>
             </thead>
             <tbody>
-              {log.map(function (d, index) {
+              {currentPosts.map(function (d, index) {
                 //console.log(d);
                 return (
                   <tr key={index}>

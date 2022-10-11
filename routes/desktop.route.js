@@ -29,101 +29,104 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", async function (req, res) {
-  const { email } = req.body;
-  console.log("In logout", email);
-  const Euser = await Emp.findOne({ email: email });
+// router.post("/logout", async function (req, res) {
+//   const { email } = req.body;
+//   console.log("In logout", email);
+//   const Euser = await Emp.findOne({ email: email });
 
-  if (Euser) {
-    Euser.desktop = false;
-    Euser.save();
-    res.send("sanoppi");
-  } else {
-    res.send("NOT OK");
-  }
-});
+//   if (Euser) {
+//     Euser.desktop = false;
+//     Euser.save();
+//     res.send("sanoppi");
+//   } else {
+//     res.send("NOT OK");
+//   }
+// });
+
 router.post("/times", (req, res) => {
   console.log("Times");
   const { email, active_time, idle_time } = req.body;
   console.log(active_time, idle_time);
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         totalTime: {
-  //           date: Date.now(),
-  //           activetime: active_time,
-  //           idletime: idle_time,
-  //         },
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error);
-  //       } else {
-  //         console.log("");
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   res.send(e);
-  // }
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          totalTime: {
+            date: Date.now(),
+            activetime: active_time,
+            idletime: idle_time,
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("");
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
 });
 
 router.post("/apptime", (req, res) => {
-  console.log("APp time");
+  console.log("APP time");
   const { email, tt } = req.body;
-  //console.log(email, tt);
+  console.log(email, tt);
 
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         appTime: {
-  //           date: Date.now(),
-  //           apps: JSON.parse(tt),
-  //         },
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error);
-  //       } else {
-  //         console.log(data);
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   res.send(e);
-  // }
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          appTime: {
+            date: Date.now(),
+            apps: JSON.parse(tt),
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log();
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
 });
 
 router.post("/SS", (req, res) => {
   console.log("In SS");
   const { email, img } = req.body;
 
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         date: Date.now(),
-  //         screenshot: img,
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error.message);
-  //       } else {
-  //         console.log(data);
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   console.log(e.message);
-  // }
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          screenshot: {
+            date: Date.now(),
+            img: img,
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log();
+        }
+      }
+    );
+  } catch (e) {
+    console.log(e.message);
+  }
 });
 
 router.post("/daytimes", (req, res) => {
@@ -133,65 +136,67 @@ router.post("/daytimes", (req, res) => {
 
   console.log(activeDayTime);
   console.log(idleDayTime);
-
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         separateTime: {
-  //           date: Date.now(),
-  //           idleDay: idleDayTime,
-  //           activeDay: activeDayTime,
-  //           idle: idleArray,
-  //           active: activeArray,
-  //         },
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error.message);
-  //       } else {
-  //         console.log("");
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   res.send(e);
-  // }
-  // router.post("/apptime", (req, res) => {
-  //   }
-});
-
-router.post("/separate", (req, res) => {
-  console.log("Sepaaete tiems");
-  const { email, activeArray, idleArray } = req.body;
-
   console.log(activeArray);
   console.log(idleArray);
 
-  // try {
-  //   Emp.findOneAndUpdate(
-  //     { email: email },
-  //     {
-  //       $push: {
-  //         separateTime: {
-  //           date: Date.now(),
-  //           idle: idleArray,
-  //           active: activeArray,
-  //         },
-  //       },
-  //     },
-  //     function (error, data) {
-  //       if (error) {
-  //         console.log(error.message);
-  //       } else {
-  //         console.log("");
-  //       }
-  //     }
-  //   );
-  // } catch (e) {
-  //   res.send(e);
-  // }
+  try {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        $push: {
+          separateTime: {
+            date: Date.now(),
+            idleDay: idleDayTime,
+            activeDay: activeDayTime,
+            idle: idleArray,
+            active: activeArray,
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log("");
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
 });
+
+// router.post("/separate", (req, res) => {
+//   console.log("Sepaaete tiems");
+//   const { email, activeArray, idleArray } = req.body;
+
+//   console.log(activeArray);
+//   console.log(idleArray);
+
+//NOT THIS
+
+// try {
+//   Emp.findOneAndUpdate(
+//     { email: email },
+//     {
+//       $push: {
+//         separateTime: {
+//           date: Date.now(),
+//           idle: idleArray,
+//           active: activeArray,
+//         },
+//       },
+//     },
+//     function (error, data) {
+//       if (error) {
+//         console.log(error.message);
+//       } else {
+//         console.log("");
+//       }
+//     }
+//   );
+// } catch (e) {
+//   res.send(e);
+// }
+// });
 module.exports = router;

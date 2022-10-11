@@ -85,6 +85,4 @@ app.get("/stop/:mail", (req, res) => {
   res.send("hello ");
 });
 
-server.listen(5000, "0.0.0.0", () =>
-  console.log("server is running on port 5000")
-);
+server.listen(5000, () => console.log("server is running on port 5000"));

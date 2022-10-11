@@ -164,14 +164,14 @@ function EmpManage() {
   };
 
   const Screenshots = (index, email) => {
-    // socket.emit("StartSS", email);
+    socket.emit("StartSS", email);
     if (selected[index] === true) {
-      // socket.emit("StopSS", email);
+      socket.emit("StopSS", email);
       let temp = [...selected];
       temp[index] = false;
       setSelected([...temp]);
     } else {
-      // socket.emit("StartSS", email);
+      socket.emit("StartSS", email);
       let temp = [...selected];
       temp[index] = true;
       setSelected([...temp]);

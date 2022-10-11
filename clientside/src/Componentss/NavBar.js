@@ -147,7 +147,8 @@ const Navbar = () => {
             : SideBarData.links.map((item, key) => {
                 if (
                   item.title === "Activity Log" ||
-                  item.title === "Manage Employee"
+                  item.title === "Manage Employee" ||
+                  item.title === "Dashboard"
                 ) {
                   return null;
                 } else {

@@ -205,7 +205,7 @@ const App = () => {
                 {role === "admin" ? (
                   <Route path="/dashboard" element={<Dashboard />} />
                 ) : role === "Employee" ? (
-                  <Route path="/dashboard" element={<Dashboard />} /> // EMP DASHBOARD
+                  <Route path="/empDashboard" element={<EmployeeDashboard />} /> // EMP DASHBOARD
                 ) : (
                   <Route exact path="/" element={<LandPage />} />
                 )}
