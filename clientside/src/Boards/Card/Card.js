@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { CheckSquare, Clock, Trash } from "react-feather";
-
+import React, { useEffect, useState } from "react";
+import { CheckSquare, Clock, Trash, UserPlus } from "react-feather";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import "./Card.css";
 import CardInfo from "./CardInfo/CardInfo";
+import AssignTaskModal from "./AssignTaskModal";
+import Image from "react-bootstrap/Image";
+import axios from "axios";
 
 function Card(props) {
   const [showModal, setShowModal] = useState(false);
+  const [assignedToUser, setAssignedToUser] = useState();
 
-  const { _id, title, date, tasks, labels } = props.card;
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const { _id, title, date, tasks, labels, assignedTo } = props.card;
 
   const formatDate = (value) => {
     if (!value) return "";
@@ -33,6 +42,21 @@ function Card(props) {
     const month = months[date.getMonth()];
     return day + " " + month;
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      {assignedTo ? "Update Assignee" : "Assign Task"}
+    </Tooltip>
+  );
+
+  useEffect(() => {
+    if (assignedTo) {
+      axios
+        .get("/emp/getemployeeinformation", { params: { _id: assignedTo } })
+        .then((rec) => setAssignedToUser(rec.data[0]))
+        .catch((err) => console.log(err + "Card 54"));
+    }
+  });
 
   return (
     <>
@@ -79,6 +103,37 @@ function Card(props) {
         </div>
         <div className="card_title">{title}</div>
         <div className="card_footer">
+          <div>
+            <OverlayTrigger
+              placement="bottom"
+              delay={{ show: 250 }}
+              overlay={renderTooltip}
+            >
+              <div
+              // onClick={() => setShowOnlineUsers(!showOnlineUsers)}
+              >
+                {assignedToUser ? (
+                  <Image
+                    src={assignedToUser?.profilePicture}
+                    roundedCircle
+                    style={{ height: "30px", width: "30px" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleShow();
+                    }}
+                  />
+                ) : (
+                  <UserPlus
+                    className="trash"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleShow();
+                    }}
+                  />
+                )}
+              </div>
+            </OverlayTrigger>
+          </div>
           {date && (
             <p className="card_footer_item">
               <Clock className="card_footer_icon" />
@@ -87,12 +142,19 @@ function Card(props) {
           )}
           {tasks && tasks?.length > 0 && (
             <p className="card_footer_item">
-              {console.log(tasks)}
               <CheckSquare className="card_footer_icon" />
               {tasks?.filter((item) => item.completed)?.length}/{tasks?.length}
             </p>
           )}
         </div>
+        <AssignTaskModal
+          show={show}
+          handleClose={handleClose}
+          setShowModal={setShowModal}
+          card={props.card}
+          boardId={props.boardId}
+          updateCard={props.updateCard}
+        />
       </div>
     </>
   );

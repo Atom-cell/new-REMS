@@ -7,6 +7,7 @@ const EmployeesTable = ({
   setNewProject,
   handleClosee,
   newConversation,
+  assignTask,
 }) => {
   const handleSelect = (emp) => {
     if (setNewProject !== undefined) {
@@ -15,6 +16,8 @@ const EmployeesTable = ({
         assignTo: emp.username,
         assignToId: emp._id,
       });
+    } else if (assignTask != undefined) {
+      assignTask(emp);
     } else {
       newConversation(emp._id);
       fetchData();

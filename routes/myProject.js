@@ -56,15 +56,11 @@ router.get("/employeeprojects", (req, res, next) => {
 
 // Get Completed Projects
 router.get("/completed", (req, res, next) => {
+  console.log(req.query._id);
   myProject
     .find({
-      projectAssignedToId: req.query._id,
-      projectFiles: {
-        $elemMatch: {
-          completionPercentage: "100",
-          completed: "true",
-        },
-      },
+      projectAssignedTo: req.query._id,
+      status: "completed",
     })
     .exec((error, records) => {
       if (error) throw error;
@@ -90,22 +86,23 @@ router.get("/completedadmin", (req, res, next) => {
     });
 });
 
-// Get Incompleted Projects
+// Get Incompleted Projects for employee
 router.get("/incompleted", (req, res, next) => {
   myProject
     .find({
-      projectAssignedToId: req.query._id,
-      $or: [
-        { "projectFiles.completed": { $ne: true } },
-        {
-          projectFiles: {
-            $elemMatch: {
-              completionPercentage: "100",
-              completed: "false",
-            },
-          },
-        },
-      ],
+      projectAssignedTo: req.query._id,
+      status: { $ne: "completed" },
+      // $or: [
+      //   { "projectFiles.completed": { $ne: true } },
+      //   {
+      //     projectFiles: {
+      //       $elemMatch: {
+      //         completionPercentage: "100",
+      //         completed: "false",
+      //       },
+      //     },
+      //   },
+      // ],
     })
     .exec((err, rec) => {
       if (err) res.status(500).json(err);
@@ -163,21 +160,6 @@ router.get("/notassignedadmin", (req, res, next) => {
 
 // Get Specific Projects
 router.get("/searchproject/:projectName", (req, res, next) => {
-  // console.log(req.params.projectName);
-  // if (req.query._id) {
-  // myProject
-  //   .find({
-  //     projectAssignedToId: req.query._id,
-  //     projectName: {
-  //       $regex: req.params.projectName,
-  //       $options: "i",
-  //     },
-  //   })
-  //   .exec((error, records) => {
-  //     if (error) throw error;
-  //     res.json(records);
-  //   });
-  // } else {
   myProject
     .find({
       projectAssignedBy: req.query._id,
@@ -190,7 +172,22 @@ router.get("/searchproject/:projectName", (req, res, next) => {
       if (error) throw error;
       res.json(records);
     });
-  // }
+});
+
+// Get Specific Projects
+router.get("/employeesearchproject/:projectName", (req, res, next) => {
+  myProject
+    .find({
+      projectAssignedTo: req.query._id,
+      projectName: {
+        $regex: req.params.projectName,
+        $options: "i",
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
 });
 
 router.post("/addNewProject", async (req, res) => {
@@ -337,25 +334,26 @@ router.put("/updateprojectstatus", (req, res) => {
 
 router.post("/updateroles", (req, res) => {
   console.log(req.body);
-  // "bookmarks.title": { $ne: "new title" }
-  myProject
-    .findOneAndUpdate(
-      { _id: req.body.projectId },
-      {
-        $push: {
-          projectroles: {
-            type: req.body.myObj.type,
-            employeeId: req.body.myObj.id,
-          },
+  // {
+  //   projectId: '6345482bc36d090ea4ceab2c',
+  //   myObj: { type: 'projectlead', id: '628600c5bfaa78c7d2eb29d4' }
+  // }
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    {
+      $push: {
+        projectroles: {
+          type: "projectlead",
+          employeeId: req.body.myObj.id,
         },
       },
-      { new: true }
-    )
-    .exec((err, rec) => {
+    },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
       console.log(rec);
-      if (err) res.status(500).send(err);
-      res.status(200).send(rec);
-    });
+      res.status(200).json(rec);
+    }
+  );
 });
 
 router.post("/addmemberstoproject", (req, res) => {
@@ -368,6 +366,42 @@ router.post("/addmemberstoproject", (req, res) => {
       console.log(rec);
       if (err) res.status(500).send(err);
       res.status(200).send(rec);
+    }
+  );
+});
+
+router.post("/uploadfile", (req, res) => {
+  console.log("hell");
+  console.log(req.body.projectId);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    {
+      $push: {
+        projectFiles: {
+          file: req.body.file.base64,
+          fileName: req.body.file.name,
+        },
+      },
+    },
+    { new: true },
+    (err, rec) => {
+      // console.log(rec);
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+// delete an event
+router.delete("/deleteprojectfile", function (req, res, next) {
+  // console.log(req.body._id);
+  myProject.findOneAndUpdate(
+    { _id: req.body._id },
+    { $pull: { projectFiles: { _id: req.body.fileId } } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
     }
   );
 });

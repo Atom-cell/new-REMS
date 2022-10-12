@@ -35,27 +35,27 @@ const AllProjects = ({ user }) => {
     setSearchInput(e.target.value);
 
     if (e.target.value) {
-      // if (role == "Employee") {
-      //   axios
-      //     .get(`/myprojects/searchproject/${e.target.value}`, {
-      //       params: { _id: user._id },
-      //     })
-      //     .then((records) => {
-      //       // console.log(records.data);
-      //       setProjects(records.data);
-      //     })
-      //     .catch((err) => console.log(err));
-      // } else {
-      axios
-        .get(`/myprojects/searchproject/${e.target.value}`, {
-          params: { _id: user._id },
-        })
-        .then((records) => {
-          // console.log(records.data);
-          setProjects(records.data);
-        })
-        .catch((err) => console.log(err));
-      // }
+      if (role == "Employee") {
+        axios
+          .get(`/myprojects/employeesearchproject/${e.target.value}`, {
+            params: { _id: user._id },
+          })
+          .then((records) => {
+            // console.log(records.data);
+            setProjects(records.data);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .get(`/myprojects/searchproject/${e.target.value}`, {
+            params: { _id: user._id },
+          })
+          .then((records) => {
+            // console.log(records.data);
+            setProjects(records.data);
+          })
+          .catch((err) => console.log(err));
+      }
     } else {
       fetchData().catch(console.error);
     }
@@ -98,18 +98,20 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category === "Not Assigned") {
+    }
+    // else if (category == "Not Assigned") {
+    //   axios
+    //     .get("/myprojects/notassigned", { params: { _id: user._id } })
+    //     .then((rec) => {
+    //       // console.log(rec);
+    //       setProjects(rec.data);
+    //     })
+    //     .catch((err) => console.log(err));
+    //   return;
+    // }
+    else if (category == "Sort By Priority") {
       axios
-        .get("/myprojects/notassigned", { params: { _id: user._id } })
-        .then((rec) => {
-          // console.log(rec);
-          setProjects(rec.data);
-        })
-        .catch((err) => console.log(err));
-      return;
-    } else if (category === "Sort By Priority") {
-      axios
-        .get("/myProjects", {
+        .get("/myProjects/employeeprojects", {
           params: { userId: user._id },
         })
         .then((rec) => {
@@ -175,7 +177,7 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category === "Sort By Priority") {
       axios
-        .get("/myprojects//organizationprojects", {
+        .get("/myprojects/organizationprojects", {
           params: { name: user.username },
         })
         .then((rec) => {
@@ -233,13 +235,13 @@ const AllProjects = ({ user }) => {
       const res = await axios.get("/myProjects/employeeprojects", {
         params: { userId: user._id },
       });
-      console.log(res.data);
+      // console.log(res.data);
       setProjects(res.data);
     } else {
       const res = await axios.get("/myProjects/organizationprojects", {
         params: { _id: user._id },
       });
-      console.log(res.data);
+      // console.log(res.data);
       setProjects(res.data);
     }
   };
@@ -275,7 +277,7 @@ const AllProjects = ({ user }) => {
                 <option value="All">All</option>
                 <option value="Completed">Completed</option>
                 <option value="Incompleted">Incompleted</option>
-                <option value="Not Assigned">Not Assigned</option>
+                {/* <option value="Not Assigned">Not Assigned</option> */}
                 <option value="Sort By Priority">Sort By Priority</option>
                 <option value="Sort By Date">Sort By Date</option>
               </select>

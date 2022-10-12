@@ -8,10 +8,13 @@ import {
   Users,
   Clipboard,
   Plus,
+  File,
 } from "react-feather";
 import { format } from "timeago.js";
 import Editable from "../Boards/Editabled/Editable";
 import { useLocation, useNavigate } from "react-router-dom";
+import AttachmentIcon from "@mui/icons-material/Attachment";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Button } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -142,7 +145,7 @@ const SpecificProject = ({ user }) => {
         title: newEvent.title,
         startDate: newEvent.start,
         category: "Goal",
-        projectId: myProject._id,
+        projectId: myProject?._id,
       };
       axios
         .post("http://localhost:5000/myCalendar/addNewEvent", myObj)
@@ -184,6 +187,44 @@ const SpecificProject = ({ user }) => {
     });
   };
 
+  const handleFileUpload = (file) => {
+    console.log(file);
+    axios
+      .post("/myProjects/uploadfile", { projectId: myProject._id, file: file })
+      .then((rec) => {
+        console.log(rec.data);
+        toast.success("File Uploaded" + file.name);
+        setMyProject(rec.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteFile = (file) => {
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure you want to delete File?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete("http://localhost:5000/myProjects/deleteprojectfile", {
+                data: { _id: myProject._id, fileId: file._id },
+              })
+              .then((rec) => {
+                toast.success(`${file.fileName.substring(0, 15)} Deleted`);
+                setMyProject(rec.data);
+              })
+              .catch((err) => console.log(err + "Specific Project 218"));
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
     axios
       .get("/myboards/getprojectboard", {
@@ -206,7 +247,7 @@ const SpecificProject = ({ user }) => {
         setMyProject(res.data[0]);
         setSelectedEmployees(res.data[0].projectAssignedTo);
       })
-      .catch((err) => console.log(err + "Specific Project 138"));
+      .catch((err) => console.log(err + "Specific Project 250"));
   }, []);
 
   const fetchData = () => {
@@ -463,49 +504,82 @@ const SpecificProject = ({ user }) => {
             <h4 className="ProjectOverviewSection-heading Typography Typography--colorDarkGray3 Typography--h4 Typography--fontWeightMedium">
               Key resources
             </h4>
+            <FileUpload handleFileUpload={handleFileUpload} />
+            {/* <Plus /> */}
             <div className="ProjectOverviewSection-headingExtraContent"></div>
           </div>
-          <div className="ProjectOverviewSection-content">
-            <div>
-              <div className="ProjectOverviewKeyResourcesEmptyState">
-                <div className="ProjectOverviewKeyResourcesEmptyState-withoutBrief">
-                  <img
-                    className="Illustration Illustration--medium Illustration--spot ProjectOverviewKeyResourcesEmptyState-illustration"
-                    alt=""
-                    src="https://d3ki9tyy5l5ruj.cloudfront.net/obj/f696815edc59be79affd1063efd6728836b8e5e4/key_resources.svg"
-                  />
-                  <div className="ProjectOverviewKeyResourcesEmptyState-content--flagEnabled ProjectOverviewKeyResourcesEmptyState-content">
-                    <span className="Typography Typography--m">
-                      Align your team around a shared vision with a project
-                      brief and supporting resources.
-                    </span>
-                    <div className="ProjectOverviewKeyResourcesEmptyState-buttons">
-                      <div
-                        className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton"
-                        role="button"
-                        aria-disabled="false"
-                        tabindex="0"
-                      >
-                        <svg
-                          className="Icon ThemeableRectangularButtonPresentation-leftIcon BriefIcon"
-                          viewBox="0 0 32 32"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <path d="M12.5,18.3c-0.3,0-0.6-0.1-0.9-0.3c-0.5-0.3-0.7-0.9-0.6-1.5l0.5-3.1l-2.3-2.2c-0.4-0.4-0.6-1-0.4-1.5c0.2-0.5,0.6-0.9,1.2-1l3.1-0.5l1.4-2.8c0.3-0.5,0.8-0.8,1.3-0.8s1.1,0.3,1.3,0.8l1.4,2.8l3.1,0.5c0.6,0.1,1,0.5,1.2,1c0.2,0.5,0,1.1-0.4,1.5l-2.3,2.2l0.5,3.1c0.1,0.6-0.1,1.1-0.6,1.5c-0.5,0.3-1.1,0.4-1.6,0.1L16,16.7l-2.8,1.5C13,18.2,12.7,18.3,12.5,18.3z M16,14.4l2.8,1.5l-0.5-3.1l2.3-2.2l-3.2-0.5L16,7.2l-1.4,2.9l-3.2,0.5l2.3,2.2l-0.5,3.1L16,14.4zM21.6,10.7L21.6,10.7L21.6,10.7z M24,32H8c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h16c2.2,0,4,1.8,4,4v24C28,30.2,26.2,32,24,32z M8,2C6.9,2,6,2.9,6,4v24c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H8z M23,21c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,22,23,21.6,23,21z M23,25c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,26,23,25.6,23,25z"></path>
-                        </svg>
-                        Create project brief
-                      </div>
-                      <span className="AddAttachmentsButton">
+          {myProject?.projectFiles.length > 0 ? (
+            <div className="allProjects">
+              {myProject?.projectFiles?.map((f) => {
+                return (
+                  <div
+                    className="messageFile project-column project-column-specific-project"
+                    style={{
+                      margin: "10px",
+                    }}
+                  >
+                    <div style={{ margin: "8px" }}>
+                      {/* <AttachmentIcon /> */}
+                      <Trash className="trash" onClick={() => deleteFile(f)} />
+                    </div>
+                    <div className="message-file-name">
+                      <a href={f.file} download={f.fileName}>
+                        {f.fileName.length > 25
+                          ? `${f.fileName.substring(0, 25)}....`
+                          : f.fileName}
+                      </a>
+                    </div>
+                    <div className="download-icon">
+                      <a href={f.file} download={f.fileName}>
+                        <FileDownloadIcon />
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="ProjectOverviewSection-content">
+              <div>
+                <div className="ProjectOverviewKeyResourcesEmptyState">
+                  <div className="ProjectOverviewKeyResourcesEmptyState-withoutBrief">
+                    <img
+                      className="Illustration Illustration--medium Illustration--spot ProjectOverviewKeyResourcesEmptyState-illustration"
+                      alt=""
+                      src="https://d3ki9tyy5l5ruj.cloudfront.net/obj/f696815edc59be79affd1063efd6728836b8e5e4/key_resources.svg"
+                    />
+                    <div className="ProjectOverviewKeyResourcesEmptyState-content--flagEnabled ProjectOverviewKeyResourcesEmptyState-content">
+                      <span className="Typography Typography--m">
+                        Align your team around a shared vision with a project
+                        brief and supporting resources.
+                      </span>
+                      <div className="ProjectOverviewKeyResourcesEmptyState-buttons">
                         <div
-                          id="lui_435"
-                          className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-addAttachmentButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-addAttachmentButton"
+                          className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton"
                           role="button"
                           aria-disabled="false"
-                          aria-expanded="false"
                           tabindex="0"
                         >
-                          {/* <svg
+                          <svg
+                            className="Icon ThemeableRectangularButtonPresentation-leftIcon BriefIcon"
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path d="M12.5,18.3c-0.3,0-0.6-0.1-0.9-0.3c-0.5-0.3-0.7-0.9-0.6-1.5l0.5-3.1l-2.3-2.2c-0.4-0.4-0.6-1-0.4-1.5c0.2-0.5,0.6-0.9,1.2-1l3.1-0.5l1.4-2.8c0.3-0.5,0.8-0.8,1.3-0.8s1.1,0.3,1.3,0.8l1.4,2.8l3.1,0.5c0.6,0.1,1,0.5,1.2,1c0.2,0.5,0,1.1-0.4,1.5l-2.3,2.2l0.5,3.1c0.1,0.6-0.1,1.1-0.6,1.5c-0.5,0.3-1.1,0.4-1.6,0.1L16,16.7l-2.8,1.5C13,18.2,12.7,18.3,12.5,18.3z M16,14.4l2.8,1.5l-0.5-3.1l2.3-2.2l-3.2-0.5L16,7.2l-1.4,2.9l-3.2,0.5l2.3,2.2l-0.5,3.1L16,14.4zM21.6,10.7L21.6,10.7L21.6,10.7z M24,32H8c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h16c2.2,0,4,1.8,4,4v24C28,30.2,26.2,32,24,32z M8,2C6.9,2,6,2.9,6,4v24c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H8z M23,21c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,22,23,21.6,23,21z M23,25c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,26,23,25.6,23,25z"></path>
+                          </svg>
+                          Create project brief
+                        </div>
+                        <span className="AddAttachmentsButton">
+                          <div
+                            id="lui_435"
+                            className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-addAttachmentButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-addAttachmentButton"
+                            role="button"
+                            aria-disabled="false"
+                            aria-expanded="false"
+                            tabindex="0"
+                          >
+                            {/* <svg
                             className="Icon ThemeableRectangularButtonPresentation-leftIcon AttachVerticalIcon"
                             viewBox="0 0 32 32"
                             aria-hidden="true"
@@ -513,16 +587,17 @@ const SpecificProject = ({ user }) => {
                           >
                             <path d="M19,32c-3.9,0-7-3.1-7-7V10c0-2.2,1.8-4,4-4s4,1.8,4,4v9c0,0.6-0.4,1-1,1s-1-0.4-1-1v-9c0-1.1-0.9-2-2-2s-2,0.9-2,2v15c0,2.8,2.2,5,5,5s5-2.2,5-5V10c0-4.4-3.6-8-8-8s-8,3.6-8,8v5c0,0.6-0.4,1-1,1s-1-0.4-1-1v-5C6,4.5,10.5,0,16,0s10,4.5,10,10v15C26,28.9,22.9,32,19,32z"></path>
                           </svg> */}
-                          <FileUpload />
-                          Add links &amp; files
-                        </div>
-                      </span>
+                            <FileUpload handleFileUpload={handleFileUpload} />
+                            Add links &amp; files
+                          </div>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="ProjectOverviewSection milestones-container">
           <div className="ProjectOverviewSection-headingContainer">

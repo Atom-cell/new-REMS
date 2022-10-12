@@ -116,10 +116,6 @@ function CardInfo(props) {
       props.updateCard(props.boardId, values._id, values);
     }
   }, [values]);
-
-  {
-    console.log(props.card);
-  }
   return (
     <Modal onClose={props.onClose}>
       <div className="cardinfo">
