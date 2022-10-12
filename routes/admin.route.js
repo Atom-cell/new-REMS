@@ -119,6 +119,16 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   }
 });
 
+router.get("/projectInfo/:id", (req, res) => {
+  // id is of employee
+
+  Project.find({ projectAssignedTo: { $in: ObjectId(req.params.id) } }).then(
+    (response) => {
+      res.json(response);
+    }
+  );
+});
+
 router.get("/getLogEmps", verifyJWT, async (req, res) => {
   const v = {
     screenshot: 0,
@@ -140,12 +150,6 @@ router.get("/getLogEmps", verifyJWT, async (req, res) => {
   } catch (err) {
     console.log(err.message);
   }
-});
-
-router.get("/projectInfo/:id", (req, res) => {
-  Project.find({ projectAssignedToId: req.params.id }).then((response) => {
-    res.json(response);
-  });
 });
 
 router.get("/logs/:email", verifyJWT, async (req, res) => {

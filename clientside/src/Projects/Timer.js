@@ -6,6 +6,7 @@ import { TimerContext } from "../Helper/Context";
 import { ProjectNameContext } from "../Helper/Context";
 import { Pause, PlayArrow, Stop } from "@mui/icons-material";
 import IconButton from "@material-ui/core/IconButton";
+import { toast } from "react-toastify";
 
 const Timer = () => {
   const stopwatchOffset = new Date();
@@ -60,7 +61,7 @@ const Timer = () => {
 
   const stopBtn = () => {
     if (name && secondTime > 0) {
-      alert("aa");
+      console.log("UPLoadings Timez");
       uploadTime();
     }
 
@@ -84,22 +85,28 @@ const Timer = () => {
       setBtnState([...a]);
       pause();
     } else {
-      alert("paused is pressed");
+      //alert("paused is pressed");
     }
   };
 
+  const Uname = () => {
+    return JSON.parse(localStorage.getItem("user"));
+  };
   const uploadTime = () => {
+    const { username } = Uname();
     axios
-      .post("/myprojects/hoursWorked", {
+      .post("http://localhost:5000/myProjects/hoursWorked", {
         time: `${hourTime}:${minuteTime}:${secondTime}`,
         breaks: breaks,
         _id: name.id,
+        username: username,
       })
       .then((rec) => {})
       .catch((err) => console.log(err));
 
     let a = {};
     setName(null);
+    toast.success("WellDone!!");
   };
   return (
     <>

@@ -26,10 +26,10 @@ var myProjectSchema = mongoose.Schema(
       },
     ],
     hoursWorked: {
-      type: [String],
+      type: [{}],
     },
     numOfBreaks: {
-      type: [[String]],
+      type: [{}],
     },
     dueDate: {
       type: String,
