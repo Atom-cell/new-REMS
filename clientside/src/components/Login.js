@@ -13,6 +13,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import axios from "axios";
 import LoginImg from "../img/Login.gif";
 import AnimatedRoutes from "../AnimatedRoutes";
+import { baseURL } from "../Request";
 
 function Login() {
   React.useEffect(() => {
@@ -56,7 +57,7 @@ function Login() {
       if (!emailE.error && !passwordE.error) {
         //alert("dd");
         await axios
-          .post("http://localhost:5000/emp/login", {
+          .post(`${baseURL}/emp/login`, {
             email: email,
             password: password,
           })
@@ -69,6 +70,7 @@ function Login() {
             localStorage.setItem("email", response.data.data.email);
             localStorage.setItem("user", JSON.stringify(response.data.data));
             localStorage.setItem("role", response.data.data.role);
+            localStorage.setItem("id", response.data.data._id);
             setData(response.data.data);
           })
           .catch(function (error) {

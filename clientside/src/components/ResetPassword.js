@@ -69,8 +69,7 @@ function ResetPassword() {
   };
   return (
     <div className="resetWrapper">
-      <Button>Logo</Button>
-      <h2 className="title">Reset Account Password</h2>
+      <h2 style={{ textAlign: "center" }}>Reset Account Password</h2>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         {resp === 1 ? (
           <Alert onClose={handleClose} severity="info" sx={{ width: "100%" }}>

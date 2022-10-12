@@ -274,13 +274,24 @@ router.post("/register", verifyJWT, async (req, res, next) => {
   } catch (e) {}
 });
 
+router.get("/getEmp/:id", verifyJWT, (req, res, next) => {
+  Emp.findById(req.params.id).then((response) => {
+    res.json(response);
+  });
+});
 //for emp + admin
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
   console.log("LOGIN: ", email, password);
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+  };
 
   //check user already exists or not
-  const Euser = await Emp.findOne({ email: email });
+  const Euser = await Emp.findOne({ email: email }).select(v);
   const Auser = await Admin.findOne({ email: email });
 
   //////////////
@@ -293,33 +304,40 @@ router.post("/login", async (req, res) => {
   };
 
   let d = new Date();
-  let present = false;
-  // d.toISOString().split("T")[0];
+  let present = true;
+
   console.log("DATE: ", fixTimezoneOffset(d));
   if (Euser) {
     if (await bcrypt.compare(req.body.password, Euser.password)) {
       console.log("ATTendance");
 
       Euser.attendance.forEach((date) => {
-        // console.log(fixTimezoneOffset(date).slice(0, 10));
+        console.log(
+          " ARRAY ",
+          fixTimezoneOffset(date).slice(0, 10),
+          " TOday, ",
+          fixTimezoneOffset(d).slice(0, 10)
+        );
+        console.log();
         if (
           fixTimezoneOffset(date).slice(0, 10) ===
           fixTimezoneOffset(d).slice(0, 10)
         ) {
-          console.log("ALREADY");
+          //console.log("ALREADY");
           present = false;
         } else {
-          console.log("not");
+          //console.log("not");
           present = true;
         }
       });
 
+      console.log(present);
       if (present) {
         Emp.findOneAndUpdate(
           { email: email },
           {
             $addToSet: {
-              attendance: fixTimezoneOffset(d),
+              attendance: d,
             },
           }
         )
@@ -333,17 +351,25 @@ router.post("/login", async (req, res) => {
     }
   }
 
-  ///////////// update desktop
+  /////////////
+  ////////////
   if (Euser) {
-    if (await bcrypt.compare(req.body.password, Euser.password)) {
-      const token = jwt.sign(
-        { email: Euser.email, role: Euser.role },
-        "helloworld"
-      );
+    if (Euser.active) {
+      if (await bcrypt.compare(req.body.password, Euser.password)) {
+        const token = jwt.sign(
+          { email: Euser.email, role: Euser.role },
+          "helloworld"
+        );
 
-      return res.json({ data: Euser, msg: 1, token: token, auth: true });
-    } else return res.json({ data: Euser, msg: 0 });
+        return res.json({ data: Euser, msg: 1, token: token, auth: true });
+      } else {
+        return res.json({ data: null, msg: 0 });
+      }
+    } else if (!Euser.active) {
+      return res.json({ data: null, msg: 0 });
+    }
   }
+
   if (Auser) {
     if (await bcrypt.compare(password, Auser.password)) {
       const token = jwt.sign(
@@ -364,12 +390,12 @@ router.delete("/deleteEmp/:id", verifyJWT, (req, res) => {
 
   //6287ffd800aa0f2419e224df
 
-  Admin.findOneAndUpdate(
-    { email: req.userEmail },
-    { $pull: { employees: req.params.id } }
-  ).then((response) => console.log(response));
+  // Admin.findOneAndUpdate(
+  //   { email: req.userEmail },
+  //   { $pull: { employees: req.params.id } }
+  // ).then((response) => console.log(response));
 
-  Emp.findByIdAndDelete(req.params.id).then((response) =>
+  Emp.findByIdAndUpdate(req.params.id, { active: false }).then((response) =>
     console.log(response)
   );
 });

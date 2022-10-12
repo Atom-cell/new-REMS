@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ProjectNameContext } from "./Helper/Context";
 import { TimerContext } from "./Helper/Context";
+import { MoreInfoContext } from "./Helper/Context";
 import { CssBaseline } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +29,9 @@ import NoMobile from "./components/NoMobile";
 import EmpManage from "./components/EmpManage";
 import MoreInfo from "./components/MoreInfo";
 import Log from "./components/Log";
+import Teams from "./Team/Teams";
+import CreateTeam from "./Team/CreateTeam";
+import TeamInfo from "./Team/TeamInfo";
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
 import AllProjects from "./Projects/AllProjects";
@@ -44,6 +48,7 @@ const App = () => {
   const [name, setName] = useState(null);
   const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
+  const [moreInfo, setMoreInfo] = useState(null);
   const [nav, setNav] = useState(false);
   const [username, setUsername] = useState();
   const [loggedUser, setLoggedUser] = useState(
@@ -154,81 +159,22 @@ const App = () => {
     <>
       <ProjectNameContext.Provider value={{ name, setName }}>
         <TimerContext.Provider value={{ timer, setTimer }}>
-          <Router>
-            {nav ? <NavBar /> : null}
-            {!nav ? <NavigationBar /> : null}
-            <CallNotification
-              callAccepted={callAccepted}
-              callerName={callerName}
-              answerCall={answerCall}
-              rejectCall={rejectCall}
-              receivingCall={receivingCall}
-            />
-            {callAccepted && (
-              <>
-                {window.location.href.indexOf(
-                  "http://localhost:3000/videoCall"
-                ) > -1 ? null : (
-                  <VideoCall
-                    onlineUsers={onlineUsers}
-                    setOnlineUsers={setOnlineUsers}
-                    receivingCall={receivingCall}
-                    setReceivingCall={setReceivingCall}
-                    callAccepted={callAccepted}
-                    setCallAccepted={setCallAccepted}
-                    callerName={callerName}
-                    setCallerName={setCallerName}
-                    answerCall={answerCall}
-                    rejectCall={rejectCall}
-                    stream={stream}
-                    userVideo={userVideo}
-                    connectionRef={connectionRef}
-                    caller={caller}
-                    setCaller={setCaller}
-                    both={both}
-                    user={user}
-                    setUser={setUser}
-                    setStream={setStream}
-                    setCallerSignal={setCallerSignal}
-                    setBoth={setBoth}
-                  />
-                )}
-              </>
-            )}
-            <Routes>
-              {role === "admin" ? (
-                <Route path="/dashboard" element={<Dashboard />} />
-              ) : role === "Employee" ? (
-                <Route path="/dashboard" element={<Dashboard />} /> // EMP DASHBOARD
-              ) : (
-                <Route exact path="/" element={<LandPage />} />
-              )}
-              <Route exact path="/" element={<LandPage />} />
-              <Route path="/home" element={<LandPage />} />
-              <Route path="/features" element={<MoreFeatures />} />
-              <Route path="/download" element={<Download />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/forget" element={<ResetPassword />} />
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/empDashboard" element={<EmployeeDashboard />} />
-                <Route path="/update" element={<UpdateProfile />} />
-                <Route path="/no" element={<NoMobile />} />
-                <Route path="/empManage" element={<EmpManage />} />
-                <Route path="/moreInfo" element={<MoreInfo />} />
-                <Route path="/log" element={<Log />} />
-                <Route
-                  path="/myCalendar"
-                  element={loggedUser && <MyCalendar user={loggedUser} />}
-                />
-                <Route
-                  path="/myTeamCalendar"
-                  element={loggedUser && <MyCalendar user={loggedUser} />}
-                />
-                <Route
-                  path="/videoCall"
-                  element={
+          <MoreInfoContext.Provider value={{ moreInfo, setMoreInfo }}>
+            <Router>
+              {nav ? <NavBar /> : null}
+              {!nav ? <NavigationBar /> : null}
+              <CallNotification
+                callAccepted={callAccepted}
+                callerName={callerName}
+                answerCall={answerCall}
+                rejectCall={rejectCall}
+                receivingCall={receivingCall}
+              />
+              {callAccepted && (
+                <>
+                  {window.location.href.indexOf(
+                    "http://localhost:3000/videoCall"
+                  ) > -1 ? null : (
                     <VideoCall
                       onlineUsers={onlineUsers}
                       setOnlineUsers={setOnlineUsers}
@@ -252,52 +198,116 @@ const App = () => {
                       setCallerSignal={setCallerSignal}
                       setBoth={setBoth}
                     />
-                  }
-                />
-                <Route
-                  path="/allMeetings/:roomId"
-                  element={
-                    username ? (
-                      <ConferenceCall username={username} />
-                    ) : (
-                      console.log("")
-                    )
-                  }
-                />
-                {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
-                <Route
-                  path="/myMessenger"
-                  element={
-                    <Messenger
-                      onlineUsers={onlineUsers}
-                      setOnlineUsers={setOnlineUsers}
-                      arrivalMessage={arrivalMessage}
-                      user={loggedUser}
-                    />
-                  }
-                />
-                <Route path="/allMeetings" element={<AllMeetings />} />
-                <Route
-                  path="/projects"
-                  element={<AllProjects user={loggedUser} />}
-                />
-                <Route
-                  path="/myproject/:pid"
-                  element={<SpecificProject user={loggedUser} />}
-                />
-                <Route
-                  path="/allboards"
-                  element={<AllBoards user={loggedUser} />}
-                />
-                <Route
-                  path="/boards/:bid"
-                  element={<Boards user={loggedUser} />}
-                />
-                {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
-              </Route>
-            </Routes>
-            <ToastContainer />
-          </Router>
+                  )}
+                </>
+              )}
+              <Routes>
+                {role === "admin" ? (
+                  <Route path="/dashboard" element={<Dashboard />} />
+                ) : role === "Employee" ? (
+                  <Route path="/dashboard" element={<Dashboard />} /> // EMP DASHBOARD
+                ) : (
+                  <Route exact path="/" element={<LandPage />} />
+                )}
+                <Route exact path="/" element={<LandPage />} />
+                <Route path="/home" element={<LandPage />} />
+                <Route path="/features" element={<MoreFeatures />} />
+                <Route path="/download" element={<Download />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/forget" element={<ResetPassword />} />
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/empDashboard" element={<EmployeeDashboard />} />
+                  <Route path="/update" element={<UpdateProfile />} />
+                  <Route path="/no" element={<NoMobile />} />
+                  <Route path="/empManage" element={<EmpManage />} />
+                  <Route path="/moreInfo" element={<MoreInfo />} />
+                  <Route path="/log" element={<Log />} />
+                  <Route path="/team" element={<Teams />} />
+                  <Route path="/createTeam" element={<CreateTeam />} />
+                  <Route path="/teamInfo" element={<TeamInfo />} />
+                  <Route
+                    path="/myCalendar"
+                    element={loggedUser && <MyCalendar user={loggedUser} />}
+                  />
+                  <Route
+                    path="/myTeamCalendar"
+                    element={loggedUser && <MyCalendar user={loggedUser} />}
+                  />
+                  <Route
+                    path="/videoCall"
+                    element={
+                      <VideoCall
+                        onlineUsers={onlineUsers}
+                        setOnlineUsers={setOnlineUsers}
+                        receivingCall={receivingCall}
+                        setReceivingCall={setReceivingCall}
+                        callAccepted={callAccepted}
+                        setCallAccepted={setCallAccepted}
+                        callerName={callerName}
+                        setCallerName={setCallerName}
+                        answerCall={answerCall}
+                        rejectCall={rejectCall}
+                        stream={stream}
+                        userVideo={userVideo}
+                        connectionRef={connectionRef}
+                        caller={caller}
+                        setCaller={setCaller}
+                        both={both}
+                        user={user}
+                        setUser={setUser}
+                        setStream={setStream}
+                        setCallerSignal={setCallerSignal}
+                        setBoth={setBoth}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/allMeetings/:roomId"
+                    element={
+                      username ? (
+                        <ConferenceCall username={username} />
+                      ) : (
+                        console.log("")
+                      )
+                    }
+                  />
+                  {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
+                  <Route
+                    path="/myMessenger"
+                    element={
+                      <Messenger
+                        onlineUsers={onlineUsers}
+                        setOnlineUsers={setOnlineUsers}
+                        arrivalMessage={arrivalMessage}
+                        user={loggedUser}
+                      />
+                    }
+                  />
+                  <Route path="/allMeetings" element={<AllMeetings />} />
+                  <Route
+                    path="/projects"
+                    element={<AllProjects user={loggedUser} />}
+                  />
+                  <Route
+                    path="/myproject/:pid"
+                    element={<SpecificProject user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allboards"
+                    element={<AllBoards user={loggedUser} />}
+                  />
+                  <Route
+                    path="/boards/:bid"
+                    element={<Boards user={loggedUser} />}
+                  />
+                  {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
+                </Route>
+              </Routes>
+              <ToastContainer />
+            </Router>
+          </MoreInfoContext.Provider>
         </TimerContext.Provider>
       </ProjectNameContext.Provider>
     </>

@@ -1,16 +1,9 @@
+import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
-import { Avatar, IconButton } from "@mui/material";
-import {
-  Table,
-  Button,
-  Row,
-  Container,
-  Col,
-  Spinner,
-  Carousel,
-  Breadcrumb,
-} from "react-bootstrap";
+import { Avatar, Divider, Tooltip } from "@mui/material";
+import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -19,26 +12,70 @@ import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-////////////////////////////////////////////////////////////////////////
-// import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
-import enUS from "date-fns/locale/en-US";
+function stringToColor(string) {
+  let hash = 0;
+  let i;
 
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+      marginRight: "0.5em",
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
 function TableDate({ date }) {
+  // alert("k");
   return <h4 style={{ fontWeight: "bold" }}>{date}</h4>;
 }
 function MoreInfo() {
   const [allEvents, setAllEvents] = React.useState([]);
   const [value, onChange] = React.useState(new Date());
 
+  const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
   const [data, setData] = React.useState({});
   const [totalTime, setTotalTime] = React.useState([]);
   const [totalTimeCopy, setTotalTimeCopy] = React.useState([]);
   const [apps, setApps] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [presents, setPresents] = React.useState(0);
+  const [dayTime, setDayTime] = React.useState([]);
+  const [dayTimeCopy, setDayTimeCopy] = React.useState([]);
+  const [SS, setSS] = React.useState([]);
+  const [showCal, setShowCal] = React.useState(false);
+  const [proj, setProj] = React.useState([]);
+  const [team, setTeam] = React.useState([]);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const [btnOption, setBtnOption] = React.useState("info");
 
@@ -51,20 +88,46 @@ function MoreInfo() {
   }, []);
 
   const loadData = async () => {
-    let a = await JSON.parse(localStorage.getItem("info"));
-    console.log(a);
-    // if (a.screenshot && a.appTime && a.totalTime) {
+    let contextData = moreInfo;
+    //console.log("CONTEXT: ", contextData);
+    let a = contextData;
 
-    console.log(a.totalTime);
     setLoading(false);
     setData(a);
     setTotalTime(a.totalTime);
     setTotalTimeCopy(a.totalTime);
+    setDayTime(a.separateTime);
+    setDayTimeCopy(a.separateTime);
     setAllEvents([...a.attendance]);
     setApps(a.appTime);
-    console.log("Data: " + data);
+    setSS([...a.screenshot]);
 
-    // }
+    getProjectInfo(a._id);
+    getTeamInfo(a._id);
+  };
+
+  const getProjectInfo = (id) => {
+    axios
+      .get(`http://localhost:5000/admin/projectInfo/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setProj(response.data);
+      });
+  };
+
+  const getTeamInfo = (id) => {
+    axios
+      .get(`http://localhost:5000/team/getMyTeam/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setTeam([...response.data.data]);
+      });
   };
 
   const timeConvert = (s) => {
@@ -94,7 +157,20 @@ function MoreInfo() {
       })
     );
 
-    console.log("temp", totalTime);
+    setDayTime(
+      data.separateTime.filter((tt) => {
+        return tt.date.slice(0, 10) >= newFrom && tt.date.slice(0, 10) <= newTo;
+      })
+    );
+
+    setSS(
+      data?.screenshot.filter((tt) => {
+        console.log(tt);
+        return tt.date.slice(0, 10) >= newFrom && tt.date.slice(0, 10) <= newTo;
+      })
+    );
+
+    console.log("SSSSS", SS);
   };
 
   const openBase64InNewTab = (data, mimeType) => {
@@ -114,6 +190,25 @@ function MoreInfo() {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
   };
 
+  const totalPresents = () => {
+    console.log("MONTH", value.getMonth() + 1);
+    let month = "";
+    setPresents(0);
+    if (value.getMonth() + 1 < 10) {
+      month = `0${value.getMonth() + 1}`;
+    } else {
+      month = value.getMonth() + 1;
+    }
+
+    let a = 0;
+    allEvents.forEach((x, index) => {
+      if (x.slice(5, 7) === month) {
+        a++;
+      }
+    });
+    setPresents(a);
+  };
+
   return (
     <div className="cnt">
       <Breadcrumb>
@@ -127,69 +222,170 @@ function MoreInfo() {
           onClick={() => setBtnOption("info")}
           id={btnOption === "info" ? "activeBtn" : ""}
         >
-          User Information
+          Employee Information
         </button>
         <button
           className="btn_userAct"
           onClick={() => setBtnOption("activity")}
           id={btnOption === "activity" ? "activeBtn" : ""}
         >
-          User Activity
+          Employee Activity
         </button>
       </div>
       {btnOption === "info" ? (
         <div className="user_infoWrapper">
           <div className="user_heading">
             <Avatar
-              src={data.profilePicture}
+              src={data?.profilePicture}
               // src="https://unsplash.com/photos/jzY0KRJopEI"
-              sx={{ width: 100, height: 100, marginBottom: "2em" }}
+              sx={{
+                width: 150,
+                height: 150,
+                marginBottom: "2em",
+                marginLeft: "3em",
+              }}
             />
+            <button
+              className="btn_userInfo"
+              onClick={() => setShowCal(!showCal)}
+              id={showCal ? "activeBtn" : ""}
+            >
+              Attendance
+            </button>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            {showCal ? (
+              <div style={{ marginLeft: "2em", marginTop: "2em" }}>
+                <h4>Attendance</h4>
+                <Calendar
+                  onChange={(value) => {
+                    let a = 0;
+                    allEvents.forEach((x) => {
+                      // console.log(x, " + ", `${value.getMonth() + 1}`);
+                      if (
+                        x.slice(5, 7) === `${value.getMonth() + 1}` ||
+                        x.slice(5, 7) === `0${value.getMonth() + 1}`
+                      ) {
+                        a++;
+                      }
+                    });
+                    setPresents(a);
+                    onChange(value);
+                  }}
+                  value={value}
+                  tileClassName={({ date }) => {
+                    if (
+                      allEvents.find(
+                        (x) =>
+                          x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
+                      )
+                    ) {
+                      // console.log(
+                      //   "ERROR: ",
+                      //   fixTimezoneOffset(date).slice(0, 10)
+                      // );
+                      return "present";
+                    }
+                  }}
+                />
+                <p>Month : {monthNames[value.getMonth()]}</p>
+                <p>Total Presents : {presents}</p>
+              </div>
+            ) : null}
             <div className="text_wrapper">
-              <div className="box1">
-                <h6>Username:</h6>
-                <h6>Email:</h6>
-                <h6>Role:</h6>
-                <h6>Contact:</h6>
-                <h6>Bank Details:</h6>
-              </div>
-              <div className="box2">
-                <h6>{data.username}</h6>
-                <h6>{data.email}</h6>
-                <h6>{data.role}</h6>
-                <h6>{data.contact ? data.contact : "-"}</h6>
-                <h6>{data.bankDetails ? data.bankDetails : "-"}</h6>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "45%",
+                  marginLeft: "3em",
+                }}
+              >
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Username:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.username}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Email:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.email}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Role:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.role} </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Contact:</h6>
+                  <h6 style={{ flex: "50%" }}>
+                    {data?.contact ? data.contact : "-"}{" "}
+                  </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Bank Details:</h6>
+                  <h6 style={{ flex: "50%" }}>
+                    {data?.bankDetails ? data.bankDetails : "-"}
+                  </h6>
+                </div>
               </div>
             </div>
-
-            <div style={{ marginRight: "2em" }}>
-              <h4>Attendance</h4>
-              <Calendar
-                onChange={onChange}
-                value={value}
-                tileClassName={({ date }) => {
-                  if (
-                    allEvents.find(
-                      (x) =>
-                        x.slice(0, 10) == fixTimezoneOffset(date).slice(0, 10)
-                    )
-                  ) {
-                    console.log(
-                      "ERROR: ",
-                      fixTimezoneOffset(date).slice(0, 10)
-                    );
-                    return "present";
-                  }
+            <div className="text_wrapper">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "60%",
                 }}
-              />
+              >
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Manager:</h6>
+                  <h6 style={{ flex: "50%" }}>{data.username}</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Teams:</h6>
+                  <h6 style={{ flex: "50%", display: "flex" }}>
+                    {team.map((t, index) => {
+                      return (
+                        <Tooltip key={index} title={t.teamName}>
+                          <Avatar {...stringAvatar(t.teamName)} />
+                        </Tooltip>
+                      );
+                    })}
+                  </h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Projects:</h6>
+                  {proj ? (
+                    <h6 style={{ flex: "50%" }}>
+                      {proj.map((p) => {
+                        return (
+                          <p>{`${p.projectName} - ${p.projectDescription}`}</p>
+                        );
+                      })}
+                    </h6>
+                  ) : (
+                    <Spinner animation="border" />
+                  )}
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>
+                    Current Project:
+                  </h6>
+                  <h6 style={{ flex: "50%" }}>From project data</h6>
+                </div>
+                <Divider />
+                <div className="infoRow">
+                  <h6 style={{ color: "gray", flex: "30%" }}>Zone:</h6>
+                  <h6 style={{ flex: "50%" }}>Green</h6>
+                </div>
+              </div>
             </div>
           </div>
-          {/* <h1>Selected date: {value.toJSON().slice(0, 10)}</h1>
-          {allEvents.map((e) => {
-            return <p>{e}</p>;
-          })} */}
         </div>
       ) : (
         <>
@@ -247,12 +443,12 @@ function MoreInfo() {
                     padding: 0,
                   }}
                 >
-                  {data.screenshot?.map((i, index) => {
+                  {SS?.map((i, index) => {
                     return (
                       <Carousel.Item>
                         <img
                           style={{ cursor: "pointer", width: "100%" }}
-                          src={`data:image/jpeg;base64,${i}`}
+                          src={`data:image/jpeg;base64,${i.img}`}
                           onClick={() => openBase64InNewTab(i, "image/png")}
                         />
                       </Carousel.Item>
@@ -276,23 +472,57 @@ function MoreInfo() {
                 <Table hover bordered className="table">
                   <thead>
                     <tr>
-                      <th>Date</th>
+                      <th style={{ width: "20%" }}>Date</th>
+                      <th style={{ width: "20%" }}>Time</th>
                       <th>Time</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {totalTime?.map(function (time, index) {
+                    {totalTime.map(function (time, index) {
                       if (index > 5);
                       else {
                         return (
                           <tr>
-                            <td>{time.date.slice(0, 10)}</td>
-                            <td>
+                            <td style={{ width: "20%" }}>
+                              {time.date.slice(0, 10)}
+                            </td>
+                            <td style={{ width: "20%" }}>
                               {time.activetime.Hours +
                                 " : " +
                                 time.activetime.Minutes +
                                 " : " +
                                 time.activetime.Seconds}
+                            </td>
+                            <td>
+                              {dayTime.map((day) => {
+                                return day.activeDay.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
+                              <Divider />
+                              {dayTime.map((day) => {
+                                return day.active.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
                             </td>
                           </tr>
                         );
@@ -303,6 +533,7 @@ function MoreInfo() {
               )}
             </>
           </h5>
+
           <h5>
             <h4 style={{ fontWeight: "bold", margin: "1em 0em 1em 0em" }}>
               Idle Time:
@@ -316,7 +547,8 @@ function MoreInfo() {
                 <Table hover bordered className="table">
                   <thead>
                     <tr>
-                      <th>Date</th>
+                      <th style={{ width: "20%" }}>Date</th>
+                      <th style={{ width: "20%" }}>Time</th>
                       <th>Time</th>
                     </tr>
                   </thead>
@@ -326,13 +558,46 @@ function MoreInfo() {
                       else {
                         return (
                           <tr>
-                            <td>{time.date.slice(0, 10)}</td>
-                            <td>
+                            <td style={{ width: "20%" }}>
+                              {time.date.slice(0, 10)}
+                            </td>
+                            <td style={{ width: "20%" }}>
                               {time.idletime.Hours +
                                 " : " +
                                 time.idletime.Minutes +
                                 " : " +
                                 time.idletime.Seconds}
+                            </td>
+                            <td>
+                              {dayTime.map((day) => {
+                                return day.idleDay.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
+                              <Divider />
+                              {dayTime.map((day) => {
+                                return day.idle.map((d) => {
+                                  return (
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        marginLeft: "0.5em",
+                                      }}
+                                    >
+                                      {d} |
+                                    </span>
+                                  );
+                                });
+                              })}
                             </td>
                           </tr>
                         );
@@ -360,28 +625,64 @@ function MoreInfo() {
                 </tr>
               </thead>
               <tbody>
-                {apps?.map(function (time) {
-                  return Object.entries(time.apps).map(function (
+                {apps.map(function (time) {
+                  // console.log("time: ", time.apps);
+                  return Object.entries(time.apps || {}).map(function (
                     [key, value],
                     index
                   ) {
-                    return (
-                      <tr key={index}>
-                        <td>{timeConvert(value) == "00:00:00" ? "" : index}</td>
-                        <td>
-                          {key != "" ? (
-                            key
-                          ) : (
-                            <TableDate date={time.date.slice(0, 10)} />
-                          )}
-                        </td>
-                        <td>
-                          {timeConvert(value) == "00:00:00"
-                            ? ""
-                            : timeConvert(value)}
-                        </td>
-                      </tr>
-                    );
+                    if (index === 0) {
+                      return (
+                        <>
+                          {/* FOR DATE */}
+                          <tr key={index}>
+                            <td></td>
+                            <td>
+                              <TableDate date={time.date.slice(0, 10)} />
+                            </td>
+                            <td></td>
+                          </tr>
+                          {/* FOR DATA */}
+                          <tr key={index}>
+                            <td>
+                              {timeConvert(value) == "00:00:00" ? "" : index}
+                            </td>
+                            <td>
+                              {key != "" ? (
+                                key
+                              ) : (
+                                <TableDate date={time.date.slice(0, 10)} />
+                              )}
+                            </td>
+                            <td>
+                              {timeConvert(value) == "00:00:00"
+                                ? ""
+                                : timeConvert(value)}
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    } else {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            {timeConvert(value) == "00:00:00" ? "" : index}
+                          </td>
+                          <td>
+                            {key != "" ? (
+                              key
+                            ) : (
+                              <TableDate date={time.date.slice(0, 10)} />
+                            )}
+                          </td>
+                          <td>
+                            {timeConvert(value) == "00:00:00"
+                              ? ""
+                              : timeConvert(value)}
+                          </td>
+                        </tr>
+                      );
+                    }
                   });
                 })}
               </tbody>

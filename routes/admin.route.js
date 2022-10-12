@@ -9,6 +9,7 @@ require("dotenv").config();
 const Admin = require("../model/Admin.model");
 const Emp = require("../model/Emp.model");
 const Activity = require("../model/Activity.model");
+const Project = require("../model/myProject.model");
 
 const verifyJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];
@@ -40,6 +41,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/register", async (req, res, next) => {
+  console.log("In REgisters");
   let { username, email, password } = req.body;
 
   //check user already exists or not
@@ -85,6 +87,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+//delete the email token ehich shows it is verififed
 router.get("/verify", async (req, res) => {
   let token = req.query.token;
   const admin = await Admin.findOne({ emailToken: token });
@@ -103,14 +106,46 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   //console.log("In all Empps");
   try {
     Admin.find({ email: req.userEmail })
-      .populate("employees")
-      .exec(function (err, data) {
+      .populate({
+        path: "employees",
+        match: { active: true },
+      })
+      .exec((err, data) => {
         if (err) console.log(err.message);
         res.json({ msg: 1, data: data[0].employees });
       });
   } catch (err) {
     console.log(err.message);
   }
+});
+
+router.get("/getLogEmps", verifyJWT, async (req, res) => {
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    attendance: 0,
+    password: 0,
+    profilePicture: 0,
+    bankDetails: 0,
+  };
+  try {
+    Admin.find({ email: req.userEmail })
+      .populate({ path: "employees", select: v, match: { active: true } })
+      .exec((err, data) => {
+        if (err) console.log(err.message);
+        res.json({ msg: 1, data: data[0].employees });
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+router.get("/projectInfo/:id", (req, res) => {
+  Project.find({ projectAssignedToId: req.params.id }).then((response) => {
+    res.json(response);
+  });
 });
 
 router.get("/logs/:email", verifyJWT, async (req, res) => {
@@ -120,6 +155,19 @@ router.get("/logs/:email", verifyJWT, async (req, res) => {
     res.json({ data: response });
   });
 });
+
+router.get("/aa", async (req, res) => {
+  res.redirect("http://localhost:3000/home");
+});
+
+router.delete("/deletelog/:email", (req, res) => {
+  console.log("In delte Logs", req.params.email);
+
+  Activity.deleteMany({ email: req.params.email }).then((response) => {
+    res.json({ data: response });
+  });
+});
+
 router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");
 });

@@ -1,3 +1,4 @@
+import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
 import axios from "axios";
 import "./EmpManage.css";
@@ -7,23 +8,26 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Input, TextField, Snackbar, Alert, ToggleButton } from "@mui/material";
+import {
+  Input,
+  TextField,
+  Snackbar,
+  Alert,
+  ToggleButton,
+  Pagination,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddEmpModal from "./AddEmpModal";
 import io from "socket.io-client";
+import { baseURL } from "../Request";
 const socket = io.connect("http://localhost:8900");
 
 function Online() {
   return (
-    <p
-    // style={{
-    //   color: "green",
-    //   padding: "0.7em",
-    //   backgroundColor: "lightGreen",
-    //   fontSize: "1rem",
-    // }}
-    >
+    <p>
       <Badge pill bg="success">
         Online
       </Badge>{" "}
@@ -44,6 +48,8 @@ function Offline() {
 function EmpManage() {
   // fetching data
 
+  const navigate = useNavigate();
+
   const [mod, setMod] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [copy, setCopy] = React.useState([...data]);
@@ -54,6 +60,10 @@ function EmpManage() {
   const [msg, setMsg] = React.useState(9);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState([false]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [postsPerPage, setPostsPerPage] = React.useState(10);
+
+  const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
 
   React.useEffect(() => {
     getData();
@@ -61,13 +71,13 @@ function EmpManage() {
 
   const getData = async () => {
     await axios
-      .get("http://localhost:5000/admin/allEmps", {
+      .get(`${baseURL}/admin/allEmps`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
       })
       .then((response) => {
-        console.log(response);
+        console.log("response from server ", response.data.data);
         setData([...response.data.data]);
         setCopy2([...response.data.data]);
         //console.log([...response.data.data]);
@@ -75,6 +85,11 @@ function EmpManage() {
         setENum(response.data.data.length);
       });
   };
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
+  // socketconsole.log("Current", currentPosts);
 
   const submit = (id) => {
     confirmAlert({
@@ -93,11 +108,13 @@ function EmpManage() {
   };
 
   const deleteEmp = (id) => {
-    axios.delete(`http://localhost:5000/emp/deleteEmp/${id}`, {
+    axios.delete(`${baseURL}/emp/deleteEmp/${id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     });
+
+    getData();
   };
   const closeMod = () => {
     setMod(false);
@@ -161,6 +178,13 @@ function EmpManage() {
     }
   };
 
+  const setInfo = (data) => {
+    setMoreInfo(data);
+    // localStorage.setItem("info", JSON.stringify(data));
+    // window.location.href = "/moreInfo";
+    navigate("/moreInfo");
+  };
+
   return (
     <div className="cnt">
       <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
@@ -217,81 +241,116 @@ function EmpManage() {
           <Spinner animation="border" />
         </div>
       ) : loading === 1 ? (
-        <Table className="table">
-          <thead>
-            <tr>
-              <th className="thead">#</th>
-              <th className="thead">Username</th>
-              <th className="thead">Email</th>
-              <th className="thead">Role</th>
-              <th className="thead">More Info</th>
-              <th className="thead">Sreenshot</th>
-              <th className="thead">Status</th>
-              <th className="thead">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(function (data, index) {
-              return (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{data.username} </td>
-                  <td>{data.email}</td>
-                  <td>{data.role}</td>
-                  <td>
-                    <button
-                      style={{ all: "unset", cursor: "pointer" }}
-                      onClick={() => {
-                        localStorage.setItem("info", JSON.stringify(data));
-                        window.location.href = "/moreInfo";
-                      }}
+        <>
+          <Table className="table">
+            <thead>
+              <tr>
+                <th className="thead">#</th>
+                <th className="thead">Username</th>
+                <th className="thead">Email</th>
+                <th className="thead">Role</th>
+                {/* <th className="thead">More Info</th> */}
+                <th className="thead">Sreenshot</th>
+                <th className="thead">Status</th>
+                <th className="thead">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentPosts.map(function (data, index) {
+                // if (data.active) {
+                return (
+                  <tr key={index}>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
                     >
-                      Click for more Info
-                    </button>
-                  </td>
-                  <td>
-                    <ToggleButton
-                      value="check"
-                      selected={selected[index]}
-                      // onChange={() => {
-                      //   setSelected(!selected);
-                      // }}
-                      onClick={() => Screenshots(index, data.email)}
-                      style={{ padding: "0.5em" }}
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
                     >
-                      <PhotoCameraIcon />
-                    </ToggleButton>
-                    {/* <Button onClick={() => ScreenshotStart(data.email)}>
+                      {data.username}{" "}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.email}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.role}
+                    </td>
+                    {/* <td>
+                        <button
+                          style={{ all: "unset", cursor: "pointer" }}
+                          onClick={() => {
+                            localStorage.setItem("info", JSON.stringify(data));
+                            window.location.href = "/moreInfo";
+                          }}
+                        >
+                          Click for more Info
+                        </button>
+                      </td> */}
+                    <td>
+                      <ToggleButton
+                        value="check"
+                        selected={selected[index]}
+                        // onChange={() => {
+                        //   setSelected(!selected);
+                        // }}
+                        onClick={() =>
+                          data.desktop
+                            ? Screenshots(index, data.email)
+                            : alert("User is not online")
+                        }
+                        style={{ padding: "0.5em" }}
+                      >
+                        <PhotoCameraIcon />
+                      </ToggleButton>
+                      {/* <Button onClick={() => ScreenshotStart(data.email)}>
                       SS
                     </Button>
                     <Button onClick={() => ScreenshotStop(data.email)}>
                       SStop
                     </Button> */}
-                  </td>
-                  <td>{data.desktop ? <Online /> : <Offline />}</td>
-                  <td>
-                    <Dropdown>
-                      <Dropdown.Toggle
-                        style={{ all: "unset", cursor: "pointer" }}
-                      >
-                        <MoreVertIcon />
-                      </Dropdown.Toggle>
+                    </td>
+                    <td>{data.desktop ? <Online /> : <Offline />}</td>
+                    <td>
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          style={{ all: "unset", cursor: "pointer" }}
+                        >
+                          <MoreVertIcon />
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => alert("action")}>
-                          Edit
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => submit(data._id)}>
-                          Delete
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+                        <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => alert("action")}>
+                            Edit
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => submit(data._id)}>
+                            Delete
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                );
+                // }
+              })}
+            </tbody>
+          </Table>
+          <Pagination
+            count={Math.ceil(data.length / postsPerPage)}
+            variant="outlined"
+            color="primary"
+            onChange={(event, pageNumber) => setCurrentPage(pageNumber)}
+            sx={{ float: "right" }}
+          />
+        </>
       ) : null}
     </div>
   );

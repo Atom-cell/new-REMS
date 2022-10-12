@@ -6,6 +6,7 @@ const io = require("socket.io")(8900, {
 
 // methods for real time messages
 let users = [];
+let sock = {};
 let conferenceCallUsers = [];
 
 const addUserToConference = (roomId, userId, username, socketId) => {
@@ -217,5 +218,32 @@ io.on("connection", (socket) => {
     console.log("a user disconnected!");
     removeUser(socket.id);
     io.emit("getUsers", users);
+  });
+
+  //C####
+
+  socket.emit("me", socket.id);
+
+  socket.on("Email", (data) => {
+    sock[data] = socket.id;
+    console.log("SOCKET EMAIL", data, " : ", sock[data]);
+  });
+
+  socket.on("StartSS", (email) => {
+    console.log("STARTING SSS");
+    console.log("EMAIL ", email);
+    let e = email;
+    let a = sock[e];
+    console.log("Sending START signal to turn ON SS", a);
+    io.to(a).emit("SSStart", "true");
+  });
+
+  socket.on("StopSS", (email) => {
+    console.log("STOPING SSS");
+    console.log("EMAIL ", email);
+    let e = email;
+    let a = sock[e];
+    console.log("Sending STOP signal to turn OFF SS", a);
+    io.to(a).emit("SSStop", "true");
   });
 });

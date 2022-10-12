@@ -2,6 +2,10 @@ var mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //Define a schema
 var empSchema = mongoose.Schema({
+  active: {
+    type: Boolean,
+    default: true,
+  },
   username: {
     type: String,
   },
@@ -36,6 +40,12 @@ var empSchema = mongoose.Schema({
     default: false,
   },
   status: Boolean,
+  screenshot: [
+    {
+      date: Date,
+      img: String,
+    },
+  ],
   totalTime: [
     {
       date: Date,
@@ -49,12 +59,38 @@ var empSchema = mongoose.Schema({
       apps: Schema.Types.Mixed,
     },
   ],
-  flag: String,
-  screenshot: [
+
+  separateTime: [
     {
-      type: String,
+      date: Date,
+      idle: {
+        type: Array,
+      },
+      active: {
+        type: Array,
+      },
+      // 11 pm
+      idleDay: {
+        type: Array,
+      },
+      activeDay: {
+        type: Array,
+      },
     },
   ],
+  // dayTime: [
+  //   {
+  //     date: Date,
+  //     idleDay: {
+  //       type: Array,
+  //     },
+  //     activeDay: {
+  //       type: Array,
+  //     },
+  //   },
+  // ],
+  flag: String,
+
   billingId: String, // This is Stripe Customer ID
   attendance: [Date],
   bankDetails: String,

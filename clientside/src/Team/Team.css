@@ -1,0 +1,56 @@
+.team_create {
+  display: flex;
+  justify-content: space-between;
+}
+.team_container {
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+.name_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin-left: 2em;
+}
+
+.members_wrapper {
+  width: 55%;
+  margin-right: 2em;
+}
+
+/* ///////////////////////// */
+
+.team_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.delete_div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: -1em;
+  margin-bottom: 1em;
+}
+.team_show_div {
+  cursor: pointer;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px rgb(201, 201, 201);
+  padding: 2em;
+  margin: 2em;
+  width: 25%;
+  transition: transform ease 300ms;
+}
+.team_show_div:hover {
+  transform: translate(0, -10px);
+}
+
+#lead_div {
+  border: 1px solid red;
+}
