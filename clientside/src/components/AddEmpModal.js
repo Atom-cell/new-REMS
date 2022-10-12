@@ -19,8 +19,10 @@ function AddEmpModal({ closeMod, addEmpModal }) {
   const [emailE, setemailE] = React.useState({ error: false, msg: "" });
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     // let NewItem = { name: itemName };
-    if (email !== "") {
+    console.log("handle submit ", emailE);
+    if (emailE.error === false && email !== "") {
       await axios
         .post(
           "http://localhost:5000/emp/register",
@@ -36,14 +38,15 @@ function AddEmpModal({ closeMod, addEmpModal }) {
         .then(function (response) {
           console.log(response);
           addEmpModal(response.data.msg);
+          //setResponse(response.data.msg);
+          closeMod();
         })
         .catch(function (error) {
           console.log(error);
         });
+    } else {
+      //alert("sd");
     }
-
-    closeMod();
-    e.preventDefault();
   };
 
   const checkEmail = () => {
@@ -56,6 +59,8 @@ function AddEmpModal({ closeMod, addEmpModal }) {
         msg: "Please enter a valid Email address.",
       });
     }
+
+    console.log("Check ", emailE);
   };
   return (
     <div>
@@ -81,6 +86,7 @@ function AddEmpModal({ closeMod, addEmpModal }) {
               value={email}
               margin="dense"
               type="text"
+              helperText={emailE.msg}
               className="ip"
               placeholder="Enter Employee Email"
               onChange={(e) => {

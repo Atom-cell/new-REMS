@@ -41,7 +41,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/register", async (req, res, next) => {
-  console.log("In REgisters");
+  console.log("In Admin Registers");
   let { username, email, password } = req.body;
 
   //check user already exists or not
@@ -77,13 +77,13 @@ router.post("/register", async (req, res, next) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (err) console.log(err);
+      if (err) console.log(err.message);
       else {
         console.log("VERIFICATION EMAIL SENT!!!");
       }
     });
 
-    console.log(newAdmin);
+    console.log("new admin: ", newAdmin);
   }
 });
 
