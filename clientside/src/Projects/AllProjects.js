@@ -98,18 +98,16 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    }
-    // else if (category == "Not Assigned") {
-    //   axios
-    //     .get("/myprojects/notassigned", { params: { _id: user._id } })
-    //     .then((rec) => {
-    //       // console.log(rec);
-    //       setProjects(rec.data);
-    //     })
-    //     .catch((err) => console.log(err));
-    //   return;
-    // }
-    else if (category == "Sort By Priority") {
+    } else if (category == "Not Assigned") {
+      // axios
+      //   .get("/myprojects/notassigned", { params: { _id: user._id } })
+      //   .then((rec) => {
+      //     // console.log(rec);
+      //     setProjects(rec.data);
+      //   })
+      //   .catch((err) => console.log(err));
+      return;
+    } else if (category == "Sort By Priority") {
       axios
         .get("/myProjects/employeeprojects", {
           params: { userId: user._id },
@@ -147,7 +145,7 @@ const AllProjects = ({ user }) => {
       return;
     } else if (category == "Completed") {
       axios
-        .get("/myProjects/completedadmin", { params: { name: user.username } })
+        .get("/myProjects/completedadmin", { params: { _id: user._id } })
         .then((records) => {
           setProjects(records.data);
         })
@@ -156,7 +154,7 @@ const AllProjects = ({ user }) => {
     } else if (category == "Incompleted") {
       axios
         .get("/myProjects/incompletedadmin", {
-          params: { name: user.username },
+          params: { _id: user._id },
         })
         .then((records) => {
           // console.log(records.data);
@@ -167,7 +165,7 @@ const AllProjects = ({ user }) => {
     } else if (category == "Not Assigned") {
       axios
         .get("/myprojects/notassignedadmin", {
-          params: { name: user.username },
+          params: { _id: user._id },
         })
         .then((rec) => {
           // console.log(rec);
@@ -178,7 +176,7 @@ const AllProjects = ({ user }) => {
     } else if (category == "Sort By Priority") {
       axios
         .get("/myprojects/organizationprojects", {
-          params: { name: user.username },
+          params: { _id: user._id },
         })
         .then((rec) => {
           // console.log(rec);
@@ -277,7 +275,9 @@ const AllProjects = ({ user }) => {
                 <option value="All">All</option>
                 <option value="Completed">Completed</option>
                 <option value="Incompleted">Incompleted</option>
-                {/* <option value="Not Assigned">Not Assigned</option> */}
+                {user?.role !== "Employee" && (
+                  <option value="Not Assigned">Not Assigned</option>
+                )}
                 <option value="Sort By Priority">Sort By Priority</option>
                 <option value="Sort By Date">Sort By Date</option>
               </select>

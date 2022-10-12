@@ -72,13 +72,8 @@ router.get("/completed", (req, res, next) => {
 router.get("/completedadmin", (req, res, next) => {
   myProject
     .find({
-      projectAssignedBy: req.query.name,
-      projectFiles: {
-        $elemMatch: {
-          completionPercentage: "100",
-          completed: "true",
-        },
-      },
+      projectAssignedBy: req.query._id,
+      status: "completed",
     })
     .exec((error, records) => {
       if (error) throw error;
@@ -115,18 +110,19 @@ router.get("/incompleted", (req, res, next) => {
 router.get("/incompletedadmin", (req, res, next) => {
   myProject
     .find({
-      projectAssignedBy: req.query.name,
-      $or: [
-        { "projectFiles.completed": { $ne: true } },
-        {
-          projectFiles: {
-            $elemMatch: {
-              completionPercentage: "100",
-              completed: "false",
-            },
-          },
-        },
-      ],
+      projectAssignedBy: req.query._id,
+      status: { $ne: "completed" },
+      // $or: [
+      //   { "projectFiles.completed": { $ne: true } },
+      //   {
+      //     projectFiles: {
+      //       $elemMatch: {
+      //         completionPercentage: "100",
+      //         completed: "false",
+      //       },
+      //     },
+      //   },
+      // ],
     })
     .exec((err, rec) => {
       if (err) res.status(500).json(err);
@@ -137,10 +133,13 @@ router.get("/incompletedadmin", (req, res, next) => {
 
 // get not assigned projects
 router.get("/notassigned", (req, res, next) => {
-  Admin.find({ employees: req.query._id }, { username: 1 }, (err, rec) => {
+  Admin.find({ employees: req.query._id }, { _id: 1 }, (err, rec) => {
     if (err) res.status(500).json(err);
     myProject
-      .find({ projectAssignedBy: rec[0].username, projectAssignedTo: "" })
+      .find({
+        projectAssignedBy: rec[0]._id,
+        projectAssignedTo: { $exists: true, $size: 0 },
+      })
       .exec((error, records) => {
         if (error) throw error;
         res.status(200).json(records);
@@ -151,7 +150,10 @@ router.get("/notassigned", (req, res, next) => {
 // get not assigned projects admin
 router.get("/notassignedadmin", (req, res, next) => {
   myProject
-    .find({ projectAssignedBy: req.query.name, projectAssignedTo: "" })
+    .find({
+      projectAssignedBy: req.query._id,
+      projectAssignedTo: { $exists: true, $size: 0 },
+    })
     .exec((error, records) => {
       if (error) throw error;
       res.status(200).json(records);
