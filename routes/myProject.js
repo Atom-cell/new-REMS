@@ -56,15 +56,11 @@ router.get("/employeeprojects", (req, res, next) => {
 
 // Get Completed Projects
 router.get("/completed", (req, res, next) => {
+  console.log(req.query._id);
   myProject
     .find({
-      projectAssignedToId: req.query._id,
-      projectFiles: {
-        $elemMatch: {
-          completionPercentage: "100",
-          completed: "true",
-        },
-      },
+      projectAssignedTo: req.query._id,
+      status: "completed",
     })
     .exec((error, records) => {
       if (error) throw error;
@@ -90,22 +86,23 @@ router.get("/completedadmin", (req, res, next) => {
     });
 });
 
-// Get Incompleted Projects
+// Get Incompleted Projects for employee
 router.get("/incompleted", (req, res, next) => {
   myProject
     .find({
-      projectAssignedToId: req.query._id,
-      $or: [
-        { "projectFiles.completed": { $ne: true } },
-        {
-          projectFiles: {
-            $elemMatch: {
-              completionPercentage: "100",
-              completed: "false",
-            },
-          },
-        },
-      ],
+      projectAssignedTo: req.query._id,
+      status: { $ne: "completed" },
+      // $or: [
+      //   { "projectFiles.completed": { $ne: true } },
+      //   {
+      //     projectFiles: {
+      //       $elemMatch: {
+      //         completionPercentage: "100",
+      //         completed: "false",
+      //       },
+      //     },
+      //   },
+      // ],
     })
     .exec((err, rec) => {
       if (err) res.status(500).json(err);
@@ -163,21 +160,6 @@ router.get("/notassignedadmin", (req, res, next) => {
 
 // Get Specific Projects
 router.get("/searchproject/:projectName", (req, res, next) => {
-  // console.log(req.params.projectName);
-  // if (req.query._id) {
-  // myProject
-  //   .find({
-  //     projectAssignedToId: req.query._id,
-  //     projectName: {
-  //       $regex: req.params.projectName,
-  //       $options: "i",
-  //     },
-  //   })
-  //   .exec((error, records) => {
-  //     if (error) throw error;
-  //     res.json(records);
-  //   });
-  // } else {
   myProject
     .find({
       projectAssignedBy: req.query._id,
@@ -190,7 +172,22 @@ router.get("/searchproject/:projectName", (req, res, next) => {
       if (error) throw error;
       res.json(records);
     });
-  // }
+});
+
+// Get Specific Projects
+router.get("/employeesearchproject/:projectName", (req, res, next) => {
+  myProject
+    .find({
+      projectAssignedTo: req.query._id,
+      projectName: {
+        $regex: req.params.projectName,
+        $options: "i",
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
 });
 
 router.post("/addNewProject", async (req, res) => {
