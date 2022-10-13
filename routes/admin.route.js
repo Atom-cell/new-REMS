@@ -122,7 +122,7 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
 router.get("/projectInfo/:id", (req, res) => {
   // id is of employee
 
-  Project.find({ projectAssignedTo: { $in: ObjectId(req.params.id) } }).then(
+  Project.find({ projectAssignedTo: { $in: req.params.id } }).then(
     (response) => {
       res.json(response);
     }

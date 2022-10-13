@@ -149,7 +149,7 @@ function Login() {
         ) : data.updated === false ? (
           (window.location = "/update")
         ) : data.updated ? (
-          (window.location = "/empDashboard")
+          (window.location = "/myCalendar")
         ) : null}
 
         <div style={{ display: "flex", marginTop: "-2em" }}>
