@@ -30,7 +30,9 @@ function Editable(props) {
               id=""
               cols="70"
               rows="3"
-              placeholder={props.placeholder}
+              placeholder={props.placeholder || props.text}
+              onChange={(event) => setInputText(event.target.value)}
+              autoFocus
             ></textarea>
           ) : (
             <input

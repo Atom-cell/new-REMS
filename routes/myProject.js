@@ -305,7 +305,7 @@ router.put("/updateprojectname", (req, res) => {
   );
 });
 router.put("/updateprojectdescription", (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   myProject.findOneAndUpdate(
     { _id: req.body.projectId },
     { $set: { projectDescription: req.body.description } },

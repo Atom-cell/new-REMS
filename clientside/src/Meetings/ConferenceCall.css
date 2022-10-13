@@ -210,3 +210,7 @@
     font-size: large;
     margin-top: 5px;
 }
+.participants-conference-call{
+    position: relative;
+    left: -17px;
+}

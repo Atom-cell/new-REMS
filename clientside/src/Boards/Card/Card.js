@@ -68,6 +68,7 @@ function Card(props) {
           card={props.card}
           boardId={props.boardId}
           updateCard={props.updateCard}
+          hideAssign={props.hideAssign}
         />
       )}
       <div

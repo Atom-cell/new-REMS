@@ -68,6 +68,8 @@ const SpecificProject = ({ user }) => {
       .catch((err) => console.log(err + "Specific Project 19"));
   };
   const updateProjectDescription = (value) => {
+    console.log("value");
+    console.log(value);
     axios
       .put("/myprojects/updateprojectDescription", {
         projectId: myProject._id,
@@ -340,7 +342,7 @@ const SpecificProject = ({ user }) => {
         params: { projectId: location.state.project._id },
       })
       .then((res) => {
-        console.log(res.data[0]);
+        // console.log(res.data[0]);
         setGoals(res.data);
       })
       .catch((err) => console.log(err + "Specific Project 138"));
@@ -732,14 +734,16 @@ const SpecificProject = ({ user }) => {
                     <p className={item.completed ? "completed" : ""}>
                       {item.task}
                     </p>
-                    <Trash onClick={() => removeMilestone(item._id)} />
+                    {user?.role !== "Employee" && (
+                      <Trash onClick={() => removeMilestone(item._id)} />
+                    )}
                   </div>
                 ))}
               </div>
               {user?.role !== "Employee" && (
                 <Editable
-                  text={"Add a Task"}
-                  placeholder="Enter task"
+                  text={"Add Milestone"}
+                  placeholder="Enter Milestone"
                   onSubmit={addMilestone}
                   emp={user?.role == "Employee" ? true : undefined}
                 />

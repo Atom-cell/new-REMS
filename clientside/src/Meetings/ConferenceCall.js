@@ -254,7 +254,7 @@ const ConferenceCall = ({ username }) => {
               <div className="main__header">
                 <h2>{participants ? "Participants" : "No Participants"}</h2>
               </div>
-              <ul className="messages">
+              <ul className="messages participants-conference-call">
                 {participants &&
                   participants.map((p) => {
                     return <li className="participants-li">{p.username}</li>;

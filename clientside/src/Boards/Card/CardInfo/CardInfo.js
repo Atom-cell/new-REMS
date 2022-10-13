@@ -132,7 +132,6 @@ function CardInfo(props) {
             onSubmit={updateTitle}
           />
         </div>
-
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <List />
@@ -146,7 +145,6 @@ function CardInfo(props) {
             onSubmit={updateDesc}
           />
         </div>
-
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <Calendar />
@@ -159,7 +157,6 @@ function CardInfo(props) {
             onChange={(event) => updateDate(event.target.value)}
           />
         </div>
-
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <Tag />
@@ -195,6 +192,7 @@ function CardInfo(props) {
             }
           />
         </div>
+        {/* {props.hideAssign !== true && ( */}
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <CheckSquare />
@@ -231,6 +229,7 @@ function CardInfo(props) {
             onSubmit={addTask}
           />
         </div>
+        {/* )} */}
       </div>
     </Modal>
   );
