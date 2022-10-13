@@ -205,7 +205,10 @@ const App = () => {
                 {role === "admin" ? (
                   <Route path="/dashboard" element={<Dashboard />} />
                 ) : role === "Employee" ? (
-                  <Route path="/myCalendar" element={<EmployeeDashboard />} /> // EMP DASHBOARD
+                  <Route
+                    path="/myCalendar"
+                    element={loggedUser && <MyCalendar user={loggedUser} />}
+                  /> // EMP DASHBOARD
                 ) : (
                   <Route exact path="/" element={<LandPage />} />
                 )}
