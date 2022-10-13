@@ -247,10 +247,10 @@
     display: flex;
 }
 .ProjectOverviewGoalsEmptyState-body {
-    /* align-items: center; */
+    align-items: center;
     box-sizing: border-box;
     display: flex;
-    /* justify-content: center; */
+    justify-content: center;
     max-width: 748px;
     min-height: 160px;
     min-width: 458px;

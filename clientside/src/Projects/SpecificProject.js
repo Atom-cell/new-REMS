@@ -30,6 +30,7 @@ const SpecificProject = ({ user }) => {
   const [myProject, setMyProject] = useState();
   const [myBoard, setMyBoard] = useState();
   const [goals, setGoals] = useState();
+  const [projectRoleEmployee, setProjectRoleEmployee] = useState();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [newEvent, setNewEvent] = useState({ title: "", start: null });
@@ -125,14 +126,32 @@ const SpecificProject = ({ user }) => {
   const handleSave = (type, id) => {
     // console.log(type, id);
     handleClosee();
-    const myObj = { type: type, id: id };
+    // const myObj = { type: type, id: id };
     axios
       .post("/myprojects/updateroles", {
         projectId: myProject._id,
-        myObj: myObj,
+        projectroles: id,
       })
-      .then((res) => toast.success("Member Added"))
-      .catch((err) => console.log(err + "specific Project 108"));
+      .then((res) => {
+        // console.log(res.data);
+        setMyProject(res.data);
+        toast.success("Project Lead Added");
+      })
+      .catch((err) => console.log(err + "specific Project 135"));
+  };
+
+  const removeRole = () => {
+    axios
+      .post("/myprojects/updateroles", {
+        projectId: myProject._id,
+        projectroles: null,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setMyProject(res.data);
+        toast.success("Project Lead Removed");
+      })
+      .catch((err) => console.log(err + "specific Project 154"));
   };
 
   const addNewEvent = (newEvent) => {
@@ -252,6 +271,17 @@ const SpecificProject = ({ user }) => {
       .catch((err) => console.log(err + "Specific Project 250"));
   }, []);
 
+  useEffect(() => {
+    if (myProject) {
+      axios
+        .get("/emp/getemployeeinformation", {
+          params: { _id: myProject.projectroles },
+        })
+        .then((rec) => setProjectRoleEmployee(rec.data[0]))
+        .catch((err) => console.log(err + "Specific Project 141"));
+    }
+  }, [myProject]);
+
   const fetchData = () => {
     axios
       .get("/mycalendar/getmyprojectgoal", {
@@ -313,81 +343,55 @@ const SpecificProject = ({ user }) => {
         <div className="ProjectOverviewSection">
           <div className="ProjectOverviewSection-headingContainer">
             <h4 className="ProjectOverviewSection-heading Typography Typography--colorDarkGray3 Typography--h4 Typography--fontWeightMedium">
-              Project roles
+              Project Lead
             </h4>
             <div className="ProjectOverviewSection-headingExtraContent"></div>
           </div>
           <div className="ProjectOverviewSection-content">
             <div className="ProjectOverviewMembersSection-membersGrid">
-              <div
-                className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-addMemberButton"
-                role="button"
-                aria-disabled="false"
-                aria-expanded="false"
-                tabindex="0"
-              >
-                <div className="ProjectOverviewMembersSection-addMemberButtonPlusIcon">
-                  <svg
-                    className="Icon PlusIcon"
-                    viewBox="0 0 32 32"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path d="M26,14h-8V6c0-1.1-0.9-2-2-2l0,0c-1.1,0-2,0.9-2,2v8H6c-1.1,0-2,0.9-2,2l0,0c0,1.1,0.9,2,2,2h8v8c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2v-8h8c1.1,0,2-0.9,2-2l0,0C28,14.9,27.1,14,26,14z"></path>
-                  </svg>
-                </div>
+              {myProject?.projectroles ? (
                 <div
-                  className="ProjectOverviewMembersSection-addMemberButtonTextContainer"
-                  onClick={handleShoww}
+                  id="lui_430"
+                  className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-member ProjectOverviewMember"
+                  role="button"
+                  aria-disabled="false"
+                  aria-expanded="false"
+                  tabindex="0"
                 >
-                  <h6 className="ProjectOverviewMembersSection-addMemberButtonText Typography Typography--colorWeak Typography--h6 Typography--fontWeightMedium">
-                    Add Member
-                  </h6>
-                </div>
-              </div>
-              <AddMemberRole
-                show={showInviteModalRole}
-                handleClose={handleClosee}
-                handleSave={handleSave}
-              />
-              <div
-                id="lui_430"
-                className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-member ProjectOverviewMember"
-                role="button"
-                aria-disabled="false"
-                aria-expanded="false"
-                tabindex="0"
-              >
-                <div className="ProjectOverviewMember-avatar">
-                  <div
-                    aria-hidden="true"
-                    className="Avatar AvatarPhoto AvatarPhoto--default AvatarPhoto--large AvatarPhoto--color3"
-                  >
-                    NA
+                  <div className="ProjectOverviewMember-avatar">
+                    <div
+                      aria-hidden="true"
+                      className="Avatar AvatarPhoto AvatarPhoto--default AvatarPhoto--large AvatarPhoto--color3"
+                    >
+                      {projectRoleEmployee?.username
+                        .substring(0, 2)
+                        .toUpperCase()}
+                    </div>
                   </div>
-                </div>
-                <div className="ProjectOverviewMember-info">
-                  <div className="ProjectOverviewMember-nameRow">
-                    <h6 className="Typography Typography--colorDarkGray3 Typography--overflowTruncate Typography--h6 Typography--fontWeightMedium">
-                      Naseer Ahmad
-                    </h6>
+                  <div className="ProjectOverviewMember-info">
+                    <div className="ProjectOverviewMember-nameRow">
+                      <h6 className="Typography Typography--colorDarkGray3 Typography--overflowTruncate Typography--h6 Typography--fontWeightMedium">
+                        {projectRoleEmployee?.username}
+                      </h6>
+                    </div>
+                    <span className="Typography Typography--colorDarkGray1 Typography--overflowTruncate Typography--s">
+                      Project Lead
+                    </span>
                   </div>
-                  <span className="Typography Typography--colorDarkGray1 Typography--overflowTruncate Typography--s">
-                    Project Owner
-                  </span>
-                </div>
-                <div className="dropdown-status">
-                  <DropdownButton
-                    id="dropdown-basic-button"
-                    className="dropdown-role"
-                    // title="Update Role"
-                  >
-                    <Dropdown.Item>Change Role</Dropdown.Item>
-                    <Dropdown.Item>Remove role</Dropdown.Item>
-                    <Dropdown.Item>Remove from Project</Dropdown.Item>
-                  </DropdownButton>
-                </div>
-                {/* <div className="ProjectOverviewMember-downIcon">
+                  <div className="dropdown-status">
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      className="dropdown-role"
+                      // title="Update Role"
+                    >
+                      {/* <Dropdown.Item>Change Role</Dropdown.Item> */}
+                      <Dropdown.Item onClick={() => removeRole()}>
+                        Remove role
+                      </Dropdown.Item>
+                      {/* <Dropdown.Item>Remove from Project</Dropdown.Item> */}
+                    </DropdownButton>
+                  </div>
+                  {/* <div className="ProjectOverviewMember-downIcon">
                   <svg
                     className="MiniIcon ArrowDownMiniIcon"
                     viewBox="0 0 24 24"
@@ -398,7 +402,43 @@ const SpecificProject = ({ user }) => {
                     <path d="M3.5,8.9c0-0.4,0.1-0.7,0.4-1C4.5,7.3,5.4,7.2,6,7.8l5.8,5.2l6.1-5.2C18.5,7.3,19.5,7.3,20,8c0.6,0.6,0.5,1.5-0.1,2.1 l-7.1,6.1c-0.6,0.5-1.4,0.5-2,0L4,10.1C3.6,9.8,3.5,9.4,3.5,8.9z"></path>
                   </svg>
                 </div> */}
-              </div>
+                </div>
+              ) : (
+                <div
+                  className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-addMemberButton"
+                  role="button"
+                  aria-disabled="false"
+                  aria-expanded="false"
+                  tabindex="0"
+                >
+                  <div
+                    className="ProjectOverviewMembersSection-addMemberButtonPlusIcon"
+                    onClick={handleShoww}
+                  >
+                    <svg
+                      className="Icon PlusIcon"
+                      viewBox="0 0 32 32"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d="M26,14h-8V6c0-1.1-0.9-2-2-2l0,0c-1.1,0-2,0.9-2,2v8H6c-1.1,0-2,0.9-2,2l0,0c0,1.1,0.9,2,2,2h8v8c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2v-8h8c1.1,0,2-0.9,2-2l0,0C28,14.9,27.1,14,26,14z"></path>
+                    </svg>
+                  </div>
+                  <div
+                    className="ProjectOverviewMembersSection-addMemberButtonTextContainer"
+                    onClick={handleShoww}
+                  >
+                    <h6 className="ProjectOverviewMembersSection-addMemberButtonText Typography Typography--colorWeak Typography--h6 Typography--fontWeightMedium">
+                      Add Project Lead
+                    </h6>
+                  </div>
+                </div>
+              )}
+              <AddMemberRole
+                show={showInviteModalRole}
+                handleClose={handleClosee}
+                handleSave={handleSave}
+              />
               {showEditRemove && (
                 <div className="specific-project-menu-dropdown">
                   <button>Change Role</button>

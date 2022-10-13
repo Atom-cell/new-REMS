@@ -93,7 +93,7 @@ const SearchBar = ({
 
   return (
     <div className="search-bar-container mt-3">
-      <div className="inputTextFields selectContainerModal">
+      {/* <div className="inputTextFields selectContainerModal">
         <select
           id="framework"
           value={projectRole}
@@ -106,7 +106,7 @@ const SearchBar = ({
           <option value="projectlead">Project Lead</option>
           <option value="projectmanager">Project Manager</option>
         </select>
-      </div>
+      </div> */}
       <div className="searchInputs">
         <input
           type="text"

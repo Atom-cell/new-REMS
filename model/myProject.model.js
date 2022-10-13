@@ -19,12 +19,8 @@ var myProjectSchema = mongoose.Schema(
     projectAssignedTo: [
       { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
     ],
-    projectroles: [
-      {
-        type: String,
-        employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
-      },
-    ],
+    projectroles: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
+
     hoursWorked: {
       type: [String],
     },

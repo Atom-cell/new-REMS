@@ -9,7 +9,7 @@ const AddMemberRole = ({ show, handleClose, handleSave }) => {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Member Role</Modal.Title>
+          <Modal.Title>Add Project Lead</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <SearchBar

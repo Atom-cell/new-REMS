@@ -342,17 +342,19 @@ router.post("/updateroles", (req, res) => {
   // }
   myProject.findOneAndUpdate(
     { _id: req.body.projectId },
-    {
-      $push: {
-        projectroles: {
-          type: "projectlead",
-          employeeId: req.body.myObj.id,
-        },
-      },
-    },
+    { $set: { projectroles: req.body.projectroles } },
+    { new: true },
+    // {
+    //   $push: {
+    //     projectroles: {
+    //       type: "projectlead",
+    //       employeeId: req.body.myObj.id,
+    //     },
+    //   },
+    // },
     (err, rec) => {
       if (err) res.status(500).json(err);
-      console.log(rec);
+      // console.log(rec);
       res.status(200).json(rec);
     }
   );
