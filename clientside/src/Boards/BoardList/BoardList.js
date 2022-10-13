@@ -45,6 +45,7 @@ function BoardList(props) {
             dragEntered={props.dragEntered}
             dragEnded={props.dragEnded}
             updateCard={props.updateCard}
+            hideAssign={props.hideAssign}
           />
         ))}
         <Editable

@@ -103,37 +103,39 @@ function Card(props) {
         </div>
         <div className="card_title">{title}</div>
         <div className="card_footer">
-          <div>
-            <OverlayTrigger
-              placement="bottom"
-              delay={{ show: 250 }}
-              overlay={renderTooltip}
-            >
-              <div
-              // onClick={() => setShowOnlineUsers(!showOnlineUsers)}
+          {props.hideAssign == true ? (
+            <div>
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 250 }}
+                overlay={renderTooltip}
               >
-                {assignedToUser ? (
-                  <Image
-                    src={assignedToUser?.profilePicture}
-                    roundedCircle
-                    style={{ height: "30px", width: "30px" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShow();
-                    }}
-                  />
-                ) : (
-                  <UserPlus
-                    className="trash"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShow();
-                    }}
-                  />
-                )}
-              </div>
-            </OverlayTrigger>
-          </div>
+                <div
+                // onClick={() => setShowOnlineUsers(!showOnlineUsers)}
+                >
+                  {assignedToUser ? (
+                    <Image
+                      src={assignedToUser?.profilePicture}
+                      roundedCircle
+                      style={{ height: "30px", width: "30px" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShow();
+                      }}
+                    />
+                  ) : (
+                    <UserPlus
+                      className="trash"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShow();
+                      }}
+                    />
+                  )}
+                </div>
+              </OverlayTrigger>
+            </div>
+          ) : null}
           {date && (
             <p className="card_footer_item">
               <Clock className="card_footer_icon" />

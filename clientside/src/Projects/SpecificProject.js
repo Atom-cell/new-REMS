@@ -117,7 +117,9 @@ const SpecificProject = ({ user }) => {
 
   const handleViewBoard = () => {
     // console.log(myBoard);
-    navigate(`/boards/${myBoard._id}`);
+    navigate(`/boards/${myBoard._id}`, {
+      state: { hide: true },
+    });
   };
 
   const handleSave = (type, id) => {

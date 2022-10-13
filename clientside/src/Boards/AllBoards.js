@@ -131,8 +131,8 @@ const AllBoards = ({ user }) => {
     if (category == "myboards") fetchData().catch(console.error);
     else {
       axios
-        .get("/myBoards//boardsshared/withme", {
-          params: { username: user.username },
+        .get("/myBoards/boardsshared/withme", {
+          params: { _id: user._id },
         })
         .then((res) => setBoards(res.data))
         .catch((err) => console.log(err));

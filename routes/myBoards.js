@@ -190,7 +190,7 @@ router.delete("/deleteboard", (req, res) => {
 
 router.get("/boardsshared/withme", (req, res) => {
   // console.log(req.query.username);
-  myBoard.find({ sharewith: { $in: [req.query.username] } }, (err, rec) => {
+  myBoard.find({ sharewith: { $in: [req.query._id] } }, (err, rec) => {
     if (err) res.status(500).json(err);
     // console.log(rec);
     res.status(200).json(rec);
@@ -213,6 +213,7 @@ router.post("/shareboardwith", (req, res) => {
     { $set: { sharewith: req.body.sharewith } },
     { new: true },
     (err, rec) => {
+      console.log(rec);
       if (err) res.status(500).send(err);
       res.status(200).send(rec);
     }

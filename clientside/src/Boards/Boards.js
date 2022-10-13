@@ -226,6 +226,8 @@ const Boards = ({ user }) => {
   };
 
   const handleInvite = (emps) => {
+    console.log("emps");
+    console.log(emps);
     axios
       .post("/myboards/shareboardwith", { bid: bid, sharewith: emps })
       .then((res) => toast.success("Board Shared"))
@@ -239,7 +241,7 @@ const Boards = ({ user }) => {
     // console.log(boards);
     if (boards?.length > 0) {
       // update using current params id
-      console.log(boards);
+      // console.log(boards);
       // console.log("completeKanban");
       // console.log(boards);
       axios
@@ -344,6 +346,7 @@ const Boards = ({ user }) => {
               dragEndedBoard={dragEndedBoard}
               updateBoardTitle={updateBoardTitle}
               updateCardAssignedTo={updateCardAssignedTo}
+              hideAssign={state.hide}
             />
           ))}
           <div className="app_boards_last">
