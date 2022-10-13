@@ -270,19 +270,26 @@ router.post("/markprojectcompletion", (req, res) => {
 //Time worked on
 
 router.post("/hoursWorked", (req, res, next) => {
+  const uname = req.body.username;
   console.log("Time is: ", req.body.time);
   console.log("Breaks: ", req.body.breaks);
-  console.log(req.body._id);
+  console.log("ID: ", req.body._id);
+  console.log("name: ", uname);
 
-  // myProject.findOneAndUpdate(
-  //   { _id: req.body._id },
-  //   { $push: { hoursWorked: req.body.time, numOfBreaks: req.body.breaks } },
+  myProject.findOneAndUpdate(
+    { _id: req.body._id },
+    {
+      $push: {
+        hoursWorked: { user: req.body.username, time: req.body.time },
+        numOfBreaks: { user: req.body.username, time: req.body.breaks },
+      },
+    },
 
-  //   (err, rec) => {
-  //     if (err) res.status(500).json(err);
-  //     res.status(200).json(rec);
-  //   }
-  // );
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
 });
 
 router.put("/updateprojectname", (req, res) => {

@@ -19,16 +19,17 @@ function UpdateProfile() {
   const [password, setPassword] = React.useState("");
   const [contactE, setcontactE] = React.useState({ error: false, msg: "" });
   const [passwordE, setpasswordE] = React.useState({ error: true, msg: "" });
+  const [resp, setResponse] = React.useState(9);
 
   const [showPass, setShowPass] = React.useState(false);
   const [data, setData] = React.useState(9);
   const [open, setOpen] = React.useState(false);
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     setpasswordE({ error: false, msg: "" });
     setcontactE({ error: false, msg: "" });
 
-    e.preventDefault();
     uploadData();
   };
 
@@ -39,7 +40,8 @@ function UpdateProfile() {
       username &&
       /[0-9]{4}-[0-9]{7}/.test(contact)
     ) {
-      axios
+      //console.log("send Update req ");
+      await axios
         .put("http://localhost:5000/emp/update", {
           email: localStorage.getItem("email"),
           username: username,
@@ -49,6 +51,7 @@ function UpdateProfile() {
         })
         .then(function (response) {
           setData(response.data.msg);
+          setResponse(response.data.msg);
         })
         .catch(function (error) {
           console.log(error);
@@ -63,14 +66,20 @@ function UpdateProfile() {
       setpasswordE({ error: false, msg: "" });
       setcontactE({ error: false, msg: "" });
 
-      localStorage.clear();
+      if (resp === 1) {
+        logout();
 
-      setTimeout(function () {
-        navigate("/");
-      }, 2000);
+        setTimeout(function () {
+          window.location.href = "/home";
+        }, 2000);
+      } else {
+      }
     }
   };
 
+  const logout = () => {
+    localStorage.clear();
+  };
   const checkContact = () => {
     if (/[0-9]{4}-[0-9]{7}/.test(contact)) {
       setcontactE({ error: false, msg: "" });
@@ -109,9 +118,19 @@ function UpdateProfile() {
   return (
     <div className="container1">
       <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Updated Successfully!
-        </Alert>
+        {resp === 1 ? (
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Account Created Successfully!
+          </Alert>
+        ) : resp === 0 ? (
+          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+            User already exists!
+          </Alert>
+        ) : null}
       </Snackbar>
 
       <h2>Update Profile</h2>

@@ -70,7 +70,7 @@ const AllProjects = ({ user }) => {
       })
       .then((rec) => {
         // remove the project from Projects
-        const newProjects = projects.filter((proj) => proj._id != project._id);
+        const newProjects = projects.filter((proj) => proj._id !== project._id);
         setProjects([...newProjects, rec.data]);
       })
       .catch((err) => console.log(err));
@@ -78,10 +78,10 @@ const AllProjects = ({ user }) => {
 
   const handleFilterChangeEmployee = (e) => {
     const category = e.target.value;
-    if (category == "All") {
+    if (category === "All") {
       fetchData().catch(console.error);
       return;
-    } else if (category == "Completed") {
+    } else if (category === "Completed") {
       axios
         .get("/myProjects/completed", { params: { _id: user._id } })
         .then((records) => {
@@ -89,7 +89,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Incompleted") {
+    } else if (category === "Incompleted") {
       axios
         .get("/myProjects/incompleted", { params: { _id: user._id } })
         .then((records) => {
@@ -125,7 +125,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Sort By Date") {
+    } else if (category === "Sort By Date") {
       // Sort in Ascending order (low to high) i-e 2012,2013
       const sortedAsc = projects
         .map((obj) => {
@@ -140,10 +140,10 @@ const AllProjects = ({ user }) => {
 
   const handleFilterChangeAdmin = (e) => {
     const category = e.target.value;
-    if (category == "All") {
+    if (category === "All") {
       fetchData().catch(console.error);
       return;
-    } else if (category == "Completed") {
+    } else if (category === "Completed") {
       axios
         .get("/myProjects/completedadmin", { params: { _id: user._id } })
         .then((records) => {
@@ -151,7 +151,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Incompleted") {
+    } else if (category === "Incompleted") {
       axios
         .get("/myProjects/incompletedadmin", {
           params: { _id: user._id },
@@ -162,7 +162,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Not Assigned") {
+    } else if (category === "Not Assigned") {
       axios
         .get("/myprojects/notassignedadmin", {
           params: { _id: user._id },
@@ -173,7 +173,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Sort By Priority") {
+    } else if (category === "Sort By Priority") {
       axios
         .get("/myprojects/organizationprojects", {
           params: { _id: user._id },
@@ -191,7 +191,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Sort By Date") {
+    } else if (category === "Sort By Date") {
       // Sort in Ascending order (low to high) i-e 2012,2013
       const sortedAsc = projects
         .map((obj) => {
@@ -229,7 +229,7 @@ const AllProjects = ({ user }) => {
   };
 
   const fetchData = async () => {
-    if (user.role == "Employee") {
+    if (user.role === "Employee") {
       const res = await axios.get("/myProjects/employeeprojects", {
         params: { userId: user._id },
       });
@@ -267,7 +267,7 @@ const AllProjects = ({ user }) => {
               <select
                 className="selectFilter"
                 onChange={
-                  user.role == "Employee"
+                  user.role === "Employee"
                     ? handleFilterChangeEmployee
                     : handleFilterChangeAdmin
                 }
@@ -281,7 +281,7 @@ const AllProjects = ({ user }) => {
                 <option value="Sort By Priority">Sort By Priority</option>
                 <option value="Sort By Date">Sort By Date</option>
               </select>
-              {role == "Employee" ? null : (
+              {role === "Employee" ? null : (
                 <div className="create-project">
                   <Button
                     style={{ backgroundColor: "#1890ff" }}

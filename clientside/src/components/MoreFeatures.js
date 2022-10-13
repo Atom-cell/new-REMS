@@ -86,7 +86,9 @@ function MoreFeatures() {
             <Col xs={12}>
               <div className="footer">
                 <h1>Start monitoring with REMS!</h1>
-                <Button>Creat Free Account Now</Button>
+                <Button onClick={() => navigate("/signup")}>
+                  Creat Free Account Now
+                </Button>
                 <p>Remote Employee Monitoring System</p>
               </div>
             </Col>

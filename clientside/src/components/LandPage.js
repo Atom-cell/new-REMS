@@ -127,8 +127,12 @@ function LandPage() {
                 <div className="ft1">
                   <h1>01</h1>
                   <h1>Monitor the apps your employees use, in realtime</h1>
-
-                  <details>
+                  <p>
+                    Working hard or browsing social media? Always know how your
+                    employees use their time. Track app and website usage, and
+                    overall productivity.
+                  </p>
+                  {/* <details>
                     <summary style={{ backgroundColor: "green" }}>
                       Working hard or browsing social media? Always know how
                       your employees use their time. Track app and website
@@ -140,7 +144,7 @@ function LandPage() {
                       dolores, recusandae incidunt natus libero rem, numquam
                       obcaecati quod qui mollitia placeat voluptas totam.
                     </p>
-                  </details>
+                  </details> */}
                 </div>
               </Col>
             </Row>

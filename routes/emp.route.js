@@ -21,6 +21,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//nyzfzwkbsgboxsce
 const verifyJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];
   if (!token) {
@@ -207,7 +208,7 @@ router.get("/getallmyusersbyname/:name", (req, res) => {
 });
 
 router.post("/register", verifyJWT, async (req, res, next) => {
-  console.log("In Register");
+  console.log("In Emp Register");
   let { email } = req.body;
 
   //check user already exists or not
@@ -242,7 +243,7 @@ router.post("/register", verifyJWT, async (req, res, next) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (err) console.log(err);
+      if (err) console.log("send mail error: ", err.message);
       else {
         console.log("VERIFICATION EMAIL SENT!!!");
       }
@@ -267,7 +268,7 @@ router.post("/register", verifyJWT, async (req, res, next) => {
         if (error) {
           console.log(error.message);
         } else {
-          console.log(data);
+          console.log();
         }
       }
     );
@@ -404,21 +405,28 @@ router.put("/update", async (req, res) => {
   const { email, username, password, contact, bank } = req.body;
   console.log(email, username, password, contact, bank);
   const hashPassword = await bcrypt.hash(password, 10);
-  Emp.findOneAndUpdate(
-    { email: email },
-    {
-      username: username,
-      password: hashPassword,
-      updated: true,
-      contact: contact,
-      bankDetails: bank,
-      verified: true,
-    }
-  )
-    .then((data) => {
-      res.json({ data: data, msg: 1 });
-    })
-    .catch((err) => res.status(err));
+
+  const user = await Emp.findOne({ username: username });
+
+  if (user) {
+    return res.json({ msg: 0 });
+  } else {
+    Emp.findOneAndUpdate(
+      { email: email },
+      {
+        username: username,
+        password: hashPassword,
+        updated: true,
+        contact: contact,
+        bankDetails: bank,
+        verified: true,
+      }
+    )
+      .then((data) => {
+        res.json({ data: data, msg: 1 });
+      })
+      .catch((err) => res.status(err));
+  }
 });
 
 //for  both admin + emp
@@ -428,10 +436,12 @@ router.post("/reset", async (req, res) => {
 
   const Euser = await Emp.findOne({ email: email });
   const Auser = await Admin.findOne({ email: email });
+
   let password = crypto.randomBytes(64).toString("hex");
+  const hashPassword = await bcrypt.hash(password, 10);
 
   if (Euser) {
-    Euser.password = password;
+    Euser.password = hashPassword;
     Euser.save();
     let mailOptions = {
       from: ' "Reset Password" <cinnakale@gmail.com>',
@@ -454,7 +464,7 @@ router.post("/reset", async (req, res) => {
 
     res.json({ msg: 1 });
   } else if (Auser) {
-    Auser.password = password;
+    Auser.password = hashPassword;
     Auser.save();
     let mailOptions = {
       from: ' "Reset Password" <cinnakale@gmail.com>',

@@ -15,9 +15,13 @@ import Editable from "../Boards/Editabled/Editable";
 import { useLocation, useNavigate } from "react-router-dom";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { Button } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+import {
+  Table,
+  Button,
+  Dropdown,
+  Badge,
+  DropdownButton,
+} from "react-bootstrap";
 import axios from "axios";
 import ProjectMembers from "./ProjectMembers";
 import { toast } from "react-toastify";
@@ -40,6 +44,7 @@ const SpecificProject = ({ user }) => {
   const [selectedEmployees, setSelectedEmployees] = useState();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showInviteModalRole, setShowInviteModalRole] = useState(false);
+  const [role, setRole] = useState("");
 
   const handleClose = () => setShowInviteModal(false);
   const handleShow = () => setShowInviteModal(true);
@@ -313,6 +318,9 @@ const SpecificProject = ({ user }) => {
         setSelectedEmployees(res.data[0].projectAssignedTo);
       })
       .catch((err) => console.log(err + "Specific Project 250"));
+
+    let r = localStorage.getItem("role");
+    setRole(r);
   }, []);
 
   useEffect(() => {
@@ -763,6 +771,56 @@ const SpecificProject = ({ user }) => {
             </div> */}
           </div>
         </div>
+        {role === "admin" ? (
+          <div className="ProjectOverviewSection milestones-container">
+            <div className="ProjectOverviewSection-headingContainer">
+              <h4 className="ProjectOverviewSection-heading Typography Typography--colorDarkGray3 Typography--h4 Typography--fontWeightMedium">
+                Members Times
+              </h4>
+            </div>
+            <Table className="table">
+              <thead>
+                <tr>
+                  <th className="thead">Member Name</th>
+                  <th className="thead">Active Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myProject?.hoursWorked.map((w, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{w.user}</td>
+                      <td>{w.time}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <div className="ProjectOverviewSection-content">
+              <Table className="table">
+                <thead>
+                  <tr>
+                    <th className="thead">Member Name</th>
+                    <th className="thead">Pause Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myProject?.numOfBreaks.map((w, index) => {
+                    return w.time.map((y, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{w.user}</td>
+                          <td>{y}</td>
+                        </tr>
+                      );
+                    });
+                  })}
+                </tbody>
+              </Table>
+            </div>
+            <div className="ProjectOverviewSection-content"></div>
+          </div>
+        ) : null}
       </div>
       <div className="project-status-container">
         <div className="project-status">

@@ -22,10 +22,10 @@ var myProjectSchema = mongoose.Schema(
     projectroles: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
 
     hoursWorked: {
-      type: [String],
+      type: [{}],
     },
     numOfBreaks: {
-      type: [[String]],
+      type: [{}],
     },
     dueDate: {
       type: String,

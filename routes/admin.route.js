@@ -41,7 +41,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/register", async (req, res, next) => {
-  console.log("In REgisters");
+  console.log("In Admin Registers");
   let { username, email, password } = req.body;
 
   //check user already exists or not
@@ -77,13 +77,13 @@ router.post("/register", async (req, res, next) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (err) console.log(err);
+      if (err) console.log(err.message);
       else {
         console.log("VERIFICATION EMAIL SENT!!!");
       }
     });
 
-    console.log(newAdmin);
+    console.log("new admin: ", newAdmin);
   }
 });
 
@@ -119,6 +119,16 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   }
 });
 
+router.get("/projectInfo/:id", (req, res) => {
+  // id is of employee
+
+  Project.find({ projectAssignedTo: { $in: req.params.id } }).then(
+    (response) => {
+      res.json(response);
+    }
+  );
+});
+
 router.get("/getLogEmps", verifyJWT, async (req, res) => {
   const v = {
     screenshot: 0,
@@ -140,12 +150,6 @@ router.get("/getLogEmps", verifyJWT, async (req, res) => {
   } catch (err) {
     console.log(err.message);
   }
-});
-
-router.get("/projectInfo/:id", (req, res) => {
-  Project.find({ projectAssignedToId: req.params.id }).then((response) => {
-    res.json(response);
-  });
 });
 
 router.get("/logs/:email", verifyJWT, async (req, res) => {

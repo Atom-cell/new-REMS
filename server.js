@@ -25,7 +25,7 @@ const peerServer = ExpressPeerServer(server, {
 app.use("/peerjs", peerServer);
 
 // mongoose connection
-var mongoDB = "mongodb://127.0.0.1/fyp";
+var mongoDB = "mongodb://127.0.0.1/REMSruff";
 mongoose.connect(mongoDB, (err) => {
   if (err) throw err;
   console.log("Database Connected");
@@ -85,6 +85,4 @@ app.get("/stop/:mail", (req, res) => {
   res.send("hello ");
 });
 
-server.listen(5000, "0.0.0.0", () =>
-  console.log("server is running on port 5000")
-);
+server.listen(5000, () => console.log("server is running on port 5000"));

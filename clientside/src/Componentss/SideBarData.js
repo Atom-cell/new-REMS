@@ -25,6 +25,13 @@ export const SideBarData = {
       icon: <DashboardRoundedIcon style={{ fill: "grey" }} />,
       cName: "nav-text",
     },
+    // {
+    //   id: 1,
+    //   title: "E Dashboard",
+    //   path: "/empDashboard",
+    //   icon: <DashboardRoundedIcon style={{ fill: "grey" }} />,
+    //   cName: "nav-text",
+    // },
     {
       id: 2,
       title: "Calendar",
