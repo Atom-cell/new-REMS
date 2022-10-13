@@ -45,7 +45,9 @@ function Card(props) {
 
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
-      {assignedTo ? "Update Assignee" : "Assign Task"}
+      {JSON.parse(localStorage.getItem("user")).role !== "Employee" && (
+        <>{assignedTo ? "Update Assignee" : "Assign Task"}</>
+      )}
     </Tooltip>
   );
 
@@ -120,7 +122,11 @@ function Card(props) {
                       style={{ height: "30px", width: "30px" }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleShow();
+                        if (
+                          JSON.parse(localStorage.getItem("user")).role !==
+                          "Employee"
+                        )
+                          handleShow();
                       }}
                     />
                   ) : (
@@ -128,7 +134,11 @@ function Card(props) {
                       className="trash"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleShow();
+                        if (
+                          JSON.parse(localStorage.getItem("user")).role !==
+                          "Employee"
+                        )
+                          handleShow();
                       }}
                     />
                   )}

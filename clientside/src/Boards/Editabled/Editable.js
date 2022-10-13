@@ -56,7 +56,9 @@ function Editable(props) {
           className={`editable_display ${
             props.displayClass ? props.displayClass : ""
           }`}
-          onClick={() => setIsEditable(true)}
+          onClick={() => {
+            if (props.emp !== true) setIsEditable(true);
+          }}
         >
           {props.text ? props.text : props.placeholder}
         </p>

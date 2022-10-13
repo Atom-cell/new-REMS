@@ -15,6 +15,7 @@ const ProjectMembers = ({
   setMyProject,
   selectedEmployees,
   setSelectedEmployees,
+  user,
 }) => {
   const [tableEmployees, setTableEmployees] = useState();
 
@@ -120,7 +121,7 @@ const ProjectMembers = ({
             <Table bordered hover>
               <thead>
                 <tr>
-                  <th>Select</th>
+                  {user?.role !== "Employee" && <th>Select</th>}
                   <th>Name</th>
                   <th>Email</th>
                 </tr>
@@ -129,26 +130,36 @@ const ProjectMembers = ({
                 {tableEmployees?.map((employee) => {
                   return (
                     <tr key={employee._id}>
-                      {selectedEmployees?.includes(employee._id) ? (
-                        <td>
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value={employee.username}
-                            onChange={(e) => handleChange(e, employee._id)}
-                            checked={true}
-                          />
-                        </td>
-                      ) : (
-                        <td>
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value={employee.username}
-                            onChange={(e) => handleChange(e, employee._id)}
-                          />
-                        </td>
-                      )}
+                      <>
+                        {user?.role !== "Employee" && (
+                          <>
+                            {selectedEmployees?.includes(employee._id) ? (
+                              <td>
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  value={employee.username}
+                                  onChange={(e) =>
+                                    handleChange(e, employee._id)
+                                  }
+                                  checked={true}
+                                />
+                              </td>
+                            ) : (
+                              <td>
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  value={employee.username}
+                                  onChange={(e) =>
+                                    handleChange(e, employee._id)
+                                  }
+                                />
+                              </td>
+                            )}
+                          </>
+                        )}
+                      </>
                       <td>{employee.username}</td>
                       <td>{employee.email}</td>
                     </tr>

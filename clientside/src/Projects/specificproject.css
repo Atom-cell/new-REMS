@@ -18,17 +18,21 @@
     padding-top: 20px;
 }
 .overview-text{
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 500;
-}
-.overview-text input{
-    width: 50%;
+    /* padding: 10px; */
 }
 .overview-text input, .overview-text textarea{
     border: none;
     margin-bottom: 12px;
     color: black;
     border-radius: 10px;
+}
+.overview-text textarea{
+    width: 80%;
+}
+.overview-text textarea:focus{
+    outline: none;
 }
 /* .overview-text input:hover{
     border: 1px solid gray;
@@ -452,15 +456,30 @@
     position: relative;
     top: 3em;
 } */
+.project-members-container{
+    margin-top: 20px;
+    width: fit-content;
+}
+
 .project-members-container:hover{
     cursor: pointer;
 }
 .project-created-container{
     display: flex;
-    margin-top: 12px;
+    margin-top: 40px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 .project-created-container-info-time-ago{
     display: flex;
+    margin-top: -10px;
+}
+.project-created-container-icon{
+    margin: 10px;
+}
+.project-created-span{
+    margin: 2px 0px 0px 12px;
 }
 .ontrack:hover{
     border: green;
@@ -549,4 +568,12 @@
 .specific-project-trash-container{
     display: flex;
     float: right;
+}
+.project-overview-text-title{
+    font-size: 25px;
+    padding: 10px 10px 10px 0px;
+}
+.project-due-date-edit{
+    width: 60%;
+    font-size: 13px;
 }

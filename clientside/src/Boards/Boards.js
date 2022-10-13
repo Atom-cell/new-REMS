@@ -346,7 +346,7 @@ const Boards = ({ user }) => {
               dragEndedBoard={dragEndedBoard}
               updateBoardTitle={updateBoardTitle}
               updateCardAssignedTo={updateCardAssignedTo}
-              hideAssign={state.hide}
+              hideAssign={state?.hide}
             />
           ))}
           <div className="app_boards_last">

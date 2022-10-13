@@ -211,7 +211,7 @@ function CardInfo(props) {
           </div>
           <div className="cardinfo_box_task_list">
             {values?.tasks?.map((item) => (
-              <div key={item.id} className="cardinfo_box_task_checkbox">
+              <div key={item._id} className="cardinfo_box_task_checkbox">
                 <input
                   type="checkbox"
                   defaultChecked={item.completed}

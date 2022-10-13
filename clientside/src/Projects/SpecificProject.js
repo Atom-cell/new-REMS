@@ -246,6 +246,50 @@ const SpecificProject = ({ user }) => {
     });
   };
 
+  const updateMilestone = (id, checked) => {
+    axios
+      .post("/myprojects/updatemilestone", {
+        projectId: myProject._id,
+        milestoneId: id,
+        checked: checked,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setMyProject(res.data);
+      })
+      .catch((err) => console.log(err + "specific Project 267"));
+  };
+  const removeMilestone = (id) => {
+    axios
+      .post("/myprojects/deletemilestone", {
+        projectId: myProject._id,
+        milestoneId: id,
+      })
+      .then((res) => {
+        // console.log(res.data);
+        setMyProject(res.data);
+      })
+      .catch((err) => console.log(err + "specific Project 259"));
+  };
+  const addMilestone = (value) => {
+    const task = {
+      task: value,
+      completed: false,
+    };
+
+    axios
+      .post("/myprojects/addmilestone", {
+        projectId: myProject._id,
+        task: value,
+        completed: false,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setMyProject(res.data);
+      })
+      .catch((err) => console.log(err + "specific Project 267"));
+  };
+
   useEffect(() => {
     axios
       .get("/myboards/getprojectboard", {
@@ -318,8 +362,9 @@ const SpecificProject = ({ user }) => {
             type={"text"}
             placeholder="Enter Title"
             onSubmit={updateProjectName}
+            emp={user?.role == "Employee" ? true : undefined}
           />
-          <p>How we will collaborate</p>
+          {/* <p>How we will collaborate</p> */}
           {/* <input type="text" placeholder="How we will collaborate" /> */}
           <div className="overview-text">
             {/* <textarea
@@ -334,9 +379,10 @@ const SpecificProject = ({ user }) => {
               editClass="project-overview-text-area-edit"
               defaultValue={myProject?.projectDescription}
               text={myProject?.projectDescription}
-              type={"textare"}
+              type={"textarea"}
               placeholder="Welcome to your Project. Now set the tone for how you'll work together with your team in REMS."
               onSubmit={updateProjectDescription}
+              emp={user?.role == "Employee" ? true : undefined}
             />
           </div>
         </div>
@@ -404,35 +450,41 @@ const SpecificProject = ({ user }) => {
                 </div> */}
                 </div>
               ) : (
-                <div
-                  className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-addMemberButton"
-                  role="button"
-                  aria-disabled="false"
-                  aria-expanded="false"
-                  tabindex="0"
-                >
-                  <div
-                    className="ProjectOverviewMembersSection-addMemberButtonPlusIcon"
-                    onClick={handleShoww}
-                  >
-                    <svg
-                      className="Icon PlusIcon"
-                      viewBox="0 0 32 32"
-                      aria-hidden="true"
-                      focusable="false"
+                <>
+                  {user?.role !== "Employee" ? (
+                    <div
+                      className="ThemeableCardPresentation--isValid ThemeableCardPresentation ThemeableInteractiveCardPresentation--isNotSelected ThemeableInteractiveCardPresentation--isEnabled ThemeableInteractiveCardPresentation SubtleButtonCard ProjectOverviewMembersSection-addMemberButton"
+                      role="button"
+                      aria-disabled="false"
+                      aria-expanded="false"
+                      tabindex="0"
                     >
-                      <path d="M26,14h-8V6c0-1.1-0.9-2-2-2l0,0c-1.1,0-2,0.9-2,2v8H6c-1.1,0-2,0.9-2,2l0,0c0,1.1,0.9,2,2,2h8v8c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2v-8h8c1.1,0,2-0.9,2-2l0,0C28,14.9,27.1,14,26,14z"></path>
-                    </svg>
-                  </div>
-                  <div
-                    className="ProjectOverviewMembersSection-addMemberButtonTextContainer"
-                    onClick={handleShoww}
-                  >
-                    <h6 className="ProjectOverviewMembersSection-addMemberButtonText Typography Typography--colorWeak Typography--h6 Typography--fontWeightMedium">
-                      Add Project Lead
-                    </h6>
-                  </div>
-                </div>
+                      <div
+                        className="ProjectOverviewMembersSection-addMemberButtonPlusIcon"
+                        onClick={handleShoww}
+                      >
+                        <svg
+                          className="Icon PlusIcon"
+                          viewBox="0 0 32 32"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path d="M26,14h-8V6c0-1.1-0.9-2-2-2l0,0c-1.1,0-2,0.9-2,2v8H6c-1.1,0-2,0.9-2,2l0,0c0,1.1,0.9,2,2,2h8v8c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2v-8h8c1.1,0,2-0.9,2-2l0,0C28,14.9,27.1,14,26,14z"></path>
+                        </svg>
+                      </div>
+                      <div
+                        className="ProjectOverviewMembersSection-addMemberButtonTextContainer"
+                        onClick={handleShoww}
+                      >
+                        <h6 className="ProjectOverviewMembersSection-addMemberButtonText Typography Typography--colorWeak Typography--h6 Typography--fontWeightMedium">
+                          Add Project Lead
+                        </h6>
+                      </div>
+                    </div>
+                  ) : (
+                    <span>Project lead not added</span>
+                  )}
+                </>
               )}
               <AddMemberRole
                 show={showInviteModalRole}
@@ -454,12 +506,15 @@ const SpecificProject = ({ user }) => {
             <h4 className="ProjectOverviewSection-heading Typography Typography--colorDarkGray3 Typography--h4 Typography--fontWeightMedium">
               Goals
             </h4>
-            <div
-              className="ProjectOverviewSection-headingExtraContent"
-              onClick={handleShowww}
-            >
-              <Plus />
-            </div>
+            {user?.role !== "Employee" && (
+              <div
+                className="ProjectOverviewSection-headingExtraContent"
+                onClick={handleShowww}
+                style={{ cursor: "pointer" }}
+              >
+                <Plus />
+              </div>
+            )}
           </div>
           <AddEventModal
             newEvent={newEvent}
@@ -478,12 +533,14 @@ const SpecificProject = ({ user }) => {
                       {goals?.map((goal) => {
                         return (
                           <div className="featuredItem featuredItem-specific-project">
-                            <div className="specific-project-trash-container">
-                              <Trash
-                                className="trash"
-                                onClick={() => deleteEvent(goal)}
-                              />
-                            </div>
+                            {user?.role !== "Employee" && (
+                              <div className="specific-project-trash-container">
+                                <Trash
+                                  className="trash"
+                                  onClick={() => deleteEvent(goal)}
+                                />
+                              </div>
+                            )}
                             <div className="assigned-by">
                               <span className="featuredSub">Title: </span>
                               <span className="featuredTitle">
@@ -513,28 +570,31 @@ const SpecificProject = ({ user }) => {
                   </div>
                   <div className="ProjectOverviewGoalsEmptyState-content">
                     <span className="Typography Typography--m">
-                      Connect or create a goal to link this project to a larger
-                      purpose.
+                      {user?.role !== "Employee"
+                        ? "Connect or create a goal to link this project to a larger purpose."
+                        : "Project goals will be shown here"}
                     </span>
-                    <div className="ProjectOverviewGoalsEmptyState-addGoalButton">
-                      <div
-                        className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton"
-                        role="button"
-                        aria-disabled="false"
-                        tabindex="0"
-                        onClick={handleShowww}
-                      >
-                        <svg
-                          className="Icon ThemeableRectangularButtonPresentation-leftIcon GoalSimpleIcon"
-                          viewBox="0 0 32 32"
-                          aria-hidden="true"
-                          focusable="false"
+                    {user?.role !== "Employee" && (
+                      <div className="ProjectOverviewGoalsEmptyState-addGoalButton">
+                        <div
+                          className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton"
+                          role="button"
+                          aria-disabled="false"
+                          tabindex="0"
+                          onClick={handleShowww}
                         >
-                          <path d="M31,21.5L19.5,4c-0.8-1.2-2.1-1.9-3.5-1.9S13.3,2.8,12.5,4L1,21.5c-0.9,1.3-0.9,2.9-0.2,4.3C1.6,27.2,2.9,28,4.5,28h23c1.6,0,2.9-0.8,3.7-2.2S31.8,22.8,31,21.5z M29.4,24.8C29,25.5,28.3,26,27.5,26h-23c-0.8,0-1.5-0.4-1.9-1.1c-0.4-0.7-0.3-1.5,0.1-2.2L14.2,5.1c0.4-0.6,1.1-1,1.8-1s1.4,0.4,1.8,1l11.5,17.6C29.8,23.3,29.8,24.1,29.4,24.8z"></path>
-                        </svg>
-                        Add goal
+                          <svg
+                            className="Icon ThemeableRectangularButtonPresentation-leftIcon GoalSimpleIcon"
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path d="M31,21.5L19.5,4c-0.8-1.2-2.1-1.9-3.5-1.9S13.3,2.8,12.5,4L1,21.5c-0.9,1.3-0.9,2.9-0.2,4.3C1.6,27.2,2.9,28,4.5,28h23c1.6,0,2.9-0.8,3.7-2.2S31.8,22.8,31,21.5z M29.4,24.8C29,25.5,28.3,26,27.5,26h-23c-0.8,0-1.5-0.4-1.9-1.1c-0.4-0.7-0.3-1.5,0.1-2.2L14.2,5.1c0.4-0.6,1.1-1,1.8-1s1.4,0.4,1.8,1l11.5,17.6C29.8,23.3,29.8,24.1,29.4,24.8z"></path>
+                          </svg>
+                          Add goal
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -651,6 +711,33 @@ const SpecificProject = ({ user }) => {
           </div>
           <div className="ProjectOverviewSection-content">
             <div className="cardinfo_box">
+              <div className="cardinfo_box_task_list">
+                {myProject?.milestones?.map((item) => (
+                  <div key={item.id} className="cardinfo_box_task_checkbox">
+                    <input
+                      type="checkbox"
+                      defaultChecked={item.completed}
+                      onChange={(event) =>
+                        updateMilestone(item._id, event.target.checked)
+                      }
+                    />
+                    <p className={item.completed ? "completed" : ""}>
+                      {item.task}
+                    </p>
+                    <Trash onClick={() => removeMilestone(item._id)} />
+                  </div>
+                ))}
+              </div>
+              {user?.role !== "Employee" && (
+                <Editable
+                  text={"Add a Task"}
+                  placeholder="Enter task"
+                  onSubmit={addMilestone}
+                  emp={user?.role == "Employee" ? true : undefined}
+                />
+              )}
+            </div>
+            {/* <div className="cardinfo_box">
               <div className="cardinfo_box_progress-bar">
                 <div className="cardinfo_box_progress" />
               </div>
@@ -673,7 +760,7 @@ const SpecificProject = ({ user }) => {
                 placeholder="Enter task"
                 // onSubmit={addTask}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -683,7 +770,7 @@ const SpecificProject = ({ user }) => {
             <h4 class="Typography Typography--colorDarkGray1 Typography--h4 Typography--fontWeightMedium">
               What's the status?
             </h4>
-            {myProject?.status && (
+            {myProject?.status && user?.role !== "Employee" && (
               <div className="dropdown-status">
                 <DropdownButton
                   id="dropdown-basic-button"
@@ -711,50 +798,56 @@ const SpecificProject = ({ user }) => {
           </div>
           {!myProject?.status ? (
             <>
-              <div
-                className="badge-container badge-container-green"
-                onClick={() => updateProjectStatus("ontrack")}
-              >
-                <div className="green-badge">
-                  <div className="badge-dot green-dot"></div>
-                  <span class="Typography Typography--overflowTruncate Typography--m">
-                    On track
-                  </span>
-                </div>
-              </div>
-              <div
-                className="badge-container badge-container-at-risk"
-                onClick={() => updateProjectStatus("atrisk")}
-              >
-                <div className="at-risk-badge">
-                  <div className="badge-dot at-risk-dot"></div>
-                  <span class="Typography Typography--overflowTruncate Typography--m">
-                    At Risk
-                  </span>
-                </div>
-              </div>
-              <div
-                className="badge-container badge-container-off-track"
-                onClick={() => updateProjectStatus("offtrack")}
-              >
-                <div className="off-track-badge">
-                  <div className="badge-dot off-track-dot"></div>
-                  <span class="Typography Typography--overflowTruncate Typography--m">
-                    Off track
-                  </span>
-                </div>
-              </div>
-              <div
-                className="badge-container badge-container-completed"
-                onClick={() => updateProjectStatus("completed")}
-              >
-                <div className="completed-badge">
-                  <div className="badge-dot completed-dot"></div>
-                  <span class="Typography Typography--overflowTruncate Typography--m">
-                    Completed
-                  </span>
-                </div>
-              </div>
+              {user?.role !== "Employee" ? (
+                <>
+                  <div
+                    className="badge-container badge-container-green"
+                    onClick={() => updateProjectStatus("ontrack")}
+                  >
+                    <div className="green-badge">
+                      <div className="badge-dot green-dot"></div>
+                      <span class="Typography Typography--overflowTruncate Typography--m">
+                        On track
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="badge-container badge-container-at-risk"
+                    onClick={() => updateProjectStatus("atrisk")}
+                  >
+                    <div className="at-risk-badge">
+                      <div className="badge-dot at-risk-dot"></div>
+                      <span class="Typography Typography--overflowTruncate Typography--m">
+                        At Risk
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="badge-container badge-container-off-track"
+                    onClick={() => updateProjectStatus("offtrack")}
+                  >
+                    <div className="off-track-badge">
+                      <div className="badge-dot off-track-dot"></div>
+                      <span class="Typography Typography--overflowTruncate Typography--m">
+                        Off track
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="badge-container badge-container-completed"
+                    onClick={() => updateProjectStatus("completed")}
+                  >
+                    <div className="completed-badge">
+                      <div className="badge-dot completed-dot"></div>
+                      <span class="Typography Typography--overflowTruncate Typography--m">
+                        Completed
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <span>Not marked yet</span>
+              )}
             </>
           ) : (
             <>
@@ -811,6 +904,7 @@ const SpecificProject = ({ user }) => {
             type={"date"}
             placeholder="Enter Due Date"
             onSubmit={updateProjectDueDate}
+            emp={user?.role == "Employee" ? true : undefined}
           />
         </div>
         <div className="project-members-container" onClick={handleShow}>
@@ -826,6 +920,7 @@ const SpecificProject = ({ user }) => {
           setMyProject={setMyProject}
           selectedEmployees={selectedEmployees}
           setSelectedEmployees={setSelectedEmployees}
+          user={user}
         />
         <div className="project-created-container">
           <div className="project-created-container-icon">
@@ -835,7 +930,9 @@ const SpecificProject = ({ user }) => {
             <h5>Project Created</h5>
             <div className="project-created-container-info-time-ago">
               <h5>{user.username}</h5>
-              <span>{format(myProject?.createdAt)}</span>
+              <span className="project-created-span">
+                {format(myProject?.createdAt)}
+              </span>
             </div>
           </div>
         </div>

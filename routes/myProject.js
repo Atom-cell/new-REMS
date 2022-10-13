@@ -410,6 +410,52 @@ router.delete("/deleteprojectfile", function (req, res, next) {
   );
 });
 
+router.post("/addmilestone", (req, res) => {
+  console.log(req.body);
+  var myObj = {
+    task: req.body.task,
+    completed: req.body.completed,
+  };
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $push: { milestones: myObj } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.log(rec);
+      res.status(200).json(rec);
+    }
+  );
+});
+
+router.post("/deletemilestone", (req, res) => {
+  console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId },
+    { $pull: { milestones: { _id: req.body.milestoneId } } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.log(rec);
+      res.status(200).json(rec);
+    }
+  );
+});
+
+router.post("/updatemilestone", (req, res) => {
+  console.log(req.body);
+  myProject.findOneAndUpdate(
+    { _id: req.body.projectId, "milestones._id": req.body.milestoneId },
+    { $set: { "milestones.$.completed": req.body.checked } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // console.log(rec);
+      res.status(200).json(rec);
+    }
+  );
+});
+
 router.post("/sendemail", async (req, res) => {
   // console.log(req.body.receiverUsername);
   // we need the id of the receiver username
