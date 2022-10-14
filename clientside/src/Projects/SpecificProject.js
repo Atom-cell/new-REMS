@@ -54,6 +54,16 @@ const SpecificProject = ({ user }) => {
 
   const handleCloseee = () => setModalOpen(false);
   const handleShowww = () => setModalOpen(true);
+
+  function randomColor() {
+    let maxVal = 0xffffff; // 16777215
+    let randomNumber = Math.random() * maxVal;
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);
+    return `#${randColor.toUpperCase()}`;
+  }
+
   //   console.log(location.state.project);
   const updateProjectName = (value) => {
     axios
@@ -788,7 +798,14 @@ const SpecificProject = ({ user }) => {
               <tbody>
                 {myProject?.hoursWorked.map((w, index) => {
                   return (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      style={
+                        index % 2 === 0
+                          ? { backgroundColor: "#98A8F8" }
+                          : { backgroundColor: "#BCCEF8" }
+                      }
+                    >
                       <td>{w.user}</td>
                       <td>{w.time}</td>
                     </tr>
@@ -805,10 +822,17 @@ const SpecificProject = ({ user }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {myProject?.numOfBreaks.map((w, index) => {
+                  {myProject?.numOfBreaks.map((w, ind) => {
                     return w.time.map((y, index) => {
                       return (
-                        <tr key={index}>
+                        <tr
+                          key={index}
+                          style={
+                            ind % 2 === 0
+                              ? { backgroundColor: "#98A8F8" }
+                              : { backgroundColor: "#BCCEF8" }
+                          }
+                        >
                           <td>{w.user}</td>
                           <td>{y}</td>
                         </tr>

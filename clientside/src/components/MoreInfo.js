@@ -342,11 +342,11 @@ function MoreInfo() {
                   width: "60%",
                 }}
               >
-                <div className="infoRow">
+                {/* <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Manager:</h6>
                   <h6 style={{ flex: "50%" }}>{data.username}</h6>
-                </div>
-                <Divider />
+                </div> */}
+                {/* <Divider /> */}
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Teams:</h6>
                   <h6 style={{ flex: "50%", display: "flex" }}>
@@ -377,13 +377,13 @@ function MoreInfo() {
                     <Spinner animation="border" />
                   )}
                 </div>
-                <Divider />
+                {/* <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>
                     Current Project:
                   </h6>
                   <h6 style={{ flex: "50%" }}>From project data</h6>
-                </div>
+                </div> */}
                 <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Zone:</h6>

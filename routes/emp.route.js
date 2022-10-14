@@ -250,6 +250,7 @@ router.post("/register", verifyJWT, async (req, res, next) => {
     });
   }
 
+  console.log("new emp: ", newEmp);
   // get email of admin from jwt
   // find admin
   // find user by email or _id

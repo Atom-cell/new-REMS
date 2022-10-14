@@ -11,7 +11,7 @@ let features = [
     id: "user",
     title: "Manage all your employees easily",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut corporis praesentium, dolorem exercitationem pariatur doloremque eligendi a nobis commodi neque eveniet dolorum vero. Fugiat vel, minus nulla voluptas earum quidem?",
+      "A clear and accessible menu which shows all the necessary details you need to manage all your employees. Add them, Delete them, look up their activity which just one click of a button",
     img: user,
   },
   {
@@ -25,7 +25,7 @@ let features = [
     id: "dashboard",
     title: "A comprehensive Dashboard to give you an overview.",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut corporis praesentium, dolorem exercitationem pariatur doloremque eligendi a nobis commodi neque eveniet dolorum vero. Fugiat vel, minus nulla voluptas earum quidem?",
+      "A very comprehensive and detailed dashboard which gives you a birds eye view of your on going projects, employed employees, your sales and activities of your employees.",
     img: dashboard,
   },
   {
@@ -46,7 +46,7 @@ let features = [
     id: "calendar",
     title: "Achieve all your goals and never miss out any meetups and events",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut corporis praesentium, dolorem exercitationem pariatur doloremque eligendi a nobis commodi neque eveniet dolorum vero. Fugiat vel, minus nulla voluptas earum quidem?",
+      "Never miss a goal or reminder. Add your events, goals and reminders all in one place in your calendar. Filter them whatever you want to see and be your most productive self.",
     img: calendar,
   },
   {
@@ -54,14 +54,14 @@ let features = [
     title:
       "Create comprehensive reports of all your employees, so you don't miss out any activity.",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut corporis praesentium, dolorem exercitationem pariatur doloremque eligendi a nobis commodi neque eveniet dolorum vero. Fugiat vel, minus nulla voluptas earum quidem?",
+      "From activities of your employees, never miss anything. Create comprehensive reports showing who achieved what, who did most of the work and who was slacking off and being lazy.",
     img: report,
   },
   {
     id: "billing",
     title: "Pay your employees directly as much as they deserve",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut corporis praesentium, dolorem exercitationem pariatur doloremque eligendi a nobis commodi neque eveniet dolorum vero. Fugiat vel, minus nulla voluptas earum quidem?",
+      "After getting your projects completed, it's time to pay your employees fairly and justly. Pay whatever they deserve according to thier work and activities while completing tasks.",
     img: bill,
   },
 ];
