@@ -62,7 +62,7 @@ const AllBoards = ({ user }) => {
 
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value === null || value === "" || value === undefined) {
         axios
           .get("/myBoards/onlymyboards", {
             params: { empId: user._id },
@@ -111,7 +111,7 @@ const AllBoards = ({ user }) => {
               .then((rec) => {
                 //   console.log(rec.data);
                 const newBoards = boards.filter(
-                  (newBoard) => newBoard._id != rec.data._id
+                  (newBoard) => newBoard._id !== rec.data._id
                 );
                 setBoards(newBoards);
                 toast.success(`${rec.data.title} is Deleted`);
@@ -128,7 +128,7 @@ const AllBoards = ({ user }) => {
 
   const handleFilterChange = (e) => {
     const category = e.target.value;
-    if (category == "myboards") fetchData().catch(console.error);
+    if (category === "myboards") fetchData().catch(console.error);
     else {
       axios
         .get("/myBoards/boardsshared/withme", {

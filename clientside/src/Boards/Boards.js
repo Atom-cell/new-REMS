@@ -217,7 +217,7 @@ const Boards = ({ user }) => {
 
   const updateBoardTitle = (boardId, value) => {
     const updatedBoards = boards.map((b) => {
-      if (b._id == boardId) {
+      if (b._id === boardId) {
         return { ...b, title: value };
       }
       return b;

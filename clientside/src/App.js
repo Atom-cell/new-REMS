@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { ProjectNameContext } from "./Helper/Context";
 import { TimerContext } from "./Helper/Context";
 import { MoreInfoContext } from "./Helper/Context";
-import { CssBaseline } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -103,7 +102,7 @@ const App = () => {
     setReceivingCall(false);
     let otherId = "";
     if (!caller) {
-      otherId = both.find((usr) => usr != user._id);
+      otherId = both.find((usr) => usr !== user._id);
       socket.emit("rejectCall", otherId, user._id, name);
     } else socket.emit("rejectCall", caller, user._id, name);
   };
@@ -136,7 +135,7 @@ const App = () => {
         Image: data.Image,
         createdAt: Date.now(),
       });
-      if (window.location.href != "http://localhost:3000/myMessenger") {
+      if (window.location.href !== "http://localhost:3000/myMessenger") {
         notify(data.senderName);
       }
     });
@@ -148,7 +147,7 @@ const App = () => {
     socket.on("getUsers", (users) => {
       // console.log(users);
       const usersWithoutMe = users?.filter(
-        (user) => user?.userId != loggedUser?._id
+        (user) => user?.userId !== loggedUser?._id
       );
       // console.log(usersWithoutMe);
       setOnlineUsers(usersWithoutMe);

@@ -79,7 +79,7 @@ const AllMeetings = () => {
                 // console.log("Deleted");
                 // console.log(allMeetings.filter((data) => data._id != meeting._id));
                 setAllMeetings(
-                  allMeetings.filter((data) => data._id != meeting._id)
+                  allMeetings.filter((data) => data._id !== meeting._id)
                 );
               });
           },
@@ -132,7 +132,7 @@ const AllMeetings = () => {
                 </tr>
               </thead>
               <tbody>
-                {allMeetings.length != 0 &&
+                {allMeetings.length !== 0 &&
                   allMeetings?.map((myObj, key) => {
                     var time = moment.utc(myObj.startDate).format("HH:mm");
                     time = formatAMPM(time);
@@ -166,7 +166,7 @@ const AllMeetings = () => {
                             title={myObj.title}
                           />
                         </td>
-                        {loggedUser._id == myObj.hostedById && (
+                        {loggedUser._id === myObj.hostedById && (
                           <td className="all-meeting-row all-meeting-row-delete-icon">
                             <DeleteOutlineIcon
                               className="delete-icon"
@@ -179,7 +179,7 @@ const AllMeetings = () => {
                   })}
               </tbody>
             </Table>
-            {allMeetings.length == 0 && (
+            {allMeetings.length === 0 && (
               <div className="no-meetings">
                 <h1>No Meetings Scheduled</h1>
               </div>

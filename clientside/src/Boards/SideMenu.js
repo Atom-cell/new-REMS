@@ -118,8 +118,8 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
             <span style={{ fontSize: "30px", color: "white" }}>color</span>
           </div>
         </div>
-        {showMedia == "Colors" && (
-          <Grow in={showMedia == "Colors"}>
+        {showMedia === "Colors" && (
+          <Grow in={showMedia === "Colors"}>
             <div className="optionContainer">
               {colors.map((color, index) => {
                 return (
@@ -134,10 +134,10 @@ const SideMenu = ({ openSideNav, setOpenSideNav, setColor }) => {
             </div>
           </Grow>
         )}
-        {showMedia == "Images" && (
-          <Grow in={showMedia == "Images"}>
+        {showMedia === "Images" && (
+          <Grow in={showMedia === "Images"}>
             <div
-              style={{ height: showMedia == "Images" ? null : 0 }}
+              style={{ height: showMedia === "Images" ? null : 0 }}
               className="menuContainer"
             >
               {images?.map((photo, index) => (

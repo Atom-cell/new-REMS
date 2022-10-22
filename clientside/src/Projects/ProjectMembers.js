@@ -42,7 +42,7 @@ const ProjectMembers = ({
     var user = JSON.parse(localStorage.getItem("user"));
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value == null || value === "" || value === undefined) {
         // console.log("hello");
         fetchData();
       } else {
@@ -53,7 +53,7 @@ const ProjectMembers = ({
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -64,7 +64,7 @@ const ProjectMembers = ({
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -76,20 +76,20 @@ const ProjectMembers = ({
   const fetchData = async () => {
     // get the data from the api
     var userId = JSON.parse(localStorage.getItem("user"))._id;
-    if (localStorage.getItem("role") == "Employee") {
+    if (localStorage.getItem("role") === "Employee") {
       const res = await axios.get(
         "http://localhost:5000/emp/getcompanyemployees",
         {
           params: { _id: userId },
         }
       );
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees(withoutMe);
     } else {
       const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
         params: { _id: userId },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees(withoutMe);
     }
   };

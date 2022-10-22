@@ -16,7 +16,7 @@ const EmployeesTable = ({
         assignTo: emp.username,
         assignToId: emp._id,
       });
-    } else if (assignTask != undefined) {
+    } else if (assignTask !== undefined) {
       assignTask(emp);
     } else {
       newConversation(emp._id);

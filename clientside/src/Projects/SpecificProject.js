@@ -382,7 +382,7 @@ const SpecificProject = ({ user }) => {
             type={"text"}
             placeholder="Enter Title"
             onSubmit={updateProjectName}
-            emp={user?.role == "Employee" ? true : undefined}
+            emp={user?.role === "Employee" ? true : undefined}
           />
           {/* <p>How we will collaborate</p> */}
           {/* <input type="text" placeholder="How we will collaborate" /> */}
@@ -402,7 +402,7 @@ const SpecificProject = ({ user }) => {
               type={"textarea"}
               placeholder="Welcome to your Project. Now set the tone for how you'll work together with your team in REMS."
               onSubmit={updateProjectDescription}
-              emp={user?.role == "Employee" ? true : undefined}
+              emp={user?.role === "Employee" ? true : undefined}
             />
           </div>
         </div>
@@ -755,7 +755,7 @@ const SpecificProject = ({ user }) => {
                   text={"Add Milestone"}
                   placeholder="Enter Milestone"
                   onSubmit={addMilestone}
-                  emp={user?.role == "Employee" ? true : undefined}
+                  emp={user?.role === "Employee" ? true : undefined}
                 />
               )}
             </div>
@@ -937,7 +937,7 @@ const SpecificProject = ({ user }) => {
             </>
           ) : (
             <>
-              {myProject.status == "ontrack" && (
+              {myProject.status === "ontrack" && (
                 <div className="badge-container badge-container-green">
                   <div className="green-badge">
                     <div className="badge-dot green-dot"></div>
@@ -947,7 +947,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "atrisk" && (
+              {myProject.status === "atrisk" && (
                 <div className="badge-container badge-container-at-risk">
                   <div className="at-risk-badge">
                     <div className="badge-dot at-risk-dot"></div>
@@ -957,7 +957,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "offtrack" && (
+              {myProject.status === "offtrack" && (
                 <div className="badge-container badge-container-off-track">
                   <div className="off-track-badge">
                     <div className="badge-dot off-track-dot"></div>
@@ -967,7 +967,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "completed" && (
+              {myProject.status === "completed" && (
                 <div className="badge-container badge-container-completed">
                   <div className="completed-badge">
                     <div className="badge-dot completed-dot"></div>
@@ -990,7 +990,7 @@ const SpecificProject = ({ user }) => {
             type={"date"}
             placeholder="Enter Due Date"
             onSubmit={updateProjectDueDate}
-            emp={user?.role == "Employee" ? true : undefined}
+            emp={user?.role === "Employee" ? true : undefined}
           />
         </div>
         <div className="project-members-container" onClick={handleShow}>

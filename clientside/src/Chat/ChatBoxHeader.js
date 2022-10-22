@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Row, Col, Button } from "react-bootstrap";
-import SearchIcon from "@mui/icons-material/Search";
-import CallIcon from "@mui/icons-material/Call";
+import React from "react";
+import { Row, Col } from "react-bootstrap";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import "./chatboxheader.css";

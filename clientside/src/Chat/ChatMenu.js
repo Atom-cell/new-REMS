@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import "./chatmenu.css";
@@ -19,7 +19,7 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
   //   Get All Employees
   const fetchData = async () => {
     // get the data from the api
-    if (localStorage.getItem("role") == "Employee") {
+    if (localStorage.getItem("role") === "Employee") {
       const res = await axios.get(
         "http://localhost:5000/emp/getcompanyemployees",
         { params: { _id: user._id } }
@@ -28,13 +28,13 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
       const response = await axios.get("http://localhost:5000/emp/getmyadmin", {
         params: { _id: JSON.parse(localStorage.getItem("user"))._id },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      var withoutMe = res.data.filter((emp) => emp._id !== user._id);
       setEmployees([...withoutMe, response.data[0]]);
     } else {
       const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
         params: { _id: JSON.parse(localStorage.getItem("user"))._id },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      var withoutMe = res.data.filter((emp) => emp._id !== user._id);
       setEmployees(withoutMe);
     }
   };
@@ -48,18 +48,18 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
   const handleSearchEmployees = (e) => {
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value == null || value === "" || value === undefined) {
         // console.log("hello");
         fetchData();
       } else {
-        if (localStorage.getItem("role") == "Employee") {
+        if (localStorage.getItem("role") === "Employee") {
           axios
             .get(`/emp/getallusersbyname/${value}`, {
               params: { _id: user._id },
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -70,7 +70,7 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
