@@ -144,10 +144,34 @@
   
   .chatOnline {
     flex: 2;
-    height: 79vh;
+    /* height: 79vh; */
     overflow: hidden;
     /* animation: fade-right 500ms ease-in; */
   }
+.chatOnline:hover{
+  overflow-y: auto;
+}
+
+.chatOnline::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+.chatOnline::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.chatOnline::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+.chatOnline::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.chatOnline::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
   /* @keyframes fade-right {
     0% {
       transform: translateX(100px);

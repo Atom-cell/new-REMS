@@ -25,6 +25,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   const scrollRef = useRef();
   const [showOnlineUsers, setShowOnlineUsers] = useState(true);
   const [friend, setFriend] = useState();
+  const [notOnlineEmployees, setNotOnlineEmployees] = useState([]);
 
   const [file, setFile] = useState();
 
@@ -182,10 +183,12 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
         senderId: user._id,
         recieverId: friendId,
       });
-      // console.log(res.data.data);
       if (res.data.message == "Conversation Exists")
         handleConvoClick(res.data.data[0]);
-      else getConversations();
+      else {
+        getConversations();
+        handleConvoClick(res.data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -193,7 +196,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   };
 
   const handleConvoClick = (convo) => {
-    // console.log(convo);
+    console.log(convo);
     setCurrentChat(convo);
     const friendId = convo.members.find((m) => m != user?._id);
     axios
@@ -220,7 +223,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                 data: { _id: currentChat._id },
               })
               .then((rec) => {
-                console.log(rec.data);
+                // console.log(rec.data);
                 const fitleredConversations = conversations.filter(
                   (convo) => rec.data._id != convo._id
                 );
@@ -246,6 +249,14 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
     });
   };
 
+  const getDifferenceOnlineAndUsers = (array1, array2) => {
+    return array1.filter((object1) => {
+      return !array2.some((object2) => {
+        return object1._id === object2.userId;
+      });
+    });
+  };
+
   const handleSearchChange = (e) => {
     // console.log(conversations);
     setTimeout(() => {
@@ -265,6 +276,44 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
       }
     }, 1000);
   };
+
+  //   Get All Employees
+  const fetchData = async () => {
+    // get the data from the api
+    if (localStorage.getItem("role") == "Employee") {
+      const res = await axios.get(
+        "http://localhost:5000/emp/getcompanyemployees",
+        { params: { _id: user._id } }
+      );
+      //   console.log(res.data);
+      const response = await axios.get("http://localhost:5000/emp/getmyadmin", {
+        params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+      });
+      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      // set employees that are not online right now
+      setNotOnlineEmployees(
+        getDifferenceOnlineAndUsers(
+          [...withoutMe, response.data[0]],
+          onlineUsers
+        )
+      );
+    } else {
+      const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
+        params: { _id: JSON.parse(localStorage.getItem("user"))._id },
+      });
+      var withoutMe = res.data.filter((emp) => emp._id != user._id);
+      setNotOnlineEmployees(
+        getDifferenceOnlineAndUsers(withoutMe, onlineUsers)
+      );
+      // console.log(getDifferenceOnlineAndUsers(withoutMe, onlineUsers));
+    }
+  };
+  useEffect(() => {
+    // call the function
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="messenger-container">
@@ -427,10 +476,33 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
           <div className="chatOnline">
             <div className="chatOnlineWrapper">
               {onlineUsers?.length > 0 ? (
-                <ChatOnline onlineUsers={onlineUsers} currentId={user?._id} />
+                <ChatOnline
+                  onlineUsers={onlineUsers}
+                  currentId={user?._id}
+                  newConversation={newConversation}
+                />
               ) : (
                 <h2>No Online Users</h2>
               )}
+              <div className="">
+                {notOnlineEmployees?.map((o) => {
+                  return (
+                    <div
+                      className="chatOnlineFriend"
+                      onClick={() => newConversation(o._id)}
+                    >
+                      <div className="chatOnlineImgContainer">
+                        <img
+                          className="chatOnlineImg"
+                          src={o?.profilePicture}
+                          alt=""
+                        />
+                      </div>
+                      <span className="chatOnlineName">{o?.username}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
