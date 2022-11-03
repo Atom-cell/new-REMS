@@ -42,6 +42,9 @@ const VideoCall = ({
   const [name, setName] = useState("");
   const [userStream, setUserStream] = useState();
 
+  const [enabledVideo, setEnabledVideo] = useState();
+  const [userEnabledVideo, setUserEnabledVideo] = useState();
+
   const myVideo = useRef();
   // allows to disconnect the call
 
@@ -67,6 +70,7 @@ const VideoCall = ({
         signalData: data,
         from: JSON.parse(localStorage.getItem("user"))._id,
         name: name,
+        enabledVideo: enabledVideo,
       });
     });
     peer.on("stream", (stream) => {
@@ -139,6 +143,7 @@ const VideoCall = ({
         setCaller(data.from);
         setCallerName(data.name);
         setCallerSignal(data.signal);
+        setUserEnabledVideo(data.enabledVideo);
       });
 
       socket.on("setBothCallers", (data) => {
@@ -241,12 +246,10 @@ const VideoCall = ({
                       </div>
                     </div>
                   </div>
-                  {console.log("userVideo")}
-                  {console.log(userVideo)}
                   <video
                     id="friend-video"
                     playsInline
-                    ref={userVideo}
+                    ref={setUserEnabledVideo && userVideo}
                     autoPlay
                     style={{ pointerEvents: "none", transition: "all 0.5s" }}
                   />
@@ -271,6 +274,7 @@ const VideoCall = ({
             mystream={stream}
             callAccepted={callAccepted}
             callEnded={callEnded}
+            setEnabledVideo={setEnabledVideo}
           />
         </div>
         {/* {receivingCall && !callAccepted ? (

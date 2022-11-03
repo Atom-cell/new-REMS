@@ -53,12 +53,12 @@ export default function ChatOnline({
   };
 
   return (
-    <div className="">
+    <div className={callAccepted != undefined && "chatOnlineVideoCall"}>
       <h2>Online</h2>
       {onlineFriends?.map((o) => (
         <div
           className="chatOnlineFriend"
-          onClick={() => newConversation(o._id)}
+          onClick={() => newConversation != undefined && newConversation(o._id)}
         >
           <div className="chatOnlineImgContainer">
             <img className="chatOnlineImg" src={o?.profilePicture} alt="" />

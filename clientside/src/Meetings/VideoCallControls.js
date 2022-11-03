@@ -6,6 +6,7 @@ const VideoCallControls = ({
   mystream,
   callAccepted,
   callEnded,
+  setEnabledVideo,
 }) => {
   // console.log("mystream"+mystream);
   const muteUnmute = () => {
@@ -67,6 +68,7 @@ const VideoCallControls = ({
           <i class="fas fa-video-slash"></i>
           `;
     // <span>Play Video</span>
+    setEnabledVideo(false);
     document.querySelector(".main__video_button").innerHTML = html;
   };
   return (

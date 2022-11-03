@@ -119,6 +119,7 @@ io.on("connection", (socket) => {
       signal: data.signalData,
       from: friend.socketId,
       name: data.name,
+      enabledVideo: data.enabledVideo,
     });
 
     // so that both callers can end the call

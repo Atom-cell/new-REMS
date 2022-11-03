@@ -148,6 +148,17 @@
     overflow: hidden;
     /* animation: fade-right 500ms ease-in; */
   }
+
+  .chatOnlineVideoCall {
+    flex: 2;
+    height: 79vh;
+    overflow: hidden;
+    background: linear-gradient(
+		to right,
+		 #f5f7fb,
+     #edf7f0 
+	);
+  }
 .chatOnline:hover{
   overflow-y: auto;
 }
