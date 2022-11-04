@@ -1,11 +1,48 @@
 .project-overview-status-container{
     display: flex;
+    height: 79vh;
+    overflow: hidden;
 }
 .project-overview-container{
     flex: 6;
     padding-left: 5%;
     padding-top: 1em;
+    overflow-y: hidden;
 }
+
+.project-overview-container:hover{
+    overflow-y: auto;
+}
+
+.project-overview-container::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.project-overview-container::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.project-overview-container::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+.project-overview-container::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+/* .project-overview-container::-webkit-scrollbar-thumb {
+    background-color: rgba(35, 49, 86, 0.8);
+    border-radius: 10px;
+    border: 2px solid transparent;
+} */
+
+.project-overview-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+
 .project-status-container {
     border-color: #edeae9;
     border-style: solid;
@@ -70,6 +107,10 @@
 }
 .ProjectOverviewSection-headingExtraContent {
     margin-left: 4px;
+    margin-bottom: 5px;
+}
+.ProjectOverviewSection-headingExtraContent svg{
+    color: gray;
 }
 .ProjectOverviewMembersSection-membersGrid {
     display: grid;
@@ -471,9 +512,13 @@
     align-items: center;
     text-align: center;
 }
+.project-created-container-info{
+    margin-top: 5px;
+}
 .project-created-container-info-time-ago{
     display: flex;
     margin-top: -10px;
+    margin-left: 5px;
 }
 .project-created-container-icon{
     margin: 10px;
@@ -573,7 +618,57 @@
     font-size: 25px;
     padding: 10px 10px 10px 0px;
 }
+.project-overview-text-title:hover {
+    background-color: #ddd;
+    padding: 10px;
+}
+.project-overview-text-title-edit input{
+    font-size: 25px;
+}
+.project-overview-text-area{
+    font-size: 18px;
+    padding: 10px 10px 10px 0px;
+}
+.project-overview-text-area:hover {
+    background-color: #ddd;
+    padding: 10px;
+}
+.project-overview-text-area-edit textarea{
+    font-size: 20px;
+}
+.checksquare{
+    display: inline;
+    margin-left: 4px;
+    margin-bottom: 5px;
+}
+.checksquare svg{
+    color: gray;
+}
+.cardinfo_box_task_checkbox svg{
+    margin-right: 50px;
+}
+.add-milestone-button{
+    font-size: 17px;
+    padding: 10px 10px 10px 0px;
+
+}
+.add-milestone-button:hover {
+    background-color: #ddd;
+    padding: 10px;
+}
+/* .add-milestone-button-edit input{
+    font-size: 25px;
+} */
+.project-due-date{
+    font-size: 25px;
+    padding: 10px 10px 10px 0px;
+
+}
+.project-due-date:hover {
+    background-color: #ddd;
+    padding: 10px;
+}
 .project-due-date-edit{
-    width: 60%;
+    /* width: 60%; */
     font-size: 13px;
 }
