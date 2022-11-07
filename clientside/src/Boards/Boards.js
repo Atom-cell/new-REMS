@@ -249,7 +249,7 @@ const Boards = ({ user }) => {
           bid: bid,
           // uid: user._id,
           boards: boards,
-        })
+        }) // //rec.data.boards
         .then((rec) => console.log(rec.data))
         .catch((err) => console.log(err + "Boards 252"));
     }

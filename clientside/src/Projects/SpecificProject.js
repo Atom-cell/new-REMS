@@ -831,7 +831,8 @@ const SpecificProject = ({ user }) => {
         <div className="project-status">
           <div class="ProjectOverviewActivityFeedPublishedReportSection-heading">
             <h4 class="Typography Typography--colorDarkGray1 Typography--h4 Typography--fontWeightMedium">
-              What's the status?
+              {/* What's the status? */}
+              {myProject?.status ? "Status" : "What's the status?"}
             </h4>
             {myProject?.status && user?.role !== "Employee" && (
               <div className="dropdown-status">
