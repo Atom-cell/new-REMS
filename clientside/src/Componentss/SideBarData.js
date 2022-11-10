@@ -15,7 +15,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { Trello } from "react-feather";
+import { Trello, DollarSign } from "react-feather";
 export const SideBarData = {
   links: [
     {
@@ -156,6 +156,53 @@ export const SideBarData = {
           title: "My Boards",
           path: "/allboards",
           icon: <Trello stroke="gray" />,
+          cName: "nav-text",
+        },
+      ],
+    },
+    {
+      id: 16,
+      title: "Financials",
+      icon: <DollarSign stroke="gray" />,
+      cName: "nav-text",
+      iconClosed: <ArrowDropDownRoundedIcon />,
+      iconOpened: <ArrowDropUpRoundedIcon />,
+      path: "/projects",
+      subNav: [
+        {
+          id: 17,
+          title: "Payroll",
+          path: "/allpayroll",
+          icon: (
+            <i
+              class="fa-solid fa-money-check-dollar"
+              style={{
+                color: "gray",
+                fontSize: "1.5rem",
+                width: "1.3em",
+                height: "1em",
+                display: "inline-block",
+              }}
+            ></i>
+          ),
+          cName: "nav-text",
+        },
+        {
+          id: 18,
+          title: "Invoices",
+          path: "/allinvoice",
+          icon: (
+            <i
+              class="fa-solid fa-file-invoice-dollar"
+              style={{
+                color: "gray",
+                fontSize: "1.5rem",
+                width: "1em",
+                height: "1em",
+                display: "inline-block",
+              }}
+            ></i>
+          ),
           cName: "nav-text",
         },
       ],

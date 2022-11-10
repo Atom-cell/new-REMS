@@ -14,6 +14,20 @@ router.get("/getmyproject", (req, res) => {
   });
 });
 
+router.get("/hoursworked", (req, res) => {
+  // console.log(req.query._id);
+  console.log(req.query.emps);
+  // Inside hoursWorked we need to find user and their sum total time
+  myProject.find(
+    { projectAssignedBy: req.query._id, "hoursWorked.user": req.query.emps },
+    { hoursWorked: 1 },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
+});
+
 // Get all Projects For Employee
 router.get("/", (req, res, next) => {
   Admin.find({ employees: req.query.userId }, { username: 1 }, (err, rec) => {

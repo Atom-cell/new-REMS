@@ -40,6 +40,12 @@ import Boards from "./Boards/Boards";
 import CallNotification from "./CallNotification";
 import Peer from "simple-peer";
 import SpecificProject from "./Projects/SpecificProject";
+import AllPayroll from "./Financials/AllPayroll";
+import AllInvoice from "./Financials/AllInvoice";
+import NewPayroll from "./Financials/NewPayroll";
+import PayrollDetails from "./Financials/PayrollDetails";
+import NewInvoice from "./Financials/NewInvoice";
+import InvoiceDetails from "./Financials/InvoiceDetails";
 // import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
 
@@ -306,6 +312,32 @@ const App = () => {
                     element={<Boards user={loggedUser} />}
                   />
                   {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
+
+                  <Route
+                    path="/allpayroll"
+                    element={<AllPayroll user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allpayroll/newpayroll"
+                    element={<NewPayroll user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allpayroll/payrolldetails"
+                    element={<PayrollDetails user={loggedUser} />}
+                  />
+
+                  <Route
+                    path="/allinvoice"
+                    element={<AllInvoice user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allinvoice/newinvoice"
+                    element={<NewInvoice user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allinvoice/invoicedetails"
+                    element={<InvoiceDetails user={loggedUser} />}
+                  />
                 </Route>
               </Routes>
               <ToastContainer />
