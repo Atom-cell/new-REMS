@@ -10,6 +10,8 @@ import SetMeeting from "./SetMeeting";
 import MeetingEmployees from "./MeetingEmployees";
 import ReadMore from "./ReadMore";
 import { confirmAlert } from "react-confirm-alert";
+import { SocketContext } from "../Helper/Context";
+
 const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,7 @@ const AllMeetings = () => {
     startDate: "",
     // endDate: "",
   });
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   var loggedUser = JSON.parse(localStorage.getItem("user"));
 
@@ -71,6 +74,17 @@ const AllMeetings = () => {
         {
           label: "Yes",
           onClick: () => {
+            axios.post("http://localhost:5000/notif/deleteMeetingNotif", {
+              id: meeting._id,
+            });
+
+            let meet = allMeetings.filter((a) => a._id === meeting._id);
+
+            sock.emit("MeetingDelete", {
+              title: meet[0].title,
+              employees: meet[0].employees,
+            });
+
             axios
               .delete("http://localhost:5000/myVideo/DeleteMeeting", {
                 data: { _id: meeting._id },

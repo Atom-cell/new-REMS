@@ -17,7 +17,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import { Trello } from "react-feather";
-export const SideBarData = {
+export const SideBarDataEmp = {
   links: [
     {
       id: 1,
@@ -26,28 +26,21 @@ export const SideBarData = {
       icon: <DashboardRoundedIcon />,
       cName: "nav-text",
     },
+    {
+      id: 3,
+      title: "My Calendar",
+      path: "/myCalendar",
+      icon: <CalendarTodayIcon />,
+      cName: "nav-text sub-nav",
+    },
+    {
+      id: 4,
+      title: "My Team Calendar",
+      path: "/myTeamCalendar",
+      icon: <CalendarMonthIcon />,
+      cName: "nav-text sub-nav",
+    },
 
-    {
-      id: 11,
-      title: "Activity Log",
-      path: "/log",
-      icon: <WorkIcon />,
-      cName: "nav-text",
-    },
-    {
-      id: 12,
-      title: "Manage Employee",
-      path: "/empManage",
-      icon: <EngineeringIcon />,
-      cName: "nav-text",
-    },
-    {
-      id: 13,
-      title: "Reports",
-      path: "/reports",
-      icon: <AnalyticsIcon />,
-      cName: "nav-text",
-    },
     {
       id: 9,
       title: "My Messenger",
@@ -69,6 +62,7 @@ export const SideBarData = {
       icon: <GroupIcon />,
       cName: "nav-text sub-nav",
     },
+
     {
       id: 6,
       title: "All Meetings",

@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { SocketContext } from "../Helper/Context";
 
 import "./Team.css";
 import {
@@ -37,9 +38,14 @@ const CreateTeam = () => {
   } = useLocation();
   //   console.log(team);
 
+  const { sock, setSocket } = React.useContext(SocketContext);
   const [teamName, setTeamName] = React.useState("");
   const [teamDesp, setTeamDesp] = React.useState("");
   const [teamLead, setTeamLead] = React.useState("");
+  const [oldteamName, setOldTeamName] = React.useState("");
+  const [oldteamLead, setOldTeamLead] = React.useState("");
+  const [oldmembers, setOldMembers] = React.useState([]);
+
   const [members, setMembers] = React.useState([]);
   const [error, setError] = React.useState([false, false]);
   const [loading, setLoading] = React.useState(true);
@@ -70,15 +76,19 @@ const CreateTeam = () => {
     setTeamName(team.teamName);
     setTeamDesp(team.teamDesp);
     setTeamLead(team.teamLead._id);
+    setOldTeamName(team.teamName);
+    setOldTeamLead(team.teamLead._id);
 
     const { members } = team;
     const array = members.map((x) => x._id);
 
     setMembers([...array]);
+    setOldMembers([...array]);
   };
 
   const handleChange = (e) => {
     // Destructuring
+
     const { value, checked } = e.target;
     console.log(`${value} is ${checked}`);
     // Case 1 : The user checks the box
@@ -123,6 +133,7 @@ const CreateTeam = () => {
   };
 
   const uploadData = () => {
+    members.push(teamLead);
     if (
       error[0] === false &&
       error[1] === false &&
@@ -148,6 +159,30 @@ const CreateTeam = () => {
         .catch(function (error) {
           console.log(error);
         });
+
+      axios
+        .post(
+          "http://localhost:5000/notif/teamNotif",
+          {
+            teamName: teamName,
+            teamLead,
+            members: members,
+          },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then(function (response) {})
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      sock.emit("TeamAdded", {
+        teamName: teamName,
+        members: members,
+      });
       // toast.info("Team Created Successfully")
       navigate("/team");
     } else {
@@ -156,6 +191,7 @@ const CreateTeam = () => {
   };
 
   const uploadEditData = () => {
+    members.push(teamLead);
     console.log("EDITE: ", {
       id: team._id,
       teamName: teamName,
@@ -190,6 +226,29 @@ const CreateTeam = () => {
         .catch(function (error) {
           console.log(error);
         });
+
+      axios
+        .post(
+          "http://localhost:5000/notif/updateTeamNotif",
+          {
+            teamName: teamName,
+            teamLead,
+            members: members,
+            oldteamName: oldteamName,
+            oldteamLead,
+            oldmembers: oldmembers,
+          },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then(function (response) {})
+        .catch(function (error) {
+          console.log(error);
+        });
+
       navigate("/team");
     } else {
       alert("Fill all the fields");
@@ -252,7 +311,10 @@ const CreateTeam = () => {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={teamLead}
-                onChange={(e) => setTeamLead(e.target.value)}
+                onChange={(e) => {
+                  setTeamLead(e.target.value);
+                  handleChange(e);
+                }}
               >
                 {data.map((data, index) => {
                   return (
@@ -305,27 +367,56 @@ const CreateTeam = () => {
                 {/* <FormGroup> */}
                 {data.map((data, index) => {
                   if (team !== null) {
+                    // FOR WHEN EDITING
                     const { members } = team;
                     const array = members.map((x) => x._id);
 
                     if (array.includes(data._id)) {
-                      return (
-                        <tr>
-                          <td>
-                            {
-                              <FormControlLabel
-                                key={index}
-                                //control={<BPCheckbox pro={team} id={data._id} />}
-                                control={<Checkbox defaultChecked />}
-                                value={data._id}
-                                onChange={(e) => handleChange(e)}
-                              />
-                            }
-                          </td>
-                          <td>{data.username}</td>
-                          <td>{data.email}</td>
-                        </tr>
-                      );
+                      if (teamLead === data._id) {
+                      } else {
+                        return (
+                          <tr>
+                            <td>
+                              {
+                                <FormControlLabel
+                                  key={index}
+                                  //control={<BPCheckbox pro={team} id={data._id} />}
+                                  control={<Checkbox defaultChecked />}
+                                  value={data._id}
+                                  onChange={(e) => handleChange(e)}
+                                />
+                              }
+                            </td>
+                            <td>{data.username}</td>
+                            <td>{data.email}</td>
+                          </tr>
+                        );
+                      }
+                    } else {
+                      if (teamLead === data._id) {
+                      } else {
+                        return (
+                          <tr>
+                            <td>
+                              {
+                                <FormControlLabel
+                                  key={index}
+                                  //control={<BPCheckbox pro={team} id={data._id} />}
+                                  control={<Checkbox />}
+                                  value={data._id}
+                                  onChange={(e) => handleChange(e)}
+                                />
+                              }
+                            </td>
+                            <td>{data.username}</td>
+                            <td>{data.email}</td>
+                          </tr>
+                        );
+                      }
+                    }
+                  } else {
+                    //WHEN NEW CREATING
+                    if (teamLead === data._id) {
                     } else {
                       return (
                         <tr>
@@ -345,24 +436,6 @@ const CreateTeam = () => {
                         </tr>
                       );
                     }
-                  } else {
-                    return (
-                      <tr>
-                        <td>
-                          {
-                            <FormControlLabel
-                              key={index}
-                              //control={<BPCheckbox pro={team} id={data._id} />}
-                              control={<Checkbox />}
-                              value={data._id}
-                              onChange={(e) => handleChange(e)}
-                            />
-                          }
-                        </td>
-                        <td>{data.username}</td>
-                        <td>{data.email}</td>
-                      </tr>
-                    );
                   }
                 })}
 

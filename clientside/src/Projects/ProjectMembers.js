@@ -6,6 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SocketContext } from "../Helper/Context";
 const ProjectMembers = ({
   showInviteModal,
   setShowInviteModal,
@@ -18,6 +19,7 @@ const ProjectMembers = ({
   user,
 }) => {
   const [tableEmployees, setTableEmployees] = useState();
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   const handleChange = (e, id) => {
     if (e.target.checked) setSelectedEmployees([...selectedEmployees, id]);
@@ -26,6 +28,16 @@ const ProjectMembers = ({
 
   const handleInvite = (emps) => {
     // console.log(emps);
+
+    sock.emit("ProjectShared", {
+      pName: myProject.projectName,
+      emps: emps,
+      oldMembers: myProject.projectAssignedTo,
+    });
+    axios.post("/notif/addedInProjectNotif", {
+      projectId: myProject._id,
+      emps: emps,
+    });
     axios
       .post("/myprojects/addmemberstoproject", {
         projectId: myProject._id,

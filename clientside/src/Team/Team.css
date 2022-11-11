@@ -44,7 +44,7 @@
   box-shadow: 0 0 5px rgb(201, 201, 201);
   padding: 2em;
   margin: 2em;
-  width: 25%;
+  width: 27%;
   transition: transform ease 300ms;
 }
 .team_show_div:hover {

@@ -49,6 +49,7 @@ const adminRouter = require("./routes/admin.route");
 const empRouter = require("./routes/emp.route");
 const desktopRouter = require("./routes/desktop.route");
 const teamRouter = require("./routes/team.route");
+const notifRouter = require("./routes/notif.route");
 
 // mount point for routers
 app.use("/", myHomeRouter);
@@ -64,6 +65,7 @@ app.use("/admin", adminRouter);
 app.use("/emp", empRouter);
 app.use("/desk", desktopRouter);
 app.use("/team", teamRouter);
+app.use("/notif", notifRouter);
 
 // from web visit this route, then on utility it will emit. front se email send. idher email se sock mai se id nikalo or emit krdo usko
 app.get("/start/:mail", (req, res) => {

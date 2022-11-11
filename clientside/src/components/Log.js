@@ -50,8 +50,8 @@ function Log() {
         },
       })
       .then((response) => {
-        console.log(response.data.data);
-        console.log(response.data.data.length);
+        console.log("LOG ", response.data.data);
+        console.log("LEN: ", response.data.data.length);
         setLog([...response.data.data]);
         setLoading(1);
       });

@@ -115,7 +115,7 @@ const Timer = () => {
       ) : (
         <div
           style={{
-            fontSize: "1.7rem",
+            fontSize: "1rem",
             textAlign: "center",
             marginTop: "0.2em",
           }}

@@ -21,8 +21,8 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddEmpModal from "./AddEmpModal";
-import io from "socket.io-client";
 import { baseURL } from "../Request";
+import io from "socket.io-client";
 const socket = io.connect("http://localhost:8900");
 
 function Online() {

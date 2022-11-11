@@ -8,9 +8,13 @@ import WidgetLarge from "./Widgets/WidgetLarge";
 import "./dashboard.css";
 import TopUsers from "./Charts/TopUsers";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { SocketContext } from "../Helper/Context";
+import io from "socket.io-client";
+
 const Dashboard = () => {
   const { name, setName } = React.useContext(ProjectNameContext);
-  let navigate = useNavigate();
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   // useEffect(() => {
   //   let user = JSON.parse(localStorage.getItem("user"));
@@ -21,9 +25,22 @@ const Dashboard = () => {
   //     navigate("/");
   //   }
   // }, []);
+  const ab = async () => {
+    let id = localStorage.getItem("id");
+    await axios
+      .get(`/notif/getNotif/${id}`)
+      .then((resp) => console.log(resp.data));
+  };
 
+  const realTime = () => {
+    const id = "628600c5bfaa78c7d2eb29d4";
+
+    sock.emit("test", { data: "hello", id: id });
+  };
   return (
     <div className="home">
+      <button onClick={() => ab()}>Socket</button>
+      <button onClick={() => realTime()}>LIVE Notification</button>
       <FeaturedInfo />
       {/* <Chart
         data={userData}

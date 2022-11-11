@@ -46,7 +46,7 @@ router.post("/login", async (req, res) => {
 router.post("/times", (req, res) => {
   console.log("Times");
   const { email, active_time, idle_time } = req.body;
-  console.log(active_time, idle_time);
+  // console.log(active_time, idle_time);
   try {
     Emp.findOneAndUpdate(
       { email: email },
@@ -75,7 +75,7 @@ router.post("/times", (req, res) => {
 router.post("/apptime", (req, res) => {
   console.log("APP time");
   const { email, tt } = req.body;
-  console.log(email, tt);
+  // console.log(email, tt);
 
   try {
     Emp.findOneAndUpdate(

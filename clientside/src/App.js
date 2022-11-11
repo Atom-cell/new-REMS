@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ProjectNameContext } from "./Helper/Context";
 import { TimerContext } from "./Helper/Context";
 import { MoreInfoContext } from "./Helper/Context";
+import { SocketContext } from "./Helper/Context";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -15,6 +16,7 @@ import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
 import AllMeetings from "./Meetings/AllMeetings";
 import NavBar from "./Componentss/NavBar";
+import SidebarMenu from "./Componentss/SidebarMenu";
 import NavigationBar from "./components/NavigationBar";
 
 import LandPage from "./components/LandPage";
@@ -39,14 +41,15 @@ import Boards from "./Boards/Boards";
 import CallNotification from "./CallNotification";
 import Peer from "simple-peer";
 import SpecificProject from "./Projects/SpecificProject";
-// import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
+// import ProjectInfo from "./Projects/ProjectInfo";
 
 const App = () => {
   // const navigate = useNavigate();
   const [name, setName] = useState(null);
   const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
+  const [sock, setSocket] = useState(null);
   const [moreInfo, setMoreInfo] = useState(null);
   const [nav, setNav] = useState(false);
   const [username, setUsername] = useState();
@@ -114,10 +117,16 @@ const App = () => {
   useEffect(() => {
     // const user = JSON.parse(localStorage.getItem("user"));
     // console.log(user.username);
+
+    setSocket(socket);
     setUsername(loggedUser?.username);
     if (localStorage.getItem("email")) {
-      socket.emit("addUser", loggedUser?._id);
+      socket.emit("addUser", {
+        userId: loggedUser?._id,
+        email: loggedUser?.email,
+      });
       setNav(true);
+      //socket.emit("notification", localStorage.getItem("email"));
     }
     if (localStorage.getItem("role")) {
       const role = localStorage.getItem("role");
@@ -142,8 +151,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // const user = JSON.parse(localStorage.getItem("user"));
-    socket.emit("addUser", loggedUser?._id);
+    setSocket(socket);
+    const user = JSON.parse(localStorage.getItem("user"));
+    socket.emit("addUser", { userId: loggedUser?._id, email: user?.email });
     socket.on("getUsers", (users) => {
       // console.log(users);
       const usersWithoutMe = users?.filter(
@@ -156,90 +166,23 @@ const App = () => {
 
   return (
     <>
-      <ProjectNameContext.Provider value={{ name, setName }}>
-        <TimerContext.Provider value={{ timer, setTimer }}>
-          <MoreInfoContext.Provider value={{ moreInfo, setMoreInfo }}>
-            <Router>
-              {nav ? <NavBar /> : null}
-              {!nav ? <NavigationBar /> : null}
-              <CallNotification
-                callAccepted={callAccepted}
-                callerName={callerName}
-                answerCall={answerCall}
-                rejectCall={rejectCall}
-                receivingCall={receivingCall}
-              />
-              {callAccepted && (
-                <>
-                  {window.location.href.indexOf(
-                    "http://localhost:3000/videoCall"
-                  ) > -1 ? null : (
-                    <VideoCall
-                      onlineUsers={onlineUsers}
-                      setOnlineUsers={setOnlineUsers}
-                      receivingCall={receivingCall}
-                      setReceivingCall={setReceivingCall}
-                      callAccepted={callAccepted}
-                      setCallAccepted={setCallAccepted}
-                      callerName={callerName}
-                      setCallerName={setCallerName}
-                      answerCall={answerCall}
-                      rejectCall={rejectCall}
-                      stream={stream}
-                      userVideo={userVideo}
-                      connectionRef={connectionRef}
-                      caller={caller}
-                      setCaller={setCaller}
-                      both={both}
-                      user={user}
-                      setUser={setUser}
-                      setStream={setStream}
-                      setCallerSignal={setCallerSignal}
-                      setBoth={setBoth}
-                    />
-                  )}
-                </>
-              )}
-              <Routes>
-                {role === "admin" ? (
-                  <Route path="/dashboard" element={<Dashboard />} />
-                ) : role === "Employee" ? (
-                  <Route
-                    path="/myCalendar"
-                    element={loggedUser && <MyCalendar user={loggedUser} />}
-                  /> // EMP DASHBOARD
-                ) : (
-                  <Route exact path="/" element={<LandPage />} />
-                )}
-                <Route exact path="/" element={<LandPage />} />
-                <Route path="/home" element={<LandPage />} />
-                <Route path="/features" element={<MoreFeatures />} />
-                <Route path="/download" element={<Download />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/forget" element={<ResetPassword />} />
-                <Route element={<ProtectedRoutes />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/empDashboard" element={<EmployeeDashboard />} />
-                  <Route path="/update" element={<UpdateProfile />} />
-                  <Route path="/no" element={<NoMobile />} />
-                  <Route path="/empManage" element={<EmpManage />} />
-                  <Route path="/moreInfo" element={<MoreInfo />} />
-                  <Route path="/log" element={<Log />} />
-                  <Route path="/team" element={<Teams />} />
-                  <Route path="/createTeam" element={<CreateTeam />} />
-                  <Route path="/teamInfo" element={<TeamInfo />} />
-                  <Route
-                    path="/myCalendar"
-                    element={loggedUser && <MyCalendar user={loggedUser} />}
-                  />
-                  <Route
-                    path="/myTeamCalendar"
-                    element={loggedUser && <MyCalendar user={loggedUser} />}
-                  />
-                  <Route
-                    path="/videoCall"
-                    element={
+      <SocketContext.Provider value={{ sock, setSocket }}>
+        <ProjectNameContext.Provider value={{ name, setName }}>
+          <TimerContext.Provider value={{ timer, setTimer }}>
+            <MoreInfoContext.Provider value={{ moreInfo, setMoreInfo }}>
+              <Router>
+                <CallNotification
+                  callAccepted={callAccepted}
+                  callerName={callerName}
+                  answerCall={answerCall}
+                  rejectCall={rejectCall}
+                  receivingCall={receivingCall}
+                />
+                {callAccepted && (
+                  <>
+                    {window.location.href.indexOf(
+                      "http://localhost:3000/videoCall"
+                    ) > -1 ? null : (
                       <VideoCall
                         onlineUsers={onlineUsers}
                         setOnlineUsers={setOnlineUsers}
@@ -263,55 +206,153 @@ const App = () => {
                         setCallerSignal={setCallerSignal}
                         setBoth={setBoth}
                       />
-                    }
-                  />
-                  <Route
-                    path="/allMeetings/:roomId"
-                    element={
-                      username ? (
-                        <ConferenceCall username={username} />
+                    )}
+                  </>
+                )}
+                {/* Landpage NAV */}
+                {!nav ? <NavigationBar /> : null}
+                {/* loggedin NAV */}
+                {nav ? <NavBar /> : null}
+                {!nav ? (
+                  <Routes>
+                    <>
+                      <Route exact path="/" element={<LandPage />} />
+                      <Route path="/home" element={<LandPage />} />
+                      <Route path="/features" element={<MoreFeatures />} />
+                      <Route path="/download" element={<Download />} />
+                      <Route path="/signup" element={<Signup />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/forget" element={<ResetPassword />} />
+                    </>
+                  </Routes>
+                ) : (
+                  <SidebarMenu>
+                    <Routes>
+                      {role === "admin" ? (
+                        <Route path="/dashboard" element={<Dashboard />} />
+                      ) : role === "Employee" ? (
+                        <Route
+                          path="/myCalendar"
+                          element={
+                            loggedUser && <MyCalendar user={loggedUser} />
+                          }
+                        /> // EMP DASHBOARD
                       ) : (
-                        console.log("")
-                      )
-                    }
-                  />
-                  {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
-                  <Route
-                    path="/myMessenger"
-                    element={
-                      <Messenger
-                        onlineUsers={onlineUsers}
-                        setOnlineUsers={setOnlineUsers}
-                        arrivalMessage={arrivalMessage}
-                        user={loggedUser}
-                      />
-                    }
-                  />
-                  <Route path="/allMeetings" element={<AllMeetings />} />
-                  <Route
-                    path="/projects"
-                    element={<AllProjects user={loggedUser} />}
-                  />
-                  <Route
-                    path="/myproject/:pid"
-                    element={<SpecificProject user={loggedUser} />}
-                  />
-                  <Route
-                    path="/allboards"
-                    element={<AllBoards user={loggedUser} />}
-                  />
-                  <Route
-                    path="/boards/:bid"
-                    element={<Boards user={loggedUser} />}
-                  />
-                  {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
-                </Route>
-              </Routes>
-              <ToastContainer />
-            </Router>
-          </MoreInfoContext.Provider>
-        </TimerContext.Provider>
-      </ProjectNameContext.Provider>
+                        <>
+                          <Route exact path="/" element={<LandPage />} />
+                          <Route path="/home" element={<LandPage />} />
+                          <Route path="/features" element={<MoreFeatures />} />
+                          <Route path="/download" element={<Download />} />
+                          <Route path="/signup" element={<Signup />} />
+                          <Route path="/login" element={<Login />} />
+                          <Route path="/forget" element={<ResetPassword />} />
+                        </>
+                      )}
+                      <Route element={<ProtectedRoutes />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route
+                          path="/empDashboard"
+                          element={<EmployeeDashboard />}
+                        />
+                        <Route path="/update" element={<UpdateProfile />} />
+                        <Route path="/no" element={<NoMobile />} />
+                        <Route path="/empManage" element={<EmpManage />} />
+                        <Route path="/moreInfo" element={<MoreInfo />} />
+                        <Route path="/log" element={<Log />} />
+                        <Route path="/team" element={<Teams />} />
+                        <Route path="/createTeam" element={<CreateTeam />} />
+                        <Route path="/teamInfo" element={<TeamInfo />} />
+                        <Route
+                          path="/myCalendar"
+                          element={
+                            loggedUser && <MyCalendar user={loggedUser} />
+                          }
+                        />
+                        <Route
+                          path="/myTeamCalendar"
+                          element={
+                            loggedUser && <MyCalendar user={loggedUser} />
+                          }
+                        />
+                        <Route
+                          path="/videoCall"
+                          element={
+                            <VideoCall
+                              onlineUsers={onlineUsers}
+                              setOnlineUsers={setOnlineUsers}
+                              receivingCall={receivingCall}
+                              setReceivingCall={setReceivingCall}
+                              callAccepted={callAccepted}
+                              setCallAccepted={setCallAccepted}
+                              callerName={callerName}
+                              setCallerName={setCallerName}
+                              answerCall={answerCall}
+                              rejectCall={rejectCall}
+                              stream={stream}
+                              userVideo={userVideo}
+                              connectionRef={connectionRef}
+                              caller={caller}
+                              setCaller={setCaller}
+                              both={both}
+                              user={user}
+                              setUser={setUser}
+                              setStream={setStream}
+                              setCallerSignal={setCallerSignal}
+                              setBoth={setBoth}
+                            />
+                          }
+                        />
+                        <Route
+                          path="/allMeetings/:roomId"
+                          element={
+                            username ? (
+                              <ConferenceCall username={username} />
+                            ) : (
+                              console.log("")
+                            )
+                          }
+                        />
+                        {/* <Route exact path="/setMeeting" element={<SetMeeting />} /> */}
+                        <Route
+                          path="/myMessenger"
+                          element={
+                            <Messenger
+                              onlineUsers={onlineUsers}
+                              setOnlineUsers={setOnlineUsers}
+                              arrivalMessage={arrivalMessage}
+                              user={loggedUser}
+                            />
+                          }
+                        />
+                        <Route path="/allMeetings" element={<AllMeetings />} />
+                        <Route
+                          path="/projects"
+                          element={<AllProjects user={loggedUser} />}
+                        />
+                        <Route
+                          path="/myproject/:pid"
+                          element={<SpecificProject user={loggedUser} />}
+                        />
+                        <Route
+                          path="/allboards"
+                          element={<AllBoards user={loggedUser} />}
+                        />
+                        <Route
+                          path="/boards/:bid"
+                          element={<Boards user={loggedUser} />}
+                        />
+                        {/* <Route path="/projects/project/:pid" element={<ProjectInfo user={loggedUser} />} /> */}
+                      </Route>
+                    </Routes>
+                  </SidebarMenu>
+                )}
+
+                <ToastContainer />
+              </Router>
+            </MoreInfoContext.Provider>
+          </TimerContext.Provider>
+        </ProjectNameContext.Provider>
+      </SocketContext.Provider>
     </>
   );
 };

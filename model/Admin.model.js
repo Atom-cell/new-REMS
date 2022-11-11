@@ -29,6 +29,7 @@ const adminSchema = mongoose.Schema(
     },
     emailToken: String,
     employees: [{ type: mongoose.Schema.Types.ObjectId, ref: "employee" }],
+    notifications: [{ msg: String, flag: { type: Number, default: 0 } }],
     blockSites: [
       {
         siteName: String,

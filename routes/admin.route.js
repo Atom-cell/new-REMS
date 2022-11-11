@@ -155,9 +155,11 @@ router.get("/getLogEmps", verifyJWT, async (req, res) => {
 router.get("/logs/:email", verifyJWT, async (req, res) => {
   console.log("In Logs", req.params.email);
 
-  Activity.find({ email: req.params.email }).then((response) => {
-    res.json({ data: response });
-  });
+  Activity.find({ email: req.params.email })
+    .sort({ _id: -1 })
+    .then((response) => {
+      res.json({ data: response });
+    });
 });
 
 router.get("/aa", async (req, res) => {

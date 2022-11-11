@@ -1,12 +1,11 @@
 .navbar {
   background-color: #1890ff;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   width: 100%;
-  top: 0;
+  /* top: 0; */
 }
 
 .menu-bars {
@@ -133,4 +132,6 @@
 }
 .timer_wrapper {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }

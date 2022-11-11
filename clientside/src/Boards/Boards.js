@@ -8,6 +8,7 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import SideMenu from "./SideMenu";
+import { SocketContext } from "../Helper/Context";
 import { toast } from "react-toastify";
 
 const Boards = ({ user }) => {
@@ -27,6 +28,8 @@ const Boards = ({ user }) => {
 
   const [employees, setEmployees] = useState([]);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [oldTitle, setOldTitle] = useState("");
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   const handleClose = () => setShowInviteModal(false);
   const handleShow = () => setShowInviteModal(true);
@@ -40,16 +43,34 @@ const Boards = ({ user }) => {
     axios
       .get("/myboards/specificboard", { params: { _id: bid } })
       .then((rec) => {
-        // console.log(rec.data);
         setBoards(rec.data[0].boards);
         setCompleteKanban(rec.data[0]);
         setColor(rec.data[0].color);
+        console.log("1: ", rec.data[0].boards);
+        console.log("2 : ", rec.data[0]);
       })
       .catch((err) => console.log(err));
   }, []);
 
   const addboardHandler = (name) => {
     // console.log(location.state);
+
+    //need board name
+    //need share with
+    //name
+
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (completeKanban.sharewith.length >= 1) {
+      axios.post("/notif/listAddedNotif", {
+        creator: completeKanban.empId,
+        online: user._id,
+        boardName: completeKanban.title,
+        listTitle: name,
+        sharewith: completeKanban.sharewith,
+        user: user.username,
+      });
+    }
+
     const tempBoards = [...boards];
     tempBoards.push({
       id: Date.now() + Math.random() * 2,
@@ -60,6 +81,20 @@ const Boards = ({ user }) => {
   };
 
   const removeBoard = (id) => {
+    const bName = boards.filter((b) => b._id === id);
+
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (completeKanban.sharewith.length >= 1) {
+      axios.post("/notif/deleteListAddedNotif", {
+        creator: completeKanban.empId,
+        online: user._id,
+        boardName: completeKanban.title,
+        listTitle: bName[0].title,
+        sharewith: completeKanban.sharewith,
+        user: user.username,
+      });
+    }
+
     const index = boards.findIndex((item) => item._id === id);
     if (index < 0) return;
 
@@ -208,14 +243,42 @@ const Boards = ({ user }) => {
     console.log(card);
   };
 
+  // For Board
   const updateTitle = (value) => {
+    let user = JSON.parse(localStorage.getItem("user"));
+
     // console.log(value);
     // console.log(completeKanban);
     // console.log(location.state);
+    if (completeKanban.sharewith.length >= 1) {
+      axios.post("http://localhost:5000/notif/boardNameChangeNotif", {
+        creator: completeKanban.empId,
+        online: user._id,
+        oldTitle: completeKanban.title,
+        title: value,
+        sharewith: completeKanban.sharewith,
+      });
+    }
+    setOldTitle(completeKanban.title);
     setCompleteKanban({ ...completeKanban, title: value });
   };
 
   const updateBoardTitle = (boardId, value) => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    const bName = boards.filter((b) => b._id === boardId);
+
+    if (completeKanban.sharewith.length >= 1) {
+      axios.post("http://localhost:5000/notif/listNameChangeNotif", {
+        creator: completeKanban.empId,
+        online: user._id,
+        oldTitle: bName[0].title,
+        title: value,
+        boardName: completeKanban.title,
+        sharewith: completeKanban.sharewith,
+        user: user.username,
+      });
+    }
+
     const updatedBoards = boards.map((b) => {
       if (b._id === boardId) {
         return { ...b, title: value };
@@ -232,6 +295,21 @@ const Boards = ({ user }) => {
       .post("/myboards/shareboardwith", { bid: bid, sharewith: emps })
       .then((res) => toast.success("Board Shared"))
       .catch((err) => console.log(err));
+
+    let user = JSON.parse(localStorage.getItem("user"));
+    axios.post("http://localhost:5000/notif/boardSharedNotif", {
+      bid: bid,
+      sharewith: emps,
+      user: user.username,
+      title: completeKanban?.title,
+    });
+
+    sock.emit("BoardShare", {
+      employees: emps,
+      title: completeKanban?.title,
+      user: user.username,
+    });
+
     // find the current board for that we need id of the board
     // then add another field sharedwith in that board
   };
@@ -258,7 +336,7 @@ const Boards = ({ user }) => {
   useEffect(() => {
     // localStorage.setItem("prac-kanban", JSON.stringify(boards));
     if (boards?.length > 0) {
-      // console.log(completeKanban);
+      console.log(completeKanban);
       axios
         .put("/myboards/updateboardtitle", {
           bid: bid,

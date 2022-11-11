@@ -281,6 +281,7 @@ router.get("/getEmp/:id", verifyJWT, (req, res, next) => {
     res.json(response);
   });
 });
+
 //for emp + admin
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
@@ -362,6 +363,29 @@ router.post("/login", async (req, res) => {
           { email: Euser.email, role: Euser.role },
           "helloworld"
         );
+
+        // try {
+        //   Emp.findOneAndUpdate(
+        //     { email: email },
+        //     {
+        //       $push: {
+        //         notifications: {
+        //           activetime: active_time,
+        //           idletime: idle_time,
+        //         },
+        //       },
+        //     },
+        //     function (error, data) {
+        //       if (error) {
+        //         console.log(error);
+        //       } else {
+        //         console.log("");
+        //       }
+        //     }
+        //   );
+        // } catch (e) {
+        //   res.send(e);
+        // }
 
         return res.json({ data: Euser, msg: 1, token: token, auth: true });
       } else {
