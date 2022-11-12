@@ -209,7 +209,7 @@ router.get("/getallmyusersbyname/:name", (req, res) => {
 
 router.post("/register", verifyJWT, async (req, res, next) => {
   console.log("In Emp Register");
-  let { email } = req.body;
+  let { email, hourlyRate } = req.body;
 
   //check user already exists or not
   const user = await Emp.findOne({ email: email });
@@ -223,6 +223,7 @@ router.post("/register", verifyJWT, async (req, res, next) => {
       email,
       password: hashPassword,
       username: email.split("@")[0],
+      hourlyRate: hourlyRate,
     });
     newEmp
       .save()

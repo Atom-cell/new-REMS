@@ -16,6 +16,7 @@ const style = {
 };
 function AddEmpModal({ closeMod, addEmpModal }) {
   const [email, setEmail] = React.useState("");
+  const [hourlyRate, setHourlyRate] = React.useState();
   const [emailE, setemailE] = React.useState({ error: false, msg: "" });
 
   const handleSubmit = async (e) => {
@@ -28,6 +29,7 @@ function AddEmpModal({ closeMod, addEmpModal }) {
           "http://localhost:5000/emp/register",
           {
             email: email,
+            hourlyRate: hourlyRate,
           },
           {
             headers: {
@@ -92,6 +94,20 @@ function AddEmpModal({ closeMod, addEmpModal }) {
               onChange={(e) => {
                 setEmail(e.target.value);
                 checkEmail();
+              }}
+            />
+            <TextField
+              id="standard-basic"
+              type="number"
+              label="Hourly Rate $"
+              variant="outlined"
+              value={hourlyRate}
+              margin="dense"
+              className="ip"
+              placeholder="Enter Employee Hourly Rate in $"
+              onChange={(e) => {
+                setHourlyRate(e.target.value);
+                // checkEmail();
               }}
             />
             <div style={{ width: "100%" }}>

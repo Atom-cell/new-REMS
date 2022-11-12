@@ -94,6 +94,7 @@ var empSchema = mongoose.Schema({
   billingId: String, // This is Stripe Customer ID
   attendance: [Date],
   bankDetails: String,
+  hourlyRate: Number,
 });
 
 module.exports = mongoose.model("employee", empSchema);
