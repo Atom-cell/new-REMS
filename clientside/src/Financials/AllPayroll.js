@@ -9,6 +9,37 @@ const AllPayroll = ({ user }) => {
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
 
+  // function exportToExcel(tableSelect, filename = "") {
+  //   alert("hl");
+  //   var downloadurl;
+  //   var dataFileType = "application/vnd.ms-excel";
+  //   // var tableHTMLData = tableSelect.outerHTML.replace(/ /g, "%20");
+
+  //   // Specify file name
+  //   filename = filename ? filename + ".xls" : "export_excel_data.xls";
+
+  //   // Create download link element
+  //   downloadurl = document.createElement("a");
+
+  //   document.body.appendChild(downloadurl);
+
+  //   if (navigator.msSaveOrOpenBlob) {
+  //     var blob = new Blob(["\ufeff", tableSelect], {
+  //       type: dataFileType,
+  //     });
+  //     navigator.msSaveOrOpenBlob(blob, filename);
+  //   } else {
+  //     // Create a link to the file
+  //     downloadurl.href = "data:" + dataFileType + ", " + tableSelect;
+
+  //     // Setting the file name
+  //     downloadurl.download = filename;
+
+  //     //triggering the function
+  //     downloadurl.click();
+  //   }
+  // }
+
   useEffect(() => {
     // get all payrolls
     axios
@@ -73,10 +104,17 @@ const AllPayroll = ({ user }) => {
                         <td>{}</td>
                         <td>{}</td>
                         <td>{}</td> */}
-                  <td onClick={() => navigate("/allpayroll/payrolldetails")}>
+                  <td
+                    onClick={() =>
+                      navigate("/allpayroll/payrolldetails", {
+                        state: p,
+                      })
+                    }
+                  >
                     View
                   </td>
                   <td>Download</td>
+                  {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
                   <td>Pay</td>
                   <td>Delete</td>
                 </tr>

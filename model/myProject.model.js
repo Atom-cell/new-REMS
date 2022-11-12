@@ -26,6 +26,7 @@ var myProjectSchema = mongoose.Schema(
         user: String,
         time: String,
         date: String,
+        marked: Boolean,
       },
     ],
 

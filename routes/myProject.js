@@ -20,12 +20,50 @@ router.get("/hoursworked", (req, res) => {
   // Inside hoursWorked we need to find user and their sum total time
   myProject.find(
     { projectAssignedBy: req.query._id, "hoursWorked.user": req.query.emps },
-    { hoursWorked: 1 },
+    // { hoursWorked: 1 },
     (err, rec) => {
       if (err) res.status(500).json(err);
       res.status(200).json(rec);
     }
   );
+});
+
+router.post("/markhoursworkedtrue", (req, res) => {
+  // console.log(req.body);
+  // console.log(req.body._id);
+  //_id, employees, dateRange
+  // console.log(req.body.employees);
+  // console.log(firstDate);
+  // console.log(secondDate);
+  req.body.projects.forEach((project) => {
+    console.log(project._id);
+    myProject.findOneAndReplace(
+      {
+        _id: project._id,
+      },
+      project,
+      // {
+      //   _id: project._id,
+      //   projectName: project.projectName,
+      //   projectCost: project.projectCost,
+      //   projectPriority: project.projectPriority,
+      //   projectAssignedBy: project.projectAssignedBy,
+      //   projectAssignedTo: project.projectAssignedTo,
+      //   hoursWorked: project.hoursWorked,
+      //   numOfBreaks: project.numOfBreaks,
+      //   dueDate: project.dueDate,
+      //   goals: project.goals,
+      //   milestones: project.milestones,
+      //   projectFiles: project.projectFiles,
+      //   createdAt: project.createdAt,
+      // },
+      {},
+      (err, rec) => {
+        if (err) res.status(500).json(err);
+      }
+    );
+  });
+  res.status(200).json("Success");
 });
 
 // Get all Projects For Employee
@@ -288,13 +326,19 @@ router.post("/hoursWorked", (req, res, next) => {
   console.log("Time is: ", req.body.time);
   console.log("Breaks: ", req.body.breaks);
   console.log("ID: ", req.body._id);
+  console.log("Date: ", req.body.date);
   console.log("name: ", uname);
 
   myProject.findOneAndUpdate(
     { _id: req.body._id },
     {
       $push: {
-        hoursWorked: { user: req.body.username, time: req.body.time },
+        hoursWorked: {
+          user: req.body.username,
+          time: req.body.time,
+          date: req.body.date,
+          marked: false,
+        },
         numOfBreaks: { user: req.body.username, time: req.body.breaks },
       },
     },

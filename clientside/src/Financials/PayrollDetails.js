@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import { Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
@@ -15,7 +16,7 @@ const PayrollDetails = () => {
         </div>
         <div className="payroll-detail">
           <h6>Created At:</h6>
-          <span>{state?.createdAt}</span>
+          <span>{moment(state?.createdAt).format("DD-MM-YYYY")}</span>
         </div>
         <div className="payroll-detail">
           <h6>Payroll Range:</h6>

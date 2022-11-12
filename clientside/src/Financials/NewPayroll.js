@@ -18,6 +18,7 @@ const NewPayroll = ({ user }) => {
   const [customDateRange, setCustomDateRange] = useState([null, null]);
   const [startDate, endDate] = customDateRange;
   const handleDateRange = (value) => {
+    setSelectedEmployees([]);
     if (value === "thismonth") {
       ///THH:mm:ss
       const startOfMonth = moment()
@@ -72,7 +73,7 @@ const NewPayroll = ({ user }) => {
       dateRange: dateRange,
       totalAmount: "",
       totalTime: totalTime,
-      paid: "No",
+      paid: false,
       employees: newSelectedEmployees,
       //   employees: [
       //     {
@@ -85,18 +86,65 @@ const NewPayroll = ({ user }) => {
       //   ],
       projectId: newSelectedProjects,
     };
-    console.log(myObj);
+    // console.log(myObj);
+    // With create payroll we have to also handle that for the date range marked is true for all selected Employees
     axios
       .post("/myPayroll/newpayroll", myObj)
       .then((rec) => {
-        console.log(rec.data);
-        navigate("/allpayroll/payrolldetails", {
-          state: rec.data,
+        // console.log(rec.data);
+        // handle for all employees the date range mark it true
+        // console.log(selectedProjects);
+        var firstDate = dateRange.substring(0, 10);
+        var secondDate = dateRange.substring(20, 30);
+        // console.log(selectedProjects);
+
+        selectedProjects.forEach((element) => {
+          // console.log(element.hoursWorked);
+          // if hoursWorked[0].user==selectedEmployees.username and date is in range then mark that true
+          element.hoursWorked.map((obj) => {
+            // selectedEmployees.includes(item)
+            selectedEmployees.map((obj2) => {
+              if (
+                obj.user === obj2.username &&
+                moment(obj.date, "DD-MM-YYYY") >=
+                  moment(firstDate, "DD-MM-YYYY") &&
+                moment(obj.date, "DD-MM-YYYY") <=
+                  moment(secondDate, "DD-MM-YYYY")
+              ) {
+                obj.marked = true;
+              }
+            });
+          });
         });
+        console.log(selectedProjects);
+
+        axios
+          .post("/myProjects/markhoursworkedtrue", {
+            projects: selectedProjects,
+          })
+          .then((records) => {
+            navigate("/allpayroll/payrolldetails", {
+              state: rec.data,
+            });
+          })
+          .catch((err) => console.log(err + "Line 132 in New Payroll"));
       })
       .catch((err) => {
         console.log(err + "line 61 New Payroll");
       });
+  };
+
+  const getAllProjects = (data) => {
+    // check if projects has already any data project
+    // if it has already that project then no need to add
+    // otherwise setProjects
+    data.forEach((element) => {
+      const found = selectedProjects.find((obj) => obj._id === element._id);
+      if (!found) {
+        setSelectedProjects([...selectedProjects, element]);
+      }
+    });
+    // setProjects(rec.data);
   };
 
   const getInfo = (emp) => {
@@ -115,30 +163,48 @@ const NewPayroll = ({ user }) => {
       })
       .then((rec) => {
         // console.log(rec.data);
+        getAllProjects(rec.data);
+        var newArray = [];
+
+        // filter hours worked
+        // if date range ke darmiyaan ho and marked false ho then ok otherwise nikaal do
+        rec.data.forEach((element) => {
+          // console.log(element.hoursWorked);
+          // console.log(dateRange.substring(3, 5));
+          // get month
+          var getMonth = dateRange.substring(3, 5);
+          var dummyArray = element.hoursWorked.filter((el) => {
+            const { date, marked } = el;
+            // var check = el.date.toString().susbtring(3, 5);
+            return date.substring(3, 5) === getMonth && marked === false;
+          });
+          Array.prototype.push.apply(newArray, dummyArray);
+        });
+        // console.log(newArray);
         // iterate above array
         // find emps.username
         // store and add that time infront of username
-        if (rec.data.length > 0) {
-          rec.data.forEach((element) => {
-            element.hoursWorked.forEach((o) => {
-              if (o.user === emp.username) {
-                totalTime = moment
-                  .duration(totalTime)
-                  .add(moment.duration(o.time));
-                totalTime = moment
-                  .utc(totalTime.as("milliseconds"))
-                  .format("HH:mm:ss");
-                setSelectedEmployees([
-                  ...selectedEmployees,
-                  {
-                    _id: emp._id,
-                    username: emp.username,
-                    totalTime: totalTime,
-                  },
-                ]);
-              }
-            });
+        if (rec.data.length > 0 && newArray.length > 0) {
+          // rec.data.forEach((element) => {
+          newArray.forEach((o) => {
+            if (o.user === emp.username) {
+              totalTime = moment
+                .duration(totalTime)
+                .add(moment.duration(o.time));
+              totalTime = moment
+                .utc(totalTime.as("milliseconds"))
+                .format("HH:mm:ss");
+              setSelectedEmployees([
+                ...selectedEmployees,
+                {
+                  _id: emp._id,
+                  username: emp.username,
+                  totalTime: totalTime,
+                },
+              ]);
+            }
           });
+          // });
         } else {
           setSelectedEmployees([
             ...selectedEmployees,

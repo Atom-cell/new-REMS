@@ -21,7 +21,7 @@ const PauseTimer = ({ pauseTime }) => {
   //[pause , play, stop]
   const [btnState, setBtnState] = React.useState([false, false, false]);
 
-  console.log("HRS: ", secondTime);
+  // console.log("HRS: ", secondTime);
 
   //   const startBtn = () => {
   //     console.log("PROJECT: ", name);
