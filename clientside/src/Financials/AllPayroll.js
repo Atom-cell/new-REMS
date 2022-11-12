@@ -3,11 +3,28 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
+import StripeCheckout from "react-stripe-checkout";
 import "./allpayroll.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 const AllPayroll = ({ user }) => {
+  const publishableKey =
+    "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
+
+  const handleTokenPay = async (token, id) => {
+    await axios
+      .post("/myPayroll/payment", { token: token, amount: 5000, payrollId: id })
+      .then((rec) => {
+        // console.log(rec.data);
+        if (rec.data.status === "success") {
+          toast.success("Payroll Paid");
+          fetchData();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   // function exportToExcel(tableSelect, filename = "") {
   //   alert("hl");
@@ -40,17 +57,16 @@ const AllPayroll = ({ user }) => {
   //   }
   // }
 
+  const fetchData = async () => {
+    const rec = await axios.get("/myPayroll/getallpayrolls", {
+      params: { employerId: user._id },
+    });
+    //   console.log(res.data);
+    setAllPayrolls(rec.data);
+  };
+
   useEffect(() => {
-    // get all payrolls
-    axios
-      .get("/myPayroll/getallpayrolls", {
-        params: { employerId: user._id },
-      })
-      .then((rec) => {
-        // console.log(rec.data);
-        setAllPayrolls(rec.data);
-      })
-      .catch((err) => console.log(err + "line 19 in All Payroll"));
+    fetchData().catch(console.error + "line 66 in All Payroll");
   }, []);
   return (
     <div className="projectContainer">
@@ -88,7 +104,7 @@ const AllPayroll = ({ user }) => {
               <th>View</th>
               <th>Download</th>
               <th>Pay</th>
-              <th>Delete</th>
+              {/* <th>Delete</th> */}
             </tr>
           </thead>
           <tbody>
@@ -115,8 +131,26 @@ const AllPayroll = ({ user }) => {
                   </td>
                   <td>Download</td>
                   {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
-                  <td>Pay</td>
-                  <td>Delete</td>
+                  {/* <td>Pay</td> */}
+                  <td>
+                    {p.paid ? (
+                      "Paid"
+                    ) : (
+                      <>
+                        <StripeCheckout
+                          stripeKey={publishableKey}
+                          label="Pay"
+                          name="Pay With Credit Card"
+                          billingAddress
+                          // shippingAddress
+                          amount={5000}
+                          description={`Total Amount to be paid is: blah blah`}
+                          token={(token) => handleTokenPay(token, p._id)}
+                        />
+                      </>
+                    )}
+                  </td>
+                  {/* <td>Delete</td> */}
                 </tr>
               );
             })}

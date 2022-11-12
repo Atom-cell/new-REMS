@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 const myPayroll = require("../model/myPayroll.model");
+const Stripe = require("stripe")("");
+// process.env.Secret_key
 
 router.get("/getallpayrolls", async (req, res) => {
   //   console.log(req.query.employerId);
@@ -25,6 +27,38 @@ router.post("/newpayroll", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+router.post("/payment", async (req, res) => {
+  // console.log(req.body.amount);
+  // console.log(process.env.Secret_key);
+  let status, error;
+  const { token, amount, payrollId } = req.body;
+  console.log(payrollId);
+  try {
+    await Stripe.charges.create({
+      source: token.id,
+      amount,
+      currency: "usd",
+      description: "asdasda",
+    });
+    status = "success";
+  } catch (error) {
+    console.log(error);
+    status = "Failure";
+  }
+  if (status == "success") {
+    myPayroll.findOneAndUpdate(
+      { _id: payrollId },
+      { paid: true },
+      { new: true },
+      (err, res) => {
+        if (err) res.status(500).json(err);
+        // console.log(res);
+      }
+    );
+  }
+  res.json({ error, status });
 });
 
 module.exports = router;
