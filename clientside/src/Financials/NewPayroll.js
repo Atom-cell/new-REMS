@@ -53,13 +53,17 @@ const NewPayroll = ({ user }) => {
     // console.log(selectedEmployees);
     // id, user, totalTime for every employee
     var totalTime;
+    var totalAmountWhole = 0;
     var newSelectedEmployees = selectedEmployees.map((emp) => {
       totalTime = moment
         .duration(totalTime)
         .add(moment.duration(emp.totalTime));
+      console.log(typeof emp.totalAmount);
+      totalAmountWhole = totalAmountWhole + emp.totalAmount;
       return {
         employeeId: emp._id,
         totalTime: emp.totalTime,
+        baseAmount: emp.totalAmount,
       };
     });
     totalTime = moment.utc(totalTime.as("milliseconds")).format("HH:mm:ss");
@@ -71,7 +75,7 @@ const NewPayroll = ({ user }) => {
     const myObj = {
       employerId: user._id,
       dateRange: dateRange,
-      totalAmount: "",
+      totalAmount: totalAmountWhole.toFixed(3),
       totalTime: totalTime,
       paid: false,
       employees: newSelectedEmployees,
@@ -147,6 +151,19 @@ const NewPayroll = ({ user }) => {
     // setProjects(rec.data);
   };
 
+  const calculateWage = (time, hourlyRate) => {
+    // console.log(time);
+    const [hours, minutes, seconds] = time.split(":");
+    var totalSeconds =
+      Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
+    // console.log(totalSeconds);
+    // now convert totalseconds to hours
+    var totalHours = totalSeconds / 3600;
+    // console.log(totalHours);
+    //now calculate total wage
+    return totalHours * hourlyRate;
+  };
+
   const getInfo = (emp) => {
     // get info
     // you have selected Employees
@@ -187,6 +204,7 @@ const NewPayroll = ({ user }) => {
         if (rec.data.length > 0 && newArray.length > 0) {
           // rec.data.forEach((element) => {
           newArray.forEach((o) => {
+            const totalAmount = calculateWage(o.time, emp.hourlyRate);
             if (o.user === emp.username) {
               totalTime = moment
                 .duration(totalTime)
@@ -200,6 +218,7 @@ const NewPayroll = ({ user }) => {
                   _id: emp._id,
                   username: emp.username,
                   totalTime: totalTime,
+                  totalAmount: totalAmount,
                 },
               ]);
             }
@@ -212,6 +231,7 @@ const NewPayroll = ({ user }) => {
               _id: emp._id,
               username: emp.username,
               totalTime: "00:00:00",
+              totalAmount: 0,
             },
           ]);
         }
@@ -283,7 +303,11 @@ const NewPayroll = ({ user }) => {
   const handleEmployeeClick = (includes, emp) => {
     var emps = [];
     if (includes) {
-      getInfo({ _id: emp._id, username: emp.username });
+      getInfo({
+        _id: emp._id,
+        username: emp.username,
+        hourlyRate: emp.hourlyRate,
+      });
     } else {
       emps = selectedEmployees.filter((em) => em._id !== emp._id);
     }
@@ -533,7 +557,7 @@ const NewPayroll = ({ user }) => {
                     <tr key={emp._id}>
                       <td>{emp.username}</td>
                       <td>{emp.totalTime}</td>
-                      <td>calcualted later</td>
+                      {/* <td> $ {emp.totalAmount}</td> */}
                     </tr>
                   );
                 })}
@@ -545,7 +569,7 @@ const NewPayroll = ({ user }) => {
                     <tr key={emp._id}>
                       <td>{emp.username}</td>
                       <td>{emp.totalTime}</td>
-                      <td>calcualted later</td>
+                      <td>$ {emp.totalAmount}</td>
                     </tr>
                   );
                 })}
