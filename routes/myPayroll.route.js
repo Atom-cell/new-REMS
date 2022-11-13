@@ -34,13 +34,23 @@ router.post("/payment", async (req, res) => {
   // console.log(process.env.Secret_key);
   let status, error;
   const { token, amount, payrollId } = req.body;
-  console.log(payrollId);
+  // console.log(typeof amount);
   try {
     await Stripe.charges.create({
       source: token.id,
-      amount,
+      amount: 10,
       currency: "usd",
       description: "asdasda",
+      shipping: {
+        name: "Jenny Rosen",
+        address: {
+          line1: "510 Townsend St",
+          postal_code: "98140",
+          city: "San Francisco",
+          state: "CA",
+          country: "US",
+        },
+      },
     });
     status = "success";
   } catch (error) {

@@ -13,9 +13,24 @@ const AllPayroll = ({ user }) => {
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
 
-  const handleTokenPay = async (token, id) => {
+  const handleTokenPay = async (token, id, amount) => {
+    amount = parseInt(amount);
+    console.log(typeof amount);
+    console.log(amount);
+    //name, address, postcode, city, India
+    // token.card.name = "asdf";
+    // token.card.address_line1 = "asd";
+    // token.card.address_zip = "45400";
+    // token.card.address_city = "Bara kau";
+    // token.card.address_country = "Pakistan";
+    // token.card.address_state = "Federal Capial &AJK";
+    // console.log(token);
     await axios
-      .post("/myPayroll/payment", { token: token, amount: 5000, payrollId: id })
+      .post("/myPayroll/payment", {
+        token: token,
+        amount: amount,
+        payrollId: id,
+      })
       .then((rec) => {
         // console.log(rec.data);
         if (rec.data.status === "success") {
@@ -141,11 +156,13 @@ const AllPayroll = ({ user }) => {
                           stripeKey={publishableKey}
                           label="Pay"
                           name="Pay With Credit Card"
-                          billingAddress
+                          // billingAddress
                           // shippingAddress
-                          amount={5000}
-                          description={`Total Amount to be paid is: blah blah`}
-                          token={(token) => handleTokenPay(token, p._id)}
+                          amount={p.totalAmount}
+                          description={`Total Amount to be paid is: ${p.totalAmount}`}
+                          token={(token) =>
+                            handleTokenPay(token, p._id, p.totalAmount)
+                          }
                         />
                       </>
                     )}
