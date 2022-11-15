@@ -61,7 +61,7 @@ const NewPayroll = ({ user }) => {
       console.log(typeof emp.totalAmount);
       totalAmountWhole = totalAmountWhole + emp.totalAmount;
       return {
-        employeeId: emp._id,
+        employeeUsername: emp.username,
         totalTime: emp.totalTime,
         baseAmount: emp.totalAmount,
       };

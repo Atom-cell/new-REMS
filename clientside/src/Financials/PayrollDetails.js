@@ -107,7 +107,7 @@ const PayrollDetails = () => {
             {selectedPayroll?.employees.map((emp, index) => {
               return (
                 <tr key={index}>
-                  <td>{emp.employeeId}</td>
+                  <td>{emp.employeeUsername}</td>
                   <td>{emp.totalTime}</td>
                   <td>{emp.baseAmount ? emp.baseAmount : "0"}</td>
                   <td

@@ -34,6 +34,10 @@ const Adjustments = ({
               <span>{payroll?.dateRange}</span>
             </div>
             <div className="payroll-detail">
+              <h6>Name</h6>
+              <span>{employee?.employeeUsername}</span>
+            </div>
+            <div className="payroll-detail">
               <h6>Worked Time</h6>
               <span>{employee?.totalTime}</span>
             </div>

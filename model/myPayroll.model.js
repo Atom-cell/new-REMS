@@ -10,7 +10,7 @@ var myPayrollSchema = mongoose.Schema(
     paid: Boolean,
     employees: [
       {
-        employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
+        employeeUsername: String,
         totalTime: String,
         baseAmount: String,
         adjustments: [{ adjustment: String, comment: String }],
