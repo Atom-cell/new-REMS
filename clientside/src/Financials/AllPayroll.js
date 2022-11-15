@@ -7,6 +7,7 @@ import StripeCheckout from "react-stripe-checkout";
 import "./allpayroll.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import moment from "moment";
 const AllPayroll = ({ user }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
@@ -73,11 +74,19 @@ const AllPayroll = ({ user }) => {
   // }
 
   const fetchData = async () => {
-    const rec = await axios.get("/myPayroll/getallpayrolls", {
-      params: { employerId: user._id },
-    });
-    //   console.log(res.data);
-    setAllPayrolls(rec.data);
+    if (user?.role === "Employee") {
+      // get all payrolls where employees field has the curent logged in id
+      const rec = await axios.get("/myPayroll/getemployeepayrolls", {
+        params: { employeeId: user._id },
+      });
+      setAllPayrolls(rec.data);
+    } else {
+      const rec = await axios.get("/myPayroll/getallpayrolls", {
+        params: { employerId: user._id },
+      });
+      //   console.log(res.data);
+      setAllPayrolls(rec.data);
+    }
   };
 
   useEffect(() => {
@@ -97,26 +106,28 @@ const AllPayroll = ({ user }) => {
             style={{ boxShadow: "#da0d50 !important" }}
           />
         </div> */}
-        <div className="create-project">
-          <Button
-            style={{ backgroundColor: "#1890ff" }}
-            onClick={() => navigate("/allpayroll/newpayroll")}
-          >
-            Create New Payroll
-          </Button>
-        </div>
+        {user?.role !== "Employee" && (
+          <div className="create-project">
+            <Button
+              style={{ backgroundColor: "#1890ff" }}
+              onClick={() => navigate("/allpayroll/newpayroll")}
+            >
+              Create New Payroll
+            </Button>
+          </div>
+        )}
       </div>
       <div className="table">
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Payroll #</th>
+              <th>Payroll Id</th>
               {/* <th>Status</th> */}
               <th>Date Range</th>
               <th>Total Time</th>
               <th>Total Amount</th>
-              <th># of People</th>
-              <th>View</th>
+              {user?.role !== "Employee" && <th># of People</th>}
+              {user?.role !== "Employee" ? <th>View</th> : <th>Created At</th>}
               <th>Download</th>
               <th>Pay</th>
               {/* <th>Delete</th> */}
@@ -129,21 +140,38 @@ const AllPayroll = ({ user }) => {
                   <td>{p._id}</td>
                   <td>{p.dateRange}</td>
                   <td>{p.totalTime}</td>
-                  <td>{p.totalAmount}</td>
-                  <td>{p.employees.length}</td>
+                  {user?.role !== "Employee" ? (
+                    <td>$ {p.totalAmount}</td>
+                  ) : (
+                    <td>
+                      $ &nbsp;
+                      {p.employees.map((emp) => {
+                        const { baseAmount } = emp;
+                        if (emp.employeeId === user?._id) {
+                          return baseAmount;
+                        }
+                      })}
+                    </td>
+                  )}
+                  {user?.role !== "Employee" && <td>{p.employees.length}</td>}
                   {/* <td>{}</td>
                         <td>{}</td>
                         <td>{}</td>
                         <td>{}</td> */}
-                  <td
-                    onClick={() =>
-                      navigate("/allpayroll/payrolldetails", {
-                        state: p,
-                      })
-                    }
-                  >
-                    View
-                  </td>
+
+                  {user?.role !== "Employee" ? (
+                    <td
+                      onClick={() =>
+                        navigate("/allpayroll/payrolldetails", {
+                          state: p,
+                        })
+                      }
+                    >
+                      View
+                    </td>
+                  ) : (
+                    <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
+                  )}
                   <td>Download</td>
                   {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
                   {/* <td>Pay</td> */}
@@ -152,18 +180,22 @@ const AllPayroll = ({ user }) => {
                       "Paid"
                     ) : (
                       <>
-                        <StripeCheckout
-                          stripeKey={publishableKey}
-                          label="Pay"
-                          name="Pay With Credit Card"
-                          // billingAddress
-                          // shippingAddress
-                          amount={p.totalAmount}
-                          description={`Total Amount to be paid is: ${p.totalAmount}`}
-                          token={(token) =>
-                            handleTokenPay(token, p._id, p.totalAmount)
-                          }
-                        />
+                        {user?.role !== "Employee" ? (
+                          <StripeCheckout
+                            stripeKey={publishableKey}
+                            label="Pay"
+                            name="Pay With Credit Card"
+                            // billingAddress
+                            // shippingAddress
+                            amount={p.totalAmount}
+                            description={`Total Amount to be paid is: ${p.totalAmount}`}
+                            token={(token) =>
+                              handleTokenPay(token, p._id, p.totalAmount)
+                            }
+                          />
+                        ) : (
+                          "Not Paid"
+                        )}
                       </>
                     )}
                   </td>

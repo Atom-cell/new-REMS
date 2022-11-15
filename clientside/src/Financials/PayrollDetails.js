@@ -1,38 +1,91 @@
+import axios from "axios";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
+import Adjustments from "./Adjustments";
 
 const PayrollDetails = () => {
   const { state } = useLocation();
+
+  const [selectedPayroll, setSelectedPayroll] = useState(state);
+  const [employee, setEmployee] = useState();
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   //   console.log(state);
+
+  const updateAmount = (adjustment, comment) => {
+    // console.log(adjustment);
+    // console.log(comment);
+    console.log(selectedPayroll?.employees);
+    // create an array of objects and then create a field in employee and then push it there
+    const myObj = {
+      adjustment: adjustment,
+      comment: comment,
+    };
+    selectedPayroll?.employees.forEach((element) => {
+      if (element.employeeId === employee.employeeId) {
+        element.adjustments.push(myObj);
+      }
+    });
+    console.log(selectedPayroll);
+
+    //payroll Id, employeeId, adjustments, comment
+
+    axios
+      .post("/myPayroll/addadjustment", selectedPayroll)
+      .then((rec) => {
+        console.log(rec.data);
+      })
+      .catch((err) => console.log(err + "Line 30 Payroll Details"));
+  };
+
+  const handleAdjustments = (arr) => {
+    console.log(arr);
+    // [adjustment,comment]
+    // find total adjustment i-e if add then add and if subtract then subtract
+    let sum = 0;
+
+    arr.forEach((element) => {
+      if (element.adjustment.substring(0, 1) == "+") {
+        sum = sum + Number(element.adjustment.substring(1));
+      } else {
+        sum = sum - Number(element.adjustment.substring(1));
+      }
+    });
+    // console.log(sum);
+    return sum;
+  };
   return (
     <div>
       {/* <h1>Payroll Details</h1> */}
       <div className="payroll-details">
         <div className="payroll-detail">
           <h6>Payroll Id:</h6>
-          <span>{state?._id}</span>
+          <span>{selectedPayroll?._id}</span>
         </div>
         <div className="payroll-detail">
           <h6>Created At:</h6>
-          <span>{moment(state?.createdAt).format("DD-MM-YYYY")}</span>
+          <span>{moment(selectedPayroll?.createdAt).format("DD-MM-YYYY")}</span>
         </div>
         <div className="payroll-detail">
           <h6>Payroll Range:</h6>
-          <span>{state?.dateRange}</span>
+          <span>{selectedPayroll?.dateRange}</span>
         </div>
         <div className="payroll-detail">
           <h6>Total Amount:</h6>
-          <span>{state?.totalAmount}</span>
+          <span>{selectedPayroll?.totalAmount}</span>
         </div>
         <div className="payroll-detail">
           <h6>Total Time:</h6>
-          <span>{state?.totalTime}</span>
+          <span>{selectedPayroll?.totalTime}</span>
         </div>
         <div className="payroll-detail">
           <h6>Total Projects:</h6>
-          <span>{state?.projectId.length}</span>
+          <span>{selectedPayroll?.projectId.length}</span>
         </div>
         {/* <div className="payroll-detail">
           <h6>Status:</h6>
@@ -51,19 +104,36 @@ const PayrollDetails = () => {
             </tr>
           </thead>
           <tbody>
-            {state?.employees.map((emp, index) => {
+            {selectedPayroll?.employees.map((emp, index) => {
               return (
                 <tr key={index}>
-                  <td>{emp._id}</td>
+                  <td>{emp.employeeId}</td>
                   <td>{emp.totalTime}</td>
                   <td>{emp.baseAmount ? emp.baseAmount : "0"}</td>
-                  <td>{emp.adjustments ? emp.adjustments : "0"}</td>
-                  <td>{emp.totalAmount ? emp.totalAmount : "0"}</td>
+                  <td
+                    onClick={() => {
+                      setEmployee(emp);
+                      handleShow();
+                    }}
+                  >
+                    {handleAdjustments(emp.adjustments)}
+                  </td>
+                  <td>
+                    {Number(emp.baseAmount) +
+                      handleAdjustments(emp.adjustments)}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+        <Adjustments
+          show={show}
+          handleClose={handleClose}
+          employee={employee}
+          payroll={selectedPayroll}
+          updateAmount={updateAmount}
+        />
       </div>
     </div>
   );

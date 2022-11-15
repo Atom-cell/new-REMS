@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 const myPayroll = require("../model/myPayroll.model");
+const Emp = require("../model/Emp.model");
 const Stripe = require("stripe")("");
 // process.env.Secret_key
 
@@ -17,6 +18,32 @@ router.get("/getallpayrolls", async (req, res) => {
   }
 });
 
+router.get("/getemployeepayrolls", async (req, res) => {
+  //   console.log(req.query.employeeId);
+  try {
+    const allPayrolls = await myPayroll.find({
+      "employees.employeeId": req.query.employeeId,
+    });
+    res.status(200).json(allPayrolls);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.post("/addadjustment", (req, res) => {
+  // console.log(req.body);
+  //_id, employeeId, adjustment, comment
+  myPayroll.findOneAndReplace(
+    { _id: req.body._id },
+    req.body,
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
+});
+
 router.post("/newpayroll", async (req, res) => {
   //   console.log(req.body);
   const newPayroll = new myPayroll(req.body);
@@ -27,6 +54,23 @@ router.post("/newpayroll", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+router.get("/empwithnames", (req, res) => {
+  // console.log(req.query.emps);
+  var newArray = req.query.emps.map(function (el) {
+    return JSON.parse(el);
+  });
+  var records = [];
+  newArray.forEach((item) => {
+    Emp.find({ _id: item.employeeId }, { _id: 1, username: 1 }, (err, rec) => {
+      if (err) res.status(500).json(err);
+      console.log(rec[0]);
+      records.push(rec[0]);
+    });
+    console.log(records);
+  });
+  // console.log(records);
 });
 
 router.post("/payment", async (req, res) => {
