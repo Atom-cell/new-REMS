@@ -49,6 +49,7 @@
 		"timeago-react": "^3.0.4",
 		"uuid": "^8.3.2",
 		"web-vitals": "^1.0.1",
+		"xlsx": "^0.18.5",
 		"yarn": "^1.22.10"
 	},
 	"scripts": {

@@ -8,6 +8,7 @@ import "./allpayroll.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
+import * as XLSX from "xlsx";
 const AllPayroll = ({ user }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
@@ -40,6 +41,16 @@ const AllPayroll = ({ user }) => {
         }
       })
       .catch((err) => console.log(err));
+  };
+
+  const exportFile = (file) => {
+    console.log(file.employees);
+    /* convert state to workbook */
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(file.employees);
+    XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+    /* generate XLSX file and send to client */
+    XLSX.writeFile(wb, "sheetjs.xlsx");
   };
 
   // function exportToExcel(tableSelect, filename = "") {
@@ -84,7 +95,7 @@ const AllPayroll = ({ user }) => {
       const rec = await axios.get("/myPayroll/getallpayrolls", {
         params: { employerId: user._id },
       });
-      //   console.log(res.data);
+      console.log(rec.data);
       setAllPayrolls(rec.data);
     }
   };
@@ -172,7 +183,7 @@ const AllPayroll = ({ user }) => {
                   ) : (
                     <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
                   )}
-                  <td>Download</td>
+                  <td onClick={() => exportFile(p)}>Download</td>
                   {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
                   {/* <td>Pay</td> */}
                   <td>
