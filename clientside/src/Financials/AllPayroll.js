@@ -14,6 +14,7 @@ const AllPayroll = ({ user }) => {
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
+  const [totalAmount, setTotalAmount] = useState();
 
   const handleTokenPay = async (token, id, amount) => {
     amount = parseInt(amount);
@@ -84,12 +85,44 @@ const AllPayroll = ({ user }) => {
   //   }
   // }
 
+  const handleAdjustments = (arr) => {
+    console.log(arr);
+    // [adjustment,comment]
+    // find total adjustment i-e if add then add and if subtract then subtract
+    let sum = 0;
+
+    arr.forEach((element) => {
+      if (element.adjustment.substring(0, 1) == "+") {
+        sum = sum + Number(element.adjustment.substring(1));
+      } else {
+        sum = sum - Number(element.adjustment.substring(1));
+      }
+    });
+    // console.log(sum);
+    return sum;
+  };
+
+  const handleTotalAmount = (employees) => {
+    var sum = 0;
+    employees.map((emp) => {
+      // console.log(emp);
+      const { baseAmount } = emp;
+      if (emp.adjustments.length > 0) {
+        sum = sum + handleAdjustments(emp.adjustments);
+      }
+      sum = Number(baseAmount) + sum;
+      // console.log(sum + Number(baseAmount));
+    });
+    return sum;
+  };
+
   const fetchData = async () => {
     if (user?.role === "Employee") {
       // get all payrolls where employees field has the curent logged in id
       const rec = await axios.get("/myPayroll/getemployeepayrolls", {
-        params: { employeeId: user._id },
+        params: { employeeUsername: user.username },
       });
+      console.log(rec.data);
       setAllPayrolls(rec.data);
     } else {
       const rec = await axios.get("/myPayroll/getallpayrolls", {
@@ -138,8 +171,9 @@ const AllPayroll = ({ user }) => {
               <th>Total Time</th>
               <th>Total Amount</th>
               {user?.role !== "Employee" && <th># of People</th>}
-              {user?.role !== "Employee" ? <th>View</th> : <th>Created At</th>}
-              <th>Download</th>
+              <th>View</th>
+              <th>Created At</th>
+              {user?.role !== "Employee" && <th>Download</th>}
               <th>Pay</th>
               {/* <th>Delete</th> */}
             </tr>
@@ -152,14 +186,23 @@ const AllPayroll = ({ user }) => {
                   <td>{p.dateRange}</td>
                   <td>{p.totalTime}</td>
                   {user?.role !== "Employee" ? (
-                    <td>$ {p.totalAmount}</td>
+                    <td>
+                      $ &nbsp;
+                      {handleTotalAmount(p.employees)}
+                    </td>
                   ) : (
                     <td>
                       $ &nbsp;
                       {p.employees.map((emp) => {
+                        // console.log(emp);
                         const { baseAmount } = emp;
-                        if (emp.employeeId === user?._id) {
-                          return baseAmount;
+                        var sum = 0;
+                        if (emp.employeeUsername === user?.username) {
+                          if (emp.adjustments.length > 0) {
+                            sum = handleAdjustments(emp.adjustments);
+                          }
+                          // console.log(sum + Number(baseAmount));
+                          return Number(baseAmount) + sum;
                         }
                       })}
                     </td>
@@ -170,20 +213,19 @@ const AllPayroll = ({ user }) => {
                         <td>{}</td>
                         <td>{}</td> */}
 
-                  {user?.role !== "Employee" ? (
-                    <td
-                      onClick={() =>
-                        navigate("/allpayroll/payrolldetails", {
-                          state: p,
-                        })
-                      }
-                    >
-                      View
-                    </td>
-                  ) : (
-                    <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
+                  <td
+                    onClick={() =>
+                      navigate("/allpayroll/payrolldetails", {
+                        state: p,
+                      })
+                    }
+                  >
+                    View
+                  </td>
+                  <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
+                  {user?.role !== "Employee" && (
+                    <td onClick={() => exportFile(p)}>Download</td>
                   )}
-                  <td onClick={() => exportFile(p)}>Download</td>
                   {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
                   {/* <td>Pay</td> */}
                   <td>

@@ -76,7 +76,7 @@ const PayrollDetails = () => {
           <span>{selectedPayroll?.dateRange}</span>
         </div>
         <div className="payroll-detail">
-          <h6>Total Amount:</h6>
+          <h6>Amount Before Adjustments:</h6>
           <span>{selectedPayroll?.totalAmount}</span>
         </div>
         <div className="payroll-detail">

@@ -22,7 +22,7 @@ router.get("/getemployeepayrolls", async (req, res) => {
   //   console.log(req.query.employeeId);
   try {
     const allPayrolls = await myPayroll.find({
-      "employees.employeeId": req.query.employeeId,
+      "employees.employeeUsername": req.query.employeeUsername,
     });
     res.status(200).json(allPayrolls);
   } catch (err) {
