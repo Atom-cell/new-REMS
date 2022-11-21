@@ -8,6 +8,11 @@ var myPayrollSchema = mongoose.Schema(
     totalAmount: String,
     totalTime: String,
     paid: Boolean,
+    invoice: {
+      _id: String,
+      date: String,
+      dueDate: String,
+    },
     employees: [
       {
         employeeUsername: String,

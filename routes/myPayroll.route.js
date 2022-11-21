@@ -44,6 +44,36 @@ router.post("/addadjustment", (req, res) => {
   );
 });
 
+router.post("/generateinvoice", (req, res) => {
+  console.log(req.body);
+  myPayroll.findOneAndUpdate(
+    { _id: req.body._id },
+    {
+      $set: { invoice: req.body.myObj },
+    },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
+router.post("/updateinvoiceduedate", (req, res) => {
+  console.log(req.body);
+  myPayroll.findOneAndUpdate(
+    { _id: req.body._id },
+    {
+      $set: { "invoice.dueDate": req.body.dueDate },
+    },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    }
+  );
+});
+
 router.post("/newpayroll", async (req, res) => {
   //   console.log(req.body);
   const newPayroll = new myPayroll(req.body);

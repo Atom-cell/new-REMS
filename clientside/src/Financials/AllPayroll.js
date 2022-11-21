@@ -14,7 +14,6 @@ const AllPayroll = ({ user }) => {
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
-  const [totalAmount, setTotalAmount] = useState();
 
   const handleTokenPay = async (token, id, amount) => {
     amount = parseInt(amount);

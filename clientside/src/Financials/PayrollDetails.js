@@ -1,12 +1,14 @@
 import axios from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Table } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { Button, Table } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 import Adjustments from "./Adjustments";
+const { v4: uuidV4 } = require("uuid");
 
-const PayrollDetails = () => {
+const PayrollDetails = ({ user }) => {
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   const [selectedPayroll, setSelectedPayroll] = useState(state);
   const [employee, setEmployee] = useState();
@@ -44,7 +46,7 @@ const PayrollDetails = () => {
   };
 
   const handleAdjustments = (arr) => {
-    console.log(arr);
+    // console.log(arr);
     // [adjustment,comment]
     // find total adjustment i-e if add then add and if subtract then subtract
     let sum = 0;
@@ -58,6 +60,26 @@ const PayrollDetails = () => {
     });
     // console.log(sum);
     return sum;
+  };
+  const handleGenerateInvoice = () => {
+    // console.log(moment().format("DD-MM-YYYY"));
+    const myObj = {
+      _id: uuidV4(),
+      date: moment().format("DD-MM-YYYY"),
+      dueDate: "",
+    };
+    axios
+      .post("/myPayroll/generateinvoice", {
+        _id: selectedPayroll._id,
+        myObj: myObj,
+      })
+      .then((rec) => {
+        // console.log(rec.data);
+        // console.log(state);
+        setSelectedPayroll(rec.data);
+        navigate("/allpayroll/generateinvoice", { state: rec.data });
+      })
+      .catch((err) => console.log(err + "Line 69 in Payroll Details"));
   };
   return (
     <div>
@@ -83,10 +105,39 @@ const PayrollDetails = () => {
           <h6>Total Time:</h6>
           <span>{selectedPayroll?.totalTime}</span>
         </div>
-        <div className="payroll-detail">
+        {selectedPayroll.invoice ? (
+          <>
+            {user?.role !== "Employee" && (
+              <div className="payroll-detail">
+                <Button
+                  style={{ backgroundColor: "#1890ff" }}
+                  onClick={() =>
+                    navigate("/allpayroll/generateinvoice", { state: state })
+                  }
+                >
+                  View Invoice
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {user?.role !== "Employee" && (
+              <div className="payroll-detail">
+                <Button
+                  style={{ backgroundColor: "#1890ff" }}
+                  onClick={handleGenerateInvoice}
+                >
+                  Generate Invoice
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+        {/* <div className="payroll-detail">
           <h6>Total Projects:</h6>
           <span>{selectedPayroll?.projectId.length}</span>
-        </div>
+        </div> */}
         {/* <div className="payroll-detail">
           <h6>Status:</h6>
           <span>Manually Created</span>

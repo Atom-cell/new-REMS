@@ -187,24 +187,24 @@ export const SideBarData = {
           ),
           cName: "nav-text",
         },
-        {
-          id: 18,
-          title: "Invoices",
-          path: "/allinvoice",
-          icon: (
-            <i
-              class="fa-solid fa-file-invoice-dollar"
-              style={{
-                color: "gray",
-                fontSize: "1.5rem",
-                width: "1em",
-                height: "1em",
-                display: "inline-block",
-              }}
-            ></i>
-          ),
-          cName: "nav-text",
-        },
+        // {
+        //   id: 18,
+        //   title: "Invoices",
+        //   path: "/allinvoice",
+        //   icon: (
+        //     <i
+        //       class="fa-solid fa-file-invoice-dollar"
+        //       style={{
+        //         color: "gray",
+        //         fontSize: "1.5rem",
+        //         width: "1em",
+        //         height: "1em",
+        //         display: "inline-block",
+        //       }}
+        //     ></i>
+        //   ),
+        //   cName: "nav-text",
+        // },
       ],
     },
     // {

@@ -46,6 +46,7 @@ import NewPayroll from "./Financials/NewPayroll";
 import PayrollDetails from "./Financials/PayrollDetails";
 import NewInvoice from "./Financials/NewInvoice";
 import InvoiceDetails from "./Financials/InvoiceDetails";
+import Invoice from "./Financials/Invoice";
 // import ProjectInfo from "./Projects/ProjectInfo";
 const socket = io.connect("http://localhost:8900");
 
@@ -324,6 +325,10 @@ const App = () => {
                   <Route
                     path="/allpayroll/payrolldetails"
                     element={<PayrollDetails user={loggedUser} />}
+                  />
+                  <Route
+                    path="/allpayroll/generateinvoice"
+                    element={<Invoice user={loggedUser} />}
                   />
 
                   <Route
