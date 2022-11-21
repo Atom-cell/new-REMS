@@ -27,18 +27,18 @@ const MeetingEmployeesTable = ({
     var user = JSON.parse(localStorage.getItem("user"));
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value == null || value === "" || value === undefined) {
         // console.log("hello");
         fetchData();
       } else {
-        if (localStorage.getItem("role") == "Employee") {
+        if (localStorage.getItem("role") === "Employee") {
           axios
             .get(`/emp/getallusersbyname/${value}`, {
               params: { _id: user._id },
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -49,7 +49,7 @@ const MeetingEmployeesTable = ({
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -61,7 +61,7 @@ const MeetingEmployeesTable = ({
   const fetchData = async () => {
     // get the data from the api
     var userId = JSON.parse(localStorage.getItem("user"))._id;
-    if (localStorage.getItem("role") == "Employee") {
+    if (localStorage.getItem("role") === "Employee") {
       const res = await axios.get(
         "http://localhost:5000/emp/getcompanyemployees",
         { params: { _id: userId } }
@@ -70,13 +70,13 @@ const MeetingEmployeesTable = ({
       const response = await axios.get("http://localhost:5000/emp/getmyadmin", {
         params: { _id: userId },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees([...withoutMe, response.data[0]]);
     } else {
       const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
         params: { _id: userId },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees(withoutMe);
     }
   };
@@ -87,8 +87,8 @@ const MeetingEmployeesTable = ({
 
   useEffect(() => {
     if (
-      handleInvite != undefined &&
-      empId == JSON.parse(localStorage.getItem("user"))._id
+      handleInvite !== undefined &&
+      empId === JSON.parse(localStorage.getItem("user"))._id
     ) {
       axios
         .get("/myboards/getsharewith/employees", { params: { bid: bid } })
@@ -105,16 +105,16 @@ const MeetingEmployeesTable = ({
       {/* {handleInvite != undefined && (
         <ShowBoardMembers bid={bid} selectedEmployees={selectedEmployees} />
       )} */}
-      {empId == JSON.parse(localStorage.getItem("user"))._id && (
+      {empId === JSON.parse(localStorage.getItem("user"))._id && (
         <Button
           variant="primary"
           onClick={handleShowEmployeesTable}
           style={{ marginTop: "10px", height: "40px" }}
         >
-          {handleInvite != undefined && "Share Board"}
+          {handleInvite !== undefined && "Share Board"}
         </Button>
       )}
-      {handleInvite == undefined && (
+      {handleInvite === undefined && (
         <Button
           variant="primary"
           onClick={handleShowEmployeesTable}
@@ -123,7 +123,7 @@ const MeetingEmployeesTable = ({
           Set Meeting With
         </Button>
       )}
-      {selectedEmployees?.length > 0 && handleInvite == undefined && (
+      {selectedEmployees?.length > 0 && handleInvite === undefined && (
         <Alert
           variant="danger"
           onClose={() => setSelectedEmployees([])}
@@ -214,7 +214,7 @@ const MeetingEmployeesTable = ({
           <Button variant="secondary" onClick={handleCloseEmployeesTable}>
             Close
           </Button>
-          {handleInvite != undefined ? (
+          {handleInvite !== undefined ? (
             <Button
               variant="primary"
               onClick={() => {

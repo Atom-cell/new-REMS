@@ -106,7 +106,7 @@ function Card(props) {
         </div>
         <div className="card_title">{title}</div>
         <div className="card_footer">
-          {props.hideAssign == true ? (
+          {props.hideAssign === true ? (
             <div>
               <OverlayTrigger
                 placement="bottom"

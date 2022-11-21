@@ -111,21 +111,21 @@ const MyCalendar = ({ user }) => {
   const handlefilter = (e) => {
     // console.log(e.target.value);
     setFilterOptionValue(e.target.value);
-    if (e.target.value == "All") {
+    if (e.target.value === "All") {
       setAllEvents(calendarData);
-    } else if (e.target.value == "Goal") {
+    } else if (e.target.value === "Goal") {
       // show only goals
       var goalEvents = calendarData?.map((myObj) => {
-        if (myObj.category == "Goal") {
+        if (myObj.category === "Goal") {
           return myObj;
         }
       });
       // console.log(goalEvents);
       setAllEvents(goalEvents);
-    } else if (e.target.value == "Reminder") {
+    } else if (e.target.value === "Reminder") {
       // show only reminders
       var reminderEvents = calendarData.map((myObj) => {
-        if (myObj.category == "Reminder") {
+        if (myObj.category === "Reminder") {
           return myObj;
         }
       });

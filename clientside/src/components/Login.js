@@ -71,6 +71,21 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(response.data.data));
             localStorage.setItem("role", response.data.data.role);
             localStorage.setItem("id", response.data.data._id);
+            let n = response.data.data.notifications;
+            let rev = n.reverse();
+            //push db notifs in here
+            localStorage.setItem(
+              "notif",
+              JSON.stringify([
+                {
+                  msg: "Welcome to REMS! Have a great work day.",
+                  flag: "0",
+                  path: "/dashboard",
+                },
+                ...rev,
+              ])
+            );
+
             setData(response.data.data);
           })
           .catch(function (error) {

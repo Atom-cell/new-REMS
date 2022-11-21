@@ -6,6 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SocketContext } from "../Helper/Context";
 const ProjectMembers = ({
   showInviteModal,
   setShowInviteModal,
@@ -18,6 +19,7 @@ const ProjectMembers = ({
   user,
 }) => {
   const [tableEmployees, setTableEmployees] = useState();
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   const handleChange = (e, id) => {
     if (e.target.checked) setSelectedEmployees([...selectedEmployees, id]);
@@ -26,6 +28,16 @@ const ProjectMembers = ({
 
   const handleInvite = (emps) => {
     // console.log(emps);
+
+    sock.emit("ProjectShared", {
+      pName: myProject.projectName,
+      emps: emps,
+      oldMembers: myProject.projectAssignedTo,
+    });
+    axios.post("/notif/addedInProjectNotif", {
+      projectId: myProject._id,
+      emps: emps,
+    });
     axios
       .post("/myprojects/addmemberstoproject", {
         projectId: myProject._id,
@@ -42,7 +54,7 @@ const ProjectMembers = ({
     var user = JSON.parse(localStorage.getItem("user"));
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value == null || value === "" || value === undefined) {
         // console.log("hello");
         fetchData();
       } else {
@@ -53,7 +65,7 @@ const ProjectMembers = ({
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -64,7 +76,7 @@ const ProjectMembers = ({
             })
             .then((rec) => {
               // console.log(rec.data);
-              var withoutMe = rec.data.filter((emp) => emp._id != user._id);
+              var withoutMe = rec.data.filter((emp) => emp._id !== user._id);
               setTableEmployees(withoutMe);
             })
             .catch((err) => console.log(err));
@@ -76,20 +88,20 @@ const ProjectMembers = ({
   const fetchData = async () => {
     // get the data from the api
     var userId = JSON.parse(localStorage.getItem("user"))._id;
-    if (localStorage.getItem("role") == "Employee") {
+    if (localStorage.getItem("role") === "Employee") {
       const res = await axios.get(
         "http://localhost:5000/emp/getcompanyemployees",
         {
           params: { _id: userId },
         }
       );
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees(withoutMe);
     } else {
       const res = await axios.get("http://localhost:5000/emp/getmyemployees", {
         params: { _id: userId },
       });
-      var withoutMe = res.data.filter((emp) => emp._id != userId);
+      var withoutMe = res.data.filter((emp) => emp._id !== userId);
       setTableEmployees(withoutMe);
     }
   };

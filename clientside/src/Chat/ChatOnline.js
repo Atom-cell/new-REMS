@@ -15,7 +15,7 @@ export default function ChatOnline({
 
   useEffect(() => {
     const getFriends = async () => {
-      if (localStorage.getItem("role") == "Employee") {
+      if (localStorage.getItem("role") === "Employee") {
         const res = await axios.get(
           "http://localhost:5000/emp/getcompanyemployees",
           { params: { _id: JSON.parse(localStorage.getItem("user"))._id } }
@@ -43,7 +43,7 @@ export default function ChatOnline({
 
   useEffect(() => {
     setOnlineFriends(
-      friends?.filter((o1) => onlineUsers?.some((o2) => o1._id == o2.userId))
+      friends?.filter((o1) => onlineUsers?.some((o2) => o1._id === o2.userId))
     );
     // console.log(friends.filter(o1 => onlineUsers.some(o2 => o1._id == o2.userId)));
   }, [friends, onlineUsers]);
@@ -65,7 +65,7 @@ export default function ChatOnline({
             <div className="chatOnlineBadge"></div>
           </div>
           <span className="chatOnlineName">{o?.username}</span>
-          {callUser != undefined && (
+          {callUser !== undefined && (
             <>
               {callAccepted && !callEnded ? null : (
                 <div

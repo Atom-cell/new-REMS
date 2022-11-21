@@ -40,7 +40,7 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
   };
 
   const findMax = (pf) => {
-    const completeTrue = pf.filter((pf) => pf.completed == true);
+    const completeTrue = pf.filter((pf) => pf.completed === true);
     const cp = completeTrue.map((ct) => ct.completionPercentage);
     const max = Math.max(...cp);
     if (Number.isFinite(max)) setWidth(`${max}%`);
@@ -86,7 +86,7 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
         {/* <div className="description">
           <p>{project.projectDescription}</p>
         </div> */}
-        {user?.role == "Employee" && (
+        {user?.role === "Employee" && (
           <>
             <Button
               className="submitbtn"
@@ -132,10 +132,10 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
               <th style={{ color: "white" }}>File Name</th>
               <th style={{ color: "white" }}>File</th>
               <th style={{ color: "white" }}>Milestone</th>
-              {user?.role == "admin" && (
+              {user?.role === "admin" && (
                 <th style={{ color: "white" }}>Mark</th>
               )}
-              {user?.role == "Employee" && (
+              {user?.role === "Employee" && (
                 <th style={{ color: "white" }}>Completed</th>
               )}
             </tr>
@@ -151,7 +151,7 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
                     </a>
                   </td>
                   <td>{pf.completionPercentage}</td>
-                  {user?.role == "admin" && (
+                  {user?.role === "admin" && (
                     <td>
                       {pf.completed ? (
                         <input
@@ -171,8 +171,8 @@ const ProjectInfo = ({ user, project, setProjects, width, setWidth }) => {
                       {/* <label for="checkbox">Completed?</label> */}
                     </td>
                   )}
-                  {user.role == "Employee" && (
-                    <td>{pf.completed == true ? "true" : "false"}</td>
+                  {user.role === "Employee" && (
+                    <td>{pf.completed === true ? "true" : "false"}</td>
                   )}
                 </tr>
               );

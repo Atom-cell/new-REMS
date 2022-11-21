@@ -89,6 +89,10 @@ var empSchema = mongoose.Schema({
   //     },
   //   },
   // ],
+
+  notifications: [
+    { msg: String, flag: { type: Number, default: 0 }, path: String },
+  ],
   flag: String,
 
   billingId: String, // This is Stripe Customer ID

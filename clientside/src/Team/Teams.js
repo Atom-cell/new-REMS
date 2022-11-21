@@ -8,6 +8,7 @@ import "./Team.css";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import { baseURL } from "../Request";
 import { toast } from "react-toastify";
+import { SocketContext } from "../Helper/Context";
 
 function stringToColor(string) {
   let hash = 0;
@@ -48,6 +49,7 @@ const Teams = () => {
   const [teams, setTeams] = React.useState();
   const [role, setRole] = React.useState("");
   const [loading, setLoading] = React.useState(true);
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   React.useEffect(() => {
     if (localStorage.getItem("role")) {
@@ -113,6 +115,20 @@ const Teams = () => {
         "x-access-token": localStorage.getItem("token"),
       },
     });
+
+    axios.post(`${baseURL}/notif/deleteTeamNotif/${id}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    });
+
+    const Team = teams.filter((t) => t._id === id);
+
+    sock.emit("TeamDelete", {
+      teamName: Team[0].teamName,
+      members: Team[0].members,
+    });
+
     //toast.info("Team deleted!");
     getAdminData();
   };

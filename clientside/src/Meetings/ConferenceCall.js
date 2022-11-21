@@ -88,7 +88,7 @@ const ConferenceCall = ({ username }) => {
         // messageBox.append(`<li class="message"><b>user</b><br/>${message}</li>`);
         const msgItem = document.createElement("li");
         // const boldItem = document.createElement("b");
-        if (friendUsername == username)
+        if (friendUsername === username)
           msgItem.setAttribute("class", "message my-message");
         else msgItem.setAttribute("class", "message");
         msgItem.innerHTML = `<b>${friendUsername}</b>${message}`;
@@ -111,7 +111,7 @@ const ConferenceCall = ({ username }) => {
 
   const connectNewUser = (userId, friendUsername, stream) => {
     console.log("New User:" + userId);
-    if (username != friendUsername)
+    if (username !== friendUsername)
       toast.info(`${friendUsername} has joined the meeting`);
     // Now use peer connection to call a user
     // call user with the id and send him my stream

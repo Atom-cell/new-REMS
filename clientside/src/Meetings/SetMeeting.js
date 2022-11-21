@@ -12,6 +12,7 @@ import "./setmeeting.css";
 import { toast } from "react-toastify";
 import EmployeesTable from "../Projects/EmployeesTable";
 import MeetingEmployeesTable from "./MeetingEmployeesTable";
+import { SocketContext } from "../Helper/Context";
 const { v4: uuidV4 } = require("uuid");
 
 const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
@@ -19,6 +20,8 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
   const [showEmployeesTable, setShowEmployeesTable] = useState(false);
 
   const [employees, setEmployees] = useState([]);
+
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -64,6 +67,19 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
           // console.log(res);
           // console.log(res.data);
         });
+
+      axios.post("http://localhost:5000/notif/setMeetingNotif", {
+        hostedBy: username,
+        hostedById: user._id,
+        title: newMeet.title,
+        employees: employees,
+      });
+
+      sock.emit("MeetingSet", {
+        hostedBy: username,
+        title: newMeet.title,
+        employees: employees,
+      });
       setNewMeet({ title: "", agenda: "", startDate: "" });
       setEmployees([]);
     } else {

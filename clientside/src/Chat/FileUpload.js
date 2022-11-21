@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import "./fileupload.css";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 const FileUpload = ({ file, setFile, handleFileUpload }) => {
   const getFiles = async (e) => {
     const filee = e.target.files[0];
     const base64 = await convertBase64(filee);
-    if (handleFileUpload == undefined)
+    if (handleFileUpload === undefined)
       setFile({ name: filee.name, base64: base64 });
     else handleFileUpload({ name: filee.name, base64: base64 });
   };

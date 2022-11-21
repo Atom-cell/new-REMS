@@ -7,6 +7,7 @@ const io = require("socket.io")(8900, {
 // methods for real time messages
 let users = [];
 let sock = {};
+let notif = {};
 let conferenceCallUsers = [];
 
 const addUserToConference = (roomId, userId, username, socketId) => {
@@ -62,6 +63,9 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
+  console.log("User connected: ", socket.id);
+  console.table(notif);
+
   // listen for an event join_room
   socket.on("join-room", (roomId, userId, username) => {
     // console.log("Rooom Joinedddd");
@@ -190,11 +194,117 @@ io.on("connection", (socket) => {
   // console.log("a user connected.");
 
   //take userId and socketId from user
-  socket.on("addUser", (userId) => {
-    // console.log("ADD USERSS");
+  socket.on("addUser", ({ userId, email }) => {
+    console.log("ADD USERSS :", userId, " SOcket ID: ", socket.id);
     addUser(userId, socket.id);
+    notif[userId] = socket.id;
+    console.table(notif);
+
     // console.log(users);
     io.emit("getUsers", users);
+  });
+
+  ///////////////////////////////////
+  ///////  NOTIFICATIONS  ////////////
+  //////////////////////////////////
+  socket.on("test", ({ data, id }) => {
+    console.log("EMail ", data, "id: ", id);
+    console.log("UserID: ", notif[id]);
+
+    io.to(notif[id]).emit("TEST", "true");
+  });
+
+  socket.on("TeamAdded", ({ teamName, members }) => {
+    console.log("team added ");
+    members.forEach((m) => {
+      io.to(notif[m]).emit(
+        "TeamAdded",
+        `You have been added in Team ${teamName}`
+      );
+    });
+  });
+
+  socket.on("TeamDelete", ({ teamName, members }) => {
+    console.log("team delete ", teamName, members);
+
+    members.forEach((m) => {
+      io.to(notif[m._id]).emit(
+        "TeamDelete",
+        `Team ${teamName} has been deleted`
+      );
+    });
+  });
+
+  socket.on("MeetingSet", ({ hostedBy, title, employees }) => {
+    console.log("meeting set");
+    employees.forEach((m) => {
+      io.to(notif[m]).emit(
+        "DeleteMeeting",
+        `You have been added in meeting ${title} by ${hostedBy}`
+      );
+    });
+  });
+
+  socket.on("MeetingDelete", ({ title, employees }) => {
+    console.log("delete meeting");
+    employees.forEach((m) => {
+      io.to(notif[m]).emit(
+        "MeetingDelete",
+        `meeting ${title} has been deleted`
+      );
+    });
+  });
+
+  socket.on("BoardShare", ({ employees, title, user }) => {
+    console.log("Baord share");
+    employees.forEach((m) => {
+      io.to(notif[m]).emit(
+        "BoardShare",
+        `Board ${title} has been shared with you by ${user}`
+      );
+    });
+  });
+
+  socket.on("BoardDelete", ({ creator, online, title, sharewith, user }) => {
+    console.log("Board deltet");
+    sharewith.push(online);
+    sharewith.push(creator);
+    let newShare = sharewith.filter((e) => e !== online);
+    newShare.forEach((m) => {
+      io.to(notif[m]).emit(
+        "BoardDelete",
+        `Board ${title} has been deleted by ${user}`
+      );
+    });
+  });
+
+  socket.on("ProjectShared", ({ pName, emps, oldMembers }) => {
+    console.log("In Project Added Notificaion");
+
+    let newMembers = [...emps, ...oldMembers];
+
+    let unique = [];
+    newMembers.forEach((element) => {
+      if (!unique.includes(element)) {
+        unique.push(element);
+      }
+    });
+    let old = unique.filter((val) => !emps.includes(val.toString()));
+    let New = unique.filter((val) => !oldMembers.includes(val));
+
+    old.forEach((o) => {
+      io.to(notif[o]).emit(
+        "ProjectShared",
+        `You have been Removed from project "${pName}"`
+      );
+    });
+
+    New.forEach((n) => {
+      io.to(notif[n]).emit(
+        "ProjectShared",
+        `You have been Added in project "${pName}"`
+      );
+    });
   });
 
   //send and get message
@@ -216,9 +326,13 @@ io.on("connection", (socket) => {
 
   //when disconnect
   socket.on("disconnect", () => {
-    console.log("a user disconnected!");
+    console.log("a user disconnected!: ", socket.id);
     removeUser(socket.id);
     io.emit("getUsers", users);
+  });
+
+  socket.on("Login", (data) => {
+    console.log("user: ", data, " ", socket.id);
   });
 
   //C####

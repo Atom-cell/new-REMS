@@ -15,9 +15,9 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { Trello, DollarSign } from "react-feather";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-export const SideBarData = {
+import { Trello } from "react-feather";
+export const SideBarDataEmp = {
   links: [
     {
       id: 1,
@@ -26,28 +26,21 @@ export const SideBarData = {
       icon: <DashboardRoundedIcon />,
       cName: "nav-text",
     },
+    {
+      id: 3,
+      title: "My Calendar",
+      path: "/myCalendar",
+      icon: <CalendarTodayIcon />,
+      cName: "nav-text sub-nav",
+    },
+    {
+      id: 4,
+      title: "My Team Calendar",
+      path: "/myTeamCalendar",
+      icon: <CalendarMonthIcon />,
+      cName: "nav-text sub-nav",
+    },
 
-    {
-      id: 11,
-      title: "Activity Log",
-      path: "/log",
-      icon: <WorkIcon />,
-      cName: "nav-text",
-    },
-    {
-      id: 12,
-      title: "Manage Employee",
-      path: "/empManage",
-      icon: <EngineeringIcon />,
-      cName: "nav-text",
-    },
-    {
-      id: 13,
-      title: "Reports",
-      path: "/reports",
-      icon: <AnalyticsIcon />,
-      cName: "nav-text",
-    },
     {
       id: 9,
       title: "My Messenger",
@@ -69,6 +62,7 @@ export const SideBarData = {
       icon: <GroupIcon />,
       cName: "nav-text sub-nav",
     },
+
     {
       id: 6,
       title: "All Meetings",
@@ -90,67 +84,6 @@ export const SideBarData = {
       icon: <Trello stroke="gray" />,
       cName: "nav-text",
     },
-    {
-      id: 16,
-      title: "Financials",
-      icon: <DollarSign stroke="gray" />,
-      cName: "nav-text",
-      iconClosed: <ArrowDropDownRoundedIcon />,
-      iconOpened: <ArrowDropUpRoundedIcon />,
-      path: "/allpayroll",
-      subNav: [
-        {
-          id: 17,
-          title: "Payroll",
-          path: "/allpayroll",
-          icon: (
-            <i
-              class="fa-solid fa-money-check-dollar"
-              style={{
-                color: "gray",
-                fontSize: "1.5rem",
-                width: "1.3em",
-                height: "1em",
-                display: "inline-block",
-              }}
-            ></i>
-          ),
-          cName: "nav-text",
-        },
-        // {
-        //   id: 18,
-        //   title: "Invoices",
-        //   path: "/allinvoice",
-        //   icon: (
-        //     <i
-        //       class="fa-solid fa-file-invoice-dollar"
-        //       style={{
-        //         color: "gray",
-        //         fontSize: "1.5rem",
-        //         width: "1em",
-        //         height: "1em",
-        //         display: "inline-block",
-        //       }}
-        //     ></i>
-        //   ),
-        //   cName: "nav-text",
-        // },
-      ],
-    },
-    // {
-    //   id: 13,
-    //   title: "Projects",
-    //   path: "/projects",
-    //   icon: <AssignmentIcon style={{ fill: "grey" }} />,
-    //   cName: "nav-text",
-    // },
-    // {
-    //   id: 14,
-    //   title: "All Boards",
-    //   path: "/allboards",
-    //   icon: <EngineeringIcon />,
-    //   cName: "nav-text",
-    // },
   ],
   activeLink: 1,
 };

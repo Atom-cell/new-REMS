@@ -45,7 +45,7 @@ const AddEventModal = ({
               className="inputTextFields"
               minDate={new Date()}
             />
-            {category == undefined && (
+            {category === undefined && (
               <div className="inputTextFields selectContainerModal">
                 <select
                   id="framework"

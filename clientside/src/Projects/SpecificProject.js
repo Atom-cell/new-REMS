@@ -54,6 +54,16 @@ const SpecificProject = ({ user }) => {
 
   const handleCloseee = () => setModalOpen(false);
   const handleShowww = () => setModalOpen(true);
+
+  function randomColor() {
+    let maxVal = 0xffffff; // 16777215
+    let randomNumber = Math.random() * maxVal;
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);
+    return `#${randColor.toUpperCase()}`;
+  }
+
   //   console.log(location.state.project);
   const updateProjectName = (value) => {
     axios
@@ -394,7 +404,7 @@ const SpecificProject = ({ user }) => {
               type={"textarea"}
               placeholder="Welcome to your Project. Now set the tone for how you'll work together with your team in REMS."
               onSubmit={updateProjectDescription}
-              emp={user?.role == "Employee" ? true : undefined}
+              emp={user?.role === "Employee" ? true : undefined}
             />
           </div>
         </div>
@@ -746,7 +756,7 @@ const SpecificProject = ({ user }) => {
                   text={"Add Milestone"}
                   placeholder="Enter Milestone"
                   onSubmit={addMilestone}
-                  emp={user?.role == "Employee" ? true : undefined}
+                  emp={user?.role === "Employee" ? true : undefined}
                 />
               )}
             </div>
@@ -793,7 +803,14 @@ const SpecificProject = ({ user }) => {
               <tbody>
                 {myProject?.hoursWorked.map((w, index) => {
                   return (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      style={
+                        index % 2 === 0
+                          ? { backgroundColor: "#98A8F8" }
+                          : { backgroundColor: "#BCCEF8" }
+                      }
+                    >
                       <td>{w.user}</td>
                       <td>{w.time}</td>
                     </tr>
@@ -810,10 +827,17 @@ const SpecificProject = ({ user }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {myProject?.numOfBreaks.map((w, index) => {
+                  {myProject?.numOfBreaks.map((w, ind) => {
                     return w.time.map((y, index) => {
                       return (
-                        <tr key={index}>
+                        <tr
+                          key={index}
+                          style={
+                            ind % 2 === 0
+                              ? { backgroundColor: "#98A8F8" }
+                              : { backgroundColor: "#BCCEF8" }
+                          }
+                        >
                           <td>{w.user}</td>
                           <td>{y}</td>
                         </tr>
@@ -915,7 +939,7 @@ const SpecificProject = ({ user }) => {
             </>
           ) : (
             <>
-              {myProject.status == "ontrack" && (
+              {myProject.status === "ontrack" && (
                 <div className="badge-container badge-container-green">
                   <div className="green-badge">
                     <div className="badge-dot green-dot"></div>
@@ -925,7 +949,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "atrisk" && (
+              {myProject.status === "atrisk" && (
                 <div className="badge-container badge-container-at-risk">
                   <div className="at-risk-badge">
                     <div className="badge-dot at-risk-dot"></div>
@@ -935,7 +959,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "offtrack" && (
+              {myProject.status === "offtrack" && (
                 <div className="badge-container badge-container-off-track">
                   <div className="off-track-badge">
                     <div className="badge-dot off-track-dot"></div>
@@ -945,7 +969,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                 </div>
               )}
-              {myProject.status == "completed" && (
+              {myProject.status === "completed" && (
                 <div className="badge-container badge-container-completed">
                   <div className="completed-badge">
                     <div className="badge-dot completed-dot"></div>
@@ -971,7 +995,7 @@ const SpecificProject = ({ user }) => {
             type={"date"}
             placeholder="Enter Due Date"
             onSubmit={updateProjectDueDate}
-            emp={user?.role == "Employee" ? true : undefined}
+            emp={user?.role === "Employee" ? true : undefined}
           />
         </div>
         <div className="project-members-container" onClick={handleShow}>

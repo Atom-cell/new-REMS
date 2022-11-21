@@ -198,7 +198,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   const handleConvoClick = (convo) => {
     console.log(convo);
     setCurrentChat(convo);
-    const friendId = convo.members.find((m) => m != user?._id);
+    const friendId = convo.members.find((m) => m !== user?._id);
     axios
       .get(`http://localhost:5000/emp/${friendId}`)
       .then((rec) => {
@@ -225,7 +225,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
               .then((rec) => {
                 // console.log(rec.data);
                 const fitleredConversations = conversations.filter(
-                  (convo) => rec.data._id != convo._id
+                  (convo) => rec.data._id !== convo._id
                 );
                 setCurrentChat();
                 setConversations(fitleredConversations);
@@ -261,7 +261,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
     // console.log(conversations);
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value === null || value === "" || value === undefined) {
         // console.log("hello");
         getConversations();
       } else {

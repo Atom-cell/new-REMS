@@ -4,3 +4,5 @@ export const ProjectNameContext = React.createContext({});
 export const TimerContext = React.createContext({});
 
 export const MoreInfoContext = React.createContext({});
+
+export const SocketContext = React.createContext({});

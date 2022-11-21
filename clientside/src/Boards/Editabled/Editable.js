@@ -24,7 +24,7 @@ function Editable(props) {
           className={`editable_edit ${props.editClass ? props.editClass : ""}`}
           onSubmit={submission}
         >
-          {props.type == "textarea" ? (
+          {props.type === "textarea" ? (
             <textarea
               name=""
               id=""
@@ -42,7 +42,7 @@ function Editable(props) {
               onChange={(event) => setInputText(event.target.value)}
               autoFocus
               min={
-                props.type == "date"
+                props.type === "date"
                   ? new Date().toISOString().split("T")[0]
                   : ""
               }

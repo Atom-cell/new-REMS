@@ -25,7 +25,7 @@ const SearchBar = ({
   useEffect(() => {
     const fetchData = async () => {
       // get the data from the api
-      if (localStorage.getItem("role") == "Employee") {
+      if (localStorage.getItem("role") === "Employee") {
         const res = await axios.get(
           "http://localhost:5000/emp/getcompanyemployees",
           {
@@ -39,7 +39,7 @@ const SearchBar = ({
             params: { _id: JSON.parse(localStorage.getItem("user"))._id },
           }
         );
-        var withoutMe = res.data.filter((u) => u._id != myId);
+        var withoutMe = res.data.filter((u) => u._id !== myId);
         setData([...withoutMe, response.data[0]]);
       } else {
         const res = await axios.get(
@@ -115,7 +115,7 @@ const SearchBar = ({
           onChange={handleFilter}
         />
       </div>
-      {filteredData.length != 0 && (
+      {filteredData.length !== 0 && (
         <div className="dataResult">
           {filteredData.slice(0, 6).map((value, key) => {
             return (

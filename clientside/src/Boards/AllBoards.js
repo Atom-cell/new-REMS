@@ -7,6 +7,8 @@ import ProjectCard from "../Projects//ProjectCard";
 import Form from "react-bootstrap/Form";
 import { Trash } from "react-feather";
 import { toast } from "react-toastify";
+import { SocketContext } from "../Helper/Context";
+
 import axios from "axios";
 
 // const allBoards = [
@@ -55,6 +57,7 @@ const AllBoards = ({ user }) => {
   const [boards, setBoards] = useState();
 
   const [searchInput, setSearchInput] = useState();
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   const handleSearchChange = (e) => {
     e.preventDefault();
@@ -62,7 +65,7 @@ const AllBoards = ({ user }) => {
 
     setTimeout(() => {
       const value = e.target.value;
-      if (value == null || value == "" || value == undefined) {
+      if (value === null || value === "" || value === undefined) {
         axios
           .get("/myBoards/onlymyboards", {
             params: { empId: user._id },
@@ -97,6 +100,7 @@ const AllBoards = ({ user }) => {
   };
 
   const handleDeleteBoard = (board) => {
+    let user = JSON.parse(localStorage.getItem("user"));
     confirmAlert({
       title: "Confirm to Delete",
       message: "Are you sure you want to delete the Board?",
@@ -104,6 +108,24 @@ const AllBoards = ({ user }) => {
         {
           label: "Yes",
           onClick: () => {
+            if (board.sharewith.length >= 1) {
+              sock.emit("BoardDelete", {
+                creator: board.empId,
+                online: user._id,
+                title: board.title,
+                sharewith: board.sharewith,
+                user: user.username,
+              });
+
+              axios.post("http://localhost:5000/notif/deleteBoardSharedNotif", {
+                creator: board.empId,
+                online: user._id,
+                title: board.title,
+                sharewith: board.sharewith,
+                name: user.username,
+              });
+            }
+
             axios
               .delete("/myboards/deleteboard", {
                 data: { _id: board._id },
@@ -111,7 +133,7 @@ const AllBoards = ({ user }) => {
               .then((rec) => {
                 //   console.log(rec.data);
                 const newBoards = boards.filter(
-                  (newBoard) => newBoard._id != rec.data._id
+                  (newBoard) => newBoard._id !== rec.data._id
                 );
                 setBoards(newBoards);
                 toast.success(`${rec.data.title} is Deleted`);
@@ -128,7 +150,7 @@ const AllBoards = ({ user }) => {
 
   const handleFilterChange = (e) => {
     const category = e.target.value;
-    if (category == "myboards") fetchData().catch(console.error);
+    if (category === "myboards") fetchData().catch(console.error);
     else {
       axios
         .get("/myBoards/boardsshared/withme", {

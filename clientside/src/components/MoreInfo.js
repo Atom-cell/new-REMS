@@ -247,6 +247,7 @@ function MoreInfo() {
                 marginLeft: "3em",
               }}
             />
+
             <button
               className="btn_userInfo"
               onClick={() => setShowCal(!showCal)}
@@ -342,11 +343,11 @@ function MoreInfo() {
                   width: "60%",
                 }}
               >
-                <div className="infoRow">
+                {/* <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Manager:</h6>
                   <h6 style={{ flex: "50%" }}>{data.username}</h6>
-                </div>
-                <Divider />
+                </div> */}
+                {/* <Divider /> */}
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Teams:</h6>
                   <h6 style={{ flex: "50%", display: "flex" }}>
@@ -377,13 +378,13 @@ function MoreInfo() {
                     <Spinner animation="border" />
                   )}
                 </div>
-                <Divider />
+                {/* <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>
                     Current Project:
                   </h6>
                   <h6 style={{ flex: "50%" }}>From project data</h6>
-                </div>
+                </div> */}
                 <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Zone:</h6>
@@ -485,9 +486,10 @@ function MoreInfo() {
                     </tr>
                   </thead>
                   <tbody>
-                    {totalTime.map(function (time, index) {
+                    {totalTime.map((time, index) => {
                       if (index > 5);
                       else {
+                        console.log("time: ", time);
                         return (
                           <tr>
                             <td style={{ width: "20%" }}>
@@ -497,36 +499,44 @@ function MoreInfo() {
                               {timeConvert(time.activetime.Seconds)}
                             </td>
                             <td>
-                              {dayTime.map((day) => {
-                                return day.activeDay.map((d) => {
-                                  return (
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        marginLeft: "0.5em",
-                                      }}
-                                    >
-                                      {d} |
-                                    </span>
-                                  );
-                                });
+                              {dayTime.map((day, ind) => {
+                                if (index === ind) {
+                                  return day.activeDay.map((d) => {
+                                    return (
+                                      <span
+                                        key={ind}
+                                        style={{
+                                          fontSize: "1rem",
+                                          marginLeft: "0.5em",
+                                        }}
+                                      >
+                                        {d} |
+                                      </span>
+                                    );
+                                  });
+                                } else {
+                                }
                               })}
                               {/* <Divider /> */}
                             </td>
                             <td>
-                              {dayTime.map((day) => {
-                                return day.active.map((d) => {
-                                  return (
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        marginLeft: "0.5em",
-                                      }}
-                                    >
-                                      {d} |
-                                    </span>
-                                  );
-                                });
+                              {dayTime.map((day, ind) => {
+                                if (index === ind) {
+                                  return day.active.map((d) => {
+                                    return (
+                                      <span
+                                        key={ind}
+                                        style={{
+                                          fontSize: "1rem",
+                                          marginLeft: "0.5em",
+                                        }}
+                                      >
+                                        {d} |
+                                      </span>
+                                    );
+                                  });
+                                } else {
+                                }
                               })}
                             </td>
                           </tr>
@@ -571,36 +581,44 @@ function MoreInfo() {
                               {timeConvert(time.idletime.Seconds)}
                             </td>
                             <td>
-                              {dayTime.map((day) => {
-                                return day.idleDay.map((d) => {
-                                  return (
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        marginLeft: "0.5em",
-                                      }}
-                                    >
-                                      {d} |
-                                    </span>
-                                  );
-                                });
+                              {dayTime.map((day, ind) => {
+                                if (index === ind) {
+                                  return day.idleDay.map((d) => {
+                                    return (
+                                      <span
+                                        key={ind}
+                                        style={{
+                                          fontSize: "1rem",
+                                          marginLeft: "0.5em",
+                                        }}
+                                      >
+                                        {d} |
+                                      </span>
+                                    );
+                                  });
+                                } else {
+                                }
                               })}
                               {/* <Divider /> */}
                             </td>
                             <td>
-                              {dayTime.map((day) => {
-                                return day.idle.map((d) => {
-                                  return (
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        marginLeft: "0.5em",
-                                      }}
-                                    >
-                                      {d} |
-                                    </span>
-                                  );
-                                });
+                              {dayTime.map((day, ind) => {
+                                if (index === ind) {
+                                  return day.idle.map((d) => {
+                                    return (
+                                      <span
+                                        key={ind}
+                                        style={{
+                                          fontSize: "1rem",
+                                          marginLeft: "0.5em",
+                                        }}
+                                      >
+                                        {d} |
+                                      </span>
+                                    );
+                                  });
+                                } else {
+                                }
                               })}
                             </td>
                           </tr>

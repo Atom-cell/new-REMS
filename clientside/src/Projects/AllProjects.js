@@ -35,7 +35,7 @@ const AllProjects = ({ user }) => {
     setSearchInput(e.target.value);
 
     if (e.target.value) {
-      if (role == "Employee") {
+      if (role === "Employee") {
         axios
           .get(`/myprojects/employeesearchproject/${e.target.value}`, {
             params: { _id: user._id },
@@ -98,7 +98,7 @@ const AllProjects = ({ user }) => {
         })
         .catch((err) => console.log(err));
       return;
-    } else if (category == "Not Assigned") {
+    } else if (category === "Not Assigned") {
       // axios
       //   .get("/myprojects/notassigned", { params: { _id: user._id } })
       //   .then((rec) => {
@@ -107,7 +107,7 @@ const AllProjects = ({ user }) => {
       //   })
       //   .catch((err) => console.log(err));
       return;
-    } else if (category == "Sort By Priority") {
+    } else if (category === "Sort By Priority") {
       axios
         .get("/myProjects/employeeprojects", {
           params: { userId: user._id },

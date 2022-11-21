@@ -10,6 +10,8 @@ import SetMeeting from "./SetMeeting";
 import MeetingEmployees from "./MeetingEmployees";
 import ReadMore from "./ReadMore";
 import { confirmAlert } from "react-confirm-alert";
+import { SocketContext } from "../Helper/Context";
+
 const AllMeetings = () => {
   const [allMeetings, setAllMeetings] = useState();
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,7 @@ const AllMeetings = () => {
     startDate: "",
     // endDate: "",
   });
+  const { sock, setSocket } = React.useContext(SocketContext);
 
   var loggedUser = JSON.parse(localStorage.getItem("user"));
 
@@ -71,6 +74,17 @@ const AllMeetings = () => {
         {
           label: "Yes",
           onClick: () => {
+            axios.post("http://localhost:5000/notif/deleteMeetingNotif", {
+              id: meeting._id,
+            });
+
+            let meet = allMeetings.filter((a) => a._id === meeting._id);
+
+            sock.emit("MeetingDelete", {
+              title: meet[0].title,
+              employees: meet[0].employees,
+            });
+
             axios
               .delete("http://localhost:5000/myVideo/DeleteMeeting", {
                 data: { _id: meeting._id },
@@ -79,7 +93,7 @@ const AllMeetings = () => {
                 // console.log("Deleted");
                 // console.log(allMeetings.filter((data) => data._id != meeting._id));
                 setAllMeetings(
-                  allMeetings.filter((data) => data._id != meeting._id)
+                  allMeetings.filter((data) => data._id !== meeting._id)
                 );
               });
           },
@@ -132,7 +146,7 @@ const AllMeetings = () => {
                 </tr>
               </thead>
               <tbody>
-                {allMeetings.length != 0 &&
+                {allMeetings.length !== 0 &&
                   allMeetings?.map((myObj, key) => {
                     var time = moment.utc(myObj.startDate).format("HH:mm");
                     time = formatAMPM(time);
@@ -166,7 +180,7 @@ const AllMeetings = () => {
                             title={myObj.title}
                           />
                         </td>
-                        {loggedUser._id == myObj.hostedById && (
+                        {loggedUser._id === myObj.hostedById && (
                           <td className="all-meeting-row all-meeting-row-delete-icon">
                             <DeleteOutlineIcon
                               className="delete-icon"
@@ -179,7 +193,7 @@ const AllMeetings = () => {
                   })}
               </tbody>
             </Table>
-            {allMeetings.length == 0 && (
+            {allMeetings.length === 0 && (
               <div className="no-meetings">
                 <h1>No Meetings Scheduled</h1>
               </div>
