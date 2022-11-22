@@ -16,7 +16,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-import { Trello } from "react-feather";
+import { Trello, DollarSign } from "react-feather";
 export const SideBarDataEmp = {
   links: [
     {
@@ -82,6 +82,13 @@ export const SideBarDataEmp = {
       title: "My Boards",
       path: "/allboards",
       icon: <Trello stroke="gray" />,
+      cName: "nav-text",
+    },
+    {
+      id: 16,
+      title: "Payroll",
+      path: "/allpayroll",
+      icon: <DollarSign stroke="gray" />,
       cName: "nav-text",
     },
   ],

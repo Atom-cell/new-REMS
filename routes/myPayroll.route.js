@@ -3,7 +3,9 @@ var router = express.Router();
 var mongoose = require("mongoose");
 const myPayroll = require("../model/myPayroll.model");
 const Emp = require("../model/Emp.model");
-const Stripe = require("stripe")("");
+const Stripe = require("stripe")(
+  "sk_test_51Izy3ZSCK5aoLzPX9hUMxFtpIEqSBjX8WJNDTaq2BrIU3OVei6OWKk2N0xJwOhQg9cyVkZhw6waaXzaC3C4jWKEZ00s7zT9K7b"
+);
 // process.env.Secret_key
 
 router.get("/getallpayrolls", async (req, res) => {

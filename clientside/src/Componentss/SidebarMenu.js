@@ -278,7 +278,7 @@ export default function SidebarMenu({ children }) {
               </Badge>
             </IconButton>
 
-            <Dropdown>
+            <Dropdown className="sidebarmenu-dropdown">
               <Dropdown.Toggle style={{ all: "unset", cursor: "pointer" }}>
                 <IconButton
                   onClick={() => {

@@ -53,6 +53,12 @@ const socket = io.connect("http://localhost:8900");
 
 const App = () => {
   // const navigate = useNavigate();
+  const [userStream, setUserStream] = useState();
+
+  const [enabledVideo, setEnabledVideo] = useState();
+  const [friend, setFriend] = useState();
+  const [userEnabledVideo, setUserEnabledVideo] = useState();
+  const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
   const [name, setName] = useState(null);
   const [role, setRole] = useState();
   const [timer, setTimer] = useState(false);
@@ -93,10 +99,11 @@ const App = () => {
       socket.emit("answerCall", {
         signal: data,
         to: caller,
-        name: user.username,
+        name: loggedUser.username,
       });
     });
     peer.on("stream", (stream) => {
+      console.log("Streammmmmmmm");
       userVideo.current.srcObject = stream;
     });
 
@@ -105,16 +112,54 @@ const App = () => {
     // navigate("/videoCall");
   };
 
+  const callUser = (user) => {
+    setFriend(user);
+    setIsOpenVideoModal(true);
+    // console.log(id);
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      socket.emit("callUser", {
+        userToCall: user._id,
+        signalData: data,
+        from: JSON.parse(localStorage.getItem("user"))._id,
+        name: JSON.parse(localStorage.getItem("user")).username,
+        enabledVideo: enabledVideo,
+      });
+    });
+    peer.on("stream", (stream) => {
+      userVideo.current.srcObject = stream;
+      setUserStream(stream);
+    });
+    socket.on("callAccepted", (signal, name) => {
+      console.log("CallAccepted");
+      setCallAccepted(true);
+      setReceivingCall(false);
+      setCallerName(name);
+      peer.signal(signal);
+      setIsOpenVideoModal(false);
+    });
+
+    connectionRef.current = peer;
+  };
+
   const rejectCall = () => {
     // receivingCall && !callAccepted ?
     setReceivingCall(false);
     setCallAccepted(false);
     setReceivingCall(false);
+    // friendId, userId, name
+    console.log(both);
+    console.log(caller);
+    console.log(user);
     let otherId = "";
     if (!caller) {
       otherId = both.find((usr) => usr !== user._id);
-      socket.emit("rejectCall", otherId, user._id, name);
-    } else socket.emit("rejectCall", caller, user._id, name);
+      socket.emit("rejectCall", otherId, loggedUser._id, name);
+    } else socket.emit("rejectCall", caller, loggedUser._id, name);
   };
 
   const notify = (name) => {
@@ -158,6 +203,50 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    socket.on("callUser", (data) => {
+      console.log("callUser data");
+      setReceivingCall(true);
+      setCaller(data.from);
+      setCallerName(data.name);
+      setCallerSignal(data.signal);
+      setUserEnabledVideo(data.enabledVideo);
+    });
+
+    socket.on("setBothCallers", (data) => {
+      console.log("Both callers Id:");
+      console.log(data);
+      setBoth([data.to, data.from]);
+    });
+
+    socket.on("cutCallInBetween", (name) => {
+      setReceivingCall(false);
+      toast.info(`${name} Cut the Call`);
+    });
+
+    socket.on("callRejected", (friend, name) => {
+      // callAccepted && !callEnded
+      console.log("Call Rejected");
+      toast.info(`Call Declined`);
+      setIsOpenVideoModal(false);
+    });
+    socket.on("leaveCallId", (friend, name) => {
+      // callAccepted && !callEnded
+      // console.log(name);
+      toast.info(`${name} Ended the call`);
+      // window.location.reload();
+      setCallAccepted(false);
+      // navigate("/dashboard");
+    });
+
+    socket.on("callRejected", (friend, name) => {
+      // callAccepted && !callEnded
+      console.log("Call Rejected");
+      toast.info(`Call Declined`);
+      setIsOpenVideoModal(false);
+    });
+  }, []);
+
+  useEffect(() => {
     setSocket(socket);
     const user = JSON.parse(localStorage.getItem("user"));
     socket.emit("addUser", { userId: loggedUser?._id, email: user?.email });
@@ -190,29 +279,41 @@ const App = () => {
                     {window.location.href.indexOf(
                       "http://localhost:3000/videoCall"
                     ) > -1 ? null : (
-                      <VideoCall
-                        onlineUsers={onlineUsers}
-                        setOnlineUsers={setOnlineUsers}
-                        receivingCall={receivingCall}
-                        setReceivingCall={setReceivingCall}
-                        callAccepted={callAccepted}
-                        setCallAccepted={setCallAccepted}
-                        callerName={callerName}
-                        setCallerName={setCallerName}
-                        answerCall={answerCall}
-                        rejectCall={rejectCall}
-                        stream={stream}
-                        userVideo={userVideo}
-                        connectionRef={connectionRef}
-                        caller={caller}
-                        setCaller={setCaller}
-                        both={both}
-                        user={user}
-                        setUser={setUser}
-                        setStream={setStream}
-                        setCallerSignal={setCallerSignal}
-                        setBoth={setBoth}
-                      />
+                      <div className="video-call-outside">
+                        <VideoCall
+                          onlineUsers={onlineUsers}
+                          setOnlineUsers={setOnlineUsers}
+                          receivingCall={receivingCall}
+                          setReceivingCall={setReceivingCall}
+                          callAccepted={callAccepted}
+                          setCallAccepted={setCallAccepted}
+                          callerName={callerName}
+                          setCallerName={setCallerName}
+                          answerCall={answerCall}
+                          rejectCall={rejectCall}
+                          stream={stream}
+                          userVideo={userVideo}
+                          connectionRef={connectionRef}
+                          caller={caller}
+                          setCaller={setCaller}
+                          both={both}
+                          user={user}
+                          setUser={setUser}
+                          setStream={setStream}
+                          setCallerSignal={setCallerSignal}
+                          setBoth={setBoth}
+                          userEnabledVideo={userEnabledVideo}
+                          setUserEnabledVideo={setUserEnabledVideo}
+                          isOpenVideoModal={isOpenVideoModal}
+                          setIsOpenVideoModal={setIsOpenVideoModal}
+                          setFriend={setFriend}
+                          friend={friend}
+                          enabledVideo={enabledVideo}
+                          setEnabledVideo={setEnabledVideo}
+                          setUserStream={setUserStream}
+                          callUser={callUser}
+                        />
+                      </div>
                     )}
                   </>
                 )}
@@ -306,6 +407,16 @@ const App = () => {
                               setStream={setStream}
                               setCallerSignal={setCallerSignal}
                               setBoth={setBoth}
+                              userEnabledVideo={userEnabledVideo}
+                              setUserEnabledVideo={setUserEnabledVideo}
+                              isOpenVideoModal={isOpenVideoModal}
+                              setIsOpenVideoModal={setIsOpenVideoModal}
+                              setFriend={setFriend}
+                              friend={friend}
+                              enabledVideo={enabledVideo}
+                              setEnabledVideo={setEnabledVideo}
+                              setUserStream={setUserStream}
+                              callUser={callUser}
                             />
                           }
                         />

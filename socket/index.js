@@ -63,8 +63,8 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("User connected: ", socket.id);
-  console.table(notif);
+  // console.log("User connected: ", socket.id);
+  // console.table(notif);
 
   // listen for an event join_room
   socket.on("join-room", (roomId, userId, username) => {
@@ -111,12 +111,14 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("callUser", (data) => {
-    // console.log("CALL USER");
-    console.log(users);
-    // console.log(data.userToCall);
+    console.log("CALL USER");
+    // console.log(users);
+    console.log(data.name);
+    console.log(data.from);
     // now get the socket id of the user to call
     const user = getUser(data.userToCall);
-    // console.log(user.socketId);
+    console.log(user);
+    console.log(users);
     const friend = getUser(data.from);
 
     io.to(user.socketId).emit("callUser", {
@@ -134,6 +136,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("cutCallInBetween", (id, name) => {
+    console.log(name);
     const user = getUser(id);
     console.log(user);
     io.to(user.socketId).emit("cutCallInBetween", name);
@@ -154,10 +157,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("rejectCall", (friendId, userId, name) => {
-    // console.log(userId);
-    // console.log(friendId);
+    console.log("rejectCall");
+    console.log(name);
+    console.log(friendId);
+    console.log(userId);
     // const friend = getUser(friendId);
     const user = getUser(userId);
+    console.log(user);
     io.to(friendId).emit("callRejected", user, name);
   });
 
@@ -167,7 +173,7 @@ io.on("connection", (socket) => {
 
   socket.on("Email", (data) => {
     sock[data] = socket.id;
-    console.log("SOCKET EMAIL", data, " : ", sock[data]);
+    // console.log("SOCKET EMAIL", data, " : ", sock[data]);
   });
 
   // console.log("ID ", socket.id);
@@ -176,7 +182,7 @@ io.on("connection", (socket) => {
   //receive from client
   socket.on("sending", (data) => {
     socket.send("hdhdhd");
-    console.log("Yo! ", data);
+    // console.log("Yo! ", data);
   });
 
   // io.to(socket.id).emit("Ex", `Exclsusive Message ${Math.random(100)}`);
@@ -187,7 +193,7 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("fromCLIENT", (data) => {
-    console.log("DATA: ", data);
+    // console.log("DATA: ", data);
   });
 
   // MESSENGERRR
@@ -198,9 +204,9 @@ io.on("connection", (socket) => {
     console.log("ADD USERSS :", userId, " SOcket ID: ", socket.id);
     addUser(userId, socket.id);
     notif[userId] = socket.id;
-    console.table(notif);
+    // console.table(notif);
 
-    // console.log(users);
+    console.log(users);
     io.emit("getUsers", users);
   });
 
@@ -208,14 +214,14 @@ io.on("connection", (socket) => {
   ///////  NOTIFICATIONS  ////////////
   //////////////////////////////////
   socket.on("test", ({ data, id }) => {
-    console.log("EMail ", data, "id: ", id);
-    console.log("UserID: ", notif[id]);
+    // console.log("EMail ", data, "id: ", id);
+    // console.log("UserID: ", notif[id]);
 
     io.to(notif[id]).emit("TEST", "true");
   });
 
   socket.on("TeamAdded", ({ teamName, members }) => {
-    console.log("team added ");
+    // console.log("team added ");
     members.forEach((m) => {
       io.to(notif[m]).emit(
         "TeamAdded",
@@ -225,7 +231,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("TeamDelete", ({ teamName, members }) => {
-    console.log("team delete ", teamName, members);
+    // console.log("team delete ", teamName, members);
 
     members.forEach((m) => {
       io.to(notif[m._id]).emit(
@@ -236,7 +242,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("MeetingSet", ({ hostedBy, title, employees }) => {
-    console.log("meeting set");
+    // console.log("meeting set");
     employees.forEach((m) => {
       io.to(notif[m]).emit(
         "DeleteMeeting",
@@ -256,7 +262,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("BoardShare", ({ employees, title, user }) => {
-    console.log("Baord share");
+    // console.log("Baord share");
     employees.forEach((m) => {
       io.to(notif[m]).emit(
         "BoardShare",
@@ -266,7 +272,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("BoardDelete", ({ creator, online, title, sharewith, user }) => {
-    console.log("Board deltet");
+    // console.log("Board deltet");
     sharewith.push(online);
     sharewith.push(creator);
     let newShare = sharewith.filter((e) => e !== online);
@@ -279,7 +285,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("ProjectShared", ({ pName, emps, oldMembers }) => {
-    console.log("In Project Added Notificaion");
+    // console.log("In Project Added Notificaion");
 
     let newMembers = [...emps, ...oldMembers];
 
@@ -341,12 +347,12 @@ io.on("connection", (socket) => {
 
   socket.on("Email", (data) => {
     sock[data] = socket.id;
-    console.log("SOCKET EMAIL", data, " : ", sock[data]);
+    // console.log("SOCKET EMAIL", data, " : ", sock[data]);
   });
 
   socket.on("StartSS", (email) => {
-    console.log("STARTING SSS");
-    console.log("EMAIL ", email);
+    // console.log("STARTING SSS");
+    // console.log("EMAIL ", email);
     let e = email;
     let a = sock[e];
     console.log("Sending START signal to turn ON SS", a);

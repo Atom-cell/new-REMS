@@ -81,7 +81,11 @@ const VideoCallModal = ({ isOpen, handleClose, friend, cutCallInBetween }) => {
               >
                 <span
                   className="avatar-title bg-transparent font-size-24"
-                  onClick={() => cutCallInBetween(friend._id)}
+                  onClick={() => {
+                    console.log("friend");
+                    console.log(friend);
+                    cutCallInBetween(friend._id);
+                  }}
                 >
                   <i
                     className="fa-solid fa-phone call-end-icon"

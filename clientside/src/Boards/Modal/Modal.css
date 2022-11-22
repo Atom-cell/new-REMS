@@ -1,6 +1,6 @@
 .modal {
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   height: 100%;
   min-height: 100vh;

@@ -20,7 +20,7 @@ const AddEventModal = ({
   };
   return (
     <div className="add-new-event-container">
-      <Modal show={modalOpen} onHide={handleClose}>
+      <Modal centered show={modalOpen} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{category ? "Add Goal" : "Add New Event"}</Modal.Title>
         </Modal.Header>

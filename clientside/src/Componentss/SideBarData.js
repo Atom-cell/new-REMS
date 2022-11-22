@@ -92,51 +92,58 @@ export const SideBarData = {
     },
     {
       id: 16,
-      title: "Financials",
+      title: "Payroll",
+      path: "/allpayroll",
       icon: <DollarSign stroke="gray" />,
       cName: "nav-text",
-      iconClosed: <ArrowDropDownRoundedIcon />,
-      iconOpened: <ArrowDropUpRoundedIcon />,
-      path: "/allpayroll",
-      subNav: [
-        {
-          id: 17,
-          title: "Payroll",
-          path: "/allpayroll",
-          icon: (
-            <i
-              class="fa-solid fa-money-check-dollar"
-              style={{
-                color: "gray",
-                fontSize: "1.5rem",
-                width: "1.3em",
-                height: "1em",
-                display: "inline-block",
-              }}
-            ></i>
-          ),
-          cName: "nav-text",
-        },
-        // {
-        //   id: 18,
-        //   title: "Invoices",
-        //   path: "/allinvoice",
-        //   icon: (
-        //     <i
-        //       class="fa-solid fa-file-invoice-dollar"
-        //       style={{
-        //         color: "gray",
-        //         fontSize: "1.5rem",
-        //         width: "1em",
-        //         height: "1em",
-        //         display: "inline-block",
-        //       }}
-        //     ></i>
-        //   ),
-        //   cName: "nav-text",
-        // },
-      ],
     },
+    // {
+    //   id: 16,
+    //   title: "Financials",
+    //   icon: <DollarSign stroke="gray" />,
+    //   cName: "nav-text",
+    //   iconClosed: <ArrowDropDownRoundedIcon />,
+    //   iconOpened: <ArrowDropUpRoundedIcon />,
+    //   path: "/allpayroll",
+    //   subNav: [
+    //     {
+    //       id: 17,
+    //       title: "Payroll",
+    //       path: "/allpayroll",
+    //       icon: (
+    //         <i
+    //           class="fa-solid fa-money-check-dollar"
+    //           style={{
+    //             color: "gray",
+    //             fontSize: "1.5rem",
+    //             width: "1.3em",
+    //             height: "1em",
+    //             display: "inline-block",
+    //           }}
+    //         ></i>
+    //       ),
+    //       cName: "nav-text",
+    //     },
+    //     {
+    //       id: 18,
+    //       title: "Invoices",
+    //       path: "/allinvoice",
+    //       icon: (
+    //         <i
+    //           class="fa-solid fa-file-invoice-dollar"
+    //           style={{
+    //             color: "gray",
+    //             fontSize: "1.5rem",
+    //             width: "1em",
+    //             height: "1em",
+    //             display: "inline-block",
+    //           }}
+    //         ></i>
+    //       ),
+    //       cName: "nav-text",
+    //     },
+    //   ],
+    // },
     // {
     //   id: 13,
     //   title: "Projects",

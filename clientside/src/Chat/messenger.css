@@ -112,6 +112,10 @@
     align-items: center;
     justify-content: space-between;
   }
+  .col{
+    position: relative;
+    top: 50px;
+  }
   .chat-footer{
     display: flex;
     margin-top: 10px;
@@ -150,8 +154,9 @@
   }
 
   .chatOnlineVideoCall {
+    padding-top: 20px;
     flex: 2;
-    height: 79vh;
+    height: 91vh;
     overflow: hidden;
     background: linear-gradient(
 		to right,

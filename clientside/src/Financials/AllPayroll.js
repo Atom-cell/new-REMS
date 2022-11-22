@@ -16,9 +16,9 @@ const AllPayroll = ({ user }) => {
   const [allPayrolls, setAllPayrolls] = useState();
 
   const handleTokenPay = async (token, id, amount) => {
-    amount = parseInt(amount);
-    console.log(typeof amount);
-    console.log(amount);
+    // amount = parseInt(amount);
+    // console.log(typeof amount);
+    // console.log(amount);
     //name, address, postcode, city, India
     // token.card.name = "asdf";
     // token.card.address_line1 = "asd";

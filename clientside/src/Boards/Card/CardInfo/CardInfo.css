@@ -1,5 +1,5 @@
 .cardinfo {
-  padding: 5px 30px;
+  padding: 5px 30px 80px 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;

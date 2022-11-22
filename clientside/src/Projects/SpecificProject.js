@@ -337,11 +337,15 @@ const SpecificProject = ({ user }) => {
 
   useEffect(() => {
     if (myProject) {
+      console.log(myProject);
       axios
         .get("/emp/getemployeeinformation", {
           params: { _id: myProject.projectroles },
         })
-        .then((rec) => setProjectRoleEmployee(rec.data[0]))
+        .then((rec) => {
+          console.log(rec.data);
+          setProjectRoleEmployee(rec.data[0]);
+        })
         .catch((err) => console.log(err + "Specific Project 141"));
     }
   }, [myProject]);
@@ -448,6 +452,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                   <div className="dropdown-status">
                     <DropdownButton
+                      variant="success"
                       id="dropdown-basic-button"
                       className="dropdown-role"
                       // title="Update Role"

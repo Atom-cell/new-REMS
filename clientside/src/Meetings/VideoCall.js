@@ -34,59 +34,27 @@ const VideoCall = ({
   setBoth,
   answerCall,
   rejectCall,
+  setUserEnabledVideo,
+  setIsOpenVideoModal,
+  isOpenVideoModal,
+  setFriend,
+  friend,
+  enabledVideo,
+  setEnabledVideo,
+  setUserStream,
+  callUser,
 }) => {
   const navigate = useNavigate();
   const [me, setMe] = useState("");
   const [idToCall, setIdToCall] = useState();
   const [callEnded, setCallEnded] = useState(false);
   const [name, setName] = useState("");
-  const [userStream, setUserStream] = useState();
-
-  const [enabledVideo, setEnabledVideo] = useState();
-  const [userEnabledVideo, setUserEnabledVideo] = useState();
 
   const myVideo = useRef();
   // allows to disconnect the call
 
-  const [friend, setFriend] = useState();
-
-  const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
-
   const handleClose = () => setIsOpenVideoModal(false);
   const handleShow = () => setIsOpenVideoModal(true);
-
-  const callUser = (user) => {
-    setFriend(user);
-    handleShow();
-    // console.log(id);
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream,
-    });
-    peer.on("signal", (data) => {
-      socket.emit("callUser", {
-        userToCall: user._id,
-        signalData: data,
-        from: JSON.parse(localStorage.getItem("user"))._id,
-        name: name,
-        enabledVideo: enabledVideo,
-      });
-    });
-    peer.on("stream", (stream) => {
-      userVideo.current.srcObject = stream;
-      setUserStream(stream);
-    });
-    socket.on("callAccepted", (signal, name) => {
-      setCallAccepted(true);
-      setReceivingCall(false);
-      setCallerName(name);
-      peer.signal(signal);
-      handleClose();
-    });
-
-    connectionRef.current = peer;
-  };
 
   const leaveCall = () => {
     setCallEnded(true);
@@ -137,25 +105,25 @@ const VideoCall = ({
         setMe(id);
       });
 
-      socket.on("callUser", (data) => {
-        // console.log(data);
-        setReceivingCall(true);
-        setCaller(data.from);
-        setCallerName(data.name);
-        setCallerSignal(data.signal);
-        setUserEnabledVideo(data.enabledVideo);
-      });
+      // socket.on("callUser", (data) => {
+      //   console.log("callUser data");
+      //   setReceivingCall(true);
+      //   setCaller(data.from);
+      //   setCallerName(data.name);
+      //   setCallerSignal(data.signal);
+      //   setUserEnabledVideo(data.enabledVideo);
+      // });
 
-      socket.on("setBothCallers", (data) => {
-        // console.log("Both callers Id:");
-        // console.log(data);
-        setBoth([data.to, data.from]);
-      });
+      // socket.on("setBothCallers", (data) => {
+      //   console.log("Both callers Id:");
+      //   console.log(data);
+      //   setBoth([data.to, data.from]);
+      // });
 
-      socket.on("cutCallInBetween", (name) => {
-        setReceivingCall(false);
-        toast.info(`${name} Cut the Call`);
-      });
+      // socket.on("cutCallInBetween", (name) => {
+      //   setReceivingCall(false);
+      //   toast.info(`${name} Cut the Call`);
+      // });
     }
   }, []);
 
@@ -167,21 +135,21 @@ const VideoCall = ({
       setOnlineUsers(usersWithoutMe);
     });
 
-    socket.on("leaveCallId", (friend, name) => {
-      // callAccepted && !callEnded
-      // console.log(name);
-      toast.info(`${name} Ended the call`);
-      // window.location.reload();
-      setCallAccepted(false);
-      navigate("/dashboard");
-    });
+    // socket.on("leaveCallId", (friend, name) => {
+    //   // callAccepted && !callEnded
+    //   // console.log(name);
+    //   toast.info(`${name} Ended the call`);
+    //   // window.location.reload();
+    //   setCallAccepted(false);
+    //   navigate("/dashboard");
+    // });
 
-    socket.on("callRejected", (friend, name) => {
-      // callAccepted && !callEnded
-      // console.log(name);
-      toast.info(`Call Declined`);
-      handleClose();
-    });
+    // socket.on("callRejected", (friend, name) => {
+    //   // callAccepted && !callEnded
+    //   console.log("Call Rejected");
+    //   toast.info(`Call Declined`);
+    //   handleClose();
+    // });
 
     // socket.on("userSocketId", (friend) => {
     //   console.log(friend.socketId);
@@ -249,7 +217,7 @@ const VideoCall = ({
                   <video
                     id="friend-video"
                     playsInline
-                    ref={setUserEnabledVideo && userVideo}
+                    ref={userVideo}
                     autoPlay
                     style={{ pointerEvents: "none", transition: "all 0.5s" }}
                   />

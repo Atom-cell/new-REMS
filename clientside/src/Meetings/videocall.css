@@ -1,8 +1,22 @@
+/* .css-1snu2qi{
+	padding: 0 !important;
+} */
+.videocallContainer{
+	height: 90.5vh;
+	background-color: #032b47;
+	overflow: hidden;
+	margin: -24px;
+}
+.video-call-outside{
+	margin-top: 64px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	height: 95vh;
+}
 .video-call-container-container {
 	display: grid;
 	grid-template-columns: 5.5fr 1fr;
 	height: 79.7vh;
-	background-color: #032b47;
 	/* background-color: black; */
 }
 
@@ -138,6 +152,7 @@
 	display: grid;
 	grid-template-columns: 1fr 5fr;
 	height: 400px;
+	padding-top: 5%;
 }
 
 .call-video{
