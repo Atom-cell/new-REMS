@@ -37,6 +37,7 @@ app.use(bodyParser.json());
 
 // all routers
 const myCalendarRouter = require("./routes/myCalendar");
+const myTeamCalendarRouter = require("./routes/myTeamCalendar");
 const myHomeRouter = require("./routes/myHome");
 const myVideoRouter = require("./routes/myVideo");
 const myEmployeeRouter = require("./routes/myEmployee");
@@ -55,6 +56,7 @@ const notifRouter = require("./routes/notif.route");
 // mount point for routers
 app.use("/", myHomeRouter);
 app.use("/myCalendar", myCalendarRouter);
+app.use("/myTeamCalendar", myTeamCalendarRouter);
 app.use("/myVideo", myVideoRouter);
 app.use("/myEmployee", myEmployeeRouter);
 app.use("/myEmployer", myEmployerRouter);

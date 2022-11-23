@@ -8,10 +8,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import EmployeesTable from "./EmployeesTable";
 import { useNavigate } from "react-router-dom";
+import TeamsSelectTable from "./TeamsSelectTable";
+import Alert from "react-bootstrap/Alert";
 const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
   const navigate = useNavigate();
   const [check, setCheck] = useState();
   const [fileName, setFileName] = useState();
+  const [team, setTeam] = useState();
   //   const [type, setType] = useState();
   //   const [projectName, setProjectName] = useState();
   //   const [projectDescription, setProjectDescription] = useState();
@@ -61,6 +64,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
         // hoursWorked: "3",
         // hoursWorkedOn: "false",
         dueDate: milestones100,
+        teamId: team && team._id,
         // milestones: [
         //   {
         //     completionPercentage: "30%",
@@ -76,6 +80,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
         //   },
         // ],
       };
+      // console.log(myObj);
       if (!newProject.priority) {
         myObj.projectPriority = "Normal";
       }
@@ -247,6 +252,68 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
           {/* <div>
             <FileBase64 multiple={false} onDone={getFiles} />
           </div> */}
+          <div style={{ margin: "10px 0 10px 0" }}>
+            <Button variant="primary" onClick={handleShoww}>
+              Select Team
+            </Button>
+          </div>
+          {team && (
+            <Alert
+              variant="danger"
+              onClose={() => setTeam()}
+              dismissible
+              className="alert-dismiss-custom rounded-pill font-size-12 mb-1 selected-team"
+              closeClassName="selected-media-close"
+            >
+              <p className="">Assign Project to {team.teamName}</p>
+            </Alert>
+          )}
+
+          <Modal show={showw} onHide={handleClosee}>
+            <Modal.Header closeButton>
+              <Modal.Title>My Teams</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <TeamsSelectTable
+                team={team}
+                setTeam={setTeam}
+                handleClosee={handleClosee}
+              />
+            </Modal.Body>
+          </Modal>
+          {/* {teamSelect !== "empty" ? (
+            <>
+              <SearchbarTeams
+                placeholder="Search Teams"
+                projectRole={projectRole}
+                setProjectRole={setProjectRole}
+                setMemberId={setMemberId}
+              />
+              <input
+                type="number"
+                placeholder="Enter Amount"
+                // value={amount}
+                // onChange={(e) => setAmount(e.target.value)}
+                className="inputTextFields"
+              />
+              <SkipBack onClick={() => setTeamSelect("empty")} />
+            </>
+          ) : (
+            <>
+              <Button
+                variant="primary my-4"
+                onClick={() => setTeamSelect("team")}
+              >
+                Select Team
+              </Button>
+              <Button
+                variant="primary m-4"
+                onClick={() => setTeamSelect("members")}
+              >
+                Select Members
+              </Button>
+            </>
+          )} */}
         </div>
       </Modal.Body>
       <Modal.Footer>

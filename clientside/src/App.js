@@ -369,7 +369,10 @@ const App = () => {
                         <Route path="/log" element={<Log />} />
                         <Route path="/team" element={<Teams />} />
                         <Route path="/createTeam" element={<CreateTeam />} />
-                        <Route path="/teamInfo" element={<TeamInfo />} />
+                        <Route
+                          path="/teamInfo"
+                          element={<TeamInfo user={loggedUser} />}
+                        />
                         <Route
                           path="/myCalendar"
                           element={

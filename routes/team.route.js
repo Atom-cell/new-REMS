@@ -112,6 +112,13 @@ router.get("/getMyTeam/:id", verifyJWT, (req, res) => {
     });
 });
 
+router.get("/teambyid", (req, res) => {
+  Team.find({ _id: req.query.teamId }, (err, rec) => {
+    if (err) res.status(500).json(err);
+    res.status(200).json(rec);
+  });
+});
+
 router.delete("/deleteTeam/:id", verifyJWT, (req, res) => {
   console.log("In team Delete");
   console.log(req.params.id);

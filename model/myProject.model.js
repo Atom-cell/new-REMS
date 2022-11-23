@@ -57,6 +57,7 @@ var myProjectSchema = mongoose.Schema(
       },
     ],
     status: String,
+    teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
   },
   { timestamps: true }
 );

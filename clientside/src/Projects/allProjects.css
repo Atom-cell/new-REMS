@@ -73,3 +73,11 @@ background: linear-gradient(90deg, rgb(19, 10, 197) 0%, rgba(27,113,193,1) 51%, 
 	box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 18%), 0px 1px 5px 0px rgb(0 0 0 / 18%) !important;
 	border-color: gray !important;
 }
+.selected-team {
+	opacity: 0.7;
+	width: fit-content;
+	height: 60px;
+	color: #494a54 !important;
+	background-color: #e4e5e8 !important;
+	border-color: #d7d8dd !important;
+  }

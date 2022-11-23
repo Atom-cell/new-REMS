@@ -9,8 +9,10 @@ import {
   Clipboard,
   Plus,
   File,
+  ArrowRight,
 } from "react-feather";
 import { format } from "timeago.js";
+import GroupsIcon from "@mui/icons-material/Groups";
 import Editable from "../Boards/Editabled/Editable";
 import { useLocation, useNavigate } from "react-router-dom";
 import AttachmentIcon from "@mui/icons-material/Attachment";
@@ -32,6 +34,7 @@ const SpecificProject = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [myProject, setMyProject] = useState();
+  const [myTeam, setMyTeam] = useState();
   const [myBoard, setMyBoard] = useState();
   const [goals, setGoals] = useState();
   const [projectRoleEmployee, setProjectRoleEmployee] = useState();
@@ -333,6 +336,23 @@ const SpecificProject = ({ user }) => {
 
     let r = localStorage.getItem("role");
     setRole(r);
+  }, []);
+
+  // get team
+  useEffect(() => {
+    // console.log(location.state.project.teamId);
+    if (location.state.project.teamId) {
+      // get team
+      axios
+        .get("http://localhost:5000/team/teambyid", {
+          params: { teamId: location.state.project.teamId },
+        })
+        .then((rec) => {
+          console.log(rec.data[0]);
+          setMyTeam(rec.data[0]);
+        })
+        .catch((err) => console.log(err + "Line 358 in Specific Project"));
+    }
   }, []);
 
   useEffect(() => {
@@ -1018,6 +1038,16 @@ const SpecificProject = ({ user }) => {
           setSelectedEmployees={setSelectedEmployees}
           user={user}
         />
+        {myTeam && (
+          <div
+            className="project-members-container"
+            onClick={() => navigate("/teamInfo", { state: { team: myTeam } })}
+          >
+            <GroupsIcon size={30} style={{ marginRight: "5px" }} />
+            <span style={{ fontSize: "20px" }}>{myTeam?.teamName}</span>
+            <ArrowRight size={30} style={{ marginRight: "5px" }} />
+          </div>
+        )}
         <div className="project-created-container">
           <div className="project-created-container-icon">
             <Clipboard size={40} />

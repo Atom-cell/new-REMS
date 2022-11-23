@@ -33,13 +33,13 @@ export const SideBarDataEmp = {
       icon: <CalendarTodayIcon />,
       cName: "nav-text sub-nav",
     },
-    {
-      id: 4,
-      title: "My Team Calendar",
-      path: "/myTeamCalendar",
-      icon: <CalendarMonthIcon />,
-      cName: "nav-text sub-nav",
-    },
+    // {
+    //   id: 4,
+    //   title: "My Team Calendar",
+    //   path: "/myTeamCalendar",
+    //   icon: <CalendarMonthIcon />,
+    //   cName: "nav-text sub-nav",
+    // },
 
     {
       id: 9,

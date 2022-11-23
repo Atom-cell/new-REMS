@@ -17,10 +17,6 @@ const AddMemberRole = ({ show, handleClose, handleSave }) => {
             projectRole={projectRole}
             setProjectRole={setProjectRole}
             setMemberId={setMemberId}
-            //   employees={employees}
-            //   setEmployees={setEmployees}
-            //   addEmployeeToMeeting={addEmployeeToMeeting}
-            //   myId={userId}
           />
         </Modal.Body>
         <Modal.Footer>

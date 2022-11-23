@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var myProject = require("../model/myProject.model");
 var Admin = require("../model/Admin.model");
+const Team = require("../model/Team.model");
 var employee = require("../model/Emp.model");
 const nodemailer = require("nodemailer");
 
@@ -12,6 +13,19 @@ router.get("/getmyproject", (req, res) => {
     if (err) res.status(500).send(err);
     res.status(200).send(rec);
   });
+});
+
+// get all projects Ids(that is array) info of a team
+router.get("/teamprojects", (req, res) => {
+  console.log(req.query.teamProjects);
+  myProject
+    .find()
+    .where("_id")
+    .in(req.query.teamProjects)
+    .exec((err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    });
 });
 
 router.get("/hoursworked", (req, res) => {
@@ -250,7 +264,18 @@ router.post("/addNewProject", async (req, res) => {
   //   console.log(req.body.hoursWorkedOn);
   try {
     const savedMessage = await newProject.save();
-    res.status(200).json(savedMessage);
+    // push team id to team
+    Team.findOneAndUpdate(
+      { _id: req.body.teamId },
+      { $push: { projects: savedMessage._id } },
+      (error, success) => {
+        if (error) {
+          res.status(500).json(error);
+        } else {
+          res.status(200).json(savedMessage);
+        }
+      }
+    );
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
