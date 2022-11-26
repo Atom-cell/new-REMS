@@ -5,10 +5,15 @@ import { Row, Col, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Editable from "../Boards/Editabled/Editable";
 import GenericPdfDownloader from "./GenericPdfDownloader";
+import { Button } from "react-bootstrap";
 import "./invoice.css";
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 const Invoice = ({ user }) => {
   const { state } = useLocation();
-  //   console.log(state);
+  // console.log(state);
   const [selectedPayroll, setSelectedPayroll] = useState(state);
   var totalAmount = 0;
 
@@ -42,9 +47,60 @@ const Invoice = ({ user }) => {
       })
       .catch((err) => console.log(err + "Specific Project 35"));
   };
+
+  const handleSendEmail = () => {
+    const input = document.getElementById("downloadinvoicepdf");
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      // console.log(imgData);
+      var allSelectedEmployees = selectedPayroll?.employees.map(
+        (emp, index) => {
+          return emp.employeeUsername;
+        }
+      );
+      // console.log(allSelectedEmployees);
+      confirmAlert({
+        title: "Confirmation",
+        message: `Are you sure you want to send Invoice Pdf as email to selected employees? ${allSelectedEmployees.map(
+          (emp, index) => {
+            if (index === selectedPayroll?.employees.length - 1) return emp;
+            return emp + ",";
+          }
+        )}`,
+        buttons: [
+          {
+            label: "Send",
+            onClick: () => {
+              axios
+                .post("/emp/emailinvoice", {
+                  employerId: user._id,
+                  emps: allSelectedEmployees,
+                  file: imgData,
+                })
+                .then((rec) => {
+                  // console.log(rec.data);
+                  toast.success(`${rec.data}`);
+                })
+                .catch((err) => console.log(err));
+            },
+          },
+          {
+            label: "Cancel",
+          },
+        ],
+      });
+    });
+  };
   return (
     <div style={{ display: "flex" }}>
       <div style={{ padding: 20, width: "800px" }} id="downloadinvoicepdf">
+        <div
+          className="invoice-heading"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <h1>REMS</h1>
+          <h6>Pakistan</h6>
+        </div>
         <Row>
           <Col>
             <div
@@ -201,6 +257,12 @@ const Invoice = ({ user }) => {
           downloadFileName="CustomPdf"
           rootElementId="downloadinvoicepdf"
         />
+        <Button
+          style={{ backgroundColor: "#1890ff", marginLeft: "10px" }}
+          onClick={handleSendEmail}
+        >
+          Send Via Email
+        </Button>
       </div>
       {/* </Row> */}
     </div>

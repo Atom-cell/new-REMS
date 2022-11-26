@@ -207,6 +207,40 @@ router.get("/getallmyusersbyname/:name", (req, res) => {
   });
 });
 
+router.post("/emailinvoice", (req, res) => {
+  // console.log(req.body);
+  // employerId, emps, file
+
+  // Find all emps and then send email to those emps
+  Emp.find()
+    .where("username")
+    .in(req.body.emps)
+    .exec((err, rec) => {
+      if (err) res.status(500).send(err);
+      // console.log(rec);
+      rec.forEach((employee) => {
+        // console.log(employee.email);
+        // send email
+        let mailOptions = {
+          from: ' "Invoice from REMS" <cinnakale@gmail.com>',
+          to: employee.email,
+          subject: "REMS - Invoice",
+          html: `<img src="${req.body.file}"`,
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.log("send mail error: ", err.message);
+            res.status(500).send(err);
+          } else {
+            console.log("Invoice Email Sent!!!");
+          }
+        });
+      });
+      res.status(200).send("Invoice Email Sent!");
+    });
+});
+
 router.post("/register", verifyJWT, async (req, res, next) => {
   console.log("In Emp Register");
   let { email, hourlyRate } = req.body;

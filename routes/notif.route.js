@@ -231,7 +231,7 @@ router.post("/setMeetingNotif", (req, res) => {
   employees.pop();
   employees.forEach((e) => {
     Emp.findOneAndUpdate(
-      { _id: e },
+      { username: e },
       {
         $push: {
           notifications: {
@@ -246,7 +246,7 @@ router.post("/setMeetingNotif", (req, res) => {
       }
     );
     Admin.findOneAndUpdate(
-      { _id: e },
+      { username: e },
       {
         $push: {
           notifications: {
