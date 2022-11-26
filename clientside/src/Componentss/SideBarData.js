@@ -16,6 +16,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AppsIcon from "@mui/icons-material/Apps";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import { Trello } from "react-feather";
 export const SideBarData = {
   links: [
@@ -41,13 +45,7 @@ export const SideBarData = {
       icon: <EngineeringIcon />,
       cName: "nav-text",
     },
-    {
-      id: 13,
-      title: "Reports",
-      path: "/reports",
-      icon: <AnalyticsIcon />,
-      cName: "nav-text",
-    },
+
     {
       id: 9,
       title: "My Messenger",
@@ -89,6 +87,35 @@ export const SideBarData = {
       path: "/allboards",
       icon: <Trello stroke="gray" />,
       cName: "nav-text",
+    },
+    {
+      id: 13,
+      title: "Reports",
+      path: "/reports/inOut",
+      icon: <AnalyticsIcon />,
+      cName: "nav-text",
+      subNav: [
+        {
+          title: "Clock-In / Clock-Out",
+          path: "/reports/inOut",
+          icon: <AccessTimeIcon />,
+        },
+        {
+          title: "Projects",
+          path: "/reports/projects",
+          icon: <TaskAltIcon />,
+        },
+        {
+          title: "Apps & Sites",
+          path: "/reports/appssites",
+          icon: <AppsIcon />,
+        },
+        {
+          title: "Active & Idle Time",
+          path: "/reports",
+          icon: <HourglassBottomIcon />,
+        },
+      ],
     },
   ],
   activeLink: 1,

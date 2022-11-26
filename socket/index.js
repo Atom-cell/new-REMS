@@ -238,7 +238,7 @@ io.on("connection", (socket) => {
     console.log("meeting set");
     employees.forEach((m) => {
       io.to(notif[m]).emit(
-        "DeleteMeeting",
+        "MeetingSet",
         `You have been added in meeting ${title} by ${hostedBy}`
       );
     });
@@ -305,6 +305,10 @@ io.on("connection", (socket) => {
       );
     });
   });
+
+  //////////////////////////////////////////
+  //////////////////////////////////////////
+  //////////////////////////////////////////
 
   //send and get message
   socket.on(

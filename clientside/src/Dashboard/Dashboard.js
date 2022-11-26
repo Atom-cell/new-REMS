@@ -39,7 +39,7 @@ const Dashboard = () => {
   };
   return (
     <div className="home">
-      <button onClick={() => ab()}>Socket</button>
+      <button onClick={() => ab()}>get notifications</button>
       <button onClick={() => realTime()}>LIVE Notification</button>
       <FeaturedInfo />
       {/* <Chart

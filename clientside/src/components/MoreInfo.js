@@ -489,7 +489,6 @@ function MoreInfo() {
                     {totalTime.map((time, index) => {
                       if (index > 5);
                       else {
-                        console.log("time: ", time);
                         return (
                           <tr>
                             <td style={{ width: "20%" }}>
@@ -660,7 +659,10 @@ function MoreInfo() {
                           <tr key={index}>
                             <td></td>
                             <td>
-                              <TableDate date={time.date.slice(0, 10)} />
+                              <TableDate
+                                date={new Date(time.date).toLocaleDateString()}
+                              />
+                              {/* <TableDate date={time.date.slice(0, 10)} /> */}
                             </td>
                             <td></td>
                           </tr>

@@ -41,6 +41,9 @@ import Boards from "./Boards/Boards";
 import CallNotification from "./CallNotification";
 import Peer from "simple-peer";
 import SpecificProject from "./Projects/SpecificProject";
+import InOutReport from "./Reports/InOutReport";
+import AppsSitesReport from "./Reports/AppsSitesReport";
+import ProjectsReport from "./Reports/ProjectsReport";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
@@ -262,6 +265,18 @@ const App = () => {
                         <Route path="/team" element={<Teams />} />
                         <Route path="/createTeam" element={<CreateTeam />} />
                         <Route path="/teamInfo" element={<TeamInfo />} />
+                        <Route
+                          path="/reports/inOut"
+                          element={<InOutReport />}
+                        />
+                        <Route
+                          path="/reports/appssites"
+                          element={<AppsSitesReport />}
+                        />
+                        <Route
+                          path="/reports/projects"
+                          element={<ProjectsReport />}
+                        />
                         <Route
                           path="/myCalendar"
                           element={

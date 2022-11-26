@@ -191,7 +191,7 @@ const CreateTeam = () => {
   };
 
   const uploadEditData = () => {
-    members.push(teamLead);
+    if (!members.includes(teamLead)) members.push(teamLead);
     console.log("EDITE: ", {
       id: team._id,
       teamName: teamName,
@@ -226,7 +226,6 @@ const CreateTeam = () => {
         .catch(function (error) {
           console.log(error);
         });
-
       axios
         .post(
           "http://localhost:5000/notif/updateTeamNotif",
@@ -248,7 +247,6 @@ const CreateTeam = () => {
         .catch(function (error) {
           console.log(error);
         });
-
       navigate("/team");
     } else {
       alert("Fill all the fields");

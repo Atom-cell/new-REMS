@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./SidebarMenu.css";
+import axios from "axios";
 import { styled, useTheme } from "@mui/material/styles";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
@@ -24,6 +25,9 @@ import { toast, ToastContainer } from "react-toastify";
 import MailIcon from "@mui/icons-material/Mail";
 ////////////////////////
 
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { Dropdown } from "react-bootstrap";
@@ -123,6 +127,11 @@ export default function SidebarMenu({ children }) {
   const [notif, setNotif] = React.useState([]);
   const [notifNum, setNotifNum] = React.useState(0);
   const { sock, setSocket } = React.useContext(SocketContext);
+  const [open1, setOpen1] = React.useState(false); //for subnav
+
+  const handleClick = () => {
+    setOpen1(!open1);
+  };
 
   React.useEffect(() => {
     sock.on("TEST", (data) => {
@@ -189,14 +198,16 @@ export default function SidebarMenu({ children }) {
     setSelectedIndex(index);
   };
 
+  // for Notifucations when LOGS in
   React.useEffect(() => {
     let a = localStorage.getItem("role");
     setRole(a);
     let User = JSON.parse(localStorage.getItem("user"));
     setPic(User.profilePicture);
-    let n = JSON.parse(localStorage.getItem("notif"));
+    let n = JSON.parse(localStorage.getItem("notif")) || "";
+    let num = JSON.parse(localStorage.getItem("notifNum")) || 0;
     setNotif(n);
-    setNotifNum(n?.length);
+    setNotifNum(num);
     console.log("Notifications: ", n);
     console.log("SIDEBAR socket sokcet sokc: ", sock);
   }, []);
@@ -206,6 +217,20 @@ export default function SidebarMenu({ children }) {
   const { name, setName } = React.useContext(ProjectNameContext);
 
   const logout = () => {
+    axios
+      .put(
+        "http://localhost:5000/emp/logout",
+        {},
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response.data);
+      });
+
     localStorage.clear();
     window.location.href = "/home";
   };
@@ -225,7 +250,30 @@ export default function SidebarMenu({ children }) {
     setOpen(false);
   };
 
-  const getMoreNotifications = () => {};
+  const notificationsNum = () => {
+    let id = localStorage.getItem("id");
+    let role = localStorage.getItem("role");
+    if (notifNum !== 0) {
+      //TODO: send request to make flag=1
+      console.log("ooooooooooooooooooooo");
+      axios.put("/notif/markRead", {
+        notif: notif,
+        id: id,
+        role: role,
+      });
+    }
+    setNotifNum(0);
+    localStorage.setItem("notifNum", 0);
+  };
+  const refreshNotifications = async () => {
+    let id = localStorage.getItem("id");
+    await axios.get(`/notif/getNotif/${id}`).then((resp) => {
+      localStorage.setItem("notif", JSON.stringify([...resp.data, ...notif]));
+      localStorage.setItem("notifNum", resp.data.length);
+      setNotif([...resp.data, ...notif]);
+      setNotifNum(resp.data.length);
+    });
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <ToastContainer />
@@ -280,11 +328,7 @@ export default function SidebarMenu({ children }) {
 
             <Dropdown>
               <Dropdown.Toggle style={{ all: "unset", cursor: "pointer" }}>
-                <IconButton
-                  onClick={() => {
-                    setNotifNum(0);
-                  }}
-                >
+                <IconButton onClick={() => notificationsNum()}>
                   <Badge badgeContent={notifNum} color="error">
                     <NotificationsIcon style={{ fill: "white" }} />
                   </Badge>
@@ -300,7 +344,9 @@ export default function SidebarMenu({ children }) {
                 <Dropdown.Item
                   style={{ marginTop: "0.4em", marginBottom: "0.4em" }}
                 >
-                  <Button>Refresh</Button>
+                  <Button onClick={() => refreshNotifications()}>
+                    Refresh
+                  </Button>
                 </Dropdown.Item>
                 {notif?.map((n, i) => {
                   return (
@@ -319,9 +365,7 @@ export default function SidebarMenu({ children }) {
                 <Dropdown.Item
                   style={{ marginTop: "0.4em", marginBottom: "0.4em" }}
                 >
-                  <Button onClick={() => getMoreNotifications()}>
-                    Show More
-                  </Button>
+                  <Button>Show More</Button>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -367,7 +411,7 @@ export default function SidebarMenu({ children }) {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? <ChevronLeftIcon /> : null}
+            {theme.direction === "ltr" ? <MenuIcon /> : null}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -375,26 +419,63 @@ export default function SidebarMenu({ children }) {
         {role === "admin"
           ? SideBarData.links.map((item, key) => {
               return (
-                <ListItem
-                  key={key}
-                  //selected={}
-                  onClick={(event) => handleListItemClick(event, key)}
-                  disablePadding
-                  sx={
-                    selectedIndex === key
-                      ? { backgroundColor: "#1a83ff", color: "white" }
-                      : null
-                  }
-                >
-                  <ListItemButton onClick={() => navigate(item.path)}>
-                    <ListItemIcon
-                      sx={selectedIndex === key ? { color: "white" } : null}
-                    >
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </ListItem>
+                <>
+                  <ListItem
+                    key={key}
+                    onClick={(event) => handleListItemClick(event, key)}
+                    disablePadding
+                    sx={
+                      selectedIndex === key
+                        ? { backgroundColor: "#1a83ff", color: "white" }
+                        : null
+                    }
+                  >
+                    <ListItemButton onClick={() => navigate(item?.path)}>
+                      <ListItemIcon
+                        sx={selectedIndex === key ? { color: "white" } : null}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      {item.subNav ? (
+                        <>
+                          <ListItemText primary={item.title} />
+                          {open1 ? (
+                            <IconButton onClick={handleClick}>
+                              <ExpandLess />
+                            </IconButton>
+                          ) : (
+                            <IconButton onClick={handleClick}>
+                              <ExpandMore />
+                            </IconButton>
+                          )}
+                        </>
+                      ) : (
+                        <ListItemText primary={item.title} />
+                      )}
+                    </ListItemButton>
+                  </ListItem>
+                  <Collapse in={open1} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {item.subNav?.map((s, i) => {
+                        return (
+                          <ListItem
+                            key={i}
+                            onClick={(event) => handleListItemClick(event, key)}
+                            disablePadding
+                          >
+                            <ListItemButton
+                              sx={{ pl: 4 }}
+                              onClick={() => navigate(s.path)}
+                            >
+                              <ListItemIcon>{s.icon}</ListItemIcon>
+                              <ListItemText primary={s.title} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </>
               );
             })
           : SideBarDataEmp.links.map((item, key) => {

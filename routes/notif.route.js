@@ -11,16 +11,55 @@ var myVid = require("../model/myVideo.model");
 var myProject = require("../model/myProject.model");
 
 router.get("/getNotif/:id", async (req, res) => {
+  console.log("getting notifications");
   let emp = await Emp.findById(req.params.id);
   let admin = await Admin.findById(req.params.id);
   if (emp) {
-    res.json(emp.notifications);
+    let notif = emp.notifications.filter((f) => f.flag === 0);
+    res.json(notif);
   } else if (admin) {
-    res.json(admin.notifications);
+    let notif = admin.notifications.filter((f) => f.flag === 0);
+
+    res.json(notif);
     // Admin.findById(req.params.id, (err, resp) => {
     //   if (err) console.log(err.message);
     //   res.json(resp);
     // });
+  }
+});
+
+router.put("/markRead", (req, res) => {
+  console.log("marking read");
+  let arr = req.body.notif;
+  let id = req.body.id;
+  console.log(req.body.role);
+  arr = arr.map((a) => {
+    return { ...a, flag: 1 };
+  });
+  if (req.body.role === "Employee") {
+    Emp.findOneAndUpdate(
+      { _id: id },
+      { notifications: arr },
+      function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data.username);
+        }
+      }
+    );
+  } else {
+    Admin.findOneAndUpdate(
+      { _id: id },
+      { notifications: arr },
+      function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data.username);
+        }
+      }
+    );
   }
 });
 //added in team
@@ -227,7 +266,7 @@ router.post("/setMeetingNotif", (req, res) => {
   console.log("in set meeting notification");
   let { hostedBy, hostedById, title, employees } = req.body;
   const message = `You have been added in meeting ${title} by ${hostedBy}`;
-
+  console.log(employees);
   employees.pop();
   employees.forEach((e) => {
     Emp.findOneAndUpdate(

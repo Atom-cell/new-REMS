@@ -364,28 +364,30 @@ router.post("/login", async (req, res) => {
           "helloworld"
         );
 
-        // try {
-        //   Emp.findOneAndUpdate(
-        //     { email: email },
-        //     {
-        //       $push: {
-        //         notifications: {
-        //           activetime: active_time,
-        //           idletime: idle_time,
-        //         },
-        //       },
-        //     },
-        //     function (error, data) {
-        //       if (error) {
-        //         console.log(error);
-        //       } else {
-        //         console.log("");
-        //       }
-        //     }
-        //   );
-        // } catch (e) {
-        //   res.send(e);
-        // }
+        let date = new Date();
+        console.log("INOUTITITITITII");
+        try {
+          Emp.findOneAndUpdate(
+            { email: req.body.email },
+            {
+              $push: {
+                InOut: {
+                  date: date.toLocaleDateString(),
+                  In: date,
+                },
+              },
+            },
+            function (error, data) {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("");
+              }
+            }
+          );
+        } catch (e) {
+          res.send(e);
+        }
 
         return res.json({ data: Euser, msg: 1, token: token, auth: true });
       } else {
@@ -573,8 +575,57 @@ router.post("/apptime", (req, res) => {
   }
 });
 
-router.get("/checkAuth", verifyJWT, (req, res) => {
-  res.send("YO! you are authenticated, COngrats!!");
+router.put("/logout", verifyJWT, async function (req, res) {
+  console.log("LOGOUTLOGOUT");
+  let date = new Date();
+  const Euser = await Emp.findOne({ email: req.userEmail });
+
+  if (Euser) {
+    let newInout = Euser.InOut;
+    Euser.InOut.forEach((o, i) => {
+      if (o.date === date.toLocaleDateString() && o.Out === undefined) {
+        newInout[i].Out = date;
+      }
+    });
+    // console.log(newInout);
+    try {
+      Emp.findOneAndUpdate(
+        { email: req.userEmail },
+        {
+          $set: {
+            InOut: newInout,
+          },
+        },
+        function (error, data) {
+          if (error) {
+            console.log(error);
+          } else {
+            res.status(200);
+          }
+        }
+      );
+    } catch (e) {
+      res.send(e);
+    }
+  } else {
+    res.status(200);
+  }
+  // try {
+  //   Emp.updateOne(
+  //     { "InOut.date": date.toLocaleDateString() },
+  //     {
+  //       $set: {
+  //         "InOut.$.Out": date.toLocaleDateString(),
+  //       },
+  //     },
+  //     function (err, result) {
+  //       if (err) console.log(err.message);
+  //       res.send(result);
+  //     }
+  //   );
+  // } catch (e) {
+  //   console.log(e);
+  // }
 });
 
 module.exports = router;

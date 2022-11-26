@@ -72,19 +72,10 @@ function Login() {
             localStorage.setItem("role", response.data.data.role);
             localStorage.setItem("id", response.data.data._id);
             let n = response.data.data.notifications;
-            let rev = n.reverse();
+            let rev = filterNotifications(n.reverse());
             //push db notifs in here
-            localStorage.setItem(
-              "notif",
-              JSON.stringify([
-                {
-                  msg: "Welcome to REMS! Have a great work day.",
-                  flag: "0",
-                  path: "/dashboard",
-                },
-                ...rev,
-              ])
-            );
+            localStorage.setItem("notif", JSON.stringify([...rev]));
+            localStorage.setItem("notifNum", rev.length);
 
             setData(response.data.data);
           })
@@ -109,6 +100,10 @@ function Login() {
         setOpen(true);
       }
     }
+  };
+
+  const filterNotifications = (n) => {
+    return (n = n.filter((s) => s.flag === 0));
   };
   const checkEmail = () => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
