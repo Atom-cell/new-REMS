@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import "./modal.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-const EditModal = ({
+const ShowModal = ({
   event,
   setEvent,
   updateEvent,
@@ -25,7 +25,7 @@ const EditModal = ({
               <input
                 type="text"
                 placeholder="Event Made By"
-                value={event.madeBy}
+                value={event?.madeBy}
                 readOnly={true}
                 // onChange={(e) => setEvent({ ...event, title: e.target.value })}
                 className="inputTextFields"
@@ -34,53 +34,48 @@ const EditModal = ({
             <input
               type="text"
               placeholder="Add Event Title"
-              value={event.title}
-              onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              value={event?.title}
+              //   onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              readOnly={true}
               className="inputTextFields"
             />
-            {/* <input type="text" value={event.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/> */}
+            {/* <input type="text" value={event?.startDate} className="inputTextFields" onChange={(e) => setEvent({ ...event, startDate: e.target.value })}/> */}
 
             <DatePicker
               placeholderText="Start Date"
-              selected={new Date(event.startDate)}
-              onChange={(start) => setEvent({ ...event, startDate: start })}
+              selected={new Date(event?.startDate)}
+              //   onChange={(start) => setEvent({ ...event, startDate: start })}
+              readOnly={true}
               timeInputLabel="Time:"
               dateFormat="MM/dd/yyyy h:mm aa"
               showTimeSelect
               className="inputTextFields"
               minDate={new Date()}
             />
-            <div className="inputTextFields selectContainerModal">
-              {/* <label for="framework">Select Event Category</label> */}
-              <select
-                id="framework"
-                value={event.category}
-                onChange={(e) =>
-                  setEvent({ ...event, category: e.target.value })
-                }
-              >
-                <option value="Goal" selected="selected">
-                  Goal
-                </option>
-                <option value="Reminder">Reminder</option>
-              </select>
-            </div>
+            <input
+              type="text"
+              placeholder="Add Event Title"
+              value={event?.category}
+              readOnly={true}
+              //   onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              className="inputTextFields"
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClosee}>
             Close
           </Button>
-          <Button variant="danger" onClick={() => deleteEvent(event)}>
+          {/* <Button variant="danger" onClick={() => deleteEvent(event)}>
             Delete
           </Button>
           <Button variant="primary" onClick={() => updateEvent(event)}>
             Save
-          </Button>
+          </Button> */}
         </Modal.Footer>
       </Modal>
     </div>
   );
 };
 
-export default EditModal;
+export default ShowModal;

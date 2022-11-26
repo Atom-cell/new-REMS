@@ -15,6 +15,7 @@ import "./mycalendar.css";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import MoreEvents from "./MoreEvents";
+import ShowModal from "./ShowModal";
 const locales = {
   "en-US": enUS,
 };
@@ -90,7 +91,7 @@ const TeamCalendar = ({ user, teamId }) => {
       // console.log(newEvent.start);
       var myObj = {
         // _id: Math.floor(Math.random() * 10000),
-        madeBy: user._id,
+        madeBy: user.username,
         title: newEvent.title,
         startDate: newEvent.start,
         category: newEvent.category,
@@ -218,14 +219,30 @@ const TeamCalendar = ({ user, teamId }) => {
         />
       )}
       {editModalOpen && (
-        <EditModal
-          event={event}
-          setEvent={setEvent}
-          updateEvent={updateEvent}
-          deleteEvent={deleteEvent}
-          editModalOpen={editModalOpen}
-          handleClosee={handleClosee}
-        />
+        <>
+          {event.madeBy ===
+          JSON.parse(localStorage.getItem("user")).username ? (
+            <EditModal
+              event={event}
+              setEvent={setEvent}
+              updateEvent={updateEvent}
+              deleteEvent={deleteEvent}
+              editModalOpen={editModalOpen}
+              handleClosee={handleClosee}
+              showMadeBy={true}
+            />
+          ) : (
+            <ShowModal
+              event={event}
+              setEvent={setEvent}
+              updateEvent={updateEvent}
+              deleteEvent={deleteEvent}
+              editModalOpen={editModalOpen}
+              handleClosee={handleClosee}
+              showMadeBy={true}
+            />
+          )}
+        </>
       )}
       {/* {!modalOpen && !editModalOpen && ( */}
       <div className="calendar-container">
