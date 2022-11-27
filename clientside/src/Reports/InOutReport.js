@@ -16,16 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ExcelExport from "./ExcelExport";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import {
-  BarChart,
-  Bar,
-  Label,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import ChartBar from "./ChartBar";
 // import PDFReport from "./components/PDFReport";
 // import { PDFDownloadLink } from "@react-pdf/renderer";
 const InOutReport = () => {
@@ -174,7 +165,7 @@ const InOutReport = () => {
     const input = document.getElementById("download");
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("img/png");
-      const pdf = new jsPDF("p", "pt", "a4");
+      const pdf = new jsPDF("p", "mm", "a4");
       pdf.addImage(imgData, "JPEG", 0, 60);
       pdf.save("demo.pdf");
     });
@@ -240,7 +231,7 @@ const InOutReport = () => {
             Search
           </Button>
           <ExcelExport excelData={inOut} fileName="Demo" />
-          {/* <Button onClick={() => downloadPDF()}></Button> */}
+          <Button onClick={() => downloadPDF()}></Button>
           {/* <PDFDownloadLink document={<PDFReport />} filename="FORM">
             {({ loading }) =>
               loading ? (
@@ -254,37 +245,7 @@ const InOutReport = () => {
       </div>
       <div>
         {chartData?.length > 1 ? (
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              width={500}
-              height={300}
-              data={chartData}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis>
-                <Label
-                  style={{
-                    textAnchor: "middle",
-                    fontSize: "130%",
-                    fill: "grey",
-                  }}
-                  dx={-15}
-                  angle={270}
-                  value={"Time (Hrs)"}
-                />
-              </YAxis>
-              <Tooltip />
-
-              <Bar dataKey="totalTime" fill="#82cdff" />
-            </BarChart>
-          </ResponsiveContainer>
+          <ChartBar chartData={chartData} xaxis="date" yaxis="totalTime" />
         ) : null}
       </div>
       <div>

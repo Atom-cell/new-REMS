@@ -430,7 +430,13 @@ export default function SidebarMenu({ children }) {
                         : null
                     }
                   >
-                    <ListItemButton onClick={() => navigate(item?.path)}>
+                    <ListItemButton
+                      onClick={
+                        item?.path
+                          ? () => navigate(item?.path)
+                          : () => handleClick()
+                      }
+                    >
                       <ListItemIcon
                         sx={selectedIndex === key ? { color: "white" } : null}
                       >

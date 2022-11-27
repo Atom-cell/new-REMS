@@ -44,6 +44,8 @@ import SpecificProject from "./Projects/SpecificProject";
 import InOutReport from "./Reports/InOutReport";
 import AppsSitesReport from "./Reports/AppsSitesReport";
 import ProjectsReport from "./Reports/ProjectsReport";
+import ActiveIdleReport from "./Reports/ActiveIdleReport";
+import ProductivityReport from "./Reports/ProductivityReport";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
@@ -276,6 +278,14 @@ const App = () => {
                         <Route
                           path="/reports/projects"
                           element={<ProjectsReport />}
+                        />
+                        <Route
+                          path="/reports/activeidle"
+                          element={<ActiveIdleReport />}
+                        />
+                        <Route
+                          path="/reports/productivity"
+                          element={<ProductivityReport />}
                         />
                         <Route
                           path="/myCalendar"

@@ -91,7 +91,7 @@ export const SideBarData = {
     {
       id: 13,
       title: "Reports",
-      path: "/reports/inOut",
+      // path: "/reports/inOut",
       icon: <AnalyticsIcon />,
       cName: "nav-text",
       subNav: [
@@ -112,8 +112,13 @@ export const SideBarData = {
         },
         {
           title: "Active & Idle Time",
-          path: "/reports",
+          path: "/reports/activeidle",
           icon: <HourglassBottomIcon />,
+        },
+        {
+          title: "Productivity",
+          path: "/reports/productivity",
+          icon: <WorkIcon />,
         },
       ],
     },
