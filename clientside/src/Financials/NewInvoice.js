@@ -51,89 +51,34 @@ const NewInvoice = ({ user }) => {
     setDateRange(`${start}-${end}`);
   };
 
-  const handleCreatePayroll = () => {
-    // console.log(selectedEmployees);
+  const handleCreateInvoice = () => {
+    console.log(selectedProjectsHoursWorked);
     // id, user, totalTime for every employee
-    var totalTime;
-    var totalAmountWhole = 0;
-    var newSelectedEmployees = selectedEmployees.map((emp) => {
-      totalTime = moment
-        .duration(totalTime)
-        .add(moment.duration(emp.totalTime));
-      console.log(typeof emp.totalAmount);
-      totalAmountWhole = totalAmountWhole + emp.totalAmount;
+    var newSelectedEmployees = selectedProjectsHoursWorked.map((emp) => {
       return {
-        employeeUsername: emp.username,
-        totalTime: emp.totalTime,
-        baseAmount: emp.totalAmount,
+        employeeUsername: emp.user,
+        totalTime: emp.time,
+        date: emp.date,
+        hourlyRate: emp.hourlyRate,
       };
     });
-    totalTime = moment.utc(totalTime.as("milliseconds")).format("HH:mm:ss");
-    // console.log(totalTime);
-    // console.log(selectedProjects);
     var newSelectedProjects = selectedProjects?.map((pro) => pro._id);
     // console.log(newSelectedProjects);
 
     const myObj = {
       employerId: user._id,
       dateRange: dateRange,
-      totalAmount: totalAmountWhole.toFixed(3),
-      totalTime: totalTime,
-      paid: false,
       employees: newSelectedEmployees,
-      //   employees: [
-      //     {
-      //       employeeId: "",
-      //       totalTime: "",
-      //       baseAmount: "",
-      //       adjustments: "",
-      //       commment: "",
-      //     },
-      //   ],
       projectId: newSelectedProjects,
     };
-    // console.log(myObj);
-    // With create payroll we have to also handle that for the date range marked is true for all selected Employees
+    console.log(myObj);
     axios
-      .post("/myPayroll/newpayroll", myObj)
+      .post("/myInvoice/newinvoice", myObj)
       .then((rec) => {
-        // console.log(rec.data);
-        // handle for all employees the date range mark it true
-        // console.log(selectedProjects);
-        var firstDate = dateRange.substring(0, 10);
-        var secondDate = dateRange.substring(20, 30);
-        // console.log(selectedProjects);
-
-        selectedProjects.forEach((element) => {
-          // console.log(element.hoursWorked);
-          // if hoursWorked[0].user==selectedEmployees.username and date is in range then mark that true
-          element.hoursWorked.map((obj) => {
-            // selectedEmployees.includes(item)
-            selectedEmployees.map((obj2) => {
-              if (
-                obj.user === obj2.username &&
-                moment(obj.date, "DD-MM-YYYY") >=
-                  moment(firstDate, "DD-MM-YYYY") &&
-                moment(obj.date, "DD-MM-YYYY") <=
-                  moment(secondDate, "DD-MM-YYYY")
-              ) {
-                obj.marked = true;
-              }
-            });
-          });
+        console.log(rec.data);
+        navigate("/allInvoice/invoicedetails", {
+          state: rec.data,
         });
-        console.log(selectedProjects);
-
-        axios
-          .post("/myProjects/markhoursworkedtrue", {
-            projects: selectedProjects,
-          })
-          .then((records) => {
-            navigate("/allpayroll/payrolldetails", {
-              state: rec.data,
-            });
-          })
-          .catch((err) => console.log(err + "Line 132 in New Payroll"));
       })
       .catch((err) => {
         console.log(err + "line 61 New Payroll");
@@ -241,68 +186,38 @@ const NewInvoice = ({ user }) => {
       .catch((err) => console.log(err));
   };
 
+  // const getDifference = (array1, array2) => {
+  //   return array1.filter((object1) => {
+  //     return !array2.some((object2) => {
+  //       return object1.user === object2.username;
+  //     });
+  //   });
+  // };
   const getDifference = (array1, array2) => {
     return array1.filter((object1) => {
       return !array2.some((object2) => {
-        return object1.user === object2.username;
+        return object1._id === object2._id;
       });
     });
   };
 
   const getSelectedProjectInfo = (pro) => {
-    // console.log(pro);
+    console.log(pro);
+    setSelectedProjects([...selectedProjects, pro]);
+
+    var newArray = pro.hoursWorked.filter((obj) => obj.marked === true);
+    console.log(newArray);
+    // send this array to backend and get employee hourly rate for every employee
     axios
-      .get("/myProjects/getmyproject", {
-        params: {
-          projectId: pro._id,
-        },
-      })
+      .get("/myPayroll/hourlyRate", { params: { newArray } })
       .then((rec) => {
-        var newArray = rec.data[0].hoursWorked.filter(
-          (obj) => obj.marked === true
-        );
-        console.log(newArray);
-        // console.log([...selectedProjectsHoursWorked, newArray]);
-        const merged = selectedProjectsHoursWorked.concat(newArray);
-        setSelectedProjectsHoursWorked(merged);
-        setSelectedProjects([...selectedProjects, rec.data[0]]);
-        //a
-        // if there are selected employees then only get those user and their total time
-        // if there are no selected employees show all i-e else part and Add the duplicate entries time
-        // const uniqueList = [];
-        // rec.data[0].hoursWorked.map((obj, index) => {
-        //   // console.log(obj);
-        //   var data = uniqueList.find((ele) => {
-        //     return ele.username === obj.user;
-        //   });
-        //   if (data) {
-        //     //   console.log(data);
-        //     // find in uniqe list and add time to that user
-        //     var finding = uniqueList.map((ele) => {
-        //       if (ele.username === obj.user) {
-        //         ele.totalTime = moment
-        //           .duration(ele.totalTime)
-        //           .add(moment.duration(obj.time));
-        //         ele.totalTime = moment
-        //           .utc(ele.totalTime.as("milliseconds"))
-        //           .format("HH:mm:ss");
-        //       }
-        //     });
-        //   } else {
-        //     uniqueList.push({
-        //       _id: index,
-        //       username: obj.user,
-        //       totalTime: obj.time,
-        //     });
-        //   }
-        // });
-        // // console.log([...selectedEmployeesProject, ...uniqueList]);
-        // setSelectedEmployeesProject([
-        //   ...selectedEmployeesProject,
-        //   ...uniqueList,
-        // ]);
+        console.log(rec.data);
+        setSelectedProjectsHoursWorked([
+          ...selectedProjectsHoursWorked,
+          ...rec.data,
+        ]);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err + "At Line 270 in NewInvoice"));
   };
 
   const handleEmployeeClick = (includes, emp) => {
@@ -324,8 +239,16 @@ const NewInvoice = ({ user }) => {
     if (includes) {
       getSelectedProjectInfo(pro);
     } else {
+      // remove project
       pros = selectedProjects.filter((em) => em._id !== pro._id);
       setSelectedProjects(pros);
+      // remove project employees from selectedProjectsHoursWorked
+      // console.log(pro.hoursWorked);
+      var newSelected = getDifference(
+        selectedProjectsHoursWorked,
+        pro.hoursWorked
+      );
+      setSelectedProjectsHoursWorked(newSelected);
     }
   };
 
@@ -551,6 +474,7 @@ const NewInvoice = ({ user }) => {
             <tr>
               <th>Name</th>
               <th>Total Time</th>
+              <th>Date</th>
               <th>Total Amount</th>
             </tr>
           </thead>
@@ -558,12 +482,13 @@ const NewInvoice = ({ user }) => {
             {selectedProjectsHoursWorked.length > 0 ? (
               <>
                 {selectedProjectsHoursWorked?.map((emp) => {
-                  console.log(emp);
+                  // console.log(emp);
                   return (
                     <tr key={emp._id}>
                       <td>{emp.user}</td>
                       <td>{emp.time}</td>
-                      {/* <td> $ {emp.totalAmount}</td> */}
+                      <td>{emp.date}</td>
+                      <td> $ {calculateWage(emp.time, emp.hourlyRate)}</td>
                     </tr>
                   );
                 })}
@@ -592,13 +517,13 @@ const NewInvoice = ({ user }) => {
       <div className="create-project" style={{ marginTop: "20px" }}>
         <Button
           style={{ backgroundColor: "#1890ff" }}
-          onClick={handleCreatePayroll}
+          onClick={handleCreateInvoice}
         >
-          Create Payroll
+          Create Invoice
         </Button>
         <Button
           variant="secondary mx-2"
-          onClick={() => navigate("/allpayroll")}
+          onClick={() => navigate("/allInvoice")}
         >
           Cancel
         </Button>

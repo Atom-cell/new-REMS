@@ -1,23 +1,33 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-const myPayroll = require("../model/myPayroll.model");
+const myInvoice = require("../model/myInvoice.model");
 const Emp = require("../model/Emp.model");
-const Stripe = require("stripe")(
-  "sk_test_51Izy3ZSCK5aoLzPX9hUMxFtpIEqSBjX8WJNDTaq2BrIU3OVei6OWKk2N0xJwOhQg9cyVkZhw6waaXzaC3C4jWKEZ00s7zT9K7b"
-);
+var myProject = require("../model/myProject.model");
 // process.env.Secret_key
 
-router.get("/getallpayrolls", async (req, res) => {
+router.get("/getallinvoices", async (req, res) => {
   //   console.log(req.query.employerId);
   try {
-    const allPayrolls = await myPayroll.find({
+    const allInvoices = await myInvoice.find({
       employerId: req.query.employerId,
     });
-    res.status(200).json(allPayrolls);
+    res.status(200).json(allInvoices);
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+router.get("/getProjects", (req, res) => {
+  console.log(req.query.projectIds);
+  myProject
+    .find()
+    .where("_id")
+    .in(req.query.projectIds)
+    .exec((err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).json(rec);
+    });
 });
 
 router.get("/hourlyRate", (req, res) => {
@@ -45,7 +55,7 @@ router.get("/hourlyRate", (req, res) => {
 router.get("/getemployeepayrolls", async (req, res) => {
   //   console.log(req.query.employeeId);
   try {
-    const allPayrolls = await myPayroll.find({
+    const allPayrolls = await myInvoice.find({
       "employees.employeeUsername": req.query.employeeUsername,
     });
     res.status(200).json(allPayrolls);
@@ -57,7 +67,7 @@ router.get("/getemployeepayrolls", async (req, res) => {
 router.post("/addadjustment", (req, res) => {
   // console.log(req.body);
   //_id, employeeId, adjustment, comment
-  myPayroll.findOneAndReplace(
+  myInvoice.findOneAndReplace(
     { _id: req.body._id },
     req.body,
     { new: true },
@@ -70,7 +80,7 @@ router.post("/addadjustment", (req, res) => {
 
 router.post("/generateinvoice", (req, res) => {
   console.log(req.body);
-  myPayroll.findOneAndUpdate(
+  myInvoice.findOneAndUpdate(
     { _id: req.body._id },
     {
       $set: { invoice: req.body.myObj },
@@ -85,7 +95,7 @@ router.post("/generateinvoice", (req, res) => {
 
 router.post("/updateinvoiceduedate", (req, res) => {
   console.log(req.body);
-  myPayroll.findOneAndUpdate(
+  myInvoice.findOneAndUpdate(
     { _id: req.body._id },
     {
       $set: { "invoice.dueDate": req.body.dueDate },
@@ -98,13 +108,13 @@ router.post("/updateinvoiceduedate", (req, res) => {
   );
 });
 
-router.post("/newpayroll", async (req, res) => {
+router.post("/newinvoice", async (req, res) => {
   //   console.log(req.body);
-  const newPayroll = new myPayroll(req.body);
+  const newInvoice = new myInvoice(req.body);
 
   try {
-    const savedPayroll = await newPayroll.save();
-    res.status(200).json(savedPayroll);
+    const savedInvoice = await newInvoice.save();
+    res.status(200).json(savedInvoice);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -156,7 +166,7 @@ router.post("/payment", async (req, res) => {
     status = "Failure";
   }
   if (status == "success") {
-    myPayroll.findOneAndUpdate(
+    myInvoice.findOneAndUpdate(
       { _id: payrollId },
       { paid: true },
       { new: true },

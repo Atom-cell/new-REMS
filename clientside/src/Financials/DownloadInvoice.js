@@ -11,49 +11,18 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-const Invoice = ({ user }) => {
+const DownloadInvoice = ({ user }) => {
   const { state } = useLocation();
   // console.log(state);
-  const [selectedPayroll, setSelectedPayroll] = useState(state);
-  var totalAmount = 0;
-
-  const handleAdjustments = (arr, baseAmount) => {
-    // console.log(arr);
-    // [adjustment,comment]
-    // find total adjustment i-e if add then add and if subtract then subtract
-    let sum = 0;
-
-    arr.forEach((element) => {
-      if (element.adjustment.substring(0, 1) == "+") {
-        sum = sum + Number(element.adjustment.substring(1));
-      } else {
-        sum = sum - Number(element.adjustment.substring(1));
-      }
-    });
-    // console.log(sum + Number(baseAmount));
-    totalAmount = totalAmount + sum + Number(baseAmount);
-    return sum + Number(baseAmount);
-  };
-  const updateInvoiceDueDate = (value) => {
-    console.log(moment(value).format("DD-MM-YYYY"));
-    axios
-      .post("/myPayroll/updateinvoiceduedate", {
-        _id: selectedPayroll?._id,
-        dueDate: moment(value).format("DD-MM-YYYY"),
-      })
-      .then((res) => {
-        // console.log(res.data);
-        setSelectedPayroll(res.data);
-      })
-      .catch((err) => console.log(err + "Specific Project 35"));
-  };
+  const [selectedInvoice, setSelectedInvoice] = useState(state.selectedInvoice);
+  const [projects, setProjects] = useState(state.projects);
 
   const handleSendEmail = () => {
     const input = document.getElementById("downloadinvoicepdf");
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       // console.log(imgData);
-      var allSelectedEmployees = selectedPayroll?.employees.map(
+      var allSelectedEmployees = selectedInvoice?.employees.map(
         (emp, index) => {
           return emp.employeeUsername;
         }
@@ -63,7 +32,7 @@ const Invoice = ({ user }) => {
         title: "Confirmation",
         message: `Are you sure you want to send Invoice Pdf as email to selected employees? ${allSelectedEmployees.map(
           (emp, index) => {
-            if (index === selectedPayroll?.employees.length - 1) return emp;
+            if (index === selectedInvoice?.employees.length - 1) return emp;
             return emp + ",";
           }
         )}`,
@@ -90,6 +59,27 @@ const Invoice = ({ user }) => {
         ],
       });
     });
+  };
+
+  const calculateWage = (time, hourlyRate) => {
+    // console.log(time);
+    const [hours, minutes, seconds] = time.split(":");
+    var totalSeconds =
+      Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
+    // console.log(totalSeconds);
+    // now convert totalseconds to hours
+    var totalHours = totalSeconds / 3600;
+    // console.log(totalHours);
+    //now calculate total wage
+    return totalHours * hourlyRate;
+  };
+
+  const handleTotalAmount = (employees) => {
+    var sum = 0;
+    employees.forEach((emp) => {
+      sum = sum + calculateWage(emp.totalTime, emp.hourlyRate);
+    });
+    return sum;
   };
   return (
     <div style={{ display: "flex" }}>
@@ -136,94 +126,57 @@ const Invoice = ({ user }) => {
             <table>
               <tr>
                 <th>Invoice Id :</th>
-                <td>{selectedPayroll?.invoice._id.substring(0, 30)}</td>
+                <td>{selectedInvoice?._id.substring(0, 30)}</td>
               </tr>
               <tr>
                 <th>Invoice Date : </th>
-                <td>{selectedPayroll?.invoice.date}</td>
-              </tr>
-              <tr>
-                <th>Due Date :</th>
-                {/* <td>{selectedPayroll?.invoice.dueDate}</td> */}
                 <td>
-                  <Editable
-                    displayClass="invoice-due-date"
-                    editClass="invoice-due-date-edit"
-                    defaultValue={selectedPayroll?.invoice.dueDate}
-                    text={selectedPayroll?.invoice.dueDate}
-                    type={"date"}
-                    placeholder="Due Date"
-                    onSubmit={updateInvoiceDueDate}
-                    emp={user?.role == "Employee" ? true : undefined}
-                  />
+                  &nbsp;
+                  {moment(selectedInvoice?.createdAt).format("DD:MM:YYYY")}
                 </td>
               </tr>
             </table>
           </Col>
         </Row>
 
-        <Row style={{ marginTop: 48 }}>
+        <Row style={{ marginTop: "60px" }}>
           <div>
-            Employees:{" "}
+            Projects:{" "}
             <strong>
-              {selectedPayroll?.employees.map((emp, index) => {
-                if (index === selectedPayroll?.employees.length - 1)
-                  return <span key={index}>{emp.employeeUsername}</span>;
+              {projects?.map((pro, index) => {
+                if (index === projects?.length - 1)
+                  return <span key={index}>{pro.projectName}</span>;
 
-                return <span key={index}>{emp.employeeUsername},</span>;
+                return <span key={index}>{pro.projectName},</span>;
               })}
             </strong>
           </div>
-          {/* <div>Bannerghatt Road,</div>
-          <div>Bangalore - 560076</div> */}
         </Row>
 
         <Row style={{ marginTop: 48 }}>
           <Table striped bordered hover>
-            <div className="watermark">
-              {selectedPayroll?.paid ? "Paid" : "Not Paid"}
-            </div>
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Total Time</th>
-                <th>Base Amount</th>
                 <th>Total Amount</th>
               </tr>
             </thead>
             <tbody>
-              {selectedPayroll?.employees.map((emp, index) => {
+              {selectedInvoice?.employees.map((emp, index) => {
                 return (
                   <tr key={index}>
                     <td>{emp.employeeUsername}</td>
                     <td>{emp.totalTime}</td>
-                    <td>{emp.baseAmount ? emp.baseAmount : "0"}</td>
                     <td>
-                      {handleAdjustments(emp.adjustments, emp.baseAmount)}
+                      $ &nbsp;
+                      {calculateWage(emp.totalTime, emp.hourlyRate)}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </Table>
-          {/* <Table
-            dataSource={[
-              {
-                id: 1,
-                name: "Accommodation (Single Occupancy)",
-                description: "Accommodation",
-                price: 1599,
-                quantity: 1,
-              },
-            ]}
-            pagination={false}
-          >
-            <Table.Column title="Items" dataIndex="name" />
-            <Table.Column title="Description" dataIndex="description" />
-            <Table.Column title="Quantity" dataIndex="quantity" />
-            <Table.Column title="Price" dataIndex="price" />
-            <Table.Column title="Line Total" />
-          </Table> */}
         </Row>
 
         <Row>
@@ -231,15 +184,15 @@ const Invoice = ({ user }) => {
             <table>
               <tr>
                 <th>Gross Total :</th>
-                <td>$ {totalAmount}</td>
+                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
               </tr>
               <tr>
                 <th>Tax 0%:</th>
-                <td>$ {totalAmount}</td>
+                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
               </tr>
               <tr>
                 <th>Net Total :</th>
-                <td>$ {totalAmount}</td>
+                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
               </tr>
             </table>
           </Col>
@@ -265,4 +218,4 @@ const Invoice = ({ user }) => {
   );
 };
 
-export default Invoice;
+export default DownloadInvoice;

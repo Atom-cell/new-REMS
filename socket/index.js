@@ -242,7 +242,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("MeetingSet", ({ hostedBy, title, employees }) => {
-    // console.log("meeting set");
+    console.log("meeting set ");
     employees.forEach((m) => {
       io.to(notif[m]).emit(
         "MeetingSet",

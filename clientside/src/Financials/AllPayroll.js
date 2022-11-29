@@ -150,13 +150,26 @@ const AllPayroll = ({ user }) => {
           />
         </div> */}
         {user?.role !== "Employee" && (
-          <div className="create-project">
-            <Button
-              style={{ backgroundColor: "#1890ff" }}
-              onClick={() => navigate("/allpayroll/newpayroll")}
-            >
-              Create New Payroll
-            </Button>
+          <div
+            className="create-project"
+            style={{ display: "flex", marginLeft: "auto" }}
+          >
+            <div>
+              <Button
+                style={{ backgroundColor: "#1890ff" }}
+                onClick={() => navigate("/allpayroll/newpayroll")}
+              >
+                Create New Payroll
+              </Button>
+            </div>
+            {/* <div style={{ marginLeft: "10px" }}>
+              <Button
+                style={{ backgroundColor: "#1890ff" }}
+                onClick={() => navigate("/allinvoice/newinvoice")}
+              >
+                Create New Invoice
+              </Button>
+            </div> */}
           </div>
         )}
       </div>

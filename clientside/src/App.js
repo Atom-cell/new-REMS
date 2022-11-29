@@ -48,6 +48,7 @@ import PayrollDetails from "./Financials/PayrollDetails";
 import NewInvoice from "./Financials/NewInvoice";
 import InvoiceDetails from "./Financials/InvoiceDetails";
 import Invoice from "./Financials/Invoice";
+import DownloadInvoice from "./Financials/DownloadInvoice";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
@@ -492,6 +493,10 @@ const App = () => {
                         <Route
                           path="/allinvoice/invoicedetails"
                           element={<InvoiceDetails user={loggedUser} />}
+                        />
+                        <Route
+                          path="/allinvoice/downloadinvoice"
+                          element={<DownloadInvoice user={loggedUser} />}
                         />
                       </Route>
                     </Routes>

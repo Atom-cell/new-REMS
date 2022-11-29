@@ -97,6 +97,23 @@ export const SideBarData = {
       icon: <DollarSign stroke="gray" />,
       cName: "nav-text",
     },
+    {
+      id: 17,
+      title: "Invoice",
+      path: "/allinvoice",
+      icon: (
+        <i
+          class="fa-solid fa-money-check-dollar"
+          style={{
+            color: "gray",
+            fontSize: "1.5rem",
+            width: "1.3em",
+            height: "1em",
+            display: "inline-block",
+          }}
+        ></i>
+      ),
+    },
     // {
     //   id: 16,
     //   title: "Financials",

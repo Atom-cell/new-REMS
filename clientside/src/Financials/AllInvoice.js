@@ -13,7 +13,7 @@ const AllInvoice = ({ user }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
-  const [allPayrolls, setAllPayrolls] = useState();
+  const [allInvoices, setAllInvoices] = useState();
 
   const handleTokenPay = async (token, id, amount) => {
     amount = parseInt(amount);
@@ -53,37 +53,6 @@ const AllInvoice = ({ user }) => {
     XLSX.writeFile(wb, "sheetjs.xlsx");
   };
 
-  // function exportToExcel(tableSelect, filename = "") {
-  //   alert("hl");
-  //   var downloadurl;
-  //   var dataFileType = "application/vnd.ms-excel";
-  //   // var tableHTMLData = tableSelect.outerHTML.replace(/ /g, "%20");
-
-  //   // Specify file name
-  //   filename = filename ? filename + ".xls" : "export_excel_data.xls";
-
-  //   // Create download link element
-  //   downloadurl = document.createElement("a");
-
-  //   document.body.appendChild(downloadurl);
-
-  //   if (navigator.msSaveOrOpenBlob) {
-  //     var blob = new Blob(["\ufeff", tableSelect], {
-  //       type: dataFileType,
-  //     });
-  //     navigator.msSaveOrOpenBlob(blob, filename);
-  //   } else {
-  //     // Create a link to the file
-  //     downloadurl.href = "data:" + dataFileType + ", " + tableSelect;
-
-  //     // Setting the file name
-  //     downloadurl.download = filename;
-
-  //     //triggering the function
-  //     downloadurl.click();
-  //   }
-  // }
-
   const handleAdjustments = (arr) => {
     console.log(arr);
     // [adjustment,comment]
@@ -101,34 +70,35 @@ const AllInvoice = ({ user }) => {
     return sum;
   };
 
+  const calculateWage = (time, hourlyRate) => {
+    // console.log(time);
+    const [hours, minutes, seconds] = time.split(":");
+    var totalSeconds =
+      Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
+    // console.log(totalSeconds);
+    // now convert totalseconds to hours
+    var totalHours = totalSeconds / 3600;
+    // console.log(totalHours);
+    //now calculate total wage
+    return totalHours * hourlyRate;
+  };
+
   const handleTotalAmount = (employees) => {
     var sum = 0;
-    employees.map((emp) => {
-      // console.log(emp);
-      const { baseAmount } = emp;
-      if (emp.adjustments.length > 0) {
-        sum = sum + handleAdjustments(emp.adjustments);
-      }
-      sum = Number(baseAmount) + sum;
-      // console.log(sum + Number(baseAmount));
+    employees.forEach((emp) => {
+      console.log(emp.totalTime);
+      sum = sum + calculateWage(emp.totalTime, emp.hourlyRate);
     });
     return sum;
   };
 
   const fetchData = async () => {
-    if (user?.role === "Employee") {
-      // get all payrolls where employees field has the curent logged in id
-      const rec = await axios.get("/myPayroll/getemployeepayrolls", {
-        params: { employeeUsername: user.username },
-      });
-      console.log(rec.data);
-      setAllPayrolls(rec.data);
-    } else {
-      const rec = await axios.get("/myPayroll/getallpayrolls", {
+    if (user?.role !== "Employee") {
+      const rec = await axios.get("/myInvoice/getallinvoices", {
         params: { employerId: user._id },
       });
       console.log(rec.data);
-      setAllPayrolls(rec.data);
+      setAllInvoices(rec.data);
     }
   };
 
@@ -138,25 +108,19 @@ const AllInvoice = ({ user }) => {
   return (
     <div className="projectContainer">
       <div className="project-header">
-        {/* <div className="search-container">
-          <Form.Control
-            type="search"
-            placeholder="Search Payroll"
-            className="me-2 search-projects"
-            aria-label="Search"
-            // value={searchInput}
-            // onChange={handleSearchChange}
-            style={{ boxShadow: "#da0d50 !important" }}
-          />
-        </div> */}
         {user?.role !== "Employee" && (
-          <div className="create-project">
-            <Button
-              style={{ backgroundColor: "#1890ff" }}
-              onClick={() => navigate("/allinvoice/newinvoice")}
-            >
-              Create New Invoice
-            </Button>
+          <div
+            className="create-project"
+            style={{ display: "flex", marginLeft: "auto" }}
+          >
+            <div style={{ marginLeft: "10px" }}>
+              <Button
+                style={{ backgroundColor: "#1890ff" }}
+                onClick={() => navigate("/allinvoice/newinvoice")}
+              >
+                Create New Invoice
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -164,94 +128,37 @@ const AllInvoice = ({ user }) => {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Payroll Id</th>
-              {/* <th>Status</th> */}
+              <th>Invoice Id</th>
               <th>Date Range</th>
-              <th>Total Time</th>
               <th>Total Amount</th>
-              {user?.role !== "Employee" && <th># of People</th>}
               <th>View</th>
-              <th>Created At</th>
               {user?.role !== "Employee" && <th>Download</th>}
-              <th>Pay</th>
-              {/* <th>Delete</th> */}
+              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
-            {allPayrolls?.map((p, i) => {
+            {allInvoices?.map((p, i) => {
               return (
                 <tr key={i}>
                   <td>{p._id}</td>
                   <td>{p.dateRange}</td>
-                  <td>{p.totalTime}</td>
-                  {user?.role !== "Employee" ? (
-                    <td>
-                      $ &nbsp;
-                      {handleTotalAmount(p.employees)}
-                    </td>
-                  ) : (
-                    <td>
-                      $ &nbsp;
-                      {p.employees.map((emp) => {
-                        // console.log(emp);
-                        const { baseAmount } = emp;
-                        var sum = 0;
-                        if (emp.employeeUsername === user?.username) {
-                          if (emp.adjustments.length > 0) {
-                            sum = handleAdjustments(emp.adjustments);
-                          }
-                          // console.log(sum + Number(baseAmount));
-                          return Number(baseAmount) + sum;
-                        }
-                      })}
-                    </td>
-                  )}
-                  {user?.role !== "Employee" && <td>{p.employees.length}</td>}
-                  {/* <td>{}</td>
-                        <td>{}</td>
-                        <td>{}</td>
-                        <td>{}</td> */}
-
+                  <td>
+                    $ &nbsp;
+                    {handleTotalAmount(p.employees)}
+                  </td>
                   <td
                     onClick={() =>
-                      navigate("/allpayroll/payrolldetails", {
+                      navigate("/allInvoice/invoicedetails", {
                         state: p,
                       })
                     }
                   >
                     View
                   </td>
-                  <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
                   {user?.role !== "Employee" && (
                     <td onClick={() => exportFile(p)}>Download</td>
                   )}
-                  {/* <td onClick={() => exportToExcel(p)}>Download</td> */}
-                  {/* <td>Pay</td> */}
-                  <td>
-                    {p.paid ? (
-                      "Paid"
-                    ) : (
-                      <>
-                        {user?.role !== "Employee" ? (
-                          <StripeCheckout
-                            stripeKey={publishableKey}
-                            label="Pay"
-                            name="Pay With Credit Card"
-                            // billingAddress
-                            // shippingAddress
-                            amount={p.totalAmount}
-                            description={`Total Amount to be paid is: ${p.totalAmount}`}
-                            token={(token) =>
-                              handleTokenPay(token, p._id, p.totalAmount)
-                            }
-                          />
-                        ) : (
-                          "Not Paid"
-                        )}
-                      </>
-                    )}
-                  </td>
-                  {/* <td>Delete</td> */}
+                  <td>{moment(p.createdAt).format("DD-MM-YYYY hh:mm a")}</td>
                 </tr>
               );
             })}
