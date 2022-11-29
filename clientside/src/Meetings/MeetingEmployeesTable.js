@@ -18,9 +18,11 @@ const MeetingEmployeesTable = ({
 }) => {
   const [tableEmployees, setTableEmployees] = useState();
 
-  const handleChange = (e, id) => {
-    if (e.target.checked) setSelectedEmployees([...selectedEmployees, id]);
-    else setSelectedEmployees(selectedEmployees.filter((emp) => emp !== id));
+  const handleChange = (e, username) => {
+    if (e.target.checked)
+      setSelectedEmployees([...selectedEmployees, username]);
+    else
+      setSelectedEmployees(selectedEmployees.filter((emp) => emp !== username));
   };
 
   const handleSearchEmployees = (e) => {
@@ -187,7 +189,7 @@ const MeetingEmployeesTable = ({
                             class="form-check-input"
                             type="checkbox"
                             value={employee.username}
-                            onChange={(e) => handleChange(e, employee._id)}
+                            onChange={(e) => handleChange(e, employee.username)}
                             checked={true}
                           />
                         </td>
@@ -197,7 +199,7 @@ const MeetingEmployeesTable = ({
                             class="form-check-input"
                             type="checkbox"
                             value={employee.username}
-                            onChange={(e) => handleChange(e, employee._id)}
+                            onChange={(e) => handleChange(e, employee.username)}
                           />
                         </td>
                       )}
