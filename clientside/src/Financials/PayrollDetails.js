@@ -160,7 +160,9 @@ const PayrollDetails = ({ user }) => {
                 <tr key={index}>
                   <td>{emp.employeeUsername}</td>
                   <td>{emp.totalTime}</td>
-                  <td>{emp.baseAmount ? emp.baseAmount : "0"}</td>
+                  <td>
+                    {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
+                  </td>
                   <td
                     onClick={() => {
                       setEmployee(emp);
@@ -170,7 +172,7 @@ const PayrollDetails = ({ user }) => {
                     {handleAdjustments(emp.adjustments)}
                   </td>
                   <td>
-                    {Number(emp.baseAmount) +
+                    {Number(emp.baseAmount).toFixed(2) +
                       handleAdjustments(emp.adjustments)}
                   </td>
                 </tr>

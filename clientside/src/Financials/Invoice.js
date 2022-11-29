@@ -32,7 +32,8 @@ const Invoice = ({ user }) => {
     });
     // console.log(sum + Number(baseAmount));
     totalAmount = totalAmount + sum + Number(baseAmount);
-    return sum + Number(baseAmount);
+    var totalSum = sum + Number(baseAmount);
+    return totalSum.toFixed(2);
   };
   const updateInvoiceDueDate = (value) => {
     console.log(moment(value).format("DD-MM-YYYY"));
@@ -197,7 +198,9 @@ const Invoice = ({ user }) => {
                   <tr key={index}>
                     <td>{emp.employeeUsername}</td>
                     <td>{emp.totalTime}</td>
-                    <td>{emp.baseAmount ? emp.baseAmount : "0"}</td>
+                    <td>
+                      {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
+                    </td>
                     <td>
                       {handleAdjustments(emp.adjustments, emp.baseAmount)}
                     </td>
@@ -231,15 +234,15 @@ const Invoice = ({ user }) => {
             <table>
               <tr>
                 <th>Gross Total :</th>
-                <td>$ {totalAmount}</td>
+                <td>$ {totalAmount.toFixed(2)}</td>
               </tr>
               <tr>
                 <th>Tax 0%:</th>
-                <td>$ {totalAmount}</td>
+                <td>$ {totalAmount.toFixed(2)}</td>
               </tr>
               <tr>
                 <th>Net Total :</th>
-                <td>$ {totalAmount}</td>
+                <td>$ {totalAmount.toFixed(2)}</td>
               </tr>
             </table>
           </Col>

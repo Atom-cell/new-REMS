@@ -112,7 +112,7 @@ const AllPayroll = ({ user }) => {
       sum = Number(baseAmount) + sum;
       // console.log(sum + Number(baseAmount));
     });
-    return sum;
+    return sum.toFixed(2);
   };
 
   const fetchData = async () => {

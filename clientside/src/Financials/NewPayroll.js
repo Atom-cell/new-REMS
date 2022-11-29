@@ -569,7 +569,7 @@ const NewPayroll = ({ user }) => {
                     <tr key={emp._id}>
                       <td>{emp.username}</td>
                       <td>{emp.totalTime}</td>
-                      <td>$ {emp.totalAmount}</td>
+                      <td>$ {emp.totalAmount.toFixed(2)}</td>
                     </tr>
                   );
                 })}

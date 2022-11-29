@@ -89,7 +89,7 @@ const AllInvoice = ({ user }) => {
       console.log(emp.totalTime);
       sum = sum + calculateWage(emp.totalTime, emp.hourlyRate);
     });
-    return sum;
+    return sum.toFixed(2);
   };
 
   const fetchData = async () => {

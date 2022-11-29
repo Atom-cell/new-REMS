@@ -79,7 +79,7 @@ const DownloadInvoice = ({ user }) => {
     employees.forEach((emp) => {
       sum = sum + calculateWage(emp.totalTime, emp.hourlyRate);
     });
-    return sum;
+    return sum.toFixed(2);
   };
   return (
     <div style={{ display: "flex" }}>
@@ -170,7 +170,7 @@ const DownloadInvoice = ({ user }) => {
                     <td>{emp.totalTime}</td>
                     <td>
                       $ &nbsp;
-                      {calculateWage(emp.totalTime, emp.hourlyRate)}
+                      {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
                     </td>
                   </tr>
                 );

@@ -27,7 +27,7 @@ const InvoiceDetails = ({ user }) => {
     employees.forEach((emp) => {
       sum = sum + calculateWage(emp.totalTime, emp.hourlyRate);
     });
-    return sum;
+    return sum.toFixed(2);
   };
 
   const handleTotalTime = (employees) => {
@@ -121,7 +121,7 @@ const InvoiceDetails = ({ user }) => {
                   <td>{emp.totalTime}</td>
                   <td>
                     $ &nbsp;
-                    {calculateWage(emp.totalTime, emp.hourlyRate)}
+                    {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
                   </td>
                   {/* <td
                     onClick={() => {
