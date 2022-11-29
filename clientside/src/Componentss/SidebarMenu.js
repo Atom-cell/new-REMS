@@ -388,7 +388,9 @@ export default function SidebarMenu({ children }) {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item>Profile</Dropdown.Item>
+                <Dropdown.Item onClick={() => navigate("/profile")}>
+                  Profile
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => logout()}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -433,7 +435,10 @@ export default function SidebarMenu({ children }) {
                     <ListItemButton
                       onClick={
                         item?.path
-                          ? () => navigate(item?.path)
+                          ? () => {
+                              setOpen(false);
+                              navigate(item?.path);
+                            }
                           : () => handleClick()
                       }
                     >
@@ -471,7 +476,11 @@ export default function SidebarMenu({ children }) {
                           >
                             <ListItemButton
                               sx={{ pl: 4 }}
-                              onClick={() => navigate(s.path)}
+                              onClick={() => {
+                                setOpen(false);
+
+                                navigate(s.path);
+                              }}
                             >
                               <ListItemIcon>{s.icon}</ListItemIcon>
                               <ListItemText primary={s.title} />
@@ -497,7 +506,12 @@ export default function SidebarMenu({ children }) {
                       : null
                   }
                 >
-                  <ListItemButton onClick={() => navigate(item.path)}>
+                  <ListItemButton
+                    onClick={() => {
+                      setOpen(false);
+                      navigate(item.path);
+                    }}
+                  >
                     <ListItemIcon
                       sx={selectedIndex === key ? { color: "white" } : null}
                     >

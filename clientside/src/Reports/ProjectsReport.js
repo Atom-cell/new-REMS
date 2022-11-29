@@ -15,6 +15,7 @@ import {
   FormControl,
   Select,
   TextField,
+  Chip,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -190,7 +191,7 @@ const ProjectsReport = () => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
               views={["year", "month"]}
-              label="Year and Month"
+              label="Project Creation Month"
               minDate={dayjs("2012-03-01")}
               maxDate={dayjs("2023-06-01")}
               value={value}
@@ -238,6 +239,7 @@ const ProjectsReport = () => {
                 <tr>
                   <th className="thead">Creation Date</th>
                   <th className="thead">Last Worked At</th>
+                  <th className="thead">Status</th>
                   <th className="thead">Project</th>
                   <th className="thead">Members Work</th>
                   <th className="thead">Total Break Time</th>
@@ -250,6 +252,29 @@ const ProjectsReport = () => {
                     <tr key={index}>
                       <td>{new Date(d.createdAt).toLocaleDateString()}</td>
                       <td>{new Date(d.updatedAt).toLocaleDateString()}</td>
+                      <td>
+                        {d.status === "ontrack" ? (
+                          <Chip
+                            sx={{ backgroundColor: "#58a182" }}
+                            label={d.status}
+                          />
+                        ) : d.status === "completed" ? (
+                          <Chip
+                            sx={{ backgroundColor: "#2be92b" }}
+                            label={d.status}
+                          />
+                        ) : d.status === "atrisk" ? (
+                          <Chip
+                            sx={{ backgroundColor: "#f1bd6c" }}
+                            label={d.status}
+                          />
+                        ) : d.status === "offtrack" ? (
+                          <Chip
+                            sx={{ backgroundColor: "#de5f73" }}
+                            label={d.status}
+                          />
+                        ) : null}
+                      </td>
                       <td>{d.projectName}</td>
                       {/* new table */}
                       <td>

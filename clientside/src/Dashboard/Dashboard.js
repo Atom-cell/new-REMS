@@ -25,6 +25,12 @@ const Dashboard = () => {
   //     navigate("/");
   //   }
   // }, []);
+  useEffect(() => {
+    const text = "Hello! Have a great day!";
+    const say = new SpeechSynthesisUtterance(text);
+    say.pitch = 1;
+    window.speechSynthesis.speak(say);
+  }, []);
   const ab = async () => {
     let id = localStorage.getItem("id");
     await axios

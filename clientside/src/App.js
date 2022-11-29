@@ -46,6 +46,7 @@ import AppsSitesReport from "./Reports/AppsSitesReport";
 import ProjectsReport from "./Reports/ProjectsReport";
 import ActiveIdleReport from "./Reports/ActiveIdleReport";
 import ProductivityReport from "./Reports/ProductivityReport";
+import Profile from "./components/Profile";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
@@ -261,6 +262,8 @@ const App = () => {
                         />
                         <Route path="/update" element={<UpdateProfile />} />
                         <Route path="/no" element={<NoMobile />} />
+                        <Route path="/profile" element={<Profile />} />
+
                         <Route path="/empManage" element={<EmpManage />} />
                         <Route path="/moreInfo" element={<MoreInfo />} />
                         <Route path="/log" element={<Log />} />

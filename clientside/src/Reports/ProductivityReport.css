@@ -1,0 +1,51 @@
+.report_wrapper {
+  /* border: 1px solid grey;
+  border-radius: 2em; */
+  padding: 1em;
+}
+.name_email_wrapper {
+  display: flex;
+  align-items: center;
+}
+.name_email_wrapper Avatar {
+  margin-top: 1em;
+}
+
+.name_email {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2em;
+  margin-top: 1em;
+}
+.name_email p {
+  color: #1890ff;
+}
+.time_box_wrapper {
+  display: flex;
+  margin-top: 2em;
+}
+.time_box1 {
+  margin: 0 2em 0 0;
+  border: 1px solid rgb(159, 159, 159);
+  padding: 1em;
+  width: 20%;
+  border-radius: 0.5em;
+}
+.time_box {
+  margin: 0 2em 0em 2em;
+  border: 1px solid rgb(159, 159, 159);
+  padding: 1em;
+  width: 20%;
+  border-radius: 0.5em;
+}
+.time_box > h4 {
+  font-weight: 900;
+}
+
+.time_box1 > h4 {
+  font-weight: 900;
+}
+
+.inout_chart h4 {
+  margin-top: 2em;
+}

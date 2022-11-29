@@ -214,7 +214,6 @@ const AppsSitesReport = () => {
               <div style={{ margin: "0em 1em 0em 1em" }} key={i}>
                 <PieChart width={150} height={150}>
                   <Tooltip />
-
                   <Pie
                     data={d.arr}
                     dataKey="time"

@@ -93,7 +93,7 @@ const ActiveIdleReport = () => {
     setChartData([...newArr]);
   };
   const convert = (s) => {
-    let hr = s / 3000;
+    let hr = s / 3600;
     return hr.toFixed(2);
   };
   const timeConvert = (s) => {
