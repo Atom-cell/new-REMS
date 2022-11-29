@@ -188,6 +188,16 @@ const NewPayroll = ({ user }) => {
         rec.data.forEach((element) => {
           // console.log(element.hoursWorked);
           // console.log(dateRange.substring(3, 5));
+          // console.log(dateRange);
+          // var firstDateRange = dateRange.substring(0, 19);
+          // // replace / with -
+          // firstDateRange = firstDateRange.split("/").join("-");
+          // // var firstResult = moment(firstDateRange).format("DD-MM-YYYY");
+          // var secondDateRange = dateRange.substring(20, 39);
+          // secondDateRange = secondDateRange.split("/").join("-");
+          // console.log(new Date(firstDateRange));
+          // console.log(secondDateRange);
+          // DD/MM/YYYY
           // get month
           var getMonth = dateRange.substring(3, 5);
           var dummyArray = element.hoursWorked.filter((el) => {
@@ -427,7 +437,7 @@ const NewPayroll = ({ user }) => {
               <Dropdown.Item onClick={() => handleDateRange("lastmonth")}>
                 Last Month
               </Dropdown.Item>
-              <Dropdown.Item>
+              {/* <Dropdown.Item>
                 <DatePicker
                   selectsRange={true}
                   startDate={startDate}
@@ -448,7 +458,7 @@ const NewPayroll = ({ user }) => {
                 >
                   Apply
                 </Button>
-              </Dropdown.Item>
+              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
         </div>

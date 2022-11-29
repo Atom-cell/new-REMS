@@ -355,7 +355,7 @@ const NewInvoice = ({ user }) => {
               <Dropdown.Item onClick={() => handleDateRange("lastmonth")}>
                 Last Month
               </Dropdown.Item>
-              <Dropdown.Item>
+              {/* <Dropdown.Item>
                 <DatePicker
                   selectsRange={true}
                   startDate={startDate}
@@ -376,7 +376,7 @@ const NewInvoice = ({ user }) => {
                 >
                   Apply
                 </Button>
-              </Dropdown.Item>
+              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
         </div>

@@ -173,7 +173,7 @@ const AllPayroll = ({ user }) => {
           </div>
         )}
       </div>
-      <div className="table">
+      <div className="table all-meetings-table-container">
         <Table striped bordered hover>
           <thead>
             <tr>
