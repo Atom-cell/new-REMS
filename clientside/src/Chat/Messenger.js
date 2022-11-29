@@ -280,7 +280,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   //   Get All Employees
   const fetchData = async () => {
     // get the data from the api
-    if (localStorage.getItem("role") == "Employee") {
+    if (localStorage.getItem("role") === "Employee") {
       const res = await axios.get(
         "http://localhost:5000/emp/getcompanyemployees",
         { params: { _id: user._id } }
@@ -380,7 +380,11 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                       <Message
                         message={m}
                         own={m.sender === user?._id}
-                        userPhoto={user?.profilePicture}
+                        userPhoto={
+                          m.sender === user?._id
+                            ? user?.profilePicture
+                            : friend?.profilePicture
+                        }
                       />
                     </div>
                   ))}
