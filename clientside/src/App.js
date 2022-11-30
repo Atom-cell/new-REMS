@@ -226,6 +226,7 @@ const App = () => {
     socket.on("cutCallInBetween", (name) => {
       setReceivingCall(false);
       toast.info(`${name} Cut the Call`);
+      fetchData();
     });
 
     socket.on("callRejected", (friend, name) => {
@@ -272,7 +273,7 @@ const App = () => {
       // filter notifications that has message word or call word
       var sum = 0;
       var messageNotifications = rec.data.filter((notif) => {
-        if (notif.msg.includes("Message")) {
+        if (notif.msg.includes("Message") || notif.msg.includes("Video")) {
           if (notif.flag === 0) sum = sum + 1;
           return notif;
         }

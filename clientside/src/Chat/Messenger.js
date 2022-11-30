@@ -163,12 +163,8 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
         senderName: user.username,
         receiverId,
         text: newMessage,
-        Image: file
-          ? {
-              name: file.name,
-              image: file.base64,
-            }
-          : null,
+        msg: `New Message From ${user.username}`,
+        path: "/myMessenger",
       })
       .then((rec) => {
         console.log(rec.data);

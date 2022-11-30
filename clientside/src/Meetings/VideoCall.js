@@ -11,6 +11,7 @@ import VideoCallControls from "./VideoCallControls";
 import ChatOnline from "../Chat/ChatOnline";
 import io from "socket.io-client";
 import VideoCallModal from "./VideoCallModal";
+import axios from "axios";
 const socket = io.connect("http://localhost:8900");
 const VideoCall = ({
   onlineUsers,
@@ -83,7 +84,22 @@ const VideoCall = ({
   };
 
   const cutCallInBetween = (id) => {
+    console.log(name);
+    console.log(id);
     socket.emit("cutCallInBetween", id, name);
+    // save notification i-e post
+    axios
+      .post("/notif/messagenotification", {
+        senderId: user._id,
+        senderName: name,
+        receiverId: id,
+        msg: `Missed Video Call From ${name}`,
+        path: "/videoCall",
+      })
+      .then((rec) => {
+        console.log(rec.data);
+      })
+      .catch((err) => console.log(err + "At 176 in Messenger"));
   };
 
   useEffect(() => {

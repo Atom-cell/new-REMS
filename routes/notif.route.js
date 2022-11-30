@@ -661,9 +661,9 @@ router.post("/messagenotification", (req, res) => {
   // console.log(req.body);
   // find receiver id in admin or emp and post in their notification
   var myObj = {
-    msg: `New Message From ${req.body.senderName}`,
+    msg: req.body.msg,
     flag: 0,
-    path: "/myMessenger",
+    path: req.body.path,
   };
   Emp.findOneAndUpdate(
     { _id: req.body.receiverId },
