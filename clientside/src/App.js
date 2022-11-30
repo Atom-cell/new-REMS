@@ -49,10 +49,13 @@ import NewInvoice from "./Financials/NewInvoice";
 import InvoiceDetails from "./Financials/InvoiceDetails";
 import Invoice from "./Financials/Invoice";
 import DownloadInvoice from "./Financials/DownloadInvoice";
+import axios from "axios";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
 const App = () => {
+  const [allNotifications, setAllNotifications] = useState([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   // const navigate = useNavigate();
   const [userStream, setUserStream] = useState();
 
@@ -197,6 +200,7 @@ const App = () => {
         Image: data.Image,
         createdAt: Date.now(),
       });
+      fetchData();
       if (window.location.href !== "http://localhost:3000/myMessenger") {
         notify(data.senderName);
       }
@@ -260,6 +264,29 @@ const App = () => {
       setOnlineUsers(usersWithoutMe);
     });
   }, [loggedUser]);
+
+  const fetchData = async () => {
+    let id = localStorage.getItem("id");
+    await axios.get(`/notif/getNotif/${id}`).then((rec) => {
+      //   console.log(rec.data);
+      // filter notifications that has message word or call word
+      var sum = 0;
+      var messageNotifications = rec.data.filter((notif) => {
+        if (notif.msg.includes("Message")) {
+          if (notif.flag === 0) sum = sum + 1;
+          return notif;
+        }
+      });
+      console.log(messageNotifications);
+      console.log(sum);
+      setAllNotifications(messageNotifications);
+      setUnreadNotifications(sum);
+    });
+  };
+
+  useEffect(() => {
+    fetchData().catch(console.error);
+  }, []);
 
   return (
     <>
@@ -335,7 +362,13 @@ const App = () => {
                     </>
                   </Routes>
                 ) : (
-                  <SidebarMenu>
+                  <SidebarMenu
+                    fetchData={fetchData}
+                    allNotifications={allNotifications}
+                    setAllNotifications={setAllNotifications}
+                    unreadNotifications={unreadNotifications}
+                    setUnreadNotifications={setUnreadNotifications}
+                  >
                     <Routes>
                       {role === "admin" ? (
                         <Route path="/dashboard" element={<Dashboard />} />

@@ -35,6 +35,7 @@ import { SideBarData } from "./SideBarData";
 import { SideBarDataEmp } from "./SideBarDataEmp";
 
 import Timer from "../Projects/Timer";
+import CommunicationNotification from "./CommunicationNotification";
 
 const drawerWidth = 220;
 
@@ -114,7 +115,14 @@ const NewToast = ({ msg, nav, link }) => {
     </div>
   );
 };
-export default function SidebarMenu({ children }) {
+export default function SidebarMenu({
+  children,
+  fetchData,
+  allNotifications,
+  setAllNotifications,
+  unreadNotifications,
+  setUnreadNotifications,
+}) {
   let navigate = useNavigate();
   const location = useLocation();
 
@@ -272,12 +280,19 @@ export default function SidebarMenu({ children }) {
 
           <div className="timer_wrapper">
             {role !== "admin" && name !== null ? <Timer /> : null}
-            <IconButton>
+            {/* <IconButton>
               <Badge badgeContent={4} color="error">
                 <MailIcon style={{ fill: "white" }} />
               </Badge>
-            </IconButton>
+            </IconButton> */}
 
+            <CommunicationNotification
+              fetchData={fetchData}
+              allNotifications={allNotifications}
+              setAllNotifications={setAllNotifications}
+              unreadNotifications={unreadNotifications}
+              setUnreadNotifications={setUnreadNotifications}
+            />
             <Dropdown className="sidebarmenu-dropdown">
               <Dropdown.Toggle style={{ all: "unset", cursor: "pointer" }}>
                 <IconButton

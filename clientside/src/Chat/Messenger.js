@@ -156,6 +156,25 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
         : null,
     });
 
+    // save notification i-e post
+    axios
+      .post("/notif/messagenotification", {
+        senderId: user._id,
+        senderName: user.username,
+        receiverId,
+        text: newMessage,
+        Image: file
+          ? {
+              name: file.name,
+              image: file.base64,
+            }
+          : null,
+      })
+      .then((rec) => {
+        console.log(rec.data);
+      })
+      .catch((err) => console.log(err + "At 176 in Messenger"));
+
     try {
       const res = await axios.post(
         "http://localhost:5000/myMessages/",

@@ -656,4 +656,54 @@ router.post("/addedInProjectNotif", async (req, res) => {
     );
   });
 });
+
+router.post("/messagenotification", (req, res) => {
+  // console.log(req.body);
+  // find receiver id in admin or emp and post in their notification
+  var myObj = {
+    msg: `New Message From ${req.body.senderName}`,
+    flag: 0,
+    path: "/myMessenger",
+  };
+  Emp.findOneAndUpdate(
+    { _id: req.body.receiverId },
+    { $push: { notifications: myObj } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      // res.status(200).json(rec);
+    }
+  );
+  Admin.findOneAndUpdate(
+    { _id: req.body.receiverId },
+    { $push: { notifications: myObj } },
+    { new: true },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+    }
+  );
+  res.status(200).json("success");
+});
+
+router.post("/readall", (req, res) => {
+  // console.log(req.body);
+  req.body.notifications.forEach((obj) => {
+    // console.log(obj);
+    Emp.findOneAndUpdate(
+      { _id: req.body.userId, "notifications._id": obj._id },
+      { $set: { "notifications.$.flag": 1 } },
+      (err, rec) => {
+        if (err) res.status(500).json(err);
+      }
+    );
+    Admin.findOneAndUpdate(
+      { _id: req.body.userId, "notifications._id": obj._id },
+      { $set: { "notifications.$.flag": 1 } },
+      (err, rec) => {
+        if (err) res.status(500).json(err);
+      }
+    );
+  });
+  res.status(200).json("Success");
+});
 module.exports = router;
