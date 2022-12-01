@@ -18,6 +18,24 @@ router.get("/getallpayrolls", async (req, res) => {
   }
 });
 
+router.get("/searchpayroll/:payrollTitle", (req, res, next) => {
+  console.log(req.params.payrollTitle);
+  console.log(req.query.empId);
+
+  myPayroll
+    .find({
+      employerId: req.query.empId,
+      payrollTitle: {
+        $regex: req.params.payrollTitle,
+        $options: "i",
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
+});
+
 router.get("/hourlyRate", (req, res) => {
   // console.log(req.query.newArray);
   var newArray = [];

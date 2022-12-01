@@ -9,11 +9,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
+import { ArrowDown, ArrowUp } from "react-feather";
 const AllPayroll = ({ user }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = useState();
+  const [searchInput, setSearchInput] = useState();
+  const [ascending, setAscending] = useState(true);
 
   const handleTokenPay = async (token, id, amount) => {
     // amount = parseInt(amount);
@@ -115,6 +118,51 @@ const AllPayroll = ({ user }) => {
     return sum.toFixed(2);
   };
 
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value === null || value === "" || value === undefined) {
+        fetchData();
+      } else {
+        axios
+          .get(`/myPayroll/searchpayroll/${e.target.value}`, {
+            params: { empId: user._id },
+          })
+          .then((rec) => {
+            console.log(rec.data);
+            setAllPayrolls(rec.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 1000);
+  };
+
+  const handleAscending = () => {
+    // oldest ones comes first
+    console.log("Ascending");
+    setAscending(!ascending);
+    var newArray = allPayrolls.sort(function compare(a, b) {
+      var dateA = new Date(a.createdAt);
+      var dateB = new Date(b.createdAt);
+      return dateA - dateB;
+    });
+    setAllPayrolls(newArray);
+  };
+  const handleDescending = () => {
+    // new ones comes first
+    console.log("Descending");
+    setAscending(!ascending);
+    var newArray = allPayrolls.sort(function compare(a, b) {
+      var dateA = new Date(a.createdAt);
+      var dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
+    setAllPayrolls(newArray);
+  };
+
   const fetchData = async () => {
     if (user?.role === "Employee") {
       // get all payrolls where employees field has the curent logged in id
@@ -138,17 +186,17 @@ const AllPayroll = ({ user }) => {
   return (
     <div className="projectContainer">
       <div className="project-header">
-        {/* <div className="search-container">
+        <div className="search-container">
           <Form.Control
             type="search"
             placeholder="Search Payroll"
             className="me-2 search-projects"
             aria-label="Search"
-            // value={searchInput}
-            // onChange={handleSearchChange}
+            value={searchInput}
+            onChange={handleSearchChange}
             style={{ boxShadow: "#da0d50 !important" }}
           />
-        </div> */}
+        </div>
         {user?.role !== "Employee" && (
           <div
             className="create-project"
@@ -177,14 +225,24 @@ const AllPayroll = ({ user }) => {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Payroll Id</th>
+              <th>Payroll Title</th>
               {/* <th>Status</th> */}
               <th>Date Range</th>
               <th>Total Time</th>
               <th>Total Amount</th>
               {user?.role !== "Employee" && <th># of People</th>}
               <th>View</th>
-              <th>Created At</th>
+              <th>
+                Created At
+                <span>
+                  {" "}
+                  {ascending ? (
+                    <ArrowUp onClick={handleAscending} />
+                  ) : (
+                    <ArrowDown onClick={handleDescending} />
+                  )}{" "}
+                </span>
+              </th>
               {user?.role !== "Employee" && <th>Download</th>}
               <th>Pay</th>
               {/* <th>Delete</th> */}
@@ -194,8 +252,11 @@ const AllPayroll = ({ user }) => {
             {allPayrolls?.map((p, i) => {
               return (
                 <tr key={i}>
-                  <td>{p._id}</td>
-                  <td>{p.dateRange}</td>
+                  <td>{p.payrollTitle}</td>
+                  <td>{`${p.dateRange.substring(
+                    0,
+                    10
+                  )}---${p.dateRange.substring(20, 30)}`}</td>
                   <td>{p.totalTime}</td>
                   {user?.role !== "Employee" ? (
                     <td>

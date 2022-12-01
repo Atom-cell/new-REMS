@@ -86,8 +86,8 @@ const PayrollDetails = ({ user }) => {
       {/* <h1>Payroll Details</h1> */}
       <div className="payroll-details">
         <div className="payroll-detail">
-          <h6>Payroll Id:</h6>
-          <span>{selectedPayroll?._id}</span>
+          <h6>Payroll Title:</h6>
+          <span>{selectedPayroll?.payrollTitle}</span>
         </div>
         <div className="payroll-detail">
           <h6>Created At:</h6>
@@ -95,7 +95,10 @@ const PayrollDetails = ({ user }) => {
         </div>
         <div className="payroll-detail">
           <h6>Payroll Range:</h6>
-          <span>{selectedPayroll?.dateRange}</span>
+          <span>{`${selectedPayroll?.dateRange.substring(
+            0,
+            10
+          )}---${selectedPayroll?.dateRange.substring(20, 30)}`}</span>
         </div>
         <div className="payroll-detail">
           <h6>Amount Before Adjustments:</h6>

@@ -5,10 +5,12 @@ import { Button, Dropdown, Form, Table } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { Check } from "react-feather";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import SearchBar from "../Componentss/SearchBar";
 
 const NewPayroll = ({ user }) => {
   const navigate = useNavigate();
+  const [payrollTitle, setPayrollTitle] = useState();
   const [dateRange, setDateRange] = useState();
   const [employees, setEmployees] = useState();
   const [selectedEmployees, setSelectedEmployees] = useState([]);
@@ -17,8 +19,10 @@ const NewPayroll = ({ user }) => {
   const [projects, setProjects] = useState();
   const [customDateRange, setCustomDateRange] = useState([null, null]);
   const [startDate, endDate] = customDateRange;
+
   const handleDateRange = (value) => {
     setSelectedEmployees([]);
+    setCustomDateRange([null, null]);
     if (value === "thismonth") {
       ///THH:mm:ss
       const startOfMonth = moment()
@@ -50,6 +54,16 @@ const NewPayroll = ({ user }) => {
   };
 
   const handleCreatePayroll = () => {
+    if (!payrollTitle) {
+      toast.error("Please Enter Payroll Title");
+      return;
+    }
+    if (selectedEmployees.length < 1) {
+      toast.error("Please Select Employees");
+      return;
+    }
+
+    // if (payrollTitle && selectedEmployees.length > 0) {
     // console.log(selectedEmployees);
     // id, user, totalTime for every employee
     var totalTime;
@@ -78,6 +92,7 @@ const NewPayroll = ({ user }) => {
       totalAmount: totalAmountWhole.toFixed(3),
       totalTime: totalTime,
       paid: false,
+      payrollTitle: payrollTitle,
       employees: newSelectedEmployees,
       //   employees: [
       //     {
@@ -187,23 +202,37 @@ const NewPayroll = ({ user }) => {
         // if date range ke darmiyaan ho and marked false ho then ok otherwise nikaal do
         rec.data.forEach((element) => {
           // console.log(element.hoursWorked);
-          // console.log(dateRange.substring(3, 5));
           // console.log(dateRange);
-          // var firstDateRange = dateRange.substring(0, 19);
-          // // replace / with -
-          // firstDateRange = firstDateRange.split("/").join("-");
-          // // var firstResult = moment(firstDateRange).format("DD-MM-YYYY");
-          // var secondDateRange = dateRange.substring(20, 39);
-          // secondDateRange = secondDateRange.split("/").join("-");
-          // console.log(new Date(firstDateRange));
-          // console.log(secondDateRange);
-          // DD/MM/YYYY
+          // console.log(dateRange.substring(0, 10));
+          // console.log(dateRange.substring(20, 30));
+          var from = dateRange.substring(0, 10).split("/").join("-");
+          var to = dateRange.substring(20, 30).split("/").join("-");
+          // console.log(from);
+          // console.log(to);
           // get month
           var getMonth = dateRange.substring(3, 5);
           var dummyArray = element.hoursWorked.filter((el) => {
             const { date, marked } = el;
+            // console.log(date);
+            // console.log(marked);
+            console.log(moment(date, "DD-MM-YYYY").toDate());
+            console.log(moment(from, "DD-MM-YYYY").toDate());
+            console.log(moment(to, "DD-MM-YYYY").toDate());
+            console.log(
+              moment(date, "DD-MM-YYYY").toDate() >
+                moment(from, "DD-MM-YYYY").toDate() &&
+                moment(date, "DD-MM-YYYY").toDate() <
+                  moment(to, "DD-MM-YYYY").toDate() &&
+                marked === false
+            );
             // var check = el.date.toString().susbtring(3, 5);
-            return date.substring(3, 5) === getMonth && marked === false;
+            return (
+              moment(date, "DD-MM-YYYY").toDate() >
+                moment(from, "DD-MM-YYYY").toDate() &&
+              moment(date, "DD-MM-YYYY").toDate() <
+                moment(to, "DD-MM-YYYY").toDate() &&
+              marked === false
+            );
           });
           Array.prototype.push.apply(newArray, dummyArray);
         });
@@ -437,6 +466,33 @@ const NewPayroll = ({ user }) => {
               <Dropdown.Item onClick={() => handleDateRange("lastmonth")}>
                 Last Month
               </Dropdown.Item>
+              <Dropdown.Item>
+                <DatePicker
+                  placeholderText="Custom Range"
+                  selectsRange={true}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={(update) => {
+                    if (update[0] && update[1]) {
+                      ///THH:mm:ss
+                      const startOfMonth = moment(update[0]).format(
+                        "DD/MM/YYYY hh:mm A"
+                      );
+                      const endOfMonth = moment(update[1]).format(
+                        "DD/MM/YYYY hh:mm a"
+                      );
+                      //   console.log(startOfMonth);
+                      //   console.log(endOfMonth);
+                      setDateRange(`${startOfMonth}-${endOfMonth}`);
+                    }
+                    // console.log(update);
+                    setSelectedEmployees([]);
+                    // setDateRange(update);
+                    setCustomDateRange(update);
+                  }}
+                  withPortal
+                />
+              </Dropdown.Item>
               {/* <Dropdown.Item>
                 <DatePicker
                   selectsRange={true}
@@ -461,6 +517,22 @@ const NewPayroll = ({ user }) => {
               </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
+        </div>
+        <div className="text-input">
+          <Form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Control
+                type="text"
+                placeholder="Enter Payroll Title"
+                value={payrollTitle}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setPayrollTitle(e.target.value);
+                }}
+                style={{ boxShadow: "#da0d50 !important" }}
+              />
+            </Form.Group>
+          </Form>
         </div>
         <div className="select-option-new-payroll">
           <Dropdown>
