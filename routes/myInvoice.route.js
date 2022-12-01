@@ -18,6 +18,24 @@ router.get("/getallinvoices", async (req, res) => {
   }
 });
 
+router.get("/searchinvoice/:invoiceTitle", (req, res, next) => {
+  console.log(req.params.invoiceTitle);
+  console.log(req.query.empId);
+
+  myInvoice
+    .find({
+      employerId: req.query.empId,
+      invoiceTitle: {
+        $regex: req.params.invoiceTitle,
+        $options: "i",
+      },
+    })
+    .exec((error, records) => {
+      if (error) throw error;
+      res.json(records);
+    });
+});
+
 router.get("/getProjects", (req, res) => {
   console.log(req.query.projectIds);
   myProject

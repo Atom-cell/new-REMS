@@ -5,6 +5,7 @@ var myInvoiceModel = mongoose.Schema(
   {
     employerId: { type: mongoose.Schema.Types.ObjectId, ref: "admin" },
     dateRange: String,
+    invoiceTitle: String,
     // totalAmount: String,
     // totalTime: String,
     employees: [

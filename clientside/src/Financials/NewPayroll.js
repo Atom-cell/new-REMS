@@ -215,16 +215,16 @@ const NewPayroll = ({ user }) => {
             const { date, marked } = el;
             // console.log(date);
             // console.log(marked);
-            console.log(moment(date, "DD-MM-YYYY").toDate());
-            console.log(moment(from, "DD-MM-YYYY").toDate());
-            console.log(moment(to, "DD-MM-YYYY").toDate());
-            console.log(
-              moment(date, "DD-MM-YYYY").toDate() >
-                moment(from, "DD-MM-YYYY").toDate() &&
-                moment(date, "DD-MM-YYYY").toDate() <
-                  moment(to, "DD-MM-YYYY").toDate() &&
-                marked === false
-            );
+            // console.log(moment(date, "DD-MM-YYYY").toDate());
+            // console.log(moment(from, "DD-MM-YYYY").toDate());
+            // console.log(moment(to, "DD-MM-YYYY").toDate());
+            // console.log(
+            //   moment(date, "DD-MM-YYYY").toDate() >
+            //     moment(from, "DD-MM-YYYY").toDate() &&
+            //     moment(date, "DD-MM-YYYY").toDate() <
+            //       moment(to, "DD-MM-YYYY").toDate() &&
+            //     marked === false
+            // );
             // var check = el.date.toString().susbtring(3, 5);
             return (
               moment(date, "DD-MM-YYYY").toDate() >

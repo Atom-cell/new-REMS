@@ -59,16 +59,19 @@ const InvoiceDetails = ({ user }) => {
     <div>
       <div className="payroll-details">
         <div className="payroll-detail">
-          <h6>Payroll Id:</h6>
-          <span>{selectedInvoice?._id}</span>
+          <h6>Invoice Title:</h6>
+          <span>{selectedInvoice?.invoiceTitle}</span>
         </div>
         <div className="payroll-detail">
           <h6>Created At:</h6>
           <span>{moment(selectedInvoice?.createdAt).format("DD-MM-YYYY")}</span>
         </div>
         <div className="payroll-detail">
-          <h6>Payroll Range:</h6>
-          <span>{selectedInvoice?.dateRange}</span>
+          <h6>Invoice Range:</h6>
+          <span>{`${selectedInvoice?.dateRange.substring(
+            0,
+            10
+          )}---${selectedInvoice?.dateRange.substring(20, 30)}`}</span>
         </div>
         <div className="payroll-detail">
           <h6>Total Amount:</h6>
@@ -82,7 +85,11 @@ const InvoiceDetails = ({ user }) => {
       {user?.role !== "Employee" && (
         <div className="payroll-detail">
           <Button
-            style={{ backgroundColor: "#1890ff", float: "right" }}
+            style={{
+              backgroundColor: "#1890ff",
+              float: "right",
+              marginTop: "30px",
+            }}
             onClick={() =>
               navigate("/allinvoice/downloadinvoice", {
                 state: { projects: projects, selectedInvoice: selectedInvoice },

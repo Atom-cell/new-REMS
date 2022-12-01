@@ -9,11 +9,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
+import { ArrowDown, ArrowUp } from "react-feather";
 const AllInvoice = ({ user }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
   const [allInvoices, setAllInvoices] = useState();
+  const [searchInput, setSearchInput] = useState();
+  const [ascending, setAscending] = useState(true);
 
   const handleTokenPay = async (token, id, amount) => {
     amount = parseInt(amount);
@@ -92,6 +95,51 @@ const AllInvoice = ({ user }) => {
     return sum.toFixed(2);
   };
 
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value === null || value === "" || value === undefined) {
+        fetchData();
+      } else {
+        axios
+          .get(`/myInvoice/searchinvoice/${e.target.value}`, {
+            params: { empId: user._id },
+          })
+          .then((rec) => {
+            console.log(rec.data);
+            setAllInvoices(rec.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 1000);
+  };
+
+  const handleAscending = () => {
+    // oldest ones comes first
+    console.log("Ascending");
+    setAscending(!ascending);
+    var newArray = allInvoices.sort(function compare(a, b) {
+      var dateA = new Date(a.createdAt);
+      var dateB = new Date(b.createdAt);
+      return dateA - dateB;
+    });
+    setAllInvoices(newArray);
+  };
+  const handleDescending = () => {
+    // new ones comes first
+    console.log("Descending");
+    setAscending(!ascending);
+    var newArray = allInvoices.sort(function compare(a, b) {
+      var dateA = new Date(a.createdAt);
+      var dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
+    setAllInvoices(newArray);
+  };
+
   const fetchData = async () => {
     if (user?.role !== "Employee") {
       const rec = await axios.get("/myInvoice/getallinvoices", {
@@ -108,6 +156,17 @@ const AllInvoice = ({ user }) => {
   return (
     <div className="projectContainer">
       <div className="project-header">
+        <div className="search-container">
+          <Form.Control
+            type="search"
+            placeholder="Search Invoice"
+            className="me-2 search-projects"
+            aria-label="Search"
+            value={searchInput}
+            onChange={handleSearchChange}
+            style={{ boxShadow: "#da0d50 !important" }}
+          />
+        </div>
         {user?.role !== "Employee" && (
           <div
             className="create-project"
@@ -128,19 +187,29 @@ const AllInvoice = ({ user }) => {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Invoice Id</th>
+              <th>Invoice Title</th>
               <th>Date Range</th>
               <th>Total Amount</th>
               <th>View</th>
               {user?.role !== "Employee" && <th>Download</th>}
-              <th>Created At</th>
+              <th>
+                Created At
+                <span>
+                  {" "}
+                  {ascending ? (
+                    <ArrowUp onClick={handleAscending} />
+                  ) : (
+                    <ArrowDown onClick={handleDescending} />
+                  )}{" "}
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {allInvoices?.map((p, i) => {
               return (
                 <tr key={i}>
-                  <td>{p._id}</td>
+                  <td>{p.invoiceTitle}</td>
                   <td>{p.dateRange}</td>
                   <td>
                     $ &nbsp;

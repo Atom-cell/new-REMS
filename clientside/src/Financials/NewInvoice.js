@@ -5,10 +5,12 @@ import { Button, Dropdown, Form, Table } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { Check } from "react-feather";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import SearchBar from "../Componentss/SearchBar";
 
 const NewInvoice = ({ user }) => {
   const navigate = useNavigate();
+  const [invoiceTitle, setInvoiceTitle] = useState();
   const [dateRange, setDateRange] = useState();
   const [employees, setEmployees] = useState();
   const [selectedEmployees, setSelectedEmployees] = useState([]);
@@ -21,6 +23,9 @@ const NewInvoice = ({ user }) => {
   const [startDate, endDate] = customDateRange;
   const handleDateRange = (value) => {
     setSelectedEmployees([]);
+    setSelectedProjects([]);
+    setSelectedProjectsHoursWorked([]);
+    setCustomDateRange([null, null]);
     if (value === "thismonth") {
       ///THH:mm:ss
       const startOfMonth = moment()
@@ -52,6 +57,18 @@ const NewInvoice = ({ user }) => {
   };
 
   const handleCreateInvoice = () => {
+    if (!invoiceTitle) {
+      toast.error("Please Enter Invoice Title");
+      return;
+    }
+    if (selectedProjects.length < 1) {
+      toast.error("Please Select Projects");
+      return;
+    }
+    if (selectedProjectsHoursWorked.length < 1) {
+      toast.error("Please Select Projects that has employees payroll");
+      return;
+    }
     console.log(selectedProjectsHoursWorked);
     // id, user, totalTime for every employee
     var newSelectedEmployees = selectedProjectsHoursWorked.map((emp) => {
@@ -205,7 +222,19 @@ const NewInvoice = ({ user }) => {
     console.log(pro);
     setSelectedProjects([...selectedProjects, pro]);
 
-    var newArray = pro.hoursWorked.filter((obj) => obj.marked === true);
+    var from = dateRange.substring(0, 10).split("/").join("-");
+    var to = dateRange.substring(20, 30).split("/").join("-");
+
+    var newArray = pro.hoursWorked.filter((obj) => {
+      console.log(obj);
+      return (
+        moment(obj.date, "DD-MM-YYYY").toDate() >
+          moment(from, "DD-MM-YYYY").toDate() &&
+        moment(obj.date, "DD-MM-YYYY").toDate() <
+          moment(to, "DD-MM-YYYY").toDate() &&
+        obj.marked === true
+      );
+    });
     console.log(newArray);
     // send this array to backend and get employee hourly rate for every employee
     axios
@@ -355,6 +384,35 @@ const NewInvoice = ({ user }) => {
               <Dropdown.Item onClick={() => handleDateRange("lastmonth")}>
                 Last Month
               </Dropdown.Item>
+              <Dropdown.Item>
+                <DatePicker
+                  placeholderText="Custom Range"
+                  selectsRange={true}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={(update) => {
+                    if (update[0] && update[1]) {
+                      ///THH:mm:ss
+                      const startOfMonth = moment(update[0]).format(
+                        "DD/MM/YYYY hh:mm A"
+                      );
+                      const endOfMonth = moment(update[1]).format(
+                        "DD/MM/YYYY hh:mm a"
+                      );
+                      //   console.log(startOfMonth);
+                      //   console.log(endOfMonth);
+                      setDateRange(`${startOfMonth}-${endOfMonth}`);
+                    }
+                    // console.log(update);
+                    setSelectedEmployees([]);
+                    setSelectedProjects([]);
+                    setSelectedProjectsHoursWorked([]);
+                    // setDateRange(update);
+                    setCustomDateRange(update);
+                  }}
+                  withPortal
+                />
+              </Dropdown.Item>
               {/* <Dropdown.Item>
                 <DatePicker
                   selectsRange={true}
@@ -379,6 +437,22 @@ const NewInvoice = ({ user }) => {
               </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
+        </div>
+        <div className="text-input">
+          <Form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Control
+                type="text"
+                placeholder="Enter Invoice Title"
+                value={invoiceTitle}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setInvoiceTitle(e.target.value);
+                }}
+                style={{ boxShadow: "#da0d50 !important" }}
+              />
+            </Form.Group>
+          </Form>
         </div>
         {/* <div className="select-option-new-payroll">
           <Dropdown>

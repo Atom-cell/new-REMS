@@ -126,7 +126,7 @@ const DownloadInvoice = ({ user }) => {
             <table>
               <tr>
                 <th>Invoice Id :</th>
-                <td>{selectedInvoice?._id.substring(0, 30)}</td>
+                <td>{selectedInvoice?._id.substring(0, 18)}</td>
               </tr>
               <tr>
                 <th>Invoice Date : </th>
