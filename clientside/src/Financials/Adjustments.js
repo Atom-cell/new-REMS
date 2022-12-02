@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { SkipBack } from "react-feather";
+import { toast } from "react-toastify";
 import Editable from "../Boards/Editabled/Editable";
 
 const Adjustments = ({
@@ -120,14 +121,18 @@ const Adjustments = ({
           <Button
             variant="primary"
             onClick={() => {
-              var adjustment = amount.toString();
-              if (add === "add") adjustment = "+" + adjustment;
-              if (add === "subtract") adjustment = "-" + adjustment;
-              updateAmount(adjustment, comment);
-              setAdd("empty");
-              setAmount();
-              setComment();
-              handleClose();
+              if (add && comment) {
+                var adjustment = amount.toString();
+                if (add === "add") adjustment = "+" + adjustment;
+                if (add === "subtract") adjustment = "-" + adjustment;
+                updateAmount(adjustment, comment, employee);
+                setAdd("empty");
+                setAmount();
+                setComment();
+                handleClose();
+              } else {
+                toast.error("Please Fill All Fields");
+              }
             }}
           >
             Save Changes

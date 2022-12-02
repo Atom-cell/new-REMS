@@ -19,21 +19,23 @@ const PayrollDetails = ({ user }) => {
   const handleShow = () => setShow(true);
   //   console.log(state);
 
-  const updateAmount = (adjustment, comment) => {
+  const updateAmount = (adjustment, comment, employee) => {
+    // console.log(employee);
     // console.log(adjustment);
     // console.log(comment);
-    console.log(selectedPayroll?.employees);
+    // console.log(selectedPayroll?.employees);
     // create an array of objects and then create a field in employee and then push it there
     const myObj = {
       adjustment: adjustment,
       comment: comment,
     };
     selectedPayroll?.employees.forEach((element) => {
-      if (element.employeeId === employee.employeeId) {
+      if (element._id === employee._id) {
+        console.log(element);
         element.adjustments.push(myObj);
       }
     });
-    console.log(selectedPayroll);
+    // console.log(selectedPayroll);
 
     //payroll Id, employeeId, adjustments, comment
 
