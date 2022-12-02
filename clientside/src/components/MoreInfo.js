@@ -238,8 +238,8 @@ function MoreInfo() {
         <div className="user_infoWrapper">
           <div className="user_heading">
             <Avatar
-              src={data?.profilePicture}
-              // src="https://unsplash.com/photos/jzY0KRJopEI"
+              alt={data.username}
+              src={`data:image/jpeg;base64,${data?.profilePicture}`}
               sx={{
                 width: 150,
                 height: 150,
@@ -456,6 +456,7 @@ function MoreInfo() {
                         <img
                           style={{ cursor: "pointer", width: "100%" }}
                           src={`data:image/jpeg;base64,${i.img}`}
+                          alt="screenshot"
                           //onClick={() => openBase64InNewTab(i, "image/png")}
                         />
                       </Carousel.Item>

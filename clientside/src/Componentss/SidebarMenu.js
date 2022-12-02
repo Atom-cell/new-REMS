@@ -37,6 +37,7 @@ import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { SideBarData } from "./SideBarData";
 import { SideBarDataEmp } from "./SideBarDataEmp";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 import Timer from "../Projects/Timer";
 
@@ -202,8 +203,8 @@ export default function SidebarMenu({ children }) {
   React.useEffect(() => {
     let a = localStorage.getItem("role");
     setRole(a);
-    let User = JSON.parse(localStorage.getItem("user"));
-    setPic(User.profilePicture);
+    // let User = JSON.parse(localStorage.getItem("user"));
+    // setPic(User.profilePicture);
     let n = JSON.parse(localStorage.getItem("notif")) || "";
     let num = JSON.parse(localStorage.getItem("notifNum")) || 0;
     setNotif(n);
@@ -271,6 +272,16 @@ export default function SidebarMenu({ children }) {
       localStorage.setItem("notif", JSON.stringify([...resp.data, ...notif]));
       localStorage.setItem("notifNum", resp.data.length);
       setNotif([...resp.data, ...notif]);
+      setNotifNum(resp.data.length);
+    });
+  };
+
+  const showMoreNotif = async () => {
+    let id = localStorage.getItem("id");
+    await axios.get(`/notif/getAllNotif/${id}`).then((resp) => {
+      localStorage.setItem("notif", JSON.stringify([...resp.data]));
+      localStorage.setItem("notifNum", resp.data.length);
+      setNotif([...resp.data]);
       setNotifNum(resp.data.length);
     });
   };
@@ -365,7 +376,7 @@ export default function SidebarMenu({ children }) {
                 <Dropdown.Item
                   style={{ marginTop: "0.4em", marginBottom: "0.4em" }}
                 >
-                  <Button>Show More</Button>
+                  <Button onClick={() => showMoreNotif()}>Show More</Button>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -380,11 +391,7 @@ export default function SidebarMenu({ children }) {
                 }}
                 className="dp_toggle"
               >
-                {pic === " " ? (
-                  <Avatar sx={{ width: 50, height: 50 }}>H</Avatar>
-                ) : (
-                  <Avatar src={pic} sx={{ width: 50, height: 50 }} />
-                )}
+                <AccountCircleOutlinedIcon />
               </Dropdown.Toggle>
 
               <Dropdown.Menu>

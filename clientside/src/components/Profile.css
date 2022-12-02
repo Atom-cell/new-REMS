@@ -1,0 +1,22 @@
+.wrapper {
+  padding: 2em;
+
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}
+.wrapper > h3 {
+  margin-bottom: 1em;
+}
+.info_pic {
+  width: 10%;
+  border-radius: 50%;
+}
+.form_div {
+}
+
+#avatar {
+  /* position: absolute;
+  bottom: 0; */
+}

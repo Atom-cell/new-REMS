@@ -135,9 +135,7 @@ router.get("/getLogEmps", verifyJWT, async (req, res) => {
     totalTime: 0,
     appTime: 0,
     separateTime: 0,
-    attendance: 0,
     password: 0,
-    profilePicture: 0,
     bankDetails: 0,
   };
   try {

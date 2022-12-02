@@ -18,10 +18,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ExcelExport from "./ExcelExport";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import ChartBar from "./ChartBar";
 
 const ProductivityReport = () => {
   const [user, setUser] = React.useState();
+  const [allEvents, setAllEvents] = React.useState([]); //for attendance
+  const [valueCal, onChangeCal] = React.useState(new Date());
   const [inOut, setInOut] = React.useState([]);
   const [data, setData] = React.useState([]); //all emps of admin
   const [active, setActive] = React.useState([]);
@@ -103,7 +107,11 @@ const ProductivityReport = () => {
 
   const getInOutData = async () => {
     data.forEach((d) => {
-      if (d._id === name) setUser(d);
+      if (d._id === name) {
+        setUser(d);
+        // console.log("USER: ", d);
+        setAllEvents([...d.attendance]);
+      }
     });
     let inout = [];
     await axios
@@ -197,11 +205,13 @@ const ProductivityReport = () => {
 
     let empcards = [];
     let completed = 0;
+    let assigned = 0;
     newBoards.forEach((b) => {
       b?.forEach((cards) => {
         cards.cards?.forEach((a) => {
           if (a.assignedTo === name) {
             empcards.push(a.tasks);
+            assigned += a.tasks.length;
             a.tasks.forEach((tasks) => {
               if (tasks.completed) completed++;
             });
@@ -210,7 +220,11 @@ const ProductivityReport = () => {
       });
     });
 
-    let percent = totalTimeofProjects * 0.3 + completed * 0.7;
+    let percent = totalTimeofProjects * 0.3 + (completed / assigned) * 0.7;
+    console.log(totalTimeofProjects);
+    console.log(completed);
+    console.log(assigned);
+    console.log(percent);
     setProductivity(percent);
   };
 
@@ -442,15 +456,19 @@ const ProductivityReport = () => {
 
     console.log(bb);
   };
+  const fixTimezoneOffset = (date) => {
+    if (!date) return "";
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
+  };
   return (
     <div>
-      <button
+      {/* <button
         onClick={() => {
           filterBoards();
         }}
       >
         clcick
-      </button>
+      </button> */}
       {/* <h2 style={{ marginBottom: "1em" }}>Monthly In-Out</h2> */}
       <div
         style={{
@@ -511,17 +529,22 @@ const ProductivityReport = () => {
           <ExcelExport excelData={inOut} fileName="Demo" />
         </div>
       </div>
-      KINKIN TEAMS AK PART
+
       <Divider />
       <div className="report_wrapper">
         <div className="name_email_wrapper">
-          <Avatar
+          {/* <Avatar
             sx={{
               width: 80,
               height: 80,
             }}
             alt={user?.username}
             src={user?.profilePicture}
+          /> */}
+          <Avatar
+            alt={user?.username}
+            src={`data:image/jpeg;base64,${user?.profilePicture}`}
+            sx={{ width: 80, height: 80 }}
           />
 
           <div className="name_email">
@@ -544,7 +567,7 @@ const ProductivityReport = () => {
           </div>
           <div className="time_box">
             <p>Productivity %</p>
-            <h4>{productivity}%</h4>
+            <h4>{productivity ? productivity : null}%</h4>
           </div>
         </div>
         <div className="inout_chart">
@@ -574,26 +597,61 @@ const ProductivityReport = () => {
             />
           ) : null}
         </div>
-        <div className="inout_chart">
-          <h4>Teams</h4>
-          <Table hover bordered striped className="table">
-            <thead>
-              <tr>
-                <th className="thead">Team Name</th>
-                <th className="thead">Team Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teams.map((t, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{t.teamName}</td>
-                    <td>{t.teamDesp}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
+        <div className="team_and_attendance">
+          <div>
+            <h4>Teams</h4>
+            <Table hover bordered striped className="table">
+              <thead>
+                <tr>
+                  <th className="thead">Team Name</th>
+                  <th className="thead">Team Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teams.map((t, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{t.teamName}</td>
+                      <td>{t.teamDesp}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </div>
+          <div style={{ marginLeft: "2em", paddingTop: "1em" }}>
+            <h4>Attendance</h4>
+            {allEvents ? (
+              <Calendar
+                // onChange={(value) => {
+                //   allEvents.forEach((x) => {
+                //     console.log(x, " + ", `${value.getMonth() + 1}`);
+                //     if (
+                //       x.slice(5, 7) === `${value.getMonth() + 1}` ||
+                //       x.slice(5, 7) === `0${value.getMonth() + 1}`
+                //     ) {
+                //     }
+                //   });
+                //   onChangeCal(value);
+                // }}
+                value={valueCal}
+                tileClassName={({ date }) => {
+                  if (
+                    allEvents.find(
+                      (x) =>
+                        x.slice(0, 10) === fixTimezoneOffset(date).slice(0, 10)
+                    )
+                  ) {
+                    // console.log(
+                    //   "ERROR: ",
+                    //   fixTimezoneOffset(date).slice(0, 10)
+                    // );
+                    return "present";
+                  }
+                }}
+              />
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

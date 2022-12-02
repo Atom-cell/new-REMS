@@ -17,9 +17,11 @@ const adminSchema = mongoose.Schema(
     password: {
       type: String,
     },
-    profilePicture: {
-      String,
-    },
+    profilePicture: String,
+    bday: { type: String },
+    gender: { type: String },
+    bankDetails: String,
+    contact: String,
     role: {
       type: String,
     },

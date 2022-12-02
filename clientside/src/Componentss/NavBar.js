@@ -17,30 +17,30 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Timer from "../Projects/Timer";
 
 const Navbar = () => {
-  let navigate = useNavigate();
-  const location = useLocation();
+  // let navigate = useNavigate();
+  // const location = useLocation();
 
-  React.useEffect(() => {
-    let a = localStorage.getItem("role");
-    setRole(a);
-    let User = JSON.parse(localStorage.getItem("user"));
-    setPic(User.profilePicture);
-    console.log("User: ", pic);
-  }, []);
+  // React.useEffect(() => {
+  //   let a = localStorage.getItem("role");
+  //   setRole(a);
+  //   let User = JSON.parse(localStorage.getItem("user"));
+  //   setPic(User.profilePicture);
+  //   console.log("User: ", pic);
+  // }, []);
 
-  const [role, setRole] = useState("");
-  const [pic, setPic] = useState("");
-  const { name, setName } = React.useContext(ProjectNameContext);
+  // const [role, setRole] = useState("");
+  // const [pic, setPic] = useState("");
+  // const { name, setName } = React.useContext(ProjectNameContext);
 
-  const logout = () => {
-    localStorage.clear();
-    window.location.href = "/home";
-  };
+  // const logout = () => {
+  //   localStorage.clear();
+  //   window.location.href = "/home";
+  // };
 
-  const go = (path) => {
-    console.log("PATH, ", path);
-    navigate(path);
-  };
+  // const go = (path) => {
+  //   console.log("PATH, ", path);
+  //   navigate(path);
+  // };
   return (
     <>
       <div className="navbar">

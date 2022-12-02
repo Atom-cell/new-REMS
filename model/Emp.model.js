@@ -35,6 +35,8 @@ var empSchema = mongoose.Schema({
   contact: {
     type: String,
   },
+  bday: String,
+  gender: String,
   desktop: {
     type: Boolean,
     default: false,

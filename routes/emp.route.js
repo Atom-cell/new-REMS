@@ -64,6 +64,30 @@ router.get("/download", function (req, res) {
 //   }
 // });
 
+router.get("/getUserInfo/:id", verifyJWT, async (req, res) => {
+  console.log(req.userEmail);
+  console.log(req.role);
+
+  let mail = req.userEmail;
+  let role = req.role;
+
+  if (role === "admin") {
+    const user = await Admin.findOne({ _id: req.params.id });
+    res.json(user);
+  } else {
+    const v = {
+      screenshot: 0,
+      totalTime: 0,
+      appTime: 0,
+      separateTime: 0,
+      notifications: 0,
+      attendance: 0,
+    };
+
+    const User = await Emp.findOne({ _id: req.params.id }).select(v);
+    res.json(User);
+  }
+});
 // search employees
 router.get("/", (req, res, next) => {
   // console.log(req.query.name);
@@ -291,11 +315,20 @@ router.post("/login", async (req, res) => {
     totalTime: 0,
     appTime: 0,
     separateTime: 0,
+    profilePicture: 0,
+  };
+  const a = {
+    profilePicture: 0,
+    emailToken: 0,
+    employees: 0,
+    bday: 0,
+    contact: 0,
+    bankDetails: 0,
   };
 
   //check user already exists or not
   const Euser = await Emp.findOne({ email: email }).select(v);
-  const Auser = await Admin.findOne({ email: email });
+  const Auser = await Admin.findOne({ email: email }).select(a);
 
   //////////////
 
@@ -428,6 +461,80 @@ router.delete("/deleteEmp/:id", verifyJWT, (req, res) => {
   );
 });
 
+router.post("/updateProfile/:role/:id", async (req, res) => {
+  console.log("updateing profile");
+  const role = req.params.role;
+  const id = req.params.id;
+  const {
+    email,
+    username,
+    password,
+    contact,
+    bank,
+    profilePicture,
+    bday,
+    gender,
+  } = req.body;
+  if (password) {
+    console.log("yes password");
+    if (role === "admin") {
+      const hashPassword = await bcrypt.hash(password, 10);
+      const user = await Admin.findOne({ _id: id });
+      user.email = email;
+      user.username = username;
+      user.password = hashPassword;
+      user.contact = contact;
+      user.bankDetails = `${bank}`;
+      user.profilePicture = profilePicture;
+      user.bday = bday;
+      user.gender = gender;
+      user.save().then(() => {
+        console.log("saved");
+      });
+    } else {
+      const hashPassword = await bcrypt.hash(password, 10);
+      const user = await Emp.findOne({ _id: id });
+      user.email = email;
+      user.username = username;
+      user.password = hashPassword;
+      user.contact = contact;
+      user.bankDetails = `${bank}`;
+      user.profilePicture = profilePicture;
+      user.bday = bday;
+      user.gender = gender;
+      user.save().then(() => {
+        console.log("saved");
+      });
+    }
+  } else {
+    console.log("no password");
+    if (role === "admin") {
+      const user = await Admin.findOne({ _id: id });
+      user.email = email;
+      user.username = username;
+      user.contact = contact;
+      user.bankDetails = `${bank}`;
+      user.profilePicture = profilePicture;
+      user.bday = bday;
+      user.gender = gender;
+      user.save().then(() => {
+        console.log("saved");
+      });
+    } else {
+      const user = await Emp.findOne({ _id: id });
+      user.email = email;
+      user.username = username;
+      user.contact = contact;
+      user.bankDetails = `${bank}`;
+      user.profilePicture = profilePicture;
+      user.bday = bday;
+      user.gender = gender;
+      user.save().then(() => {
+        console.log("saved");
+      });
+    }
+  }
+});
 router.put("/update", async (req, res) => {
   const { email, username, password, contact, bank } = req.body;
   console.log(email, username, password, contact, bank);

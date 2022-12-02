@@ -49,3 +49,10 @@
 .inout_chart h4 {
   margin-top: 2em;
 }
+
+.team_and_attendance {
+  display: flex;
+}
+.team_and_attendance div {
+  flex-grow: 2;
+}

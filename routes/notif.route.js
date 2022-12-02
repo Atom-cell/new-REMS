@@ -10,6 +10,7 @@ var myBoard = require("../model/myBoard.model");
 var myVid = require("../model/myVideo.model");
 var myProject = require("../model/myProject.model");
 
+//for refresh
 router.get("/getNotif/:id", async (req, res) => {
   console.log("getting notifications");
   let emp = await Emp.findById(req.params.id);
@@ -21,6 +22,23 @@ router.get("/getNotif/:id", async (req, res) => {
     let notif = admin.notifications.filter((f) => f.flag === 0);
 
     res.json(notif);
+    // Admin.findById(req.params.id, (err, resp) => {
+    //   if (err) console.log(err.message);
+    //   res.json(resp);
+    // });
+  }
+});
+
+router.get("/getAllNotif/:id", async (req, res) => {
+  console.log("getting All notifications");
+  let emp = await Emp.findById(req.params.id);
+  let admin = await Admin.findById(req.params.id);
+  if (emp) {
+    // let notif = emp.notifications.filter((f) => f.flag === 0);
+    res.json(emp.notifications);
+  } else if (admin) {
+    // let notif = admin.notifications.filter((f) => f.flag === 0);
+    res.json(admin.notifications);
     // Admin.findById(req.params.id, (err, resp) => {
     //   if (err) console.log(err.message);
     //   res.json(resp);

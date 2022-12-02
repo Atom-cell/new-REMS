@@ -38,7 +38,7 @@ const InOutReport = () => {
   for (let i = 1; i <= totalDays; i++) {
     if (i < 10) {
       days.push({
-        date: `${new Date(value).getMonth() + 1}/0${i}/${year}`,
+        date: `${new Date(value).getMonth() + 1}/${i}/${year}`,
         In: "A",
         Out: "A",
         totalTime: 0,
@@ -158,7 +158,7 @@ const InOutReport = () => {
       datasets: [{ label: "Total Work Time", data: arr.map((d) => d.diff) }],
     };
     setChartData([...arr]);
-    console.log(arr);
+    console.log("Chart array ", arr);
   };
 
   const downloadPDF = () => {
