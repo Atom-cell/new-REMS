@@ -8,16 +8,26 @@ import IconButton from "@mui/material/IconButton";
 import { baseURL } from "../Request";
 
 import EditIcon from "@mui/icons-material/Edit";
+import TeamCalendar from "../Calendar/TeamCalendar";
+import ProjectCard from "../Projects/ProjectCard";
 
-const TeamInfo = () => {
+const TeamInfo = ({ user }) => {
   const navigate = useNavigate();
   const {
     state: { team },
   } = useLocation();
-  console.log(team);
 
   const [role, setRole] = React.useState("");
+  const [teamProjects, setTeamProjects] = React.useState();
   const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
+
+  const handleClickOnProject = (project) => {
+    navigate(`/myproject/${project._id}`, {
+      state: {
+        project: project,
+      },
+    });
+  };
 
   React.useEffect(() => {
     if (localStorage.getItem("role")) {
@@ -25,6 +35,20 @@ const TeamInfo = () => {
 
       setRole(role);
     }
+  }, []);
+
+  React.useEffect(() => {
+    console.log(team.projects);
+    // get team.projects array project information
+    axios
+      .get("/myProjects/teamprojects", {
+        params: { teamProjects: team.projects },
+      })
+      .then((rec) => {
+        console.log(rec.data);
+        setTeamProjects(rec.data);
+      })
+      .catch((err) => console.log(err + "at 40 in Team Info"));
   }, []);
 
   const getEmpData = (id) => {
@@ -140,6 +164,17 @@ const TeamInfo = () => {
         </tbody>
       </Table>
       <h3>Projects</h3>
+      <div className="allProjects">
+        {teamProjects?.map((project, index) => {
+          return (
+            <ProjectCard project={project} setProjects={handleClickOnProject} />
+          );
+        })}
+      </div>
+      <div className="team-calendar">
+        <h3>Team Calendar</h3>
+        <TeamCalendar user={user} teamId={team._id} />
+      </div>
     </div>
   );
 };

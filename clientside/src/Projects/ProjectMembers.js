@@ -111,7 +111,7 @@ const ProjectMembers = ({
   }, []);
   return (
     <>
-      <Modal show={showInviteModal} onHide={handleClose}>
+      <Modal centered show={showInviteModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Share {myProject?.projectName}</Modal.Title>
         </Modal.Header>

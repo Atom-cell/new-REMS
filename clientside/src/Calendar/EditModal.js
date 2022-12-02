@@ -11,6 +11,7 @@ const EditModal = ({
   deleteEvent,
   editModalOpen,
   handleClosee,
+  showMadeBy,
 }) => {
   return (
     <div className="add-new-event-container">
@@ -20,6 +21,16 @@ const EditModal = ({
         </Modal.Header>
         <Modal.Body>
           <div>
+            {showMadeBy && (
+              <input
+                type="text"
+                placeholder="Event Made By"
+                value={event.madeBy}
+                readOnly={true}
+                // onChange={(e) => setEvent({ ...event, title: e.target.value })}
+                className="inputTextFields"
+              />
+            )}
             <input
               type="text"
               placeholder="Add Event Title"

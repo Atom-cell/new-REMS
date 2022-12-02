@@ -94,7 +94,7 @@ const AssignTaskModal = ({
   }, []);
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal centered show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add Assignee</Modal.Title>
       </Modal.Header>

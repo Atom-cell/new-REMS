@@ -25,7 +25,7 @@ const CallNotification = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <Modal show={receivingCall && !callAccepted}>
+    <Modal centered show={receivingCall && !callAccepted}>
       <Modal.Header>
         <Modal.Title>
           <h1>{callerName} is calling...</h1>

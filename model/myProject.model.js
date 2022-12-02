@@ -21,9 +21,15 @@ var myProjectSchema = mongoose.Schema(
     ],
     projectroles: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
 
-    hoursWorked: {
-      type: [{}],
-    },
+    hoursWorked: [
+      {
+        user: String,
+        time: String,
+        date: String,
+        marked: Boolean,
+      },
+    ],
+
     numOfBreaks: {
       type: [{}],
     },

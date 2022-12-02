@@ -121,7 +121,7 @@ const ChatMenu = ({ newConversation, user, handleSearchChange }) => {
           </div>
         </Form>
       </div>
-      <Modal show={show} onHide={handleClose}>
+      <Modal centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Chat</Modal.Title>
         </Modal.Header>

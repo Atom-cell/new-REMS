@@ -7,6 +7,7 @@ import { ProjectNameContext } from "../Helper/Context";
 import { Pause, PlayArrow, Stop } from "@mui/icons-material";
 import IconButton from "@material-ui/core/IconButton";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 const Timer = () => {
   const stopwatchOffset = new Date();
@@ -100,6 +101,7 @@ const Timer = () => {
         breaks: breaks,
         _id: name.id,
         username: username,
+        date: moment().format("DD-MM-YYYY"),
       })
       .then((rec) => {})
       .catch((err) => console.log(err));

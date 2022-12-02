@@ -9,8 +9,10 @@ import {
   Clipboard,
   Plus,
   File,
+  ArrowRight,
 } from "react-feather";
 import { format } from "timeago.js";
+import GroupsIcon from "@mui/icons-material/Groups";
 import Editable from "../Boards/Editabled/Editable";
 import { useLocation, useNavigate } from "react-router-dom";
 import AttachmentIcon from "@mui/icons-material/Attachment";
@@ -32,6 +34,7 @@ const SpecificProject = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [myProject, setMyProject] = useState();
+  const [myTeam, setMyTeam] = useState();
   const [myBoard, setMyBoard] = useState();
   const [goals, setGoals] = useState();
   const [projectRoleEmployee, setProjectRoleEmployee] = useState();
@@ -335,13 +338,34 @@ const SpecificProject = ({ user }) => {
     setRole(r);
   }, []);
 
+  // get team
+  useEffect(() => {
+    // console.log(location.state.project.teamId);
+    if (location.state.project.teamId) {
+      // get team
+      axios
+        .get("http://localhost:5000/team/teambyid", {
+          params: { teamId: location.state.project.teamId },
+        })
+        .then((rec) => {
+          console.log(rec.data[0]);
+          setMyTeam(rec.data[0]);
+        })
+        .catch((err) => console.log(err + "Line 358 in Specific Project"));
+    }
+  }, []);
+
   useEffect(() => {
     if (myProject) {
+      console.log(myProject);
       axios
         .get("/emp/getemployeeinformation", {
           params: { _id: myProject.projectroles },
         })
-        .then((rec) => setProjectRoleEmployee(rec.data[0]))
+        .then((rec) => {
+          console.log(rec.data);
+          setProjectRoleEmployee(rec.data[0]);
+        })
         .catch((err) => console.log(err + "Specific Project 141"));
     }
   }, [myProject]);
@@ -374,16 +398,18 @@ const SpecificProject = ({ user }) => {
           >
             {myBoard ? "View Board" : "Create Board"}
           </Button>
-          <Editable
-            displayClass="project-overview-text-title"
-            editClass="project-overview-text-title-edit"
-            defaultValue={myProject?.projectName}
-            text={myProject?.projectName}
-            type={"text"}
-            placeholder="Enter Title"
-            onSubmit={updateProjectName}
-            emp={user?.role === "Employee" ? true : undefined}
-          />
+          <div>
+            <Editable
+              displayClass="project-overview-text-title"
+              editClass="project-overview-text-title-edit"
+              defaultValue={myProject?.projectName}
+              text={myProject?.projectName}
+              type={"text"}
+              placeholder="Enter Title"
+              onSubmit={updateProjectName}
+              emp={user?.role == "Employee" ? true : undefined}
+            />
+          </div>
           {/* <p>How we will collaborate</p> */}
           {/* <input type="text" placeholder="How we will collaborate" /> */}
           <div className="overview-text">
@@ -446,6 +472,7 @@ const SpecificProject = ({ user }) => {
                   </div>
                   <div className="dropdown-status">
                     <DropdownButton
+                      variant="success"
                       id="dropdown-basic-button"
                       className="dropdown-role"
                       // title="Update Role"
@@ -676,7 +703,7 @@ const SpecificProject = ({ user }) => {
                         brief and supporting resources.
                       </span>
                       <div className="ProjectOverviewKeyResourcesEmptyState-buttons">
-                        <div
+                        {/* <div
                           className="ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton SubtleButton--standardTheme SubtleButton--isCompact SubtleButton ProjectOverviewKeyResourcesEmptyState-projectBriefButton"
                           role="button"
                           aria-disabled="false"
@@ -691,7 +718,7 @@ const SpecificProject = ({ user }) => {
                             <path d="M12.5,18.3c-0.3,0-0.6-0.1-0.9-0.3c-0.5-0.3-0.7-0.9-0.6-1.5l0.5-3.1l-2.3-2.2c-0.4-0.4-0.6-1-0.4-1.5c0.2-0.5,0.6-0.9,1.2-1l3.1-0.5l1.4-2.8c0.3-0.5,0.8-0.8,1.3-0.8s1.1,0.3,1.3,0.8l1.4,2.8l3.1,0.5c0.6,0.1,1,0.5,1.2,1c0.2,0.5,0,1.1-0.4,1.5l-2.3,2.2l0.5,3.1c0.1,0.6-0.1,1.1-0.6,1.5c-0.5,0.3-1.1,0.4-1.6,0.1L16,16.7l-2.8,1.5C13,18.2,12.7,18.3,12.5,18.3z M16,14.4l2.8,1.5l-0.5-3.1l2.3-2.2l-3.2-0.5L16,7.2l-1.4,2.9l-3.2,0.5l2.3,2.2l-0.5,3.1L16,14.4zM21.6,10.7L21.6,10.7L21.6,10.7z M24,32H8c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h16c2.2,0,4,1.8,4,4v24C28,30.2,26.2,32,24,32z M8,2C6.9,2,6,2.9,6,4v24c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H8z M23,21c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,22,23,21.6,23,21z M23,25c0-0.6-0.4-1-1-1H10c-0.6,0-1,0.4-1,1s0.4,1,1,1h12C22.6,26,23,25.6,23,25z"></path>
                           </svg>
                           Create project brief
-                        </div>
+                        </div> */}
                         <span className="AddAttachmentsButton">
                           <div
                             id="lui_435"
@@ -701,14 +728,6 @@ const SpecificProject = ({ user }) => {
                             aria-expanded="false"
                             tabindex="0"
                           >
-                            {/* <svg
-                            className="Icon ThemeableRectangularButtonPresentation-leftIcon AttachVerticalIcon"
-                            viewBox="0 0 32 32"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <path d="M19,32c-3.9,0-7-3.1-7-7V10c0-2.2,1.8-4,4-4s4,1.8,4,4v9c0,0.6-0.4,1-1,1s-1-0.4-1-1v-9c0-1.1-0.9-2-2-2s-2,0.9-2,2v15c0,2.8,2.2,5,5,5s5-2.2,5-5V10c0-4.4-3.6-8-8-8s-8,3.6-8,8v5c0,0.6-0.4,1-1,1s-1-0.4-1-1v-5C6,4.5,10.5,0,16,0s10,4.5,10,10v15C26,28.9,22.9,32,19,32z"></path>
-                          </svg> */}
                             <FileUpload handleFileUpload={handleFileUpload} />
                             Add links &amp; files
                           </div>
@@ -725,7 +744,9 @@ const SpecificProject = ({ user }) => {
           <div className="ProjectOverviewSection-headingContainer">
             <h4 className="ProjectOverviewSection-heading Typography Typography--colorDarkGray3 Typography--h4 Typography--fontWeightMedium">
               MileStones
-              <CheckSquare />
+              <div className="checksquare">
+                <CheckSquare />
+              </div>
             </h4>
             <div className="ProjectOverviewSection-headingExtraContent"></div>
           </div>
@@ -745,13 +766,18 @@ const SpecificProject = ({ user }) => {
                       {item.task}
                     </p>
                     {user?.role !== "Employee" && (
-                      <Trash onClick={() => removeMilestone(item._id)} />
+                      <Trash
+                        className="trash"
+                        onClick={() => removeMilestone(item._id)}
+                      />
                     )}
                   </div>
                 ))}
               </div>
               {user?.role !== "Employee" && (
                 <Editable
+                  displayClass="add-milestone-button"
+                  editClass="add-milestone-button-edit"
                   text={"Add Milestone"}
                   placeholder="Enter Milestone"
                   onSubmit={addMilestone}
@@ -854,7 +880,8 @@ const SpecificProject = ({ user }) => {
         <div className="project-status">
           <div class="ProjectOverviewActivityFeedPublishedReportSection-heading">
             <h4 class="Typography Typography--colorDarkGray1 Typography--h4 Typography--fontWeightMedium">
-              What's the status?
+              {/* What's the status? */}
+              {myProject?.status ? "Status" : "What's the status?"}
             </h4>
             {myProject?.status && user?.role !== "Employee" && (
               <div className="dropdown-status">
@@ -981,7 +1008,10 @@ const SpecificProject = ({ user }) => {
           )}
         </div>
         <div className="project-due-date-container">
-          <Calendar />
+          <Calendar
+            size={30}
+            style={{ marginTop: "15px", marginRight: "5px" }}
+          />
           <Editable
             displayClass="project-due-date"
             editClass="project-due-date-edit"
@@ -994,8 +1024,8 @@ const SpecificProject = ({ user }) => {
           />
         </div>
         <div className="project-members-container" onClick={handleShow}>
-          <Users />
-          <span>Members</span>
+          <Users size={30} style={{ marginRight: "5px" }} />
+          <span style={{ fontSize: "20px" }}>Members</span>
         </div>
         <ProjectMembers
           showInviteModal={showInviteModal}
@@ -1008,9 +1038,19 @@ const SpecificProject = ({ user }) => {
           setSelectedEmployees={setSelectedEmployees}
           user={user}
         />
+        {myTeam && (
+          <div
+            className="project-members-container"
+            onClick={() => navigate("/teamInfo", { state: { team: myTeam } })}
+          >
+            <GroupsIcon size={30} style={{ marginRight: "5px" }} />
+            <span style={{ fontSize: "20px" }}>{myTeam?.teamName}</span>
+            <ArrowRight size={30} style={{ marginRight: "5px" }} />
+          </div>
+        )}
         <div className="project-created-container">
           <div className="project-created-container-icon">
-            <Clipboard />
+            <Clipboard size={40} />
           </div>
           <div className="project-created-container-info">
             <h5>Project Created</h5>

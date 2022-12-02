@@ -40,6 +40,7 @@ import { SideBarDataEmp } from "./SideBarDataEmp";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 import Timer from "../Projects/Timer";
+import CommunicationNotification from "./CommunicationNotification";
 
 const drawerWidth = 220;
 
@@ -119,7 +120,14 @@ const NewToast = ({ msg, nav, link }) => {
     </div>
   );
 };
-export default function SidebarMenu({ children }) {
+export default function SidebarMenu({
+  children,
+  fetchData,
+  allNotifications,
+  setAllNotifications,
+  unreadNotifications,
+  setUnreadNotifications,
+}) {
   let navigate = useNavigate();
   const location = useLocation();
 
@@ -287,7 +295,7 @@ export default function SidebarMenu({ children }) {
   };
   return (
     <Box sx={{ display: "flex" }}>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <CssBaseline />
       <AppBar position="fixed" open={open} sx={{ backgroundColor: "#1890ff" }}>
         <Toolbar
@@ -331,13 +339,20 @@ export default function SidebarMenu({ children }) {
 
           <div className="timer_wrapper">
             {role !== "admin" && name !== null ? <Timer /> : null}
-            <IconButton>
+            {/* <IconButton>
               <Badge badgeContent={4} color="error">
                 <MailIcon style={{ fill: "white" }} />
               </Badge>
-            </IconButton>
+            </IconButton> */}
 
-            <Dropdown>
+            <CommunicationNotification
+              fetchData={fetchData}
+              allNotifications={allNotifications}
+              setAllNotifications={setAllNotifications}
+              unreadNotifications={unreadNotifications}
+              setUnreadNotifications={setUnreadNotifications}
+            />
+            <Dropdown className="sidebarmenu-dropdown">
               <Dropdown.Toggle style={{ all: "unset", cursor: "pointer" }}>
                 <IconButton onClick={() => notificationsNum()}>
                   <Badge badgeContent={notifNum} color="error">

@@ -102,6 +102,7 @@ var empSchema = mongoose.Schema({
   bankDetails: String,
   // date is string because easier to filter
   InOut: [{ date: String, In: Date, Out: Date }],
+  hourlyRate: Number,
 });
 
 module.exports = mongoose.model("employee", empSchema);

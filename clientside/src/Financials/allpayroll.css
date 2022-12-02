@@ -1,0 +1,12 @@
+.payroll-details{
+    display: flex;
+    justify-content: space-evenly;
+}
+.react-datepicker__close-icon {
+    right: -25px;
+}
+.react-datepicker__portal{
+    top: -70px;
+    left: -40px;
+    overflow: hidden;
+}

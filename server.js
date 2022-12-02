@@ -37,6 +37,7 @@ app.use(bodyParser.json());
 
 // all routers
 const myCalendarRouter = require("./routes/myCalendar");
+const myTeamCalendarRouter = require("./routes/myTeamCalendar");
 const myHomeRouter = require("./routes/myHome");
 const myVideoRouter = require("./routes/myVideo");
 const myEmployeeRouter = require("./routes/myEmployee");
@@ -45,6 +46,8 @@ const myMessagesRouter = require("./routes/myMessages");
 const myConversationRouter = require("./routes/myConversation");
 const myProjectRouter = require("./routes/myProject");
 const myBoardRouter = require("./routes/myBoards");
+const myPayrollRouter = require("./routes/myPayroll.route");
+const myInvoiceRouter = require("./routes/myInvoice.route");
 const adminRouter = require("./routes/admin.route");
 const empRouter = require("./routes/emp.route");
 const desktopRouter = require("./routes/desktop.route");
@@ -55,6 +58,7 @@ const reportRouter = require("./routes/report.route");
 // mount point for routers
 app.use("/", myHomeRouter);
 app.use("/myCalendar", myCalendarRouter);
+app.use("/myTeamCalendar", myTeamCalendarRouter);
 app.use("/myVideo", myVideoRouter);
 app.use("/myEmployee", myEmployeeRouter);
 app.use("/myEmployer", myEmployerRouter);
@@ -62,6 +66,8 @@ app.use("/myConversation", myConversationRouter);
 app.use("/myMessages", myMessagesRouter);
 app.use("/myProjects", myProjectRouter);
 app.use("/myBoards", myBoardRouter);
+app.use("/myPayroll", myPayrollRouter);
+app.use("/myInvoice", myInvoiceRouter);
 app.use("/admin", adminRouter);
 app.use("/emp", empRouter);
 app.use("/desk", desktopRouter);

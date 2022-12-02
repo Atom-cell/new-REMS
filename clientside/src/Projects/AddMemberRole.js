@@ -7,7 +7,7 @@ const AddMemberRole = ({ show, handleClose, handleSave }) => {
   const [memberId, setMemberId] = useState();
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Project Lead</Modal.Title>
         </Modal.Header>
@@ -17,10 +17,6 @@ const AddMemberRole = ({ show, handleClose, handleSave }) => {
             projectRole={projectRole}
             setProjectRole={setProjectRole}
             setMemberId={setMemberId}
-            //   employees={employees}
-            //   setEmployees={setEmployees}
-            //   addEmployeeToMeeting={addEmployeeToMeeting}
-            //   myId={userId}
           />
         </Modal.Body>
         <Modal.Footer>

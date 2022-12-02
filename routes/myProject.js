@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var myProject = require("../model/myProject.model");
 var Admin = require("../model/Admin.model");
+const Team = require("../model/Team.model");
 var employee = require("../model/Emp.model");
 const nodemailer = require("nodemailer");
 
@@ -12,6 +13,71 @@ router.get("/getmyproject", (req, res) => {
     if (err) res.status(500).send(err);
     res.status(200).send(rec);
   });
+});
+
+// get all projects Ids(that is array) info of a team
+router.get("/teamprojects", (req, res) => {
+  console.log(req.query.teamProjects);
+  myProject
+    .find()
+    .where("_id")
+    .in(req.query.teamProjects)
+    .exec((err, rec) => {
+      if (err) res.status(500).send(err);
+      res.status(200).send(rec);
+    });
+});
+
+router.get("/hoursworked", (req, res) => {
+  // console.log(req.query._id);
+  console.log(req.query.emps);
+  // Inside hoursWorked we need to find user and their sum total time
+  myProject.find(
+    { projectAssignedBy: req.query._id, "hoursWorked.user": req.query.emps },
+    // { hoursWorked: 1 },
+    (err, rec) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(rec);
+    }
+  );
+});
+
+router.post("/markhoursworkedtrue", (req, res) => {
+  // console.log(req.body);
+  // console.log(req.body._id);
+  //_id, employees, dateRange
+  // console.log(req.body.employees);
+  // console.log(firstDate);
+  // console.log(secondDate);
+  req.body.projects.forEach((project) => {
+    console.log(project._id);
+    myProject.findOneAndReplace(
+      {
+        _id: project._id,
+      },
+      project,
+      // {
+      //   _id: project._id,
+      //   projectName: project.projectName,
+      //   projectCost: project.projectCost,
+      //   projectPriority: project.projectPriority,
+      //   projectAssignedBy: project.projectAssignedBy,
+      //   projectAssignedTo: project.projectAssignedTo,
+      //   hoursWorked: project.hoursWorked,
+      //   numOfBreaks: project.numOfBreaks,
+      //   dueDate: project.dueDate,
+      //   goals: project.goals,
+      //   milestones: project.milestones,
+      //   projectFiles: project.projectFiles,
+      //   createdAt: project.createdAt,
+      // },
+      {},
+      (err, rec) => {
+        if (err) res.status(500).json(err);
+      }
+    );
+  });
+  res.status(200).json("Success");
 });
 
 // Get all Projects For Employee
@@ -198,7 +264,18 @@ router.post("/addNewProject", async (req, res) => {
   //   console.log(req.body.hoursWorkedOn);
   try {
     const savedMessage = await newProject.save();
-    res.status(200).json(savedMessage);
+    // push team id to team
+    Team.findOneAndUpdate(
+      { _id: req.body.teamId },
+      { $push: { projects: savedMessage._id } },
+      (error, success) => {
+        if (error) {
+          res.status(500).json(error);
+        } else {
+          res.status(200).json(savedMessage);
+        }
+      }
+    );
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -274,13 +351,19 @@ router.post("/hoursWorked", (req, res, next) => {
   console.log("Time is: ", req.body.time);
   console.log("Breaks: ", req.body.breaks);
   console.log("ID: ", req.body._id);
+  console.log("Date: ", req.body.date);
   console.log("name: ", uname);
 
   myProject.findOneAndUpdate(
     { _id: req.body._id },
     {
       $push: {
-        hoursWorked: { user: req.body.username, time: req.body.time },
+        hoursWorked: {
+          user: req.body.username,
+          time: req.body.time,
+          date: req.body.date,
+          marked: false,
+        },
         numOfBreaks: { user: req.body.username, time: req.body.breaks },
       },
     },

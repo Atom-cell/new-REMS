@@ -327,7 +327,7 @@ const Boards = ({ user }) => {
           bid: bid,
           // uid: user._id,
           boards: boards,
-        })
+        }) // //rec.data.boards
         .then((rec) => console.log(rec.data))
         .catch((err) => console.log(err + "Boards 252"));
     }
@@ -350,17 +350,9 @@ const Boards = ({ user }) => {
   }, [completeKanban]);
 
   return (
-    <div
-      className="boards-container"
-      style={{
-        backgroundColor: color,
-        backgroundImage: `url(${color})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-    >
+    <div className="boards-container-container">
       <div
-        className="boards-container-nav"
+        className="boards-container"
         style={{
           backgroundColor: color,
           backgroundImage: `url(${color})`,
@@ -368,75 +360,89 @@ const Boards = ({ user }) => {
           backgroundSize: "cover",
         }}
       >
-        <Editable
-          displayClass="app_boards_title"
-          editClass="board-add-card-edit-title"
-          defaultValue={completeKanban?.title}
-          text={completeKanban?.title}
-          placeholder="Enter Title"
-          type={"text"}
-          onSubmit={updateTitle}
-        />
         <div
-          className="boards-container-nav-background-button-div"
-          style={{ display: "flex" }}
+          className="boards-container-nav"
+          style={{
+            backgroundColor: color,
+            backgroundImage: `url(${color})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
         >
-          <MeetingEmployeesTable
-            showEmployeesTable={showInviteModal}
-            handleShowEmployeesTable={handleShow}
-            handleCloseEmployeesTable={handleClose}
-            selectedEmployees={employees}
-            setSelectedEmployees={setEmployees}
-            handleInvite={handleInvite}
-            bid={bid}
-            empId={state?.empId}
+          <Editable
+            displayClass="app_boards_title"
+            editClass="board-add-card-edit-title"
+            defaultValue={completeKanban?.title}
+            text={completeKanban?.title}
+            placeholder="Enter Title"
+            type={"text"}
+            onSubmit={updateTitle}
           />
-          <Button
-            variant="primary"
-            className=""
-            style={{ marginTop: "10px", marginLeft: "0.5rem", height: "40px" }}
-            onClick={() => setOpenSideNav(true)}
+          <div
+            className="boards-container-nav-background-button-div"
+            style={{ display: "flex" }}
           >
-            Change Background
-          </Button>
+            <MeetingEmployeesTable
+              showEmployeesTable={showInviteModal}
+              handleShowEmployeesTable={handleShow}
+              handleCloseEmployeesTable={handleClose}
+              selectedEmployees={employees}
+              setSelectedEmployees={setEmployees}
+              handleInvite={handleInvite}
+              bid={bid}
+              empId={state?.empId}
+            />
+            <Button
+              variant="primary"
+              className=""
+              style={{
+                marginTop: "10px",
+                marginLeft: "0.5rem",
+                height: "40px",
+              }}
+              onClick={() => setOpenSideNav(true)}
+            >
+              Change Background
+            </Button>
+          </div>
         </div>
-      </div>
-      {openSideNav && (
-        <SideMenu
-          openSideNav={openSideNav}
-          setOpenSideNav={setOpenSideNav}
-          setColor={setColor}
-        />
-      )}
-      <div className="app_boards_container custom-scroll-horizontal">
-        <div className="app_boards">
-          {boards?.map((item) => (
-            <BoardList
-              key={item._id}
-              board={item}
-              addCard={addCardHandler}
-              removeBoard={() => removeBoard(item._id)}
-              removeCard={removeCard}
-              dragEnded={dragEnded}
-              dragEntered={dragEntered}
-              updateCard={updateCard}
-              dragEnteredBoard={dragEnteredBoard}
-              dragEndedBoard={dragEndedBoard}
-              updateBoardTitle={updateBoardTitle}
-              updateCardAssignedTo={updateCardAssignedTo}
-              hideAssign={state?.hide}
-            />
-          ))}
-          <div className="app_boards_last">
-            <Editable
-              displayClass="app_boards_add-board"
-              editClass="app_boards_add-board_edit"
-              placeholder="Enter List Name"
-              text="Add Another List"
-              buttonText="Add List"
-              type={"text"}
-              onSubmit={addboardHandler}
-            />
+        {openSideNav && (
+          <SideMenu
+            openSideNav={openSideNav}
+            setOpenSideNav={setOpenSideNav}
+            setColor={setColor}
+          />
+        )}
+        <div className="app_boards_container custom-scroll-horizontal">
+          <div className="app_boards">
+            {boards?.map((item) => (
+              <BoardList
+                key={item._id}
+                board={item}
+                addCard={addCardHandler}
+                removeBoard={() => removeBoard(item._id)}
+                removeCard={removeCard}
+                dragEnded={dragEnded}
+                dragEntered={dragEntered}
+                updateCard={updateCard}
+                dragEnteredBoard={dragEnteredBoard}
+                dragEndedBoard={dragEndedBoard}
+                updateBoardTitle={updateBoardTitle}
+                updateCardAssignedTo={updateCardAssignedTo}
+                hideAssign={state?.hide}
+              />
+            ))}
+            <div className="app_boards_last">
+              <Editable
+                displayClass="app_boards_add-board"
+                editClass="app_boards_add-board_edit"
+                placeholder="Enter List Name"
+                text="Add Another List"
+                buttonText="Add List"
+                type={"text"}
+                onSubmit={addboardHandler}
+              />
+            </div>
           </div>
         </div>
       </div>

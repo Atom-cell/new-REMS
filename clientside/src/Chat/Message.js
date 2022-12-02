@@ -4,7 +4,7 @@ import { format } from "timeago.js";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const Message = ({ message, own, userPhoto }) => {
-  // console.log(own);
+  console.log(userPhoto);
   const [extension, setExtension] = useState();
   const getExtension = (file) => {
     const type = file.split(";")[0].split(":")[1];

@@ -1,3 +1,6 @@
-.dropdown-toggle::after {
+/* .dropdown-toggle::after {
+  display: none !important;
+} */
+.sidebarmenu-dropdown .dropdown-toggle::after{
   display: none !important;
 }

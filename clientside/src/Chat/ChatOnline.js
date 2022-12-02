@@ -8,6 +8,7 @@ export default function ChatOnline({
   callUser,
   callAccepted,
   callEnded,
+  newConversation,
 }) {
   const [friends, setFriends] = useState([]);
   const [onlineFriends, setOnlineFriends] = useState([]);
@@ -52,10 +53,13 @@ export default function ChatOnline({
   };
 
   return (
-    <div className="chatOnline">
+    <div className={callAccepted != undefined && "chatOnlineVideoCall"}>
       <h2>Online</h2>
       {onlineFriends?.map((o) => (
-        <div className="chatOnlineFriend">
+        <div
+          className="chatOnlineFriend"
+          onClick={() => newConversation != undefined && newConversation(o._id)}
+        >
           <div className="chatOnlineImgContainer">
             <img className="chatOnlineImg" src={o?.profilePicture} alt="" />
             <div className="chatOnlineBadge"></div>

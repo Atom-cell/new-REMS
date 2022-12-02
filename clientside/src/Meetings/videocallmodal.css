@@ -1,4 +1,5 @@
 .videocallModal {
+  margin-top: 20px;
     min-height: 400px;
     overflow: hidden;
     @media (max-width: 575.98px) {
