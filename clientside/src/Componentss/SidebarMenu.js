@@ -287,9 +287,11 @@ export default function SidebarMenu({
   const showMoreNotif = async () => {
     let id = localStorage.getItem("id");
     await axios.get(`/notif/getAllNotif/${id}`).then((resp) => {
-      localStorage.setItem("notif", JSON.stringify([...resp.data]));
+      let a = [...resp.data];
+      a.reverse();
+      localStorage.setItem("notif", JSON.stringify([...a]));
       localStorage.setItem("notifNum", resp.data.length);
-      setNotif([...resp.data]);
+      setNotif([...a]);
       setNotifNum(resp.data.length);
     });
   };

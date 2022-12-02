@@ -329,7 +329,7 @@ router.post("/deleteMeetingNotif", (req, res) => {
 
     resp.employees.forEach((e) => {
       Emp.findOneAndUpdate(
-        { _id: e },
+        { username: e },
         {
           $push: {
             notifications: {
@@ -344,7 +344,7 @@ router.post("/deleteMeetingNotif", (req, res) => {
         }
       );
       Admin.findOneAndUpdate(
-        { _id: e },
+        { username: e },
         {
           $push: {
             notifications: {
