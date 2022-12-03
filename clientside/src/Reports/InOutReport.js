@@ -17,6 +17,8 @@ import ExcelExport from "./ExcelExport";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import ChartBar from "./ChartBar";
+import { toast } from "react-toastify";
+
 // import PDFReport from "./components/PDFReport";
 // import { PDFDownloadLink } from "@react-pdf/renderer";
 const InOutReport = () => {
@@ -84,37 +86,45 @@ const InOutReport = () => {
       })
       .then((response) => {
         // setInOut([...response.data]);
-        console.log(response.data);
-        inout = [...response.data];
-        console.log("INOOOOOUT ", response.data);
-        let aa = [];
-        for (let i = 0; i < days.length; i++) {
-          let flag = false;
-          for (let j = 0; j < inout.length; j++) {
-            if (days[i].date === inout[j].date) {
-              flag = true;
-              if (days[i].In === undefined) {
-                let obj = { ...inout[j] };
-                obj.In = new Date(inout[j].In).toLocaleTimeString();
-                obj.Out = new Date(inout[j].Out).toLocaleTimeString();
-                delete obj._id;
-                aa.push(obj);
-              } else if (days[i].In || days[i].Out) {
-                let obj = { ...inout[j] };
-                obj.In = new Date(inout[j].In).toLocaleTimeString();
-                obj.Out = new Date(inout[j].Out).toLocaleTimeString();
-                delete obj._id;
-                aa.push(obj);
+        if (response.data.length === 0) {
+          toast.info("No data available");
+          setWorkingDays(0);
+          setAbsents(days.length);
+          setInOut([...days]);
+          convertDataForChart(days);
+        } else {
+          console.log(response.data);
+          inout = [...response.data];
+          console.log("INOOOOOUT ", response.data);
+          let aa = [];
+          for (let i = 0; i < days.length; i++) {
+            let flag = false;
+            for (let j = 0; j < inout.length; j++) {
+              if (days[i].date === inout[j].date) {
+                flag = true;
+                if (days[i].In === undefined) {
+                  let obj = { ...inout[j] };
+                  obj.In = new Date(inout[j].In).toLocaleTimeString();
+                  obj.Out = new Date(inout[j].Out).toLocaleTimeString();
+                  delete obj._id;
+                  aa.push(obj);
+                } else if (days[i].In || days[i].Out) {
+                  let obj = { ...inout[j] };
+                  obj.In = new Date(inout[j].In).toLocaleTimeString();
+                  obj.Out = new Date(inout[j].Out).toLocaleTimeString();
+                  delete obj._id;
+                  aa.push(obj);
+                }
               }
             }
+            if (!flag) aa.push(days[i]);
           }
-          if (!flag) aa.push(days[i]);
-        }
 
-        setInOut([...aa]);
-        console.log("NEEEEWWWWWWWWWWW: ", aa);
-        getTotalWorkingDays(aa);
-        convertDataForChart(aa);
+          setInOut([...aa]);
+          console.log("NEEEEWWWWWWWWWWW: ", aa);
+          getTotalWorkingDays(aa);
+          convertDataForChart(aa);
+        }
       });
     data.forEach((d) => {
       if (d.email === name) setUsername(d.username);

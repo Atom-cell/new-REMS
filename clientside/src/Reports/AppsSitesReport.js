@@ -28,6 +28,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ExcelExport from "./ExcelExport";
+import { toast } from "react-toastify";
 
 function TableDate({ date }) {
   // alert("k");
@@ -80,9 +81,15 @@ const AppsSitesReport = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setApps([...response.data]);
-        filterChartData(response.data);
+        if (response.data.length === 0) {
+          toast.info("No data available");
+          setApps([...response.data]);
+          filterChartData(response.data);
+        } else {
+          console.log(response.data);
+          setApps([...response.data]);
+          filterChartData(response.data);
+        }
       });
   };
 

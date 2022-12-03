@@ -104,10 +104,23 @@ router.get("/verify", async (req, res) => {
 
 router.get("/allEmps", verifyJWT, async (req, res) => {
   //console.log("In all Empps");
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    attendance: 0,
+    password: 0,
+    profilePicture: 0,
+    bankDetails: 0,
+    InOut: 0,
+    notifications: 0,
+  };
   try {
     Admin.find({ email: req.userEmail })
       .populate({
         path: "employees",
+        select: v,
         match: { active: true },
       })
       .exec((err, data) => {
@@ -117,6 +130,14 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
   } catch (err) {
     console.log(err.message);
   }
+});
+router.get("/getMoreInfo/:email", async (req, res) => {
+  console.log("getting more Info", req.params.email);
+  let email = req.params.email;
+  const v = { notifications: 0, InOut: 0 };
+
+  const user = await Emp.findOne({ email: email }).select(v);
+  res.json(user);
 });
 
 router.get("/projectInfo/:id", (req, res) => {
@@ -171,6 +192,8 @@ router.delete("/deletelog/:email", (req, res) => {
     res.json({ data: response });
   });
 });
+
+router.delete("/deleteSS", (req, res) => {});
 
 router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");

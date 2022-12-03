@@ -1,7 +1,8 @@
 import { MoreInfoContext } from "../Helper/Context";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Divider, Tooltip } from "@mui/material";
+import { Avatar, Divider, Tooltip, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Table, Button, Spinner, Carousel, Breadcrumb } from "react-bootstrap";
 import "./moreInfo.css";
 import axios from "axios";
@@ -12,6 +13,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { confirmAlert } from "react-confirm-alert";
 
 function stringToColor(string) {
   let hash = 0;
@@ -94,20 +96,40 @@ function MoreInfo() {
     //console.log("CONTEXT: ", contextData);
     let a = contextData;
 
-    setLoading(false);
-    setData(a);
-    setTotalTime(a.totalTime);
-    setTotalTimeCopy(a.totalTime);
-    setDayTime(a.separateTime);
-    setDayTimeCopy(a.separateTime);
-    setAllEvents([...a.attendance]);
-    setApps(a.appTime);
-    setSS([...a.screenshot]);
-
+    getMoreInfo(a.email);
     getProjectInfo(a._id);
     getTeamInfo(a._id);
   };
 
+  const getMoreInfo = (email) => {
+    axios
+      .get(`http://localhost:5000/admin/getMoreInfo/${email}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("0000000 ", response.data);
+        setSS([...response.data.screenshot]);
+        setLoading(false);
+        setData(response.data);
+        setTotalTime([...response.data.totalTime]);
+        setTotalTimeCopy([...response.data.totalTime]);
+        setDayTime([...response.data.separateTime]);
+        setDayTimeCopy([...response.data.separateTime]);
+        setAllEvents([...response.data.attendance]);
+        setApps([...response.data.appTime]);
+
+        // setLoading(false);
+        // setData(a);
+        // setTotalTime(a.totalTime);
+        // setTotalTimeCopy(a.totalTime);
+        // setDayTime(a.separateTime);
+        // setDayTimeCopy(a.separateTime);
+        // setAllEvents([...a.attendance]);
+        // setApps(a.appTime);
+      });
+  };
   const getProjectInfo = (id) => {
     axios
       .get(`http://localhost:5000/admin/projectInfo/${id}`, {
@@ -209,6 +231,26 @@ function MoreInfo() {
       }
     });
     setPresents(a);
+  };
+
+  const confirmDeleteSS = () => {
+    confirmAlert({
+      title: "Confirm to Delete Screenshots",
+      message: "Do you want to delete these Screenshots?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => deleteSS(),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
+  const deleteSS = () => {
+    let email = data.email;
   };
 
   return (
@@ -434,9 +476,23 @@ function MoreInfo() {
             </div>
           </div>
           <div>
-            <h4 style={{ fontWeight: "bold", margin: "1em 0em 1em 0em" }}>
-              Screen Shots
-            </h4>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <h4
+                style={{
+                  fontWeight: "bold",
+                  margin: "1em 0em 1em 0em",
+                }}
+              >
+                Screen Shots
+              </h4>
+              <IconButton
+                onClick={() => confirmDeleteSS()}
+                size="large"
+                sx={{ marginTop: "-0.4em" }}
+              >
+                <DeleteIcon sx={{ fill: "black" }} fontSize="inherit" />
+              </IconButton>
+            </div>
             {loading ? (
               <div className="spinner">
                 <Spinner animation="border" />
@@ -459,6 +515,11 @@ function MoreInfo() {
                           alt="screenshot"
                           //onClick={() => openBase64InNewTab(i, "image/png")}
                         />
+                        <Carousel.Caption>
+                          <h3 style={{ color: "black" }}>
+                            {i.date.slice(0, 10)}
+                          </h3>
+                        </Carousel.Caption>
                       </Carousel.Item>
                     );
                   })}

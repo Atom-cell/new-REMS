@@ -17,6 +17,7 @@ import {
   Pagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -180,8 +181,6 @@ function EmpManage() {
 
   const setInfo = (data) => {
     setMoreInfo(data);
-    // localStorage.setItem("info", JSON.stringify(data));
-    // window.location.href = "/moreInfo";
     navigate("/moreInfo");
   };
 
@@ -305,7 +304,7 @@ function EmpManage() {
                         onClick={() =>
                           data.desktop
                             ? Screenshots(index, data.email)
-                            : alert("User is not online")
+                            : toast.info("User is not online")
                         }
                         style={{ padding: "0.5em" }}
                       >

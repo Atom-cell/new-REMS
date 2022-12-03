@@ -24,6 +24,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { toast } from "react-toastify";
 
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
@@ -72,11 +73,18 @@ const ActiveIdleReport = () => {
         },
       })
       .then((response) => {
-        setActive([...response.data.totalTime]);
-        setSeparate([...response.data.separateTime]);
-        console.log(response.data.totalTime);
-        console.log(response.data.separateTime);
-        convertDataForChart(response.data.totalTime);
+        if (response.data.totalTime.length === 0) {
+          toast.info("No data available");
+          setActive([...response.data.totalTime]);
+          setSeparate([...response.data.separateTime]);
+          convertDataForChart(response.data.totalTime);
+        } else {
+          setActive([...response.data.totalTime]);
+          setSeparate([...response.data.separateTime]);
+          console.log("Total time: ", response.data.totalTime);
+          console.log("Separate time: ", response.data.separateTime);
+          convertDataForChart(response.data.totalTime);
+        }
       });
   };
 

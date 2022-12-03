@@ -322,7 +322,6 @@ export default function SidebarMenu({
             >
               <MenuIcon />
             </IconButton>
-            <button onClick={() => console.log(notif)}>ss</button>
 
             <h3
               onClick={handleDrawerOpen}

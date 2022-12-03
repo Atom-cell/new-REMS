@@ -24,6 +24,7 @@ import ExcelExport from "./ExcelExport";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import ChartBar from "./ChartBar";
+import { toast } from "react-toastify";
 // import PDFReport from "./components/PDFReport";
 // import { PDFDownloadLink } from "@react-pdf/renderer";
 const ProjectsReport = () => {
@@ -72,10 +73,16 @@ const ProjectsReport = () => {
         }
       )
       .then((response) => {
-        console.log(response.data);
-        setData([...response.data]);
-        makeChartDate([...response.data]);
-        setLoading(1);
+        if (response.data.length === 0) {
+          toast.info("No data available");
+          setData([...response.data]);
+          makeChartDate([...response.data]);
+        } else {
+          console.log(response.data);
+          setData([...response.data]);
+          makeChartDate([...response.data]);
+          setLoading(1);
+        }
       });
   };
 

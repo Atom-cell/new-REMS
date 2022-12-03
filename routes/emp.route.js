@@ -81,7 +81,6 @@ router.get("/getUserInfo/:id", verifyJWT, async (req, res) => {
       appTime: 0,
       separateTime: 0,
       notifications: 0,
-      attendance: 0,
     };
 
     const User = await Emp.findOne({ _id: req.params.id }).select(v);

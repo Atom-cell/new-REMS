@@ -11,6 +11,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { toast } from "react-toastify";
 
 import dayjs from "dayjs";
@@ -26,6 +29,8 @@ const Profile = () => {
   const [gender, setGender] = React.useState("");
   const [password, setPassword] = React.useState();
   const [showPass, setShowPass] = React.useState(false);
+  const [allEvents, setAllEvents] = React.useState([]); //for attendance
+  const [valueCal, onChangeCal] = React.useState(new Date());
 
   React.useEffect(() => {
     getUserInfo();
@@ -39,7 +44,9 @@ const Profile = () => {
     setPic(data?.profilePicture);
     setBank(data?.bankDetails);
     setGender(data?.gender);
+    setAllEvents(data?.attendance);
   }, [data]);
+
   const getUserInfo = async () => {
     let id = localStorage.getItem("id");
     await axios
@@ -138,138 +145,160 @@ const Profile = () => {
       setPassword("");
     }
   };
+  const fixTimezoneOffset = (date) => {
+    if (!date) return "";
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toJSON();
+  };
 
   return (
-    <div className="wrapper">
-      <button onClick={() => toast.success("hello")}></button>
-      <h3>Personal Information</h3>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        {pic ? (
-          <Avatar
-            alt="pp"
-            src={`data:image/jpeg;base64,${pic}`}
-            sx={{ width: 150, height: 150 }}
-          />
-        ) : (
-          <Avatar
-            src="https://i.stack.imgur.com/34AD2.jpg"
-            alt="profile"
-            className="info_pic"
-          />
-        )}
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="wrapper">
+        <h3>Personal Information</h3>
+        <div
+          style={{
+            position: "relative",
+          }}
+        >
+          {pic ? (
+            <Avatar
+              alt="pp"
+              src={`data:image/jpeg;base64,${pic}`}
+              sx={{ width: 150, height: 150 }}
+            />
+          ) : (
+            <Avatar
+              src="https://i.stack.imgur.com/34AD2.jpg"
+              alt="profile"
+              className="info_pic"
+            />
+          )}
 
-        {/*  */}
-        <input
-          type="file"
-          id="avatar"
-          name="avatar"
-          accept="image/png, image/jpeg"
-          placeholder="Upload Profile Picture"
-          onChange={(e) => convertImage(e)}
-        ></input>
-      </div>
-      <div className="form_div">
-        <form action="" noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <TextField
-            onChange={(e) => setName(e.target.value)}
-            id="standard-basic"
-            placeholder="Username"
-            variant="outlined"
-            value={name}
-            margin="dense"
-            type="text"
-            className="ip"
-          />
-          <div style={{ marginTop: "1em", display: "flex" }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Birth date"
-                value={bday}
-                onChange={(newValue) => {
-                  setBDay(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-            <FormControl sx={{ marginLeft: "2em", width: "20%" }}>
-              <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={gender}
-                placeholder="Age"
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <TextField
-            onChange={(e) => setEmail(e.target.value)}
-            id="standard-basic"
-            placeholder="Email"
-            variant="outlined"
-            value={email}
-            margin="dense"
-            type="text"
-            className="ip"
-          />
-          <TextField
-            onChange={(e) => setPassword(e.target.value)}
-            id="standard-basic"
-            placeholder="Password"
-            variant="outlined"
-            margin="dense"
-            onBlur={(e) => checkPassword(e.target.value)}
-            value={password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={showPassword}>
-                    <Visibility />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            type={showPass ? "text" : "password"}
-            className="ip"
-          />
-
-          <TextField
-            onChange={(e) => setPhone(e.target.value)}
-            id="standard-basic"
-            placeholder="Phone #"
-            variant="outlined"
-            margin="dense"
-            value={phone}
-            type="text"
-            className="ip"
-          />
-          <div className="bank_info">
+          {/*  */}
+          <input
+            type="file"
+            id="avatar"
+            name="avatar"
+            accept="image/png, image/jpeg"
+            placeholder="Upload Profile Picture"
+            onChange={(e) => convertImage(e)}
+          ></input>
+        </div>
+        <div className="form_div">
+          <form action="" noValidate autoComplete="off" onSubmit={handleSubmit}>
             <TextField
-              onChange={(e) => setBank(e.target.value)}
-              sx={{ marginRight: "2em", width: "20%" }}
+              onChange={(e) => setName(e.target.value)}
               id="standard-basic"
-              placeholder="Bank Name & Account Number"
+              placeholder="Username"
               variant="outlined"
+              value={name}
               margin="dense"
-              value={bank}
               type="text"
               className="ip"
             />
-          </div>
+            <div style={{ marginTop: "1em", display: "flex" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Birth date"
+                  value={bday}
+                  onChange={(newValue) => {
+                    setBDay(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+              <FormControl sx={{ marginLeft: "2em", width: "20%" }}>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={gender}
+                  placeholder="Age"
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <TextField
+              onChange={(e) => setEmail(e.target.value)}
+              id="standard-basic"
+              placeholder="Email"
+              variant="outlined"
+              value={email}
+              margin="dense"
+              type="text"
+              className="ip"
+            />
+            <TextField
+              onChange={(e) => setPassword(e.target.value)}
+              id="standard-basic"
+              placeholder="Password"
+              variant="outlined"
+              margin="dense"
+              onBlur={(e) => checkPassword(e.target.value)}
+              value={password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={showPassword}>
+                      <Visibility />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              type={showPass ? "text" : "password"}
+              className="ip"
+            />
 
-          <div style={{ width: "100%" }}>
-            <Button type="submit" className="submitbtn">
-              Save Profile
-            </Button>
-          </div>
-        </form>
+            <TextField
+              onChange={(e) => setPhone(e.target.value)}
+              id="standard-basic"
+              placeholder="Phone #"
+              variant="outlined"
+              margin="dense"
+              value={phone}
+              type="text"
+              className="ip"
+            />
+            <div className="bank_info">
+              <TextField
+                onChange={(e) => setBank(e.target.value)}
+                sx={{ marginRight: "2em", width: "20%" }}
+                id="standard-basic"
+                placeholder="Bank Name & Account Number"
+                variant="outlined"
+                margin="dense"
+                value={bank}
+                type="text"
+                className="ip"
+              />
+            </div>
+
+            <div style={{ width: "100%" }}>
+              <Button type="submit" className="submitbtn">
+                Save Profile
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div style={{ marginTop: "2em" }}>
+        <h3>Attendance</h3>
+        {allEvents ? (
+          <Calendar
+            value={valueCal}
+            tileClassName={({ date }) => {
+              if (
+                allEvents.find(
+                  (x) => x.slice(0, 10) === fixTimezoneOffset(date).slice(0, 10)
+                )
+              ) {
+                return "present";
+              }
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );
