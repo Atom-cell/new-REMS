@@ -45,7 +45,7 @@ function Offline() {
   );
 }
 
-function EmpManage() {
+function EmpManage({ currency }) {
   // fetching data
 
   const navigate = useNavigate();
@@ -203,7 +203,11 @@ function EmpManage() {
         ) : null}
       </Snackbar>
       {mod ? (
-        <AddEmpModal closeMod={closeMod} addEmpModal={addEmpModal} />
+        <AddEmpModal
+          closeMod={closeMod}
+          addEmpModal={addEmpModal}
+          currency={currency}
+        />
       ) : null}
       <h1>Employee Management</h1>
 

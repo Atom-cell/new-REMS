@@ -3,7 +3,7 @@ import { Button, Table } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
-const InvoiceDetails = ({ user }) => {
+const InvoiceDetails = ({ user, currency }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [selectedInvoice, setSelectedInvoice] = useState(state);
@@ -75,7 +75,10 @@ const InvoiceDetails = ({ user }) => {
         </div>
         <div className="payroll-detail">
           <h6>Total Amount:</h6>
-          <span>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</span>
+          <span>
+            {currency?.symbol} &nbsp;
+            {handleTotalAmount(selectedInvoice?.employees)}
+          </span>
         </div>
         <div className="payroll-detail">
           <h6>Total Time:</h6>
@@ -127,7 +130,7 @@ const InvoiceDetails = ({ user }) => {
                   <td>{emp.employeeUsername}</td>
                   <td>{emp.totalTime}</td>
                   <td>
-                    $ &nbsp;
+                    {currency?.symbol} &nbsp;
                     {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
                   </td>
                   {/* <td

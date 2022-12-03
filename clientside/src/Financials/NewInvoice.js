@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SearchBar from "../Componentss/SearchBar";
 
-const NewInvoice = ({ user }) => {
+const NewInvoice = ({ user, currency }) => {
   const navigate = useNavigate();
   const [invoiceTitle, setInvoiceTitle] = useState();
   const [dateRange, setDateRange] = useState();
@@ -125,7 +125,7 @@ const NewInvoice = ({ user }) => {
     var totalHours = totalSeconds / 3600;
     // console.log(totalHours);
     //now calculate total wage
-    return totalHours * hourlyRate;
+    return Number(totalHours * hourlyRate).toFixed(2);
   };
 
   const getInfo = (emp) => {
@@ -562,7 +562,11 @@ const NewInvoice = ({ user }) => {
                       <td>{emp.user}</td>
                       <td>{emp.time}</td>
                       <td>{emp.date}</td>
-                      <td> $ {calculateWage(emp.time, emp.hourlyRate)}</td>
+                      <td>
+                        {" "}
+                        {currency?.symbol}{" "}
+                        {calculateWage(emp.time, emp.hourlyRate)}
+                      </td>
                     </tr>
                   );
                 })}

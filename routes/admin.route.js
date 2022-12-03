@@ -42,7 +42,7 @@ const transporter = nodemailer.createTransport({
 
 router.post("/register", async (req, res, next) => {
   console.log("In Admin Registers");
-  let { username, email, password } = req.body;
+  let { username, email, password, currency } = req.body;
 
   //check user already exists or not
   const user = await Admin.findOne({ email: email });
@@ -56,6 +56,7 @@ router.post("/register", async (req, res, next) => {
       email,
       password: hashPassword,
       role: "admin",
+      currency: currency,
       emailToken: crypto.randomBytes(64).toString("hex"),
     });
     //// 1 = User registered

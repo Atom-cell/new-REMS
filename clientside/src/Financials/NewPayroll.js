@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SearchBar from "../Componentss/SearchBar";
 
-const NewPayroll = ({ user }) => {
+const NewPayroll = ({ user, currency }) => {
   const navigate = useNavigate();
   const [payrollTitle, setPayrollTitle] = useState();
   const [dateRange, setDateRange] = useState();
@@ -651,7 +651,9 @@ const NewPayroll = ({ user }) => {
                     <tr key={emp._id}>
                       <td>{emp.username}</td>
                       <td>{emp.totalTime}</td>
-                      <td>$ {emp.totalAmount.toFixed(2)}</td>
+                      <td>
+                        {currency?.symbol} {emp.totalAmount.toFixed(2)}
+                      </td>
                     </tr>
                   );
                 })}

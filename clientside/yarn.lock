@@ -6970,9 +6970,9 @@
     "rgba-regex" "^1.0.0"
 
 "is-core-module@^2.0.0":
-  "integrity" "sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ=="
-  "resolved" "https://registry.npmjs.org/is-core-module/-/is-core-module-2.2.0.tgz"
-  "version" "2.2.0"
+  "integrity" "sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw=="
+  "resolved" "https://registry.npmjs.org/is-core-module/-/is-core-module-2.11.0.tgz"
+  "version" "2.11.0"
   dependencies:
     "has" "^1.0.3"
 
