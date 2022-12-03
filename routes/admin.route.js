@@ -193,7 +193,18 @@ router.delete("/deletelog/:email", (req, res) => {
   });
 });
 
-router.delete("/deleteSS", (req, res) => {});
+router.put("/deleteSS/:email", (req, res) => {
+  console.log("Deleting SS");
+  let email = req.params.email;
+  let { SS } = req.body;
+  console.log(email, SS.length);
+  Emp.findOneAndUpdate({ email: email }, { screenshot: SS }, (err, rec) => {
+    if (err) console.log(err.message);
+    else {
+      res.json("OK");
+    }
+  });
+});
 
 router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");

@@ -14,6 +14,7 @@ import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
 
 function stringToColor(string) {
   let hash = 0;
@@ -66,6 +67,7 @@ function MoreInfo() {
   const [showCal, setShowCal] = React.useState(false);
   const [proj, setProj] = React.useState([]);
   const [team, setTeam] = React.useState([]);
+  const [SSLoading, setSSLoading] = React.useState(false);
   const monthNames = [
     "January",
     "February",
@@ -187,6 +189,7 @@ function MoreInfo() {
       })
     );
 
+    setSSLoading(true);
     setSS(
       data?.screenshot.filter((tt) => {
         console.log(tt);
@@ -194,7 +197,7 @@ function MoreInfo() {
       })
     );
 
-    console.log("SSSSS", SS);
+    setSSLoading(false);
   };
 
   const openBase64InNewTab = (data, mimeType) => {
@@ -251,6 +254,29 @@ function MoreInfo() {
 
   const deleteSS = () => {
     let email = data.email;
+    console.log("SSSSSSSSSSSS: ", SS);
+
+    if (SS.length === 0) {
+      toast.info("no data");
+    } else {
+      let dates = SS.map((s) => s.date);
+      let newSS = [];
+      data.screenshot.forEach((s) => {
+        if (dates.includes(s.date)) {
+          console.log(s);
+        } else {
+          newSS.push(s);
+        }
+      });
+      axios
+        .put(`http://localhost:5000/admin/deleteSS/${email}`, { SS: newSS })
+        .then((response) => {
+          if (response.data === "OK") {
+            setSS([...newSS]);
+            toast.warning("Deleted");
+          }
+        });
+    }
   };
 
   return (
@@ -493,7 +519,7 @@ function MoreInfo() {
                 <DeleteIcon sx={{ fill: "black" }} fontSize="inherit" />
               </IconButton>
             </div>
-            {loading ? (
+            {SSLoading ? (
               <div className="spinner">
                 <Spinner animation="border" />
               </div>
@@ -517,7 +543,7 @@ function MoreInfo() {
                         />
                         <Carousel.Caption>
                           <h3 style={{ color: "black" }}>
-                            {i.date.slice(0, 10)}
+                            {i.date?.slice(0, 10)}
                           </h3>
                         </Carousel.Caption>
                       </Carousel.Item>
