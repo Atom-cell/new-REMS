@@ -204,7 +204,7 @@ function EmpManage() {
       {mod ? (
         <AddEmpModal closeMod={closeMod} addEmpModal={addEmpModal} />
       ) : null}
-      <h1>Employee Management</h1>
+      <h2 style={{ marginBottom: "1em" }}>Employee Management</h2>
 
       <div className="search">
         <div>
@@ -332,6 +332,13 @@ function EmpManage() {
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => submit(data._id)}>
                             Delete
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() =>
+                              navigate("/coach", { state: { emp: data } })
+                            }
+                          >
+                            Add Strengths & Weaknesses
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>

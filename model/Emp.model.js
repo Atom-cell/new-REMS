@@ -80,18 +80,6 @@ var empSchema = mongoose.Schema({
       },
     },
   ],
-  // dayTime: [
-  //   {
-  //     date: Date,
-  //     idleDay: {
-  //       type: Array,
-  //     },
-  //     activeDay: {
-  //       type: Array,
-  //     },
-  //   },
-  // ],
-
   notifications: [
     { msg: String, flag: { type: Number, default: 0 }, path: String },
   ],
@@ -103,6 +91,8 @@ var empSchema = mongoose.Schema({
   // date is string because easier to filter
   InOut: [{ date: String, In: Date, Out: Date }],
   hourlyRate: Number,
+  strength: [{ msg: String }],
+  weakness: [{ msg: String }],
 });
 
 module.exports = mongoose.model("employee", empSchema);

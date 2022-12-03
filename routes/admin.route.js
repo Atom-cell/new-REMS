@@ -185,6 +185,97 @@ router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");
 });
 
+router.get("/getCoaching/:id", async (req, res) => {
+  console.log("getting coaching");
+  let id = req.params.id;
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    password: 0,
+    bankDetails: 0,
+    notifications: 0,
+    profilePicture: 0,
+  };
+
+  const user = await Emp.findOne({ _id: id }).select(v);
+  res.json(user);
+});
+
+router.post("/coachStrength/:id", (req, res) => {
+  console.log("adding stength");
+  let id = req.params.id;
+  let { msg } = req.body;
+  // strength
+  // weakness
+  Emp.findOneAndUpdate(
+    { _id: id },
+    {
+      $push: {
+        strength: {
+          msg: msg,
+        },
+      },
+    },
+    (err, rec) => {
+      if (err) console.log(err);
+      else res.json(rec.strength);
+    }
+  );
+});
+
+router.post("/coachWeakness/:id", (req, res) => {
+  console.log("adding weakness");
+  let id = req.params.id;
+  let { msg } = req.body;
+
+  Emp.findOneAndUpdate(
+    { _id: id },
+    {
+      $push: {
+        weakness: {
+          msg: msg,
+        },
+      },
+    },
+    (err, rec) => {
+      if (err) console.log(err);
+      else res.json(rec.weakness);
+    }
+  );
+});
+
+router.post("/deleteStrength/:id/:sid", (req, res) => {
+  console.log("deleting strength");
+  let id = req.params.id;
+  let sid = req.params.sid;
+
+  Emp.findOneAndUpdate(
+    { _id: id },
+    { $pull: { strength: { _id: sid } } },
+    function (err, obj) {
+      if (err) console.log(err);
+      else res.json(obj);
+    }
+  );
+});
+
+router.post("/deleteWeakness/:id/:sid", (req, res) => {
+  console.log("deleting weakness");
+  let id = req.params.id;
+  let sid = req.params.sid;
+
+  Emp.findOneAndUpdate(
+    { _id: id },
+    { $pull: { weakness: { _id: sid } } },
+    function (err, obj) {
+      if (err) console.log(err);
+      else res.json(obj);
+    }
+  );
+});
+
 router.delete("/deletelog/:email", (req, res) => {
   console.log("In delte Logs", req.params.email);
 

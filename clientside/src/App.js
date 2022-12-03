@@ -29,6 +29,7 @@ import UpdateProfile from "./components/UpdateProfile";
 import NoMobile from "./components/NoMobile";
 import EmpManage from "./components/EmpManage";
 import MoreInfo from "./components/MoreInfo";
+import Coach from "./components/Coach";
 import Log from "./components/Log";
 import Teams from "./Team/Teams";
 import CreateTeam from "./Team/CreateTeam";
@@ -408,7 +409,7 @@ const App = () => {
                         <Route path="/update" element={<UpdateProfile />} />
                         <Route path="/no" element={<NoMobile />} />
                         <Route path="/profile" element={<Profile />} />
-
+                        <Route path="/coach" element={<Coach />} />
                         <Route path="/empManage" element={<EmpManage />} />
                         <Route path="/moreInfo" element={<MoreInfo />} />
                         <Route path="/log" element={<Log />} />
