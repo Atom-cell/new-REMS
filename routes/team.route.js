@@ -113,10 +113,31 @@ router.get("/getMyTeam/:id", verifyJWT, (req, res) => {
 });
 
 router.get("/teambyid", (req, res) => {
-  Team.find({ _id: req.query.teamId }, (err, rec) => {
-    if (err) res.status(500).json(err);
-    res.status(200).json(rec);
-  });
+  // console.log(req.userEmail);
+  // console.log("GEtting teams");
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    attendance: 0,
+  };
+  try {
+    Team.find({ _id: req.query.teamId, active: true }, v)
+      .populate({ path: "teamLead", select: v, match: { active: true } })
+      .populate({ path: "members", select: v, match: { active: true } })
+      .exec((err, rec) => {
+        if (err) res.status(500).json(err);
+        res.status(200).json(rec);
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+
+  // Team.find({ _id: req.query.teamId }, (err, rec) => {
+  //   if (err) res.status(500).json(err);
+  //   res.status(200).json(rec);
+  // });
 });
 
 router.delete("/deleteTeam/:id", verifyJWT, (req, res) => {

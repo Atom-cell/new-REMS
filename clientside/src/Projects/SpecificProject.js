@@ -348,7 +348,7 @@ const SpecificProject = ({ user }) => {
           params: { teamId: location.state.project.teamId },
         })
         .then((rec) => {
-          console.log(rec.data[0]);
+          console.log(rec.data);
           setMyTeam(rec.data[0]);
         })
         .catch((err) => console.log(err + "Line 358 in Specific Project"));
@@ -1068,7 +1068,10 @@ const SpecificProject = ({ user }) => {
         {myTeam && (
           <div
             className="project-members-container"
-            onClick={() => navigate("/teamInfo", { state: { team: myTeam } })}
+            onClick={() => {
+              console.log(myTeam);
+              navigate("/teamInfo", { state: { team: myTeam } });
+            }}
           >
             <GroupsIcon size={30} style={{ marginRight: "5px" }} />
             <span style={{ fontSize: "20px" }}>{myTeam?.teamName}</span>

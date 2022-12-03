@@ -5,7 +5,7 @@ import { X } from "react-feather";
 import "./Editable.css";
 
 function Editable(props) {
-  console.log(props.emp);
+  // console.log(props.emp);
   const [isEditable, setIsEditable] = useState(false);
   const [inputText, setInputText] = useState(props.defaultValue || "");
 

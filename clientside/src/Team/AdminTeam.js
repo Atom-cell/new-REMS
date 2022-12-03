@@ -64,7 +64,7 @@ const AdminTeam = ({ teams, confirm }) => {
         </div>
         <div className="team_wrapper">
           {teams?.map((p, index) => {
-            console.log("team: ", p);
+            // console.log("team: ", p);
             if (p.teamLead !== null) {
               return (
                 <div key={index} className="team_show_div">
