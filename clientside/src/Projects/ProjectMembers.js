@@ -133,7 +133,8 @@ const ProjectMembers = ({
             <Table bordered hover>
               <thead>
                 <tr>
-                  {user?.role !== "Employee" && <th>Select</th>}
+                  {(user?.role !== "Employee" ||
+                    user?._id === myProject?.projectroles) && <th>Select</th>}
                   <th>Name</th>
                   <th>Email</th>
                 </tr>
@@ -143,7 +144,8 @@ const ProjectMembers = ({
                   return (
                     <tr key={employee._id}>
                       <>
-                        {user?.role !== "Employee" && (
+                        {(user?.role !== "Employee" ||
+                          user?._id === myProject?.projectroles) && (
                           <>
                             {selectedEmployees?.includes(employee._id) ? (
                               <td>
