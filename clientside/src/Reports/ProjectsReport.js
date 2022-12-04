@@ -34,6 +34,7 @@ const ProjectsReport = () => {
   const [loading, setLoading] = React.useState(1);
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
+  const [boards, setBoards] = React.useState([]);
   const date = new Date();
   const [value, setValue] = React.useState(dayjs(date.toJSON().slice(0, 10)));
   const [chartData, setChartData] = React.useState();
@@ -41,28 +42,10 @@ const ProjectsReport = () => {
   let month = new Date(value).getMonth() + 1;
   let year = new Date(value).getFullYear();
 
-  React.useEffect(() => {
-    // getData();
-  }, []);
-
-  const getData = async () => {
-    let id = localStorage.getItem("id");
-    await axios
-      .get(`http://localhost:5000/report/allProjects/${id}`, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        setData([...response.data]);
-        setLoading(1);
-      });
-  };
-
   const getProject = async () => {
     let id = localStorage.getItem("id");
 
+    let proj;
     await axios
       .get(
         `http://localhost:5000/report/allProjects/${id}/${status}/${month}`,
@@ -82,8 +65,68 @@ const ProjectsReport = () => {
           setData([...response.data]);
           makeChartDate([...response.data]);
           setLoading(1);
+          proj = response.data;
         }
       });
+    getBoards(proj);
+  };
+
+  const getBoards = async (projects) => {
+    await axios
+      .get("http://localhost:5000/report/onlymyboards", {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("BOARDS:  ", response.data);
+        console.log("Projects: ", projects);
+
+        let projectID = projects.map((p) => p._id);
+        let newBoards = [];
+
+        let boards = [...response.data];
+        boards.forEach((b) => {
+          if (projectID.includes(b.projectId)) {
+            newBoards.push(b);
+          }
+        });
+
+        console.log("new boards: ", newBoards);
+        setBoards([...newBoards]);
+      });
+  };
+
+  //kitne tasks complete hue kitne assigned they
+  const getProjectProgress = (id, name) => {
+    let completed = 0;
+    let assinged = 0;
+
+    boards.forEach((b) => {
+      if (b.projectId === id) {
+        b.boards?.forEach((cards) => {
+          cards.cards?.forEach((a) => {
+            // console.log("cards: ", id, " ", a.tasks);
+            assinged += a.tasks.length;
+            a.tasks.forEach((tasks) => {
+              if (tasks.completed) completed++;
+            });
+          });
+        });
+      }
+    });
+
+    console.log(
+      "project: ",
+      name,
+      " Complte: ",
+      completed,
+      " total tasks given: ",
+      assinged
+    );
+
+    let progress = (completed / assinged) * 100;
+    return progress.toFixed(2);
   };
 
   const makeChartDate = (data) => {
@@ -161,24 +204,6 @@ const ProjectsReport = () => {
             width: "100%",
           }}
         >
-          {/* <FormControl style={{ width: "20%", marginRight: "2em" }}>
-            <InputLabel id="demo-simple-select-label">Projects</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={name}
-              onChange={handleChange}
-            >
-              {data.map((data, index) => {
-                return (
-                  <MenuItem value={data._id} key={index}>
-                    {data.projectName}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl> */}
-
           <FormControl style={{ width: "20%", marginRight: "2em" }}>
             <InputLabel id="demo-simple-select-label">Status</InputLabel>
             <Select
@@ -219,7 +244,7 @@ const ProjectsReport = () => {
           >
             Search
           </Button>
-          <ExcelExport excelData={project} fileName="Demo" />
+          {/* <ExcelExport excelData={project} fileName="Demo" /> */}
         </div>
       </div>
       <div>
@@ -251,6 +276,7 @@ const ProjectsReport = () => {
                   <th className="thead">Members Work</th>
                   <th className="thead">Total Break Time</th>
                   <th className="thead">Worked Hours</th>
+                  <th className="thead">Progress</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,7 +321,7 @@ const ProjectsReport = () => {
                             {d.hoursWorked?.map((h, i) => {
                               return (
                                 <tr key={i}>
-                                  <td style={{ width: "20%" }}>{h.date}</td>
+                                  <td style={{ width: "25%" }}>{h.date}</td>
                                   <td style={{ width: "30%" }}>{h.user} </td>
                                   <td style={{ width: "30%" }}>{h.time} </td>
                                 </tr>
@@ -306,6 +332,12 @@ const ProjectsReport = () => {
                       </td>
                       <td>{calculateTotalBreak(d.numOfBreaks)}</td>
                       <td>{calculateTotalHour(d.hoursWorked)}</td>
+                      <td>
+                        {isNaN(getProjectProgress(d._id, d.projectName))
+                          ? 0
+                          : getProjectProgress(d._id, d.projectName)}
+                        %
+                      </td>
                     </tr>
                   );
                 })}

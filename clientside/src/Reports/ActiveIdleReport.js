@@ -170,7 +170,7 @@ const ActiveIdleReport = () => {
           >
             Search
           </Button>
-          <ExcelExport excelData={active} fileName="Demo" />
+          {/* <ExcelExport excelData={active} fileName="Demo" /> */}
           {/* <Button onClick={() => downloadPDF()}></Button> */}
           {/* <PDFDownloadLink document={<PDFReport />} filename="FORM">
             {({ loading }) =>

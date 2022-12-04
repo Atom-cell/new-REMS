@@ -240,7 +240,7 @@ const InOutReport = () => {
           >
             Search
           </Button>
-          <ExcelExport excelData={inOut} fileName="Demo" />
+          {/* <ExcelExport excelData={inOut} fileName="Demo" /> */}
           {/* <Button onClick={() => downloadPDF()}></Button> */}
           {/* <PDFDownloadLink document={<PDFReport />} filename="FORM">
             {({ loading }) =>
