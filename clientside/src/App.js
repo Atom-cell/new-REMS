@@ -275,32 +275,36 @@ const App = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user.role == "admin") {
-      axios
-        .get(`https://restcountries.com/v2/name/${user.currency}?fullText=true`)
-        .then((rec) => {
-          console.log(rec.data[0].currencies[0]);
-          setCurrency(rec.data[0].currencies[0]);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      //get my admin
-      axios
-        .get("http://localhost:5000/emp/getmyadmin", {
-          params: { _id: user._id },
-        })
-        .then((rec) => {
-          // console.log(rec.data[0].currency);
-          axios
-            .get(
-              `https://restcountries.com/v2/name/${rec.data[0].currency}?fullText=true`
-            )
-            .then((records) => {
-              console.log(records.data[0].currencies[0]);
-              setCurrency(records.data[0].currencies[0]);
-            })
-            .catch((err) => console.log(err));
-        });
+    if (user) {
+      if (user?.role == "admin") {
+        axios
+          .get(
+            `https://restcountries.com/v2/name/${user.currency}?fullText=true`
+          )
+          .then((rec) => {
+            console.log(rec.data[0].currencies[0]);
+            setCurrency(rec.data[0].currencies[0]);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        //get my admin
+        axios
+          .get("http://localhost:5000/emp/getmyadmin", {
+            params: { _id: user?._id },
+          })
+          .then((rec) => {
+            // console.log(rec.data[0].currency);
+            axios
+              .get(
+                `https://restcountries.com/v2/name/${rec?.data[0].currency}?fullText=true`
+              )
+              .then((records) => {
+                console.log(records?.data[0].currencies[0]);
+                setCurrency(records?.data[0].currencies[0]);
+              })
+              .catch((err) => console.log(err));
+          });
+      }
     }
   }, []);
 

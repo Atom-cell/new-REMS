@@ -147,13 +147,16 @@ router.post("/payment", async (req, res) => {
   // console.log(req.body.amount);
   // console.log(process.env.Secret_key);
   let status, error;
-  const { token, amount, payrollId } = req.body;
-  // console.log(typeof amount);
+  const { token, amount, payrollId, currency } = req.body;
+  var money = Number(amount);
+  // console.log(typeof money);
+  // console.log(money);
+  // console.log(currency);
   try {
     await Stripe.charges.create({
       source: token.id,
-      amount: 10,
-      currency: "usd",
+      amount: Math.floor(money) * 100,
+      currency: currency,
       description: "asdasda",
       shipping: {
         name: "Jenny Rosen",

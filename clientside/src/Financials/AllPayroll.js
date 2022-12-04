@@ -18,7 +18,10 @@ const AllPayroll = ({ user, currency }) => {
   const [searchInput, setSearchInput] = useState();
   const [ascending, setAscending] = useState(true);
 
-  const handleTokenPay = async (token, id, amount) => {
+  const handleTokenPay = async (token, id, emps) => {
+    var amount = handleTotalAmount(emps);
+    // console.log(typeof amount);
+    // console.log(amount);
     // amount = parseInt(amount);
     // console.log(typeof amount);
     // console.log(amount);
@@ -34,6 +37,7 @@ const AllPayroll = ({ user, currency }) => {
       .post("/myPayroll/payment", {
         token: token,
         amount: amount,
+        currency: currency.code,
         payrollId: id,
       })
       .then((rec) => {
@@ -88,7 +92,7 @@ const AllPayroll = ({ user, currency }) => {
   // }
 
   const handleAdjustments = (arr) => {
-    console.log(arr);
+    // console.log(arr);
     // [adjustment,comment]
     // find total adjustment i-e if add then add and if subtract then subtract
     let sum = 0;
@@ -175,7 +179,7 @@ const AllPayroll = ({ user, currency }) => {
       const rec = await axios.get("/myPayroll/getallpayrolls", {
         params: { employerId: user._id },
       });
-      console.log(rec.data);
+      // console.log(rec.data);
       setAllPayrolls(rec.data);
     }
   };
@@ -313,12 +317,13 @@ const AllPayroll = ({ user, currency }) => {
                             name="Pay With Credit Card"
                             // billingAddress
                             // shippingAddress
-                            amount={p.totalAmount}
+                            currency={currency?.code}
+                            amount={handleTotalAmount(p.employees) * 100}
                             description={`Total Amount to be paid is: ${
                               currency?.symbol
                             } ${handleTotalAmount(p.employees)}`}
                             token={(token) =>
-                              handleTokenPay(token, p._id, p.totalAmount)
+                              handleTokenPay(token, p._id, p.employees)
                             }
                           />
                         ) : (
