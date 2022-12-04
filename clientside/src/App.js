@@ -282,7 +282,7 @@ const App = () => {
             `https://restcountries.com/v2/name/${user.currency}?fullText=true`
           )
           .then((rec) => {
-            console.log(rec.data[0].currencies[0]);
+            // console.log(rec.data[0].currencies[0]);
             setCurrency(rec.data[0].currencies[0]);
           })
           .catch((err) => console.log(err));
@@ -318,11 +318,12 @@ const App = () => {
         var messageNotifications = rec.data.filter((notif) => {
           if (notif.msg.includes("Message") || notif.msg.includes("Video")) {
             if (notif.flag === 0) sum = sum + 1;
+            console.log(notif);
             return notif;
           }
         });
-        // console.log(messageNotifications);
-        console.log(sum);
+        console.log(messageNotifications);
+        // console.log(sum);
         setAllNotifications(messageNotifications);
         setUnreadNotifications(sum);
       });

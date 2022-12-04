@@ -151,6 +151,18 @@ const NewPayroll = ({ user, currency }) => {
       .catch((err) => {
         console.log(err + "line 61 New Payroll");
       });
+
+    // post notification
+    axios
+      .post("http://localhost:5000/notif/payrollnotification", {
+        employerName: user?.username,
+        emps: newSelectedEmployees,
+        payrollTitle: payrollTitle,
+      })
+      .then((rec) => {
+        console.log(rec.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getAllProjects = (data) => {

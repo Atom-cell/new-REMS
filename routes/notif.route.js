@@ -742,6 +742,31 @@ router.post("/messagenotification", (req, res) => {
   res.status(200).json("success");
 });
 
+router.post("/payrollnotification", (req, res) => {
+  console.log("in set payroll notification");
+  // console.log(req.body);
+  let { emps, employerName, payrollTitle } = req.body;
+  const message = `Payroll Generated ${payrollTitle} by ${employerName}`;
+  // emps.pop();
+  emps.forEach((e) => {
+    Emp.findOneAndUpdate(
+      { username: e.employeeUsername },
+      {
+        $push: {
+          notifications: {
+            msg: message,
+            path: "/allpayroll",
+          },
+        },
+      },
+      (err, rec) => {
+        if (err) res.status(200).json(err);
+      }
+    );
+  });
+  res.status(500).json("Success");
+});
+
 router.post("/readall", (req, res) => {
   // console.log(req.body);
   req.body.notifications.forEach((obj) => {
