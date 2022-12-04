@@ -297,7 +297,8 @@ router.post("/register", verifyJWT, async (req, res, next) => {
       <h4>Following are your credentials</h4>
       <p>Email: ${email}</p>
       <p>Password: ${password}</p>
-      <a href="http://localhost:3000/login">Login to REMS</a>`,
+      <a href="http://localhost:3000/login">Login to REMS</a>
+      <a href="http://localhost:3000/download>Download App link</a>`,
     };
 
     transporter.sendMail(mailOptions, (err, info) => {

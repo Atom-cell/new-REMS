@@ -1,8 +1,16 @@
 import { MoreInfoContext } from "../Helper/Context";
+import LoadingModal from "./LoadingModal";
 import React from "react";
 import axios from "axios";
 import "./EmpManage.css";
-import { Table, Button, Dropdown, Spinner, Badge } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Dropdown,
+  Spinner,
+  Badge,
+  Modal,
+} from "react-bootstrap";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
@@ -46,6 +54,20 @@ function Offline() {
   );
 }
 
+function Zone({ color }) {
+  return (
+    <span
+      style={{
+        height: "2em",
+        width: "2em",
+        backgroundColor: color,
+        borderRadius: "50%",
+        display: "inline-block",
+      }}
+    ></span>
+  );
+}
+
 function EmpManage() {
   // fetching data
 
@@ -60,16 +82,43 @@ function EmpManage() {
   const [eNum, setENum] = React.useState(0);
   const [msg, setMsg] = React.useState(9);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState([false]);
+  const [selected, setSelected] = React.useState([false]); //for showing that ss is toggled on off
   const [currentPage, setCurrentPage] = React.useState(1);
   const [postsPerPage, setPostsPerPage] = React.useState(10);
+  const [loadingModal, setLoadingModal] = React.useState(false);
+  const [productivity, setProductivity] = React.useState();
+  const [show, setShow] = React.useState(false); //for showing productivity
+
+  const handleCloseModal = () => setShow(false); //for showing productivity in modal
+  const handleShow = () => setShow(true); //for showing productivity in modal
 
   const { moreInfo, setMoreInfo } = React.useContext(MoreInfoContext);
+  const month = new Date().getMonth() + 1;
 
+  const monthName = {
+    1: "Jan",
+    2: "Feb",
+    3: "Mar",
+    4: "Apr",
+    5: "May",
+    6: "Jun",
+    7: "Jul",
+    8: "Aug",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
   React.useEffect(() => {
     getData();
   }, [eNum]);
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadingModal(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [loadingModal]);
   const getData = async () => {
     await axios
       .get(`${baseURL}/admin/allEmps`, {
@@ -109,11 +158,13 @@ function EmpManage() {
   };
 
   const deleteEmp = (id) => {
-    axios.delete(`${baseURL}/emp/deleteEmp/${id}`, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    });
+    axios
+      .delete(`${baseURL}/emp/deleteEmp/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => toast.success("User deleted"));
 
     getData();
   };
@@ -184,6 +235,115 @@ function EmpManage() {
     navigate("/moreInfo");
   };
 
+  const calculateProductivity = async (id, name) => {
+    let data = [];
+    let boards = [];
+    await axios
+      .get(`http://localhost:5000/report/employeeprojects/${id}/${11}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("proj ", response.data);
+        data = [...response.data];
+        setLoading(1);
+      });
+
+    let timeWorked = filterProjectData([...data], name);
+
+    await axios
+      .get("http://localhost:5000/report/onlymyboards", {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("BOARDS :;  ", response.data);
+        boards = [...response.data];
+      });
+
+    filterBoards(data, boards, id, timeWorked);
+  };
+
+  //time spent doing the projects
+  const filterProjectData = (arr, name) => {
+    let totalTime = 0;
+    let secs = [];
+
+    arr.forEach((a) => {
+      a.hoursWorked.forEach((h) => {
+        if (h.user === name) {
+          let str = h.time.split(":");
+          str = str[0] * 3600 + str[1] * 60 + str[2] * 1;
+          secs.push(str);
+          totalTime += str;
+        }
+      });
+    });
+
+    console.log("Total time workedon : ", totalTime);
+    return totalTime;
+  };
+
+  const filterBoards = (projects, boards, id, timeWorked) => {
+    console.log("filterProjsfilterprojs: ", projects);
+    console.log("filterBoardsfilterBoards: ", boards);
+    let projectID = projects.map((p) => p._id);
+    let newBoards = [];
+
+    boards.forEach((b) => {
+      if (projectID.includes(b.projectId)) {
+        newBoards.push(b);
+      }
+    });
+
+    newBoards = newBoards.map((b) => {
+      return b.boards;
+    });
+
+    console.log("new boards: ", newBoards);
+
+    let completed = 0;
+    let assigned = 0;
+    newBoards.forEach((b) => {
+      b?.forEach((cards) => {
+        cards.cards?.forEach((a) => {
+          if (a.assignedTo === id) {
+            assigned += a.tasks.length;
+            a.tasks.forEach((tasks) => {
+              if (tasks.completed) completed++;
+            });
+          }
+        });
+      });
+    });
+
+    let percent = timeWorked * 0.3 + (completed / assigned) * 0.7;
+    console.log(timeWorked);
+    console.log("completed ", completed);
+    console.log("assigned ", assigned);
+    console.log(percent);
+    setProductivity(percent);
+    if (isNaN(percent)) {
+      toast.info("Not enough data");
+    } else {
+      setLoadingModal(true);
+      sendNotification(percent, id);
+    }
+  };
+
+  const sendNotification = (zone, id) => {
+    axios
+      .put("/admin/updateZone", { zone: zone, id: id })
+      .then((response) => {})
+      .catch((error) => {});
+
+    axios.post(`/notif/zone/${id}`).then((response) => {
+      getData();
+    });
+  };
+
   return (
     <div className="cnt">
       <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
@@ -203,6 +363,9 @@ function EmpManage() {
       </Snackbar>
       {mod ? (
         <AddEmpModal closeMod={closeMod} addEmpModal={addEmpModal} />
+      ) : null}
+      {loadingModal ? (
+        <LoadingModal closeMod={closeMod} prod={productivity} />
       ) : null}
       <h2 style={{ marginBottom: "1em" }}>Employee Management</h2>
 
@@ -247,11 +410,10 @@ function EmpManage() {
                 <th className="thead">#</th>
                 <th className="thead">Username</th>
                 <th className="thead">Email</th>
-                <th className="thead">Role</th>
-                {/* <th className="thead">More Info</th> */}
                 <th className="thead">Sreenshot</th>
                 <th className="thead">Status</th>
                 <th className="thead">Action</th>
+                <th className="thead">Zone</th>
               </tr>
             </thead>
             <tbody>
@@ -277,45 +439,21 @@ function EmpManage() {
                     >
                       {data.email}
                     </td>
-                    <td
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setInfo(data)}
-                    >
-                      {data.role}
-                    </td>
-                    {/* <td>
-                        <button
-                          style={{ all: "unset", cursor: "pointer" }}
-                          onClick={() => {
-                            localStorage.setItem("info", JSON.stringify(data));
-                            window.location.href = "/moreInfo";
-                          }}
-                        >
-                          Click for more Info
-                        </button>
-                      </td> */}
                     <td>
                       <ToggleButton
                         value="check"
                         selected={selected[index]}
-                        // onChange={() => {
-                        //   setSelected(!selected);
-                        // }}
                         onClick={() =>
-                          data.desktop
+                          data.desktop && data.zone === "red"
                             ? Screenshots(index, data.email)
-                            : toast.info("User is not online")
+                            : toast.info(
+                                "Screenshots only for red zone and online users"
+                              )
                         }
                         style={{ padding: "0.5em" }}
                       >
                         <PhotoCameraIcon />
                       </ToggleButton>
-                      {/* <Button onClick={() => ScreenshotStart(data.email)}>
-                      SS
-                    </Button>
-                    <Button onClick={() => ScreenshotStop(data.email)}>
-                      SStop
-                    </Button> */}
                     </td>
                     <td>{data.desktop ? <Online /> : <Offline />}</td>
                     <td>
@@ -325,10 +463,13 @@ function EmpManage() {
                         >
                           <MoreVertIcon />
                         </Dropdown.Toggle>
-
                         <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => alert("action")}>
-                            Edit
+                          <Dropdown.Item
+                            onClick={() =>
+                              calculateProductivity(data._id, data.username)
+                            }
+                          >
+                            Calculate Productivity for {monthName[month]}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => submit(data._id)}>
                             Delete
@@ -342,6 +483,18 @@ function EmpManage() {
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
+                    </td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setInfo(data)}
+                    >
+                      {data.zone === "green" ? (
+                        <Zone color="#1fd655" />
+                      ) : data.zone === "yellow" ? (
+                        <Zone color="yellow" />
+                      ) : data.zone === "red" ? (
+                        <Zone color="#f70d1a" />
+                      ) : null}
                     </td>
                   </tr>
                 );
@@ -358,6 +511,12 @@ function EmpManage() {
           />
         </>
       ) : null}
+      <Modal show={show} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Calculated Productivity</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{productivity}</Modal.Body>
+      </Modal>
     </div>
   );
 }

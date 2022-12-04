@@ -763,4 +763,31 @@ router.post("/readall", (req, res) => {
   });
   res.status(200).json("Success");
 });
+
+router.post("/zone/:id", (req, res) => {
+  console.log("adding red zone");
+  let id = req.params.id;
+  try {
+    Emp.findOneAndUpdate(
+      { _id: id },
+      {
+        $push: {
+          notifications: {
+            msg: `Your productivity is dangerously low. You are under more supervision`,
+            path: "/dashboard",
+          },
+        },
+      },
+      function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("");
+        }
+      }
+    );
+  } catch (e) {
+    res.send(e);
+  }
+});
 module.exports = router;

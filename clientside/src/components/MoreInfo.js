@@ -456,7 +456,7 @@ function MoreInfo() {
                 <Divider />
                 <div className="infoRow">
                   <h6 style={{ color: "gray", flex: "30%" }}>Zone:</h6>
-                  <h6 style={{ flex: "50%" }}>Green</h6>
+                  <h6 style={{ flex: "50%" }}>{data.zone}</h6>
                 </div>
               </div>
             </div>

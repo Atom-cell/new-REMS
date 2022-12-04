@@ -185,7 +185,66 @@ const ProductivityReport = () => {
       });
   };
 
-  // only selected months projects boards
+  const getProject = async () => {
+    let data = [];
+    await axios
+      .get(`http://localhost:5000/report/employeeprojects/${name}/${month}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("proj ", response.data);
+        setProjects([...response.data]);
+        data = [...response.data];
+        setLoading(1);
+      });
+    filterProjectDataForChart([...data]); //for chart
+    filterProjectData([...data]); //for total time spent in projects
+  };
+
+  //time spent doing the projects
+  const filterProjectData = (arr) => {
+    const name = user?.username;
+    let totalTime = 0;
+    let secs = [];
+
+    arr.forEach((a) => {
+      a.hoursWorked.forEach((h) => {
+        if (h.user === name) {
+          let str = h.time.split(":");
+          str = str[0] * 3600 + str[1] * 60 + str[2] * 1;
+          secs.push(str);
+          totalTime += str;
+        }
+      });
+    });
+
+    setTotalTimeOfProjects(totalTime);
+    console.log("Total time workedon : ", totalTime);
+    setProjectTime(timeConvert(totalTime));
+  };
+
+  const filterProjectDataForChart = (arr) => {
+    const name = user?.username;
+
+    let newArr = [];
+    arr.forEach((d) => {
+      if (d.hoursWorked.length >= 1) {
+        let obj = {};
+        obj.projectName = d.projectName;
+        obj.totalTime = calculateTotalHourForChart(d.hoursWorked, name);
+        newArr.push(obj);
+      } else {
+        newArr.push({ projectName: d.projectName, totalTime: 0 });
+      }
+    });
+    setchartDataProject([...newArr]);
+    console.log("new arr for proj chart ", newArr);
+  };
+
+  // only selected months projects boards//
+  ////////////////////////////////////////
   const filterBoards = () => {
     console.log("filterProjsfilterprojs: ", projects);
     console.log("filterBoardsfilterBoards: ", boards);
@@ -227,79 +286,6 @@ const ProductivityReport = () => {
     console.log(assigned);
     console.log(percent);
     setProductivity(percent);
-  };
-
-  const getProject = async () => {
-    await axios
-      .get(`http://localhost:5000/report/employeeprojects/${name}/${month}`, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      })
-      .then((response) => {
-        console.log("proj ", response.data);
-        setProjects([...response.data]);
-        filterProjectDataForChart([...response.data]); //for chart
-        setLoading(1);
-        filterProjectData([...response.data]); //for total time spent in projects
-      });
-  };
-
-  const filterProjectData = (arr) => {
-    const name = user?.username;
-    let totalTime = 0;
-    let secs = [];
-
-    arr.forEach((a) => {
-      a.hoursWorked.forEach((h) => {
-        if (h.user === name) {
-          let str = h.time.split(":");
-          str = str[0] * 3600 + str[1] * 60 + str[2] * 1;
-          secs.push(str);
-          totalTime += str;
-        }
-      });
-    });
-
-    // let empcards = [];
-    // let completed = 0;
-    // boards.forEach((b) => {
-    //   b?.forEach((cards) => {
-    //     cards.cards?.forEach((a) => {
-    //       if (a.assignedTo === name) {
-    //         empcards.push(a.tasks);
-    //         a.tasks.forEach((tasks) => {
-    //           if (tasks.completed) completed++;
-    //         });
-    //       }
-    //     });
-    //   });
-    // });
-
-    // let percent = totalTime * 0.3 + completed * 0.7;
-    // setProductivity(percent);
-
-    setTotalTimeOfProjects(totalTime);
-    console.log("Total time workedon : ", totalTime);
-    setProjectTime(timeConvert(totalTime));
-  };
-
-  const filterProjectDataForChart = (arr) => {
-    const name = user?.username;
-
-    let newArr = [];
-    arr.forEach((d) => {
-      if (d.hoursWorked.length >= 1) {
-        let obj = {};
-        obj.projectName = d.projectName;
-        obj.totalTime = calculateTotalHourForChart(d.hoursWorked, name);
-        newArr.push(obj);
-      } else {
-        newArr.push({ projectName: d.projectName, totalTime: 0 });
-      }
-    });
-    setchartDataProject([...newArr]);
-    console.log("new arr for proj chart ", newArr);
   };
 
   const calculateTotalHourForChart = (hours, n) => {

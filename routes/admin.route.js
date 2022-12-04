@@ -297,6 +297,16 @@ router.put("/deleteSS/:email", (req, res) => {
   });
 });
 
+router.put("/updateZone", (req, res) => {
+  let prod = req.body.zone;
+  let id = req.body.id;
+  if (prod < 60) zone = "red";
+  else if (prod > 60 && prod < 80) zone = "yellow";
+  else zone = "green";
+
+  Emp.findOneAndUpdate({ _id: id }, { zone: zone }, (err, rec) => {});
+});
+
 router.get("/aa", async (req, res) => {
   res.redirect("http://localhost:3000/home");
 });

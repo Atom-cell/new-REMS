@@ -110,11 +110,15 @@ const Teams = () => {
   };
 
   const deleteTeam = (id) => {
-    axios.delete(`${baseURL}/team/deleteTeam/${id}`, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    });
+    axios
+      .delete(`${baseURL}/team/deleteTeam/${id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        toast.warn("Team deleted!");
+      });
 
     axios.post(`${baseURL}/notif/deleteTeamNotif/${id}`, {
       headers: {
@@ -129,19 +133,34 @@ const Teams = () => {
       members: Team[0].members,
     });
 
-    //toast.info("Team deleted!");
     getAdminData();
   };
   return (
     <div style={{ margin: "1em 3em 1em 3em" }}>
       {role !== "Employee" ? (
         loading ? (
-          <Spinner animation="border" style={{ margin: "auto" }} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Spinner animation="grow" />
+          </div>
         ) : (
           <AdminTeam teams={teams} confirm={confirm} />
         )
       ) : loading ? (
-        <Spinner animation="border" style={{ margin: "auto" }} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="grow" />
+        </div>
       ) : (
         <EmpTeam teams={teams} />
       )}

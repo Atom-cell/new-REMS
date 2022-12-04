@@ -84,7 +84,7 @@ var empSchema = mongoose.Schema({
     { msg: String, flag: { type: Number, default: 0 }, path: String },
   ],
   flag: String,
-
+  zone: { type: String, default: "green" },
   billingId: String, // This is Stripe Customer ID
   attendance: [Date],
   bankDetails: String,

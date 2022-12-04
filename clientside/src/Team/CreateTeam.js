@@ -17,20 +17,6 @@ import {
 } from "@mui/material";
 import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
 
-// function BPCheckbox({ pro, id }) {
-//   if (pro !== null) {
-//     const { members } = pro;
-//     console.log(members, id);
-//     let a = false;
-//     members.forEach((m) => {
-//       if (m._id === id) a = true;
-//       else {
-//       }
-//     });
-//     if (a) return <Checkbox defaultChecked />;
-//     else return <Checkbox />;
-//   } else return <Checkbox />;
-// }
 const CreateTeam = () => {
   let navigate = useNavigate();
   const {
@@ -155,7 +141,9 @@ const CreateTeam = () => {
             },
           }
         )
-        .then(function (response) {})
+        .then(function (response) {
+          toast.success("Team Created");
+        })
         .catch(function (error) {
           console.log(error);
         });
