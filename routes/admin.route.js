@@ -131,6 +131,37 @@ router.get("/allEmps", verifyJWT, async (req, res) => {
     console.log(err.message);
   }
 });
+router.get("/allDeletedEmps", verifyJWT, (req, res) => {
+  const v = {
+    screenshot: 0,
+    totalTime: 0,
+    appTime: 0,
+    separateTime: 0,
+    attendance: 0,
+    password: 0,
+    profilePicture: 0,
+    bankDetails: 0,
+    InOut: 0,
+    notifications: 0,
+    strength: 0,
+    weakness: 0,
+  };
+  try {
+    Admin.find({ email: req.userEmail })
+      .populate({
+        path: "employees",
+        select: v,
+        match: { active: false },
+      })
+      .exec((err, data) => {
+        if (err) console.log(err.message);
+        res.json(data[0].employees);
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 router.get("/getMoreInfo/:email", async (req, res) => {
   console.log("getting more Info", req.params.email);
   let email = req.params.email;

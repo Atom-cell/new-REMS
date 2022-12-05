@@ -1,5 +1,6 @@
 import { MoreInfoContext } from "../Helper/Context";
 import LoadingModal from "./LoadingModal";
+import RecoverEmps from "./RecoverEmps";
 import React from "react";
 import axios from "axios";
 import "./EmpManage.css";
@@ -16,6 +17,7 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import {
   Input,
   TextField,
@@ -88,6 +90,7 @@ function EmpManage() {
   const [loadingModal, setLoadingModal] = React.useState(false);
   const [productivity, setProductivity] = React.useState();
   const [show, setShow] = React.useState(false); //for showing productivity
+  const [recover, setRecover] = React.useState(false);
 
   const handleCloseModal = () => setShow(false); //for showing productivity in modal
   const handleShow = () => setShow(true); //for showing productivity in modal
@@ -119,6 +122,7 @@ function EmpManage() {
     }, 2000);
     return () => clearTimeout(timer);
   }, [loadingModal]);
+
   const getData = async () => {
     await axios
       .get(`${baseURL}/admin/allEmps`, {
@@ -168,8 +172,14 @@ function EmpManage() {
 
     getData();
   };
+
   const closeMod = () => {
     setMod(false);
+  };
+
+  const activeUser = () => {
+    setRecover(false);
+    getData();
   };
 
   const addEmpModal = (num) => {
@@ -388,21 +398,35 @@ function EmpManage() {
             Search
           </Button>
         </div>
-        <Button
-          className="submitbtn"
-          //style={{ marginBottom: "20px" }}
-          onClick={() => setMod(true)}
-        >
-          <PersonAddIcon style={{ fill: "white", marginRight: "0.5em" }} />
-          Add new Employee
-        </Button>
+        <div>
+          {!recover ? (
+            <Button className="submitbtn" onClick={() => setRecover(true)}>
+              <SettingsBackupRestoreIcon
+                style={{ fill: "white", marginRight: "0.5em" }}
+              />
+              Archive
+            </Button>
+          ) : (
+            <Button className="submitbtn" onClick={() => setRecover(false)}>
+              Active
+            </Button>
+          )}
+          <Button
+            className="submitbtn"
+            onClick={() => setMod(true)}
+            style={{ marginLeft: "0.7em" }}
+          >
+            <PersonAddIcon style={{ fill: "white", marginRight: "0.5em" }} />
+            Add new Employee
+          </Button>
+        </div>
       </div>
 
       {loading === 0 ? (
         <div className="spinner">
           <Spinner animation="border" />
         </div>
-      ) : loading === 1 ? (
+      ) : loading === 1 && !recover ? (
         <>
           <Table className="table">
             <thead>
@@ -510,7 +534,9 @@ function EmpManage() {
             sx={{ float: "right" }}
           />
         </>
-      ) : null}
+      ) : (
+        <RecoverEmps activeUser={activeUser} />
+      )}
       <Modal show={show} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Calculated Productivity</Modal.Title>

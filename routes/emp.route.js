@@ -491,8 +491,8 @@ router.delete("/deleteEmp/:id", verifyJWT, (req, res) => {
   //   { $pull: { employees: req.params.id } }
   // ).then((response) => console.log(response));
 
-  Emp.findByIdAndUpdate(req.params.id, { active: false }).then((response) =>
-    console.log(response)
+  Emp.findByIdAndUpdate(req.params.id, { active: false }).then(
+    (response) => {}
   );
 });
 
@@ -569,6 +569,15 @@ router.post("/updateProfile/:role/:id", async (req, res) => {
       });
     }
   }
+});
+router.put("/recoverEmp", (req, res) => {
+  console.log("recvering employee");
+  let id = req.body.id;
+  Emp.findOneAndUpdate({ _id: id }, { active: true }, (err, rec) => {
+    if (err) console.log(err);
+    else {
+    }
+  });
 });
 router.put("/update", async (req, res) => {
   const { email, username, password, contact, bank } = req.body;
