@@ -772,15 +772,18 @@ router.post("/readall", (req, res) => {
   req.body.notifications.forEach((obj) => {
     // console.log(obj);
     Emp.findOneAndUpdate(
-      { _id: req.body.userId, "notifications._id": obj._id },
-      { $set: { "notifications.$.flag": 1 } },
+      { _id: req.body.userId },
+      { $pull: { notifications: { _id: obj._id } } },
+      { safe: true, multi: false },
+      // { $set: { "notifications.$.flag": 1 } },
       (err, rec) => {
         if (err) res.status(500).json(err);
       }
     );
     Admin.findOneAndUpdate(
-      { _id: req.body.userId, "notifications._id": obj._id },
-      { $set: { "notifications.$.flag": 1 } },
+      { _id: req.body.userId },
+      { $pull: { notifications: { _id: obj._id } } },
+      { safe: true, multi: false },
       (err, rec) => {
         if (err) res.status(500).json(err);
       }
