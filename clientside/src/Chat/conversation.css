@@ -13,6 +13,12 @@
     border-radius: 10px;
   }
   
+  .convo-active{
+    background-color: #e4f4ec;
+    border-radius: 10px;
+    
+  }
+  
   .conversationImg {
     width: 40px;
     height: 40px;

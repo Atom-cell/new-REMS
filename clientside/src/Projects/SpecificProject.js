@@ -151,16 +151,29 @@ const SpecificProject = ({ user }) => {
       .post("/myprojects/updateroles", {
         projectId: myProject._id,
         projectroles: id,
+        teamId: myTeam._id,
       })
       .then((res) => {
         // console.log(res.data);
         setMyProject(res.data);
         toast.success("Project Lead Added");
+        axios
+          .get("http://localhost:5000/team/teambyid", {
+            params: { teamId: myTeam._id },
+          })
+          .then((rec) => {
+            console.log(rec.data);
+            setMyTeam(rec.data[0]);
+          })
+          .catch((err) => console.log(err + "Line 171 in Specific Project"));
       })
       .catch((err) => console.log(err + "specific Project 135"));
   };
 
   const removeRole = () => {
+    // update project role as well as team lead
+    // for team we need team id
+    // location.state.project.teamId
     axios
       .post("/myprojects/updateroles", {
         projectId: myProject._id,

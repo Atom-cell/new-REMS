@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./conversation.css";
-const Conversation = ({ conversation, currentUser }) => {
+const Conversation = ({ conversation, currentUser, currentChat }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
     // get id having conversation with the current user
@@ -26,7 +26,13 @@ const Conversation = ({ conversation, currentUser }) => {
   }, [currentUser, conversation]);
 
   return (
-    <div className="conversation">
+    <div
+      className={
+        conversation?._id === currentChat?._id
+          ? "conversation convo-active"
+          : "conversation"
+      }
+    >
       <img className="conversationImg" src={user?.profilePicture} alt="" />
       <span className="conversationName">{user?.username}</span>
     </div>

@@ -356,7 +356,11 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                   className="px-4 pt-2"
                   onClick={() => handleConvoClick(convo)}
                 >
-                  <Conversation conversation={convo} currentUser={user} />
+                  <Conversation
+                    conversation={convo}
+                    currentUser={user}
+                    currentChat={currentChat}
+                  />
                 </div>
               ))}
             </div>

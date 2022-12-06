@@ -426,28 +426,45 @@ router.put("/updateprojectstatus", (req, res) => {
 
 router.post("/updateroles", (req, res) => {
   console.log(req.body);
-  // {
-  //   projectId: '6345482bc36d090ea4ceab2c',
-  //   myObj: { type: 'projectlead', id: '628600c5bfaa78c7d2eb29d4' }
-  // }
+  if (req.body.teamId) {
+    Team.findOneAndUpdate(
+      { _id: req.body.teamId },
+      { $set: { teamLead: req.body.projectroles } },
+      { new: true },
+      (err, rec) => {
+        console.log("Hell");
+        if (err) res.status(500).json(err);
+      }
+    );
+  }
+
   myProject.findOneAndUpdate(
     { _id: req.body.projectId },
     { $set: { projectroles: req.body.projectroles } },
     { new: true },
-    // {
-    //   $push: {
-    //     projectroles: {
-    //       type: "projectlead",
-    //       employeeId: req.body.myObj.id,
-    //     },
-    //   },
-    // },
     (err, rec) => {
       if (err) res.status(500).json(err);
       // console.log(rec);
       res.status(200).json(rec);
     }
   );
+});
+
+router.post("/projectsleadupdate", (req, res) => {
+  console.log(req.body);
+
+  req.body.projects.forEach((pro) => {
+    myProject.findOneAndUpdate(
+      { _id: pro._id },
+      { $set: { projectroles: req.body.projectLead } },
+      { new: true },
+      (err, rec) => {
+        if (err) res.status(500).json(err);
+        // console.log(rec);
+      }
+    );
+  });
+  res.status(200).json("Success");
 });
 
 router.post("/addmemberstoproject", (req, res) => {

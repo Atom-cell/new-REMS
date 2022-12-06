@@ -9,9 +9,9 @@ var myProjectSchema = mongoose.Schema(
     projectDescription: {
       type: String,
     },
-    projectCost: {
-      type: String,
-    },
+    // projectCost: {
+    //   type: String,
+    // },
     projectPriority: {
       type: String,
     },
