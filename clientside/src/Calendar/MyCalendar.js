@@ -50,6 +50,7 @@ const localizer = dateFnsLocalizer({
 // ]
 
 const MyCalendar = ({ user }) => {
+  const [project, setProject] = useState();
   const [allEvents, setAllEvents] = useState();
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -67,7 +68,10 @@ const MyCalendar = ({ user }) => {
   const handleClose = () => setModalOpen(false);
   const handleShow = () => setModalOpen(true);
 
-  const handleClosee = () => setEditModalOpen(false);
+  const handleClosee = () => {
+    setEditModalOpen(false);
+    setProject();
+  };
   const handleShoww = () => setEditModalOpen(true);
 
   useEffect(() => {
@@ -138,6 +142,20 @@ const MyCalendar = ({ user }) => {
   const eventSelected = (e) => {
     setEvent(e);
     setEditModalOpen(true);
+    setProject();
+    // console.log(e);
+    if (e?.projectId) {
+      // get that project
+      axios
+        .get("/myprojects/getmyproject", {
+          params: { projectId: e.projectId },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setProject(res.data[0]);
+        })
+        .catch((err) => console.log(err + "My Calendar 151"));
+    }
   };
 
   // function to update an event
@@ -162,11 +180,13 @@ const MyCalendar = ({ user }) => {
       });
     setNewEvent({ title: "", start: null });
     setEditModalOpen(false);
+    setProject();
   };
 
   //Clicking an existing event allows you to remove it
   const deleteEvent = (event) => {
     setEditModalOpen(false);
+    setProject();
     confirmAlert({
       title: "Confirm to Delete",
       message: "Are you sure you want to delete the event?",
@@ -214,6 +234,7 @@ const MyCalendar = ({ user }) => {
           deleteEvent={deleteEvent}
           editModalOpen={editModalOpen}
           handleClosee={handleClosee}
+          project={project}
         />
       )}
       {/* {!modalOpen && !editModalOpen && ( */}

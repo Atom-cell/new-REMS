@@ -79,7 +79,11 @@ const TeamInfo = ({ user }) => {
         <h1 style={{ borderBottom: "1px solid black" }}>{team.teamName}</h1>
         {role !== "Employee" ? (
           <IconButton
-            onClick={() => navigate("/createTeam", { state: { team: team } })}
+            onClick={() =>
+              navigate("/createTeam", {
+                state: { team: team, teamProjects: teamProjects },
+              })
+            }
           >
             <EditIcon />
           </IconButton>

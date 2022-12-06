@@ -11,7 +11,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-const Invoice = ({ user }) => {
+const Invoice = ({ user, currency }) => {
   const { state } = useLocation();
   // console.log(state);
   const [selectedPayroll, setSelectedPayroll] = useState(state);
@@ -199,9 +199,11 @@ const Invoice = ({ user }) => {
                     <td>{emp.employeeUsername}</td>
                     <td>{emp.totalTime}</td>
                     <td>
+                      {currency?.symbol}{" "}
                       {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
                     </td>
                     <td>
+                      {currency?.symbol}{" "}
                       {handleAdjustments(emp.adjustments, emp.baseAmount)}
                     </td>
                   </tr>
@@ -234,15 +236,21 @@ const Invoice = ({ user }) => {
             <table>
               <tr>
                 <th>Gross Total :</th>
-                <td>$ {totalAmount.toFixed(2)}</td>
+                <td>
+                  {currency?.symbol} {totalAmount.toFixed(2)}
+                </td>
               </tr>
               <tr>
                 <th>Tax 0%:</th>
-                <td>$ {totalAmount.toFixed(2)}</td>
+                <td>
+                  {currency?.symbol} {totalAmount.toFixed(2)}
+                </td>
               </tr>
               <tr>
                 <th>Net Total :</th>
-                <td>$ {totalAmount.toFixed(2)}</td>
+                <td>
+                  {currency?.symbol} {totalAmount.toFixed(2)}
+                </td>
               </tr>
             </table>
           </Col>

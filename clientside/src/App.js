@@ -61,6 +61,7 @@ const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
 const App = () => {
+  const [currency, setCurrency] = useState();
   const [allNotifications, setAllNotifications] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   // const navigate = useNavigate();
@@ -273,6 +274,41 @@ const App = () => {
     });
   }, [loggedUser]);
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      if (user?.role == "admin") {
+        axios
+          .get(
+            `https://restcountries.com/v2/name/${user.currency}?fullText=true`
+          )
+          .then((rec) => {
+            // console.log(rec.data[0].currencies[0]);
+            setCurrency(rec.data[0].currencies[0]);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        //get my admin
+        axios
+          .get("http://localhost:5000/emp/getmyadmin", {
+            params: { _id: user?._id },
+          })
+          .then((rec) => {
+            // console.log(rec.data[0].currency);
+            axios
+              .get(
+                `https://restcountries.com/v2/name/${rec?.data[0].currency}?fullText=true`
+              )
+              .then((records) => {
+                console.log(records?.data[0].currencies[0]);
+                setCurrency(records?.data[0].currencies[0]);
+              })
+              .catch((err) => console.log(err));
+          });
+      }
+    }
+  }, []);
+
   const fetchData = async () => {
     let id = localStorage.getItem("id");
     if (id) {
@@ -283,11 +319,12 @@ const App = () => {
         var messageNotifications = rec.data.filter((notif) => {
           if (notif.msg.includes("Message") || notif.msg.includes("Video")) {
             if (notif.flag === 0) sum = sum + 1;
+            console.log(notif);
             return notif;
           }
         });
         console.log(messageNotifications);
-        console.log(sum);
+        // console.log(sum);
         setAllNotifications(messageNotifications);
         setUnreadNotifications(sum);
       });
@@ -410,7 +447,12 @@ const App = () => {
                         <Route path="/no" element={<NoMobile />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/coach" element={<Coach />} />
-                        <Route path="/empManage" element={<EmpManage />} />
+                        {/* <Route path="/empManage" element={<EmpManage />} /> */}
+
+                        <Route
+                          path="/empManage"
+                          element={<EmpManage currency={currency} />}
+                        />
                         <Route path="/moreInfo" element={<MoreInfo />} />
                         <Route path="/log" element={<Log />} />
                         <Route path="/team" element={<Teams />} />
@@ -532,36 +574,61 @@ const App = () => {
 
                         <Route
                           path="/allpayroll"
-                          element={<AllPayroll user={loggedUser} />}
+                          element={
+                            <AllPayroll user={loggedUser} currency={currency} />
+                          }
                         />
                         <Route
                           path="/allpayroll/newpayroll"
-                          element={<NewPayroll user={loggedUser} />}
+                          element={
+                            <NewPayroll user={loggedUser} currency={currency} />
+                          }
                         />
                         <Route
                           path="/allpayroll/payrolldetails"
-                          element={<PayrollDetails user={loggedUser} />}
+                          element={
+                            <PayrollDetails
+                              user={loggedUser}
+                              currency={currency}
+                            />
+                          }
                         />
                         <Route
                           path="/allpayroll/generateinvoice"
-                          element={<Invoice user={loggedUser} />}
+                          element={
+                            <Invoice user={loggedUser} currency={currency} />
+                          }
                         />
 
                         <Route
                           path="/allinvoice"
-                          element={<AllInvoice user={loggedUser} />}
+                          element={
+                            <AllInvoice user={loggedUser} currency={currency} />
+                          }
                         />
                         <Route
                           path="/allinvoice/newinvoice"
-                          element={<NewInvoice user={loggedUser} />}
+                          element={
+                            <NewInvoice user={loggedUser} currency={currency} />
+                          }
                         />
                         <Route
                           path="/allinvoice/invoicedetails"
-                          element={<InvoiceDetails user={loggedUser} />}
+                          element={
+                            <InvoiceDetails
+                              user={loggedUser}
+                              currency={currency}
+                            />
+                          }
                         />
                         <Route
                           path="/allinvoice/downloadinvoice"
-                          element={<DownloadInvoice user={loggedUser} />}
+                          element={
+                            <DownloadInvoice
+                              user={loggedUser}
+                              currency={currency}
+                            />
+                          }
                         />
                       </Route>
                     </Routes>

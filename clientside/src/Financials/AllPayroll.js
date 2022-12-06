@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
 import { ArrowDown, ArrowUp } from "react-feather";
-const AllPayroll = ({ user }) => {
+const AllPayroll = ({ user, currency }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
@@ -18,7 +18,10 @@ const AllPayroll = ({ user }) => {
   const [searchInput, setSearchInput] = useState();
   const [ascending, setAscending] = useState(true);
 
-  const handleTokenPay = async (token, id, amount) => {
+  const handleTokenPay = async (token, id, emps) => {
+    var amount = handleTotalAmount(emps);
+    // console.log(typeof amount);
+    // console.log(amount);
     // amount = parseInt(amount);
     // console.log(typeof amount);
     // console.log(amount);
@@ -34,6 +37,7 @@ const AllPayroll = ({ user }) => {
       .post("/myPayroll/payment", {
         token: token,
         amount: amount,
+        currency: currency.code,
         payrollId: id,
       })
       .then((rec) => {
@@ -88,7 +92,7 @@ const AllPayroll = ({ user }) => {
   // }
 
   const handleAdjustments = (arr) => {
-    console.log(arr);
+    // console.log(arr);
     // [adjustment,comment]
     // find total adjustment i-e if add then add and if subtract then subtract
     let sum = 0;
@@ -169,13 +173,13 @@ const AllPayroll = ({ user }) => {
       const rec = await axios.get("/myPayroll/getemployeepayrolls", {
         params: { employeeUsername: user.username },
       });
-      console.log(rec.data);
+      console.log("PAAAAAAAAA: ", rec.data);
       setAllPayrolls(rec.data);
     } else {
       const rec = await axios.get("/myPayroll/getallpayrolls", {
         params: { employerId: user._id },
       });
-      console.log(rec.data);
+      // console.log(rec.data);
       setAllPayrolls(rec.data);
     }
   };
@@ -260,12 +264,12 @@ const AllPayroll = ({ user }) => {
                   <td>{p.totalTime}</td>
                   {user?.role !== "Employee" ? (
                     <td>
-                      $ &nbsp;
+                      {currency?.symbol} &nbsp;
                       {handleTotalAmount(p.employees)}
                     </td>
                   ) : (
                     <td>
-                      $ &nbsp;
+                      {currency?.symbol} &nbsp;
                       {p.employees.map((emp) => {
                         // console.log(emp);
                         const { baseAmount } = emp;
@@ -275,7 +279,7 @@ const AllPayroll = ({ user }) => {
                             sum = handleAdjustments(emp.adjustments);
                           }
                           // console.log(sum + Number(baseAmount));
-                          return Number(baseAmount) + sum;
+                          return (Number(baseAmount) + sum).toFixed(2);
                         }
                       })}
                     </td>
@@ -313,10 +317,13 @@ const AllPayroll = ({ user }) => {
                             name="Pay With Credit Card"
                             // billingAddress
                             // shippingAddress
-                            amount={p.totalAmount}
-                            description={`Total Amount to be paid is: ${p.totalAmount}`}
+                            currency={currency?.code}
+                            amount={handleTotalAmount(p.employees) * 100}
+                            description={`Total Amount to be paid is: ${
+                              currency?.symbol
+                            } ${handleTotalAmount(p.employees)}`}
                             token={(token) =>
-                              handleTokenPay(token, p._id, p.totalAmount)
+                              handleTokenPay(token, p._id, p.employees)
                             }
                           />
                         ) : (

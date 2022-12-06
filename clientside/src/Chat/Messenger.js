@@ -356,7 +356,11 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                   className="px-4 pt-2"
                   onClick={() => handleConvoClick(convo)}
                 >
-                  <Conversation conversation={convo} currentUser={user} />
+                  <Conversation
+                    conversation={convo}
+                    currentUser={user}
+                    currentChat={currentChat}
+                  />
                 </div>
               ))}
             </div>
@@ -513,7 +517,11 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                       <div className="chatOnlineImgContainer">
                         <img
                           className="chatOnlineImg"
-                          src={`data:image/jpeg;base64,${o?.profilePicture}`}
+                          src={
+                            o?.profilePicture
+                              ? `data:image/jpeg;base64,${o?.profilePicture}`
+                              : "https://i.stack.imgur.com/34AD2.jpg"
+                          }
                           alt=""
                         />
                       </div>

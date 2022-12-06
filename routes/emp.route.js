@@ -123,7 +123,7 @@ router.get("/getcompanyemployees", (req, res) => {
 router.get("/getmyadmin", (req, res) => {
   Admin.find(
     { employees: req.query._id },
-    { _id: 1, username: 1, email: 1 },
+    // { _id: 1, username: 1, email: 1 },
     (err, rec) => {
       if (err) res.status(500).json(err);
       // console.log(rec);

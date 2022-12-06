@@ -46,7 +46,11 @@ function Card(props) {
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       {JSON.parse(localStorage.getItem("user")).role !== "Employee" && (
-        <>{assignedTo ? "Update Assignee" : "Assign Task"}</>
+        <>
+          {assignedTo
+            ? `Update Assignee ${assignedToUser?.username}`
+            : "Assign Task"}
+        </>
       )}
     </Tooltip>
   );

@@ -14,8 +14,12 @@ const ChatBoxHeader = ({ friend, handleDeleteChat }) => {
         <Col sm={4} className="col-8">
           <img
             className="chatProfileImg"
-            src={friend?.profilePicture}
-            alt="No picture"
+            src={
+              friend?.profilePicture
+                ? `data:image/jpeg;base64,${friend?.profilePicture}`
+                : "https://i.stack.imgur.com/34AD2.jpg"
+            }
+            // alt="No picture"
             style={{ height: "2.4rem", width: "2.4rem" }}
           />
           <span style={{ color: "FFEFD5", fontSize: "18px" }}>

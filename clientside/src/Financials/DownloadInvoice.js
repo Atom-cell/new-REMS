@@ -11,7 +11,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-const DownloadInvoice = ({ user }) => {
+const DownloadInvoice = ({ user, currency }) => {
   const { state } = useLocation();
   // console.log(state);
   const [selectedInvoice, setSelectedInvoice] = useState(state.selectedInvoice);
@@ -169,7 +169,7 @@ const DownloadInvoice = ({ user }) => {
                     <td>{emp.employeeUsername}</td>
                     <td>{emp.totalTime}</td>
                     <td>
-                      $ &nbsp;
+                      {currency?.symbol} &nbsp;
                       {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
                     </td>
                   </tr>
@@ -184,15 +184,24 @@ const DownloadInvoice = ({ user }) => {
             <table>
               <tr>
                 <th>Gross Total :</th>
-                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
+                <td>
+                  {currency?.symbol} &nbsp;
+                  {handleTotalAmount(selectedInvoice?.employees)}
+                </td>
               </tr>
               <tr>
                 <th>Tax 0%:</th>
-                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
+                <td>
+                  {currency?.symbol} &nbsp;
+                  {handleTotalAmount(selectedInvoice?.employees)}
+                </td>
               </tr>
               <tr>
                 <th>Net Total :</th>
-                <td>$ &nbsp;{handleTotalAmount(selectedInvoice?.employees)}</td>
+                <td>
+                  {currency?.symbol} &nbsp;
+                  {handleTotalAmount(selectedInvoice?.employees)}
+                </td>
               </tr>
             </table>
           </Col>

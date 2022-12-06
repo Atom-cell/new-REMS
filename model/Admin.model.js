@@ -31,13 +31,16 @@ const adminSchema = mongoose.Schema(
     },
     emailToken: String,
     employees: [{ type: mongoose.Schema.Types.ObjectId, ref: "employee" }],
-    notifications: [{ msg: String, flag: { type: Number, default: 0 } }],
+    notifications: [
+      { msg: String, flag: { type: Number, default: 0 }, path: String },
+    ],
     blockSites: [
       {
         siteName: String,
         address: String,
       },
     ],
+    currency: String,
   },
   { timestamps: true }
 );

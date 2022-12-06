@@ -16,7 +16,7 @@ const ProjectCard = ({
   check,
   widthh,
 }) => {
-  var { projectName, projectPriority, projectCost, dueDate } = project;
+  var { projectName, projectPriority, dueDate } = project;
 
   const navigate = useNavigate();
 
@@ -97,7 +97,7 @@ const ProjectCard = ({
         </div> */}
         <div className="project-description">
           <span className="featuredSub">Cost: </span>
-          <span>${projectCost}</span>
+          {/* <span>${projectCost}</span> */}
         </div>
         <div className="project-description">
           <span className="featuredSub">Priority: </span>

@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Adjustments from "./Adjustments";
 const { v4: uuidV4 } = require("uuid");
 
-const PayrollDetails = ({ user }) => {
+const PayrollDetails = ({ user, currency }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -83,6 +83,14 @@ const PayrollDetails = ({ user }) => {
       })
       .catch((err) => console.log(err + "Line 69 in Payroll Details"));
   };
+
+  const ultimateTotalAmount = (baseAmount, adjustments) => {
+    var adjustment = handleAdjustments(adjustments);
+    var num1 = Number(baseAmount);
+    var num2 = Number(adjustment);
+    var result = num1 + num2;
+    return result.toFixed(2);
+  };
   return (
     <div>
       {/* <h1>Payroll Details</h1> */}
@@ -104,7 +112,10 @@ const PayrollDetails = ({ user }) => {
         </div>
         <div className="payroll-detail">
           <h6>Amount Before Adjustments:</h6>
-          <span>{selectedPayroll?.totalAmount}</span>
+          <span>
+            {currency?.symbol} {""}
+            {selectedPayroll?.totalAmount}
+          </span>
         </div>
         <div className="payroll-detail">
           <h6>Total Time:</h6>
@@ -166,6 +177,7 @@ const PayrollDetails = ({ user }) => {
                   <td>{emp.employeeUsername}</td>
                   <td>{emp.totalTime}</td>
                   <td>
+                    {currency?.symbol} {""}{" "}
                     {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
                   </td>
                   <td
@@ -174,11 +186,13 @@ const PayrollDetails = ({ user }) => {
                       handleShow();
                     }}
                   >
-                    {handleAdjustments(emp.adjustments)}
+                    {currency?.symbol} {""} {handleAdjustments(emp.adjustments)}
                   </td>
                   <td>
-                    {Number(emp.baseAmount).toFixed(2) +
-                      handleAdjustments(emp.adjustments)}
+                    {currency?.symbol}{" "}
+                    {ultimateTotalAmount(emp.baseAmount, emp.adjustments)}
+                    {/* {Number(emp.baseAmount).toFixed(2) +
+                      handleAdjustments(emp.adjustments)} */}
                   </td>
                 </tr>
               );
@@ -191,6 +205,7 @@ const PayrollDetails = ({ user }) => {
           employee={employee}
           payroll={selectedPayroll}
           updateAmount={updateAmount}
+          currency={currency}
         />
       </div>
     </div>

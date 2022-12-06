@@ -13,6 +13,7 @@ const Adjustments = ({
   employee,
   payroll,
   updateAmount,
+  currency,
 }) => {
   //   console.log(employee);
   // baseAmaount, employeeId, totalTime
@@ -25,7 +26,7 @@ const Adjustments = ({
         <Modal.Header closeButton>
           <Modal.Title>Adjustments</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="adjustments-modal">
           <div className="adjustments-deatils">
             {/* <div className="payroll-detail">
               <h6>Payroll Id</h6>
@@ -45,7 +46,10 @@ const Adjustments = ({
             </div>
             <div className="payroll-detail">
               <h6>Base Amount</h6>
-              <span>{employee?.baseAmount}</span>
+              <span>
+                {currency?.symbol} {""}{" "}
+                {Number(employee?.baseAmount).toFixed(3)}
+              </span>
             </div>
             <Table striped bordered hover>
               <thead>
@@ -62,7 +66,10 @@ const Adjustments = ({
                       return (
                         <tr key={index}>
                           <td>{index + 1}</td>
-                          <td>{ad.adjustment}</td>
+                          <td>
+                            {currency?.symbol} {""}
+                            {ad.adjustment}
+                          </td>
                           <td>{ad.comment}</td>
                         </tr>
                       );
@@ -78,7 +85,7 @@ const Adjustments = ({
                 <>
                   <input
                     type="number"
-                    placeholder="Enter Amount"
+                    placeholder={`Enter Amount in ${currency?.symbol}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     className="inputTextFields"

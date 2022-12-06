@@ -9,13 +9,22 @@ import {
   Alert,
 } from "@mui/material";
 import axios from "axios";
-import { Image } from "react-bootstrap";
+import { Dropdown, Form, Image } from "react-bootstrap";
 import SignUpImg from "../img/SignupImg.gif";
 import AnimatedRoutes from "../AnimatedRoutes";
+import { toast } from "react-toastify";
 
 // import { Form, Button } from "react-bootstrap";
 
 function Signup() {
+  const [allCountries, setAllCountries] = React.useState([]);
+  const [selectedCountry, setSelectedCountry] = React.useState();
+  const [searchInput, setSearchInput] = React.useState();
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
   React.useEffect(() => {
     if (window.screen.width < 768) {
       window.location = "/no";
@@ -59,6 +68,11 @@ function Signup() {
         msg: "Please enter a valid password.",
       });
     }
+    if (!selectedCountry) {
+      toast.error("Please Choose A Currency");
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     uploadData();
   };
@@ -71,6 +85,7 @@ function Signup() {
             username: username,
             email: email,
             password: password,
+            currency: selectedCountry,
           })
           .then(function (response) {
             console.log(response);
@@ -94,6 +109,8 @@ function Signup() {
         setUsername("");
         setEmail("");
         setPassword("");
+        setSelectedCountry("");
+        setSearchInput("");
       }
     }
   };
@@ -116,6 +133,38 @@ function Signup() {
 
     setOpen(false);
   };
+
+  const fetchData = () => {
+    axios
+      .get("https://restcountries.com/v2/all")
+      .then((rec) => {
+        console.log(rec.data);
+        // data.slice(0, 30)
+        // console.log(rec.data.currencies);
+        setAllCountries(rec.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+    setTimeout(() => {
+      const value = e.target.value;
+      if (value === null || value === "" || value === undefined) {
+        fetchData();
+      } else {
+        axios
+          .get(`https://restcountries.com/v2/name/${e.target.value}`)
+          .then((rec) => {
+            console.log(rec.data);
+            setAllCountries(rec.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    }, 100);
+  };
+
   return (
     <AnimatedRoutes>
       <div className="container1">
@@ -200,6 +249,52 @@ function Signup() {
                 type="password"
                 className="ip"
               />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  marginLeft: "90px",
+                }}
+              >
+                <Dropdown>
+                  <Dropdown.Toggle className="my-4" id="dropdown-basic">
+                    {selectedCountry ? selectedCountry : "Select Currency"}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu
+                    style={{
+                      height: "200px",
+                      overflowY: "scroll",
+                      // width: "40%",
+                    }}
+                  >
+                    <Form.Control
+                      type="search"
+                      placeholder="Search Countries"
+                      className="search-projects"
+                      aria-label="Search"
+                      value={searchInput}
+                      onChange={handleSearchChange}
+                      style={{ boxShadow: "#da0d50 !important" }}
+                    />
+                    {allCountries?.map((country) => {
+                      return (
+                        <Dropdown.Item
+                          onClick={() => {
+                            console.log(country);
+                            setSelectedCountry(country.name);
+                            setSearchInput("");
+                            fetchData();
+                          }}
+                        >
+                          {country.name}
+                        </Dropdown.Item>
+                      );
+                    })}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
               <p style={{ color: "grey", marginTop: "1em" }}>
                 If you are an employee, DO NOT register here. Employees will get
                 an invite link to signin.

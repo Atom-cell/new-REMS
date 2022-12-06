@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SearchBar from "../Componentss/SearchBar";
 
-const NewPayroll = ({ user }) => {
+const NewPayroll = ({ user, currency }) => {
   const navigate = useNavigate();
   const [payrollTitle, setPayrollTitle] = useState();
   const [dateRange, setDateRange] = useState();
@@ -151,6 +151,18 @@ const NewPayroll = ({ user }) => {
       .catch((err) => {
         console.log(err + "line 61 New Payroll");
       });
+
+    // post notification
+    axios
+      .post("http://localhost:5000/notif/payrollnotification", {
+        employerName: user?.username,
+        emps: newSelectedEmployees,
+        payrollTitle: payrollTitle,
+      })
+      .then((rec) => {
+        console.log(rec.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getAllProjects = (data) => {
@@ -651,7 +663,9 @@ const NewPayroll = ({ user }) => {
                     <tr key={emp._id}>
                       <td>{emp.username}</td>
                       <td>{emp.totalTime}</td>
-                      <td>$ {emp.totalAmount.toFixed(2)}</td>
+                      <td>
+                        {currency?.symbol} {emp.totalAmount.toFixed(2)}
+                      </td>
                     </tr>
                   );
                 })}

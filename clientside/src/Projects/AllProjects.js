@@ -16,7 +16,7 @@ const AllProjects = ({ user }) => {
   const [newProject, setNewProject] = useState({
     projectName: "",
     projectDescription: "",
-    projectCost: "",
+    // projectCost: "",
     assignTo: "",
     assignToId: "",
     priority: "",

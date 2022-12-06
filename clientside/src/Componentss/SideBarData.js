@@ -114,6 +114,13 @@ export const SideBarData = {
       ),
     },
     {
+      id: 3,
+      title: "My Calendar",
+      path: "/myCalendar",
+      icon: <CalendarTodayIcon />,
+      cName: "nav-text sub-nav",
+    },
+    {
       id: 13,
       title: "Reports",
       // path: "/reports/inOut",

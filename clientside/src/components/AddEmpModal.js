@@ -14,7 +14,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-function AddEmpModal({ closeMod, addEmpModal }) {
+function AddEmpModal({ closeMod, addEmpModal, currency }) {
   const [email, setEmail] = React.useState("");
   const [hourlyRate, setHourlyRate] = React.useState();
   const [emailE, setemailE] = React.useState({ error: false, msg: "" });
@@ -99,7 +99,7 @@ function AddEmpModal({ closeMod, addEmpModal }) {
             <TextField
               id="standard-basic"
               type="number"
-              label="Hourly Rate $"
+              label={`Hourly Rate in ${currency?.symbol}`}
               variant="outlined"
               value={hourlyRate}
               margin="dense"

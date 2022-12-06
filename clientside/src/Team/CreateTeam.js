@@ -20,9 +20,9 @@ import { Button, Breadcrumb, Table, Spinner } from "react-bootstrap";
 const CreateTeam = () => {
   let navigate = useNavigate();
   const {
-    state: { team },
+    state: { team, teamProjects },
   } = useLocation();
-  //   console.log(team);
+  // console.log(teamProjects);
 
   const { sock, setSocket } = React.useContext(SocketContext);
   const [teamName, setTeamName] = React.useState("");
@@ -210,7 +210,19 @@ const CreateTeam = () => {
             },
           }
         )
-        .then(function (response) {})
+        .then(function (response) {
+          // now update all the projects project lead
+          axios
+            .post("/myprojects/projectsleadupdate", {
+              projects: teamProjects,
+              projectLead: teamLead,
+            })
+            .then((res) => {
+              console.log(res.data);
+              // setMyProject(res.data);
+            })
+            .catch((err) => console.log(err + "specific Project 135"));
+        })
         .catch(function (error) {
           console.log(error);
         });

@@ -151,16 +151,29 @@ const SpecificProject = ({ user }) => {
       .post("/myprojects/updateroles", {
         projectId: myProject._id,
         projectroles: id,
+        teamId: myTeam._id,
       })
       .then((res) => {
         // console.log(res.data);
         setMyProject(res.data);
         toast.success("Project Lead Added");
+        axios
+          .get("http://localhost:5000/team/teambyid", {
+            params: { teamId: myTeam._id },
+          })
+          .then((rec) => {
+            console.log(rec.data);
+            setMyTeam(rec.data[0]);
+          })
+          .catch((err) => console.log(err + "Line 171 in Specific Project"));
       })
       .catch((err) => console.log(err + "specific Project 135"));
   };
 
   const removeRole = () => {
+    // update project role as well as team lead
+    // for team we need team id
+    // location.state.project.teamId
     axios
       .post("/myprojects/updateroles", {
         projectId: myProject._id,
@@ -348,7 +361,7 @@ const SpecificProject = ({ user }) => {
           params: { teamId: location.state.project.teamId },
         })
         .then((rec) => {
-          console.log(rec.data[0]);
+          console.log(rec.data);
           setMyTeam(rec.data[0]);
         })
         .catch((err) => console.log(err + "Line 358 in Specific Project"));
@@ -428,7 +441,12 @@ const SpecificProject = ({ user }) => {
               type={"textarea"}
               placeholder="Welcome to your Project. Now set the tone for how you'll work together with your team in REMS."
               onSubmit={updateProjectDescription}
-              emp={user?.role === "Employee" ? true : undefined}
+              emp={
+                user?.role === "Employee" &&
+                user?._id !== myProject?.projectroles
+                  ? true
+                  : undefined
+              }
             />
           </div>
         </div>
@@ -471,18 +489,20 @@ const SpecificProject = ({ user }) => {
                     </span>
                   </div>
                   <div className="dropdown-status">
-                    <DropdownButton
-                      variant="success"
-                      id="dropdown-basic-button"
-                      className="dropdown-role"
-                      // title="Update Role"
-                    >
-                      {/* <Dropdown.Item>Change Role</Dropdown.Item> */}
-                      <Dropdown.Item onClick={() => removeRole()}>
-                        Remove role
-                      </Dropdown.Item>
-                      {/* <Dropdown.Item>Remove from Project</Dropdown.Item> */}
-                    </DropdownButton>
+                    {user?.role === "admin" && (
+                      <DropdownButton
+                        variant="success"
+                        id="dropdown-basic-button"
+                        className="dropdown-role"
+                        // title="Update Role"
+                      >
+                        {/* <Dropdown.Item>Change Role</Dropdown.Item> */}
+                        <Dropdown.Item onClick={() => removeRole()}>
+                          Remove role
+                        </Dropdown.Item>
+                        {/* <Dropdown.Item>Remove from Project</Dropdown.Item> */}
+                      </DropdownButton>
+                    )}
                   </div>
                   {/* <div className="ProjectOverviewMember-downIcon">
                   <svg
@@ -765,7 +785,8 @@ const SpecificProject = ({ user }) => {
                     <p className={item.completed ? "completed" : ""}>
                       {item.task}
                     </p>
-                    {user?.role !== "Employee" && (
+                    {(user?.role !== "Employee" ||
+                      user?._id === myProject?.projectroles) && (
                       <Trash
                         className="trash"
                         onClick={() => removeMilestone(item._id)}
@@ -774,16 +795,22 @@ const SpecificProject = ({ user }) => {
                   </div>
                 ))}
               </div>
-              {user?.role !== "Employee" && (
+              {user?.role !== "Employee" ||
+              user?._id === myProject?.projectroles ? (
                 <Editable
                   displayClass="add-milestone-button"
                   editClass="add-milestone-button-edit"
                   text={"Add Milestone"}
                   placeholder="Enter Milestone"
                   onSubmit={addMilestone}
-                  emp={user?.role === "Employee" ? true : undefined}
+                  emp={
+                    user?.role === "Employee" &&
+                    user?._id !== myProject?.projectroles
+                      ? true
+                      : undefined
+                  }
                 />
-              )}
+              ) : null}
             </div>
             {/* <div className="cardinfo_box">
               <div className="cardinfo_box_progress-bar">
@@ -883,30 +910,39 @@ const SpecificProject = ({ user }) => {
               {/* What's the status? */}
               {myProject?.status ? "Status" : "What's the status?"}
             </h4>
-            {myProject?.status && user?.role !== "Employee" && (
-              <div className="dropdown-status">
-                <DropdownButton
-                  id="dropdown-basic-button"
-                  title="Update Status"
-                >
-                  <Dropdown.Item onClick={() => updateProjectStatus("ontrack")}>
-                    On Track
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => updateProjectStatus("atrisk")}>
-                    At Risk
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => updateProjectStatus("offtrack")}
-                  >
-                    Off Track
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => updateProjectStatus("completed")}
-                  >
-                    Completed
-                  </Dropdown.Item>
-                </DropdownButton>
-              </div>
+            {myProject?.status && (
+              <>
+                {user?.role === "admin" ||
+                user?._id === myProject?.projectroles ? (
+                  <div className="dropdown-status">
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Update Status"
+                    >
+                      <Dropdown.Item
+                        onClick={() => updateProjectStatus("ontrack")}
+                      >
+                        On Track
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => updateProjectStatus("atrisk")}
+                      >
+                        At Risk
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => updateProjectStatus("offtrack")}
+                      >
+                        Off Track
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => updateProjectStatus("completed")}
+                      >
+                        Completed
+                      </Dropdown.Item>
+                    </DropdownButton>
+                  </div>
+                ) : null}
+              </>
             )}
           </div>
           {!myProject?.status ? (
@@ -1020,7 +1056,11 @@ const SpecificProject = ({ user }) => {
             type={"date"}
             placeholder="Enter Due Date"
             onSubmit={updateProjectDueDate}
-            emp={user?.role === "Employee" ? true : undefined}
+            emp={
+              user?.role === "Employee" && user?._id !== myProject?.projectroles
+                ? true
+                : undefined
+            }
           />
         </div>
         <div className="project-members-container" onClick={handleShow}>
@@ -1041,7 +1081,10 @@ const SpecificProject = ({ user }) => {
         {myTeam && (
           <div
             className="project-members-container"
-            onClick={() => navigate("/teamInfo", { state: { team: myTeam } })}
+            onClick={() => {
+              console.log(myTeam);
+              navigate("/teamInfo", { state: { team: myTeam } });
+            }}
           >
             <GroupsIcon size={30} style={{ marginRight: "5px" }} />
             <span style={{ fontSize: "20px" }}>{myTeam?.teamName}</span>

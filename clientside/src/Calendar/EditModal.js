@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import "./modal.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ChevronRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
 const EditModal = ({
   event,
   setEvent,
@@ -12,12 +14,31 @@ const EditModal = ({
   editModalOpen,
   handleClosee,
   showMadeBy,
+  project,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="add-new-event-container">
       <Modal show={editModalOpen} onHide={handleClosee}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Event</Modal.Title>
+          <Modal.Title>
+            Edit Event
+            {project && (
+              <h5 style={{ fontSize: "1rem" }}>
+                This goal is associated with Project {project?.projectName}
+                <ChevronRight
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    navigate(`/myproject/${project._id}`, {
+                      state: {
+                        project: project,
+                      },
+                    })
+                  }
+                />
+              </h5>
+            )}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>

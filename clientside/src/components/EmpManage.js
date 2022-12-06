@@ -70,7 +70,7 @@ function Zone({ color }) {
   );
 }
 
-function EmpManage() {
+function EmpManage({ currency }) {
   // fetching data
 
   const navigate = useNavigate();
@@ -372,7 +372,11 @@ function EmpManage() {
         ) : null}
       </Snackbar>
       {mod ? (
-        <AddEmpModal closeMod={closeMod} addEmpModal={addEmpModal} />
+        <AddEmpModal
+          closeMod={closeMod}
+          addEmpModal={addEmpModal}
+          currency={currency}
+        />
       ) : null}
       {loadingModal ? (
         <LoadingModal closeMod={closeMod} prod={productivity} />

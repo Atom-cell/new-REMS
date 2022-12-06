@@ -49,12 +49,12 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
     // if (!check) {
     //   toast.error("Please Select a Pdf file");
     // } else
-    if (newProject.projectName && newProject.projectCost && milestones100) {
+    if (newProject.projectName && milestones100) {
       // create new project
       const myObj = {
         projectName: newProject.projectName,
         // projectDescription: newProject.projectDescription,
-        projectCost: newProject.projectCost,
+        // projectCost: newProject.projectCost,
         projectPriority: newProject.priority,
         projectAssignedBy: JSON.parse(localStorage.getItem("user"))._id,
         // projectAssignedTo: newProject.assignTo,
@@ -65,6 +65,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
         // hoursWorkedOn: "false",
         dueDate: milestones100,
         teamId: team && team._id,
+        projectroles: team && team.teamLead,
         // milestones: [
         //   {
         //     completionPercentage: "30%",
@@ -99,7 +100,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
           setNewProject({
             projectName: "",
             projectDescription: "",
-            projectCost: "",
+            // projectCost: "",
             assignTo: "",
             assignToId: "",
           });
@@ -156,7 +157,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
             }
             className="inputTextFields"
           /> */}
-          <input
+          {/* <input
             type="number"
             placeholder="Enter Project Cost in $"
             value={newProject.projectCost}
@@ -167,7 +168,7 @@ const NewProjectModal = ({ handleClose, show, newProject, setNewProject }) => {
               })
             }
             className="inputTextFields"
-          />
+          /> */}
           {/* <DatePicker
             placeholderText="30% due Date"
             selected={milestones30}

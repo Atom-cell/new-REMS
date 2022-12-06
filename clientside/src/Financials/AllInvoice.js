@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
 import { ArrowDown, ArrowUp } from "react-feather";
-const AllInvoice = ({ user }) => {
+const AllInvoice = ({ user, currency }) => {
   const publishableKey =
     "pk_test_51Izy3ZSCK5aoLzPXKSUJYks26dOaC522apZtLjmsLaHccU4kSw8Ez6RA0Bi6O0Ylbm3zIrir8ITdjhGnsHnDBMcZ00erYP3yzo";
   const navigate = useNavigate();
@@ -212,7 +212,7 @@ const AllInvoice = ({ user }) => {
                   <td>{p.invoiceTitle}</td>
                   <td>{p.dateRange}</td>
                   <td>
-                    $ &nbsp;
+                    {currency?.symbol} &nbsp;
                     {handleTotalAmount(p.employees)}
                   </td>
                   <td
