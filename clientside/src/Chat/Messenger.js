@@ -513,7 +513,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                       <div className="chatOnlineImgContainer">
                         <img
                           className="chatOnlineImg"
-                          src={o?.profilePicture}
+                          src={`data:image/jpeg;base64,${o?.profilePicture}`}
                           alt=""
                         />
                       </div>

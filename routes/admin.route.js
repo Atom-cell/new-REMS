@@ -162,6 +162,38 @@ router.get("/allDeletedEmps", verifyJWT, (req, res) => {
   }
 });
 
+router.get("/dash/totalEmps/:id", verifyJWT, async (req, res) => {
+  console.log("Dashbaord total Emps");
+  const id = req.params.id;
+  const v = {
+    desktop: 1,
+  };
+  try {
+    Admin.find({ _id: id })
+      .populate({
+        path: "employees",
+        select: v,
+        match: { active: true },
+      })
+      .exec((err, data) => {
+        if (err) console.log(err.message);
+        res.json(data[0].employees);
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+router.get("/dash/projects/:id", (req, res) => {
+  console.log("dashboard gtting projets");
+
+  const id = req.params.id;
+  Project.find({ projectAssignedBy: { $in: id } }).exec((err, rec) => {
+    if (err) res.status(500).json(err);
+    res.json(rec);
+  });
+});
+
 router.get("/getMoreInfo/:email", async (req, res) => {
   console.log("getting more Info", req.params.email);
   let email = req.params.email;
@@ -169,6 +201,28 @@ router.get("/getMoreInfo/:email", async (req, res) => {
 
   const user = await Emp.findOne({ email: email }).select(v);
   res.json(user);
+});
+
+router.get("/dash/topActive", async (req, res) => {
+  const v = {
+    username: 1,
+    totalTime: 1,
+  };
+  // req.userEmail
+  try {
+    Admin.find({ email: "sani2@gmail.com" })
+      .populate({
+        path: "employees",
+        select: v,
+        match: { active: true },
+      })
+      .exec((err, data) => {
+        if (err) console.log(err.message);
+        res.json({ msg: 1, data: data[0].employees });
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 
 router.get("/projectInfo/:id", (req, res) => {

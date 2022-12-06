@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import axios from "axios";
 import {
   ComposedChart,
   Line,
@@ -11,9 +12,41 @@ import {
   Legend,
 } from "recharts";
 const TopUsers = ({ data }) => {
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await axios
+      .get("/admin/dash/topActive", {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log("sssssssss ", response.data.data);
+        filterData(response.data.data);
+      });
+  };
+
+  const filterData = (data) => {
+    const day = new Date().getDate();
+    let users = [];
+    data.forEach((tt) => {
+      let times = [];
+      tt.totalTime.forEach((t) => {
+        if (new Date(t.date).getDate() === 5) {
+          times.push(t);
+        }
+      });
+      users.push({ username: tt.username, times: times });
+    });
+
+    console.log("qqqqqqqqqqqqqqqqqqq, ", users);
+  };
   return (
     <div className="chart">
-      <h3 className="chartTitle">Top Users</h3>
+      <h3 className="chartTitle">Top Active Users</h3>
       <ComposedChart
         layout="vertical"
         width={800}

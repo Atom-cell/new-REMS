@@ -82,12 +82,12 @@ const ProjectsReport = () => {
         console.log("BOARDS:  ", response.data);
         console.log("Projects: ", projects);
 
-        let projectID = projects.map((p) => p._id);
+        let projectID = projects?.map((p) => p._id);
         let newBoards = [];
 
         let boards = [...response.data];
-        boards.forEach((b) => {
-          if (projectID.includes(b.projectId)) {
+        boards?.forEach((b) => {
+          if (projectID?.includes(b.projectId)) {
             newBoards.push(b);
           }
         });

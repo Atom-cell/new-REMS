@@ -59,7 +59,7 @@ let features = [
   },
   {
     id: "billing",
-    title: "Pay your employees directly as much as they deserve",
+    title: "Pay your employees directly ",
     description:
       "After getting your projects completed, it's time to pay your employees fairly and justly. Pay whatever they deserve according to thier work and activities while completing tasks.",
     img: bill,

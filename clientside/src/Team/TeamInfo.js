@@ -103,7 +103,9 @@ const TeamInfo = ({ user }) => {
               style={{ cursor: "pointer" }}
               onClick={() => getEmpData(team.teamLead._id)}
             >
-              <Avatar src={team.teamLead.profilePicture} />
+              <Avatar
+                src={`data:image/jpeg;base64,${team.teamLead.profilePicture}`}
+              />
             </td>
             <td
               style={{ cursor: "pointer" }}
@@ -144,7 +146,7 @@ const TeamInfo = ({ user }) => {
                   style={{ cursor: "pointer" }}
                   onClick={() => getEmpData(m._id)}
                 >
-                  <Avatar src={m.profilePicture} />
+                  <Avatar src={`data:image/jpeg;base64,${m.profilePicture}`} />
                 </td>
                 <td
                   style={{ cursor: "pointer" }}

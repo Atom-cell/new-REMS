@@ -27,7 +27,11 @@ const Conversation = ({ conversation, currentUser }) => {
 
   return (
     <div className="conversation">
-      <img className="conversationImg" src={user?.profilePicture} alt="" />
+      <img
+        className="conversationImg"
+        src={`data:image/jpeg;base64,${user?.profilePicture}`}
+        alt=""
+      />
       <span className="conversationName">{user?.username}</span>
     </div>
   );

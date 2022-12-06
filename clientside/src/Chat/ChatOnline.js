@@ -61,7 +61,11 @@ export default function ChatOnline({
           onClick={() => newConversation != undefined && newConversation(o._id)}
         >
           <div className="chatOnlineImgContainer">
-            <img className="chatOnlineImg" src={o?.profilePicture} alt="" />
+            <img
+              className="chatOnlineImg"
+              src={`data:image/jpeg;base64,${o?.profilePicture}`}
+              alt=""
+            />
             <div className="chatOnlineBadge"></div>
           </div>
           <span className="chatOnlineName">{o?.username}</span>

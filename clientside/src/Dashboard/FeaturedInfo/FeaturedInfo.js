@@ -1,44 +1,30 @@
 import "./featuredinfo.css";
-import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
+import TotalEmps from "./TotalEmps";
+import TotalProj from "./TotalProj";
+import TotalWorkTime from "./TotalWorkTime";
+import TodayMeetings from "./TodayMeetings";
+import { useNavigate } from "react-router-dom";
 
 export default function FeaturedInfo() {
+  const navigate = useNavigate();
+
   return (
-    <div className="featured">
-      <div className="featuredItem">
-        <span className="featuredTitle">Total Employees</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">10</span>
-          {/* <span className="featuredMoneyRate">
-            -11.4 <ArrowDownward className="featuredIcon negative" />
-          </span> */}
+    <>
+      <div className="featured">
+        <div className="featuredItem" onClick={() => navigate("/empManage")}>
+          <span className="featuredTitle">Total Employees</span>
+          <TotalEmps />
         </div>
-        <span className="featuredSub">Currently Working </span>
-        <span> 3</span>
-      </div>
-      <div className="featuredItem">
-        <span className="featuredTitle">Projects</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">20</span>
-          <span className="featuredMoneyRate">
-            +2 <ArrowUpward className="featuredIcon" />
-          </span>
+        <div className="featuredItem" onClick={() => navigate("/projects")}>
+          <span className="featuredTitle">Total Ongoing Projects</span>
+          <TotalProj />
         </div>
-        <span className="featuredSub">Compared to last month</span>
-      </div>
-      <div className="featuredItem">
-        <span className="featuredTitle">Total Hours Worked</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">30:25 hrs </span>
-          <span className="featuredMoneyRate">
-            -11.4{" "}
-            <ArrowDownward
-              className="featuredIcon negative"
-              style={{ fill: "red" }}
-            />
-          </span>
+        <div className="featuredItem" onClick={() => navigate("/projects")}>
+          <span className="featuredTitle">Total Hours Worked Today</span>
+          <TotalWorkTime />
         </div>
-        <span className="featuredSub">Compared to last month</span>
       </div>
-    </div>
+      <TodayMeetings />
+    </>
   );
 }
