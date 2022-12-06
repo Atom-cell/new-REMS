@@ -5,7 +5,7 @@ import moment from "moment";
 import Chip from "@mui/material/Chip";
 import { useNavigate } from "react-router-dom";
 
-const Transactions = () => {
+const Payments = () => {
   const navigate = useNavigate();
   const [allPayrolls, setAllPayrolls] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -23,12 +23,16 @@ const Transactions = () => {
       const rec = await axios.get("/myPayroll/getemployeepayrolls", {
         params: { employeeUsername: user.username },
       });
-      setAllPayrolls(rec.data);
+
+      setAllPayrolls([...rec.data]);
+      setLoading(false);
     } else {
       const rec = await axios.get("/myPayroll/getallpayrolls", {
         params: { employerId: user._id },
       });
-      filterData(rec.data);
+      //   filterData(rec.data);
+      setAllPayrolls([...rec.data]);
+      setLoading(false);
     }
   };
 
@@ -76,7 +80,7 @@ const Transactions = () => {
   };
   return (
     <div>
-      <h4 style={{ marginTop: "1em" }}>This Months Transactions</h4>
+      <h3 style={{ marginTop: "1em" }}>Payments</h3>
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Spinner animation="grow" />
@@ -90,10 +94,7 @@ const Transactions = () => {
               <thead>
                 <tr>
                   <th>Payroll Title</th>
-                  <th>Date Range</th>
                   <th>Total Amount</th>
-                  {user?.role !== "Employee" && <th># of People</th>}
-                  <th>Created At</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -106,10 +107,6 @@ const Transactions = () => {
                       style={{ cursor: "pointer" }}
                     >
                       <td>{p?.payrollTitle}</td>
-                      <td>{`${p?.dateRange.substring(
-                        0,
-                        10
-                      )}---${p?.dateRange.substring(20, 30)}`}</td>
                       {user?.role !== "Employee" ? (
                         <td>
                           $ &nbsp;
@@ -132,13 +129,6 @@ const Transactions = () => {
                           })}
                         </td>
                       )}
-                      {user?.role !== "Employee" && (
-                        <td>{p?.employees.length}</td>
-                      )}
-                      <td>
-                        {moment(p?.createdAt).format("DD-MM-YYYY hh:mm a")}
-                      </td>
-
                       <td>
                         {p?.paid ? (
                           <Chip
@@ -170,4 +160,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default Payments;

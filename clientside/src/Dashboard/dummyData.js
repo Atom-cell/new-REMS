@@ -51,16 +51,12 @@ export const userData = [
 
 export const productivityData = [
   {
-    name: "Naseer",
-    productivity: 90,
+    username: "Naseer",
+    times: "0.057",
   },
   {
-    name: "Sani",
-    productivity: 50,
-  },
-  {
-    name: "Ahmad",
-    productivity: 70,
+    username: "Toto",
+    times: "0.09",
   },
 ];
 

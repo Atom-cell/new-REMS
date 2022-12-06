@@ -10,7 +10,7 @@ import VideoCall from "./Meetings/VideoCall";
 import MyCalendar from "./Calendar/MyCalendar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
-import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
+import EmpDashboard from "./Dashboard/EmployeeDashboard/EmpDashboard";
 // import SetMeeting from "./Meetings/SetMeeting";
 import ConferenceCall from "./Meetings/ConferenceCall";
 import Messenger from "./Chat/Messenger";
@@ -277,7 +277,7 @@ const App = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-      if (user?.role == "admin") {
+      if (user?.role === "admin") {
         axios
           .get(
             `https://restcountries.com/v2/name/${user.currency}?fullText=true`
@@ -421,10 +421,8 @@ const App = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                       ) : role === "Employee" ? (
                         <Route
-                          path="/myCalendar"
-                          element={
-                            loggedUser && <MyCalendar user={loggedUser} />
-                          }
+                          path="/empdashboard"
+                          element={<EmpDashboard />}
                         /> // EMP DASHBOARD
                       ) : (
                         <>
@@ -440,8 +438,8 @@ const App = () => {
                       <Route element={<ProtectedRoutes />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route
-                          path="/empDashboard"
-                          element={<EmployeeDashboard />}
+                          path="/empdashboard"
+                          element={<EmpDashboard />}
                         />
                         <Route path="/update" element={<UpdateProfile />} />
                         <Route path="/no" element={<NoMobile />} />

@@ -230,6 +230,28 @@ router.get("/getallmyusersbyname/:name", (req, res) => {
   });
 });
 
+router.get("/dash/getCoaching/:id", async (req, res) => {
+  console.log("getting coaching");
+  let id = req.params.id;
+  const v = {
+    strength: 1,
+    weakness: 1,
+  };
+
+  const user = await Emp.findOne({ _id: id }).select(v);
+  res.json(user);
+});
+
+router.get("/dash/activeTime", verifyJWT, async (req, res) => {
+  console.log("getting coaching");
+  const v = {
+    totalTime: 1,
+  };
+
+  const user = await Emp.findOne({ email: req.userEmail }).select(v);
+  res.json(user);
+});
+
 router.post("/emailinvoice", (req, res) => {
   // console.log(req.body);
   // employerId, emps, file
@@ -432,29 +454,31 @@ router.post("/login", async (req, res) => {
           "helloworld"
         );
 
-        let date = new Date();
-        console.log("INOUTITITITITII");
-        try {
-          Emp.findOneAndUpdate(
-            { email: req.body.email },
-            {
-              $push: {
-                InOut: {
-                  date: date.toLocaleDateString(),
-                  In: date,
+        if (Euser.desktop) {
+          let date = new Date();
+          console.log("INOUTITITITITII");
+          try {
+            Emp.findOneAndUpdate(
+              { email: req.body.email },
+              {
+                $push: {
+                  InOut: {
+                    date: date.toLocaleDateString(),
+                    In: date,
+                  },
                 },
               },
-            },
-            function (error, data) {
-              if (error) {
-                console.log(error);
-              } else {
-                console.log("");
+              function (error, data) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("");
+                }
               }
-            }
-          );
-        } catch (e) {
-          res.send(e);
+            );
+          } catch (e) {
+            res.send(e);
+          }
         }
 
         return res.json({ data: Euser, msg: 1, token: token, auth: true });
