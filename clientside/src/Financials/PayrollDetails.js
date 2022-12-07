@@ -93,120 +93,120 @@ const PayrollDetails = ({ user, currency }) => {
   };
   return (
     <div>
-      {/* <h1>Payroll Details</h1> */}
-      <div className="payroll-details">
-        <div className="payroll-detail">
-          <h6>Payroll Title:</h6>
-          <span>{selectedPayroll?.payrollTitle}</span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Created At:</h6>
-          <span>{moment(selectedPayroll?.createdAt).format("DD-MM-YYYY")}</span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Payroll Range:</h6>
-          <span>{`${selectedPayroll?.dateRange.substring(
-            0,
-            10
-          )}---${selectedPayroll?.dateRange.substring(20, 30)}`}</span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Amount Before Adjustments:</h6>
-          <span>
-            {currency?.symbol} {""}
-            {selectedPayroll?.totalAmount}
-          </span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Total Time:</h6>
-          <span>{selectedPayroll?.totalTime}</span>
-        </div>
-        {selectedPayroll.invoice ? (
-          <>
-            {user?.role !== "Employee" && (
-              <div className="payroll-detail">
-                <Button
-                  style={{ backgroundColor: "#1890ff" }}
-                  onClick={() =>
-                    navigate("/allpayroll/generateinvoice", { state: state })
-                  }
-                >
-                  View Invoice
-                </Button>
-              </div>
+      <div className="table-and-details-container">
+        <div className="payroll-details-container">
+          <div className="payroll-detail">
+            <h5>Payroll Title:</h5>
+            <span>{selectedPayroll?.payrollTitle}</span>
+          </div>
+          <div className="payroll-detail">
+            <h5>Created At:</h5>
+            <span>
+              {moment(selectedPayroll?.createdAt).format("DD-MM-YYYY")}
+            </span>
+          </div>
+          <div className="payroll-detail">
+            <h5>Payroll Range:</h5>
+            <span>{`${selectedPayroll?.dateRange.substring(
+              0,
+              10
+            )}---${selectedPayroll?.dateRange.substring(20, 30)}`}</span>
+          </div>
+          <div className="payroll-detail">
+            <h5>Amount Before Adjustments:</h5>
+            <span>
+              {currency?.symbol} {""}
+              {selectedPayroll?.totalAmount}
+            </span>
+          </div>
+          <div className="payroll-detail">
+            <h5>Total Time:</h5>
+            <span>{selectedPayroll?.totalTime}</span>
+          </div>
+          <div className="payroll-detail">
+            {selectedPayroll.invoice ? (
+              <>
+                {user?.role !== "Employee" && (
+                  <div>
+                    <Button
+                      style={{ backgroundColor: "#1890ff" }}
+                      onClick={() =>
+                        navigate("/allpayroll/generateinvoice", {
+                          state: state,
+                        })
+                      }
+                    >
+                      View Invoice
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {user?.role !== "Employee" && (
+                  <div>
+                    <Button
+                      style={{ backgroundColor: "#1890ff" }}
+                      onClick={handleGenerateInvoice}
+                    >
+                      Generate Invoice
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-          </>
-        ) : (
-          <>
-            {user?.role !== "Employee" && (
-              <div className="payroll-detail">
-                <Button
-                  style={{ backgroundColor: "#1890ff" }}
-                  onClick={handleGenerateInvoice}
-                >
-                  Generate Invoice
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-        {/* <div className="payroll-detail">
-          <h6>Total Projects:</h6>
-          <span>{selectedPayroll?.projectId.length}</span>
-        </div> */}
-        {/* <div className="payroll-detail">
-          <h6>Status:</h6>
-          <span>Manually Created</span>
-        </div> */}
-      </div>
-      <div className="table">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Total Time</th>
-              <th>Base Amount</th>
-              <th>Adjustments</th>
-              <th>Total Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selectedPayroll?.employees.map((emp, index) => {
-              return (
-                <tr key={index}>
-                  <td>{emp.employeeUsername}</td>
-                  <td>{emp.totalTime}</td>
-                  <td>
-                    {currency?.symbol} {""}{" "}
-                    {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
-                  </td>
-                  <td
-                    onClick={() => {
-                      setEmployee(emp);
-                      handleShow();
-                    }}
-                  >
-                    {currency?.symbol} {""} {handleAdjustments(emp.adjustments)}
-                  </td>
-                  <td>
-                    {currency?.symbol}{" "}
-                    {ultimateTotalAmount(emp.baseAmount, emp.adjustments)}
-                    {/* {Number(emp.baseAmount).toFixed(2) +
+          </div>
+        </div>
+        <div className="table">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Total Time</th>
+                <th>Base Amount</th>
+                <th>Adjustments</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedPayroll?.employees.map((emp, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{emp.employeeUsername}</td>
+                    <td>{emp.totalTime}</td>
+                    <td>
+                      {currency?.symbol} {""}{" "}
+                      {emp.baseAmount ? Number(emp.baseAmount).toFixed(2) : "0"}
+                    </td>
+                    <td
+                      onClick={() => {
+                        setEmployee(emp);
+                        handleShow();
+                      }}
+                    >
+                      {currency?.symbol} {""}{" "}
+                      {handleAdjustments(emp.adjustments)}
+                    </td>
+                    <td>
+                      {currency?.symbol}{" "}
+                      {ultimateTotalAmount(emp.baseAmount, emp.adjustments)}
+                      {/* {Number(emp.baseAmount).toFixed(2) +
                       handleAdjustments(emp.adjustments)} */}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-        <Adjustments
-          show={show}
-          handleClose={handleClose}
-          employee={employee}
-          payroll={selectedPayroll}
-          updateAmount={updateAmount}
-          currency={currency}
-        />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <Adjustments
+            show={show}
+            handleClose={handleClose}
+            employee={employee}
+            payroll={selectedPayroll}
+            updateAmount={updateAmount}
+            currency={currency}
+          />
+        </div>
       </div>
     </div>
   );
