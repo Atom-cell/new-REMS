@@ -19,7 +19,15 @@ const Message = ({ message, own, userPhoto }) => {
   return (
     <div className={own ? "message" : "message own"}>
       <div className="messageTop">
-        <img className="messageImg" src={userPhoto} alt="" />
+        <img
+          className="messageImg"
+          src={
+            userPhoto
+              ? `data:image/jpeg;base64,${userPhoto}`
+              : "https://i.stack.imgur.com/34AD2.jpg"
+          }
+          alt=""
+        />
         <div className="messageText">
           {message.Image && (
             <div className="messageFile">

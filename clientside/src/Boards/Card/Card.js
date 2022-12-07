@@ -129,7 +129,11 @@ function Card(props) {
                 >
                   {assignedToUser ? (
                     <Image
-                      src={assignedToUser?.profilePicture}
+                      src={
+                        assignedToUser?.profilePicture
+                          ? `data:image/jpeg;base64,${assignedToUser?.profilePicture}`
+                          : "https://i.stack.imgur.com/34AD2.jpg"
+                      }
                       roundedCircle
                       style={{ height: "30px", width: "30px" }}
                       onClick={(e) => {
