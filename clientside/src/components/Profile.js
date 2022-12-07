@@ -31,6 +31,7 @@ const Profile = () => {
   const [showPass, setShowPass] = React.useState(false);
   const [allEvents, setAllEvents] = React.useState([]); //for attendance
   const [valueCal, onChangeCal] = React.useState(new Date());
+  const [role, setRole] = React.useState(localStorage.getItem("role"));
 
   React.useEffect(() => {
     getUserInfo();
@@ -283,23 +284,26 @@ const Profile = () => {
           </form>
         </div>
       </div>
-      <div style={{ marginTop: "2em" }}>
-        <h3>Attendance</h3>
-        {allEvents ? (
-          <Calendar
-            value={valueCal}
-            tileClassName={({ date }) => {
-              if (
-                allEvents.find(
-                  (x) => x.slice(0, 10) === fixTimezoneOffset(date).slice(0, 10)
-                )
-              ) {
-                return "present";
-              }
-            }}
-          />
-        ) : null}
-      </div>
+      {role !== "admin" ? (
+        <div style={{ marginTop: "2em" }}>
+          <h3>Attendance</h3>
+          {allEvents ? (
+            <Calendar
+              value={valueCal}
+              tileClassName={({ date }) => {
+                if (
+                  allEvents.find(
+                    (x) =>
+                      x.slice(0, 10) === fixTimezoneOffset(date).slice(0, 10)
+                  )
+                ) {
+                  return "present";
+                }
+              }}
+            />
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -58,13 +58,12 @@ const TodayMeetings = () => {
         setAllMeetings([...meets]);
       });
 
-    let aa = [];
     axios
       .get("/myCalendar/", { params: { userId: user._id } })
       .then((res) => {
         // setCalendarData(res.data);
         // setAllEvents(res.data);
-        console.log("CALLLLEE :", res.data);
+        // console.log("CALLLLEE :", res.data);
         filterAgenda(res.data);
       })
       .catch((err) => console.log(err));
@@ -79,7 +78,7 @@ const TodayMeetings = () => {
       if (new Date(a.startDate).getDate() == day) filter.push(a);
     });
     setCalendarData([...filter]);
-    console.log("FILTEEEEEEE: ", filter);
+    // console.log("FILTEEEEEEE: ", filter);
   };
 
   const eventSelected = (e) => {
@@ -122,7 +121,9 @@ const TodayMeetings = () => {
               <h4 style={{ marginTop: "1em" }}>Today's Scheduled Meetings</h4>
               <div className="all-meetings-table-container">
                 {loading ? (
-                  <Spinner animation="grow" />
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Spinner animation="grow" />
+                  </div>
                 ) : (
                   <Table hover bordered className="all-meetings-table">
                     <thead>

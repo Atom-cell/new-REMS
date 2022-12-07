@@ -204,14 +204,14 @@ router.get("/getMoreInfo/:email", async (req, res) => {
   res.json(user);
 });
 
-router.get("/dash/topActive", async (req, res) => {
+router.get("/dash/topActive", verifyJWT, async (req, res) => {
+  console.log("top active");
   const v = {
     username: 1,
     totalTime: 1,
   };
-  // req.userEmail
   try {
-    Admin.find({ email: "sani2@gmail.com" })
+    Admin.find({ email: req.userEmail })
       .populate({
         path: "employees",
         select: v,

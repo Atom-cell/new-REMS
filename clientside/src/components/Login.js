@@ -14,6 +14,7 @@ import axios from "axios";
 import LoginImg from "../img/Login.gif";
 import AnimatedRoutes from "../AnimatedRoutes";
 import { baseURL } from "../Request";
+import { toast } from "react-toastify";
 
 function Login() {
   React.useEffect(() => {
@@ -62,22 +63,12 @@ function Login() {
             password: password,
           })
           .then(function (response) {
-            console.log(response.data.data);
-            console.log(response.data.token);
+            // console.log(response.data.data);
+            // console.log(response.data.token);
             setValid(response.data.msg);
             //for updating info email is needed
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("email", response.data.data.email);
-            localStorage.setItem("user", JSON.stringify(response.data.data));
-            localStorage.setItem("role", response.data.data.role);
-            localStorage.setItem("id", response.data.data._id);
-            let n = response.data.data.notifications;
-            let rev = filterNotifications(n.reverse());
-            //push db notifs in here
-            localStorage.setItem("notif", JSON.stringify([...rev]));
-            localStorage.setItem("notifNum", rev.length);
-
             setData(response.data.data);
+            localStorage.setItem("token", response.data.token);
           })
           .catch(function (error) {
             console.log(error);
@@ -139,10 +130,51 @@ function Login() {
         console.log("Response: ", response);
       });
   };
+
+  const forward = () => {
+    if (data.role === "admin" && !data.verified)
+      alert("Please Verify your Credentials");
+    else if (data.role === "admin" && data.verified) {
+      saveInfo(data);
+      window.location = "/dashboard";
+    } else if (data.role === "Employee" && data.updated === false) {
+      saveInfo(data);
+      window.location = "/update";
+    } else if (data.role === "Employee" && data.updated && data.desktop) {
+      saveInfo(data);
+      window.location = "/empdashboard";
+    } else if (data.role === "Employee" && !data.desktop)
+      alert("Login on desktop first!");
+  };
+
+  const saveInfo = (data) => {
+    localStorage.setItem("email", data.email);
+    localStorage.setItem("user", JSON.stringify(data));
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("id", data._id);
+    let n = data.notifications;
+    let rev = filterNotifications(n.reverse());
+    //push db notifs in here
+    localStorage.setItem("notif", JSON.stringify([...rev]));
+    localStorage.setItem("notifNum", rev.length);
+  };
   return (
     <AnimatedRoutes>
       <div className="container1">
         {valid === 0 ? (
+          <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Invalid Credentials!
+            </Alert>
+          </Snackbar>
+        ) : (
+          forward()
+        )}
+        {/* {valid === 0 ? (
           <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
@@ -158,9 +190,11 @@ function Login() {
           (window.location = "/dashboard")
         ) : data.updated === false ? (
           (window.location = "/update")
-        ) : data.updated ? (
-          (window.location = "/myCalendar")
-        ) : null}
+        ) : data.updated && data.desktop ? (
+          (window.location = "/empdashboard")
+        ) : !data.desktop ? (
+          alert("Login on desktop first!")
+        ) : null} */}
 
         <div style={{ display: "flex", marginTop: "-2em" }}>
           <Image src={LoginImg} />
@@ -231,17 +265,6 @@ function Login() {
           </div>
         </div>
       </div>
-      {/* <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
-        style={{ marginTop: "-13em" }}
-      >
-        <path
-          fill="#0099ff"
-          fill-opacity="1"
-          d="M0,128L48,117.3C96,107,192,85,288,101.3C384,117,480,171,576,197.3C672,224,768,224,864,202.7C960,181,1056,139,1152,144C1248,149,1344,203,1392,229.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        ></path>
-      </svg> */}
     </AnimatedRoutes>
   );
 }

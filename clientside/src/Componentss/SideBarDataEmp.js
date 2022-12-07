@@ -22,7 +22,7 @@ export const SideBarDataEmp = {
     {
       id: 1,
       title: "Dashboard",
-      path: "/dashboard",
+      path: "/empdashboard",
       icon: <DashboardRoundedIcon />,
       cName: "nav-text",
     },

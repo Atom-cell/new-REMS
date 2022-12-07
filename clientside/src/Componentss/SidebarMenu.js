@@ -23,6 +23,10 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { toast, ToastContainer } from "react-toastify";
 import MailIcon from "@mui/icons-material/Mail";
+import { confirmAlert } from "react-confirm-alert"; // Import
+
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+
 ////////////////////////
 
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -137,7 +141,9 @@ export default function SidebarMenu({
   const [notifNum, setNotifNum] = React.useState(0);
   const { sock, setSocket } = React.useContext(SocketContext);
   const [open1, setOpen1] = React.useState(false); //for subnav
-
+  const [user, seUser] = React.useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
   const handleClick = () => {
     setOpen1(!open1);
   };
@@ -224,6 +230,22 @@ export default function SidebarMenu({
   const [role, setRole] = React.useState("");
   const [pic, setPic] = React.useState("");
   const { name, setName } = React.useContext(ProjectNameContext);
+
+  const submit = () => {
+    confirmAlert({
+      title: "Logged Out of Desktop Too?",
+      message: "Did you log out of the desktop?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => logout(),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
 
   const logout = () => {
     axios
@@ -414,7 +436,13 @@ export default function SidebarMenu({
                 <Dropdown.Item onClick={() => navigate("/profile")}>
                   Profile
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => logout()}>Logout</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={
+                    user?.role === "Employee" ? () => submit() : () => logout()
+                  }
+                >
+                  Logout
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
