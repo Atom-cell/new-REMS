@@ -122,7 +122,7 @@ function CardInfo(props) {
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <Type />
-            <p>Title</p>
+            <p style={{ marginTop: "20px" }}>Title</p>
           </div>
           <Editable
             defaultValue={values.title}
@@ -135,7 +135,7 @@ function CardInfo(props) {
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <List />
-            <p>Description</p>
+            <p style={{ marginTop: "20px" }}>Description</p>
           </div>
           <Editable
             defaultValue={values.desc}
@@ -148,13 +148,18 @@ function CardInfo(props) {
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <Calendar />
-            <p>Date</p>
+            <p style={{ marginTop: "20px" }}>Date</p>
           </div>
           <input
             type="date"
             defaultValue={values.date}
             min={new Date().toISOString().substr(0, 10)}
             onChange={(event) => updateDate(event.target.value)}
+            readOnly={
+              JSON.parse(localStorage.getItem("user"))?.role === "admin"
+                ? false
+                : true
+            }
           />
         </div>
         <div className="cardinfo_box">
@@ -196,7 +201,7 @@ function CardInfo(props) {
         <div className="cardinfo_box">
           <div className="cardinfo_box_title">
             <CheckSquare />
-            <p>Tasks</p>
+            <p style={{ marginTop: "20px" }}>Tasks</p>
           </div>
           <div className="cardinfo_box_progress-bar">
             <div
@@ -218,18 +223,21 @@ function CardInfo(props) {
                   }
                 />
                 <p className={item.completed ? "completed" : ""}>{item.task}</p>
-                <Trash onClick={() => removeTask(item._id)} />
+                {JSON.parse(localStorage.getItem("user"))?.role === "admin" && (
+                  <Trash onClick={() => removeTask(item._id)} />
+                )}
               </div>
             ))}
           </div>
-          <Editable
-            text={"Add a Task"}
-            placeholder="Enter task"
-            type={"text"}
-            onSubmit={addTask}
-          />
+          {JSON.parse(localStorage.getItem("user"))?.role === "admin" && (
+            <Editable
+              text={"Add a Task"}
+              placeholder="Enter task"
+              type={"text"}
+              onSubmit={addTask}
+            />
+          )}
         </div>
-        {/* )} */}
       </div>
     </Modal>
   );
