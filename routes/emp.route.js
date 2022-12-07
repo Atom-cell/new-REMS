@@ -109,7 +109,7 @@ router.get("/getcompanyemployees", (req, res) => {
   Admin.find({ employees: req.query._id }, (err, rec) => {
     if (err) res.status(500).json(err);
     Emp.find(
-      { _id: { $in: rec[0].employees } },
+      { _id: { $in: rec[0].employees }, active: true },
       { _id: 1, username: 1, email: 1, profilePicture: 1 },
       (errr, recc) => {
         if (errr) res.status(500).json(err);
@@ -148,7 +148,7 @@ router.get("/getmyemployees", (req, res) => {
   console.log(req.query._id);
   Admin.find({ _id: req.query._id }, (err, rec) => {
     if (err) res.status(500).json(err);
-    Emp.find({ _id: { $in: rec[0].employees } }, (errr, recc) => {
+    Emp.find({ _id: { $in: rec[0].employees }, active: true }, (errr, recc) => {
       if (errr) res.status(500).json(err);
       res.status(200).json(recc);
     });
@@ -178,7 +178,7 @@ router.get("/:userId", (req, res, next) => {
 router.get("/getuserbyname/:name", (req, res) => {
   // console.log(req.params.name);
   Emp.find(
-    { username: { $regex: req.params.name, $options: "i" } },
+    { username: { $regex: req.params.name, $options: "i" }, active: true },
     { _id: true },
     (err, rec) => {
       if (err) res.status(500).json(err);
@@ -203,6 +203,7 @@ router.get("/getallusersbyname/:name", (req, res) => {
       {
         _id: { $in: rec[0].employees },
         username: { $regex: req.params.name, $options: "i" },
+        active: true,
       },
       { _id: 1, username: 1, email: 1 },
       (errr, recc) => {
@@ -220,6 +221,7 @@ router.get("/getallmyusersbyname/:name", (req, res) => {
       {
         _id: { $in: rec[0].employees },
         username: { $regex: req.params.name, $options: "i" },
+        active: true,
       },
       { _id: 1, username: 1, email: 1 },
       (errr, recc) => {

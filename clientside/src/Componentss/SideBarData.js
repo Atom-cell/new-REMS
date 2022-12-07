@@ -119,7 +119,6 @@ export const SideBarData = {
         ></i>
       ),
     },
-
     {
       id: 13,
       title: "Reports",

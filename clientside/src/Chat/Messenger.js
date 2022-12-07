@@ -105,6 +105,11 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
   }, [messages]);
 
   const handleSendMessage = async (e) => {
+    //check if user is deleted
+    if (friend?.active === false) {
+      toast.error("This user is deleted");
+      return;
+    }
     // e.preventDefault();
     // sender is the person that is currently logged in i-e Naseer
     var imageUrl = "";
@@ -400,7 +405,7 @@ const Messenger = ({ onlineUsers, setOnlineUsers, arrivalMessage, user }) => {
                         message={m}
                         own={m.sender === user?._id}
                         userPhoto={
-                          m.sender === user?._id
+                          m?.sender === user?._id
                             ? user?.profilePicture
                             : friend?.profilePicture
                         }
