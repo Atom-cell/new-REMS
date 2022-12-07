@@ -810,7 +810,7 @@ router.post("/zone/:id", (req, res) => {
         if (error) {
           console.log(error);
         } else {
-          console.log("");
+          res.status(200);
         }
       }
     );

@@ -16,6 +16,7 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import {
@@ -25,6 +26,8 @@ import {
   Alert,
   ToggleButton,
   Pagination,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -249,7 +252,7 @@ function EmpManage({ currency }) {
     let data = [];
     let boards = [];
     await axios
-      .get(`http://localhost:5000/report/employeeprojects/${id}/${11}`, {
+      .get(`http://localhost:5000/report/employeeprojects/${id}`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
@@ -283,7 +286,7 @@ function EmpManage({ currency }) {
 
     arr.forEach((a) => {
       a.hoursWorked.forEach((h) => {
-        if (h.user === name) {
+        if (h.user === name && h.date.slice(3, 5) == month) {
           let str = h.time.split(":");
           str = str[0] * 3600 + str[1] * 60 + str[2] * 1;
           secs.push(str);
@@ -349,9 +352,11 @@ function EmpManage({ currency }) {
       .then((response) => {})
       .catch((error) => {});
 
-    axios.post(`/notif/zone/${id}`).then((response) => {
-      getData();
-    });
+    if (zone < 60) {
+      axios.post(`/notif/zone/${id}`).then((response) => {
+        getData();
+      });
+    }
   };
 
   return (
@@ -423,6 +428,11 @@ function EmpManage({ currency }) {
             <PersonAddIcon style={{ fill: "white", marginRight: "0.5em" }} />
             Add new Employee
           </Button>
+          <Tooltip title="productivity is 30% time on projects & 70% completed tasks">
+            <IconButton>
+              <PriorityHighIcon style={{ fill: "black" }} />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
 
@@ -497,7 +507,7 @@ function EmpManage({ currency }) {
                               calculateProductivity(data._id, data.username)
                             }
                           >
-                            Calculate Productivity for {monthName[month]}
+                            Calculate Productivity for {monthName[month]}{" "}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => submit(data._id)}>
                             Delete

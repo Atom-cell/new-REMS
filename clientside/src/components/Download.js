@@ -29,12 +29,12 @@ function Download() {
             <Col xs={12} md={6} className="img">
               <Image src={img} className="headerimg2" />
             </Col>
-            <Col xs={12} md={6} className="downloadbtnwrapper">
+            <Col xs={12} md={5} className="downloadbtnwrapper">
               <h1>Download the Desktop App</h1>
               <Button className="windows" onClick={(e) => downloadFile(e)}>
                 Get for Windows
               </Button>
-              <Button className="ios">Coming Soon...</Button>
+              {/* <Button className="ios">Coming Soon...</Button> */}
             </Col>
           </Row>
         </Container>

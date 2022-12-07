@@ -54,7 +54,7 @@ const ProductivityReport = () => {
   for (let i = 1; i <= totalDays; i++) {
     if (i < 10) {
       days.push({
-        date: `${new Date(value).getMonth() + 1}/0${i}/${year}`,
+        date: `${new Date(value).getMonth() + 1}/${i}/${year}`,
         In: "A",
         Out: "A",
         totalTime: 0,
@@ -122,8 +122,6 @@ const ProductivityReport = () => {
         },
       })
       .then((response) => {
-        // setInOut([...response.data]);
-        console.log(response.data);
         inout = [...response.data];
         console.log("INOOOOOUT ", response.data);
         let aa = [];
@@ -151,7 +149,7 @@ const ProductivityReport = () => {
         }
 
         setInOut([...aa]);
-        // console.log("NEEEEWWWWWWWWWWW: ", aa);
+        console.log("INOUUT ARRY : ", aa);
         getTotalWorkingDays(aa);
         convertDataForChart(aa);
       });
@@ -188,34 +186,36 @@ const ProductivityReport = () => {
   const getProject = async () => {
     let data = [];
     await axios
-      .get(`http://localhost:5000/report/employeeprojects/${name}/${month}`, {
+      .get(`http://localhost:5000/report/employeeprojects/${name}`, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
       })
       .then((response) => {
-        console.log("proj ", response.data);
+        console.log("projects ", response.data);
         setProjects([...response.data]);
         data = [...response.data];
         setLoading(1);
       });
     filterProjectDataForChart([...data]); //for chart
-    filterProjectData([...data]); //for total time spent in projects
+    filterProjectData([...data], month); //for total time spent in projects
   };
 
   //time spent doing the projects
-  const filterProjectData = (arr) => {
+  const filterProjectData = (arr, m) => {
     const name = user?.username;
     let totalTime = 0;
     let secs = [];
 
     arr.forEach((a) => {
       a.hoursWorked.forEach((h) => {
-        if (h.user === name) {
+        if (h.user === name && h.date.slice(3, 5) == m) {
+          console.log("Hours worked Array: ", h);
           let str = h.time.split(":");
           str = str[0] * 3600 + str[1] * 60 + str[2] * 1;
           secs.push(str);
           totalTime += str;
+          console.log("SECS:  ", str);
         }
       });
     });
@@ -281,10 +281,10 @@ const ProductivityReport = () => {
     });
 
     let percent = totalTimeofProjects * 0.3 + (completed / assigned) * 0.7;
-    console.log(totalTimeofProjects);
-    console.log(completed);
-    console.log(assigned);
-    console.log(percent);
+    console.log("total time of projects: ", totalTimeofProjects);
+    console.log("completed ", completed);
+    console.log("assingned: ", assigned);
+    console.log("percent ", percent);
     setProductivity(percent);
   };
 
@@ -555,7 +555,7 @@ const ProductivityReport = () => {
           </div>
           <div className="time_box">
             <p>Productivity %</p>
-            <h4>{productivity ? productivity : null}%</h4>
+            <h4>{productivity ? productivity.toFixed(2) : null}%</h4>
           </div>
         </div>
         <div className="inout_chart">

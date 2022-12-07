@@ -152,7 +152,10 @@ function Login() {
     localStorage.setItem("user", JSON.stringify(data));
     localStorage.setItem("role", data.role);
     localStorage.setItem("id", data._id);
-    let n = data.notifications;
+    let n = data.notifications.filter((n) => {
+      if (n.msg.includes("Message") || n.msg.includes("Video")) {
+      } else return n;
+    });
     let rev = filterNotifications(n.reverse());
     //push db notifs in here
     localStorage.setItem("notif", JSON.stringify([...rev]));

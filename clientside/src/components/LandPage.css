@@ -97,6 +97,7 @@ Nav.Link {
 .header-features {
   margin-top: 2rem;
   display: flex;
+  justify-content: space-between;
   text-align: center;
 }
 .header-features h4 {

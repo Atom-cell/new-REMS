@@ -68,10 +68,33 @@ router.get("/allProjects/:id/:status/:month", async (req, res) => {
       projectAssignedBy: req.params.id,
       status: req.params.status,
     });
-    let proj = project.filter(
-      (p) => new Date(p.createdAt).getMonth() + 1 == month
-    );
-    res.json(proj);
+    // let proj = project.filter(
+    //   (p) => new Date(p.createdAt).getMonth() + 1 == month
+    // );
+    res.json(project);
+  }
+});
+
+router.get("/allProjectsWork/:id/:status", async (req, res) => {
+  console.log("getting projects");
+  // let month = req.params.month;
+  if (req.params.status === "all") {
+    const project = await Project.find({
+      projectAssignedBy: req.params.id,
+    });
+    // let proj = project.filter(
+    //   (p) => new Date(p.createdAt).getMonth() + 1 == month
+    // );
+    res.json(project);
+  } else {
+    const project = await Project.find({
+      projectAssignedBy: req.params.id,
+      status: req.params.status,
+    });
+    // let proj = project.filter(
+    //   (p) => new Date(p.createdAt).getMonth() + 1 == month
+    // );
+    res.json(project);
   }
 });
 
@@ -141,16 +164,16 @@ router.get("/activeIdleLast/:id/:month/:year", async (req, res) => {
   res.json(User);
 });
 
-router.get("/employeeprojects/:id/:month", (req, res) => {
+router.get("/employeeprojects/:id", (req, res) => {
   console.log("gtting projets");
-  const month = req.params.month;
+  // const month = req.params.month;
   Project.find({ projectAssignedTo: { $in: req.params.id } }, (err, rec) => {
     if (err) res.status(500).json(err);
     else {
-      let proj = rec.filter(
-        (p) => new Date(p.createdAt).getMonth() + 1 == month
-      );
-      res.json(proj);
+      // let proj = rec.filter(
+      //   (p) => new Date(p.createdAt).getMonth() + 1 == month
+      // );
+      res.json(rec);
     }
   });
 });
