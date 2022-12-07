@@ -77,8 +77,7 @@ const TodayTasks = () => {
       if (b.projectId === id) {
         b.boards?.forEach((cards) => {
           cards.cards?.forEach((a) => {
-            // console.log("cards: ", id, " ", a.tasks);
-            assinged += a.tasks.length;
+            if (a.assignedTo === user?._id) assinged += a.tasks.length;
             a.tasks.forEach((tasks) => {
               if (tasks.completed) completed++;
             });
@@ -87,14 +86,19 @@ const TodayTasks = () => {
       }
     });
 
-    // console.log(
-    //   "project: ",
-    //   name,
-    //   " Complte: ",
-    //   completed,
-    //   " total tasks given: ",
-    //   assinged
-    // );
+    // newBoards.forEach((b) => {
+    //   b?.forEach((cards) => {
+    //     cards.cards?.forEach((a) => {
+    //       if (a.assignedTo === name) {
+    //         empcards.push(a.tasks);
+    //         assigned += a.tasks.length;
+    //         a.tasks.forEach((tasks) => {
+    //           if (tasks.completed) completed++;
+    //         });
+    //       }
+    //     });
+    //   });
+    // });
 
     let progress = completed / assinged;
     if (isNaN(progress)) return `${0}/${0}`;

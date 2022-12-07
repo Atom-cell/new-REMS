@@ -100,13 +100,15 @@ function LandPage() {
                 <h4>Project Management</h4>
               </div>
               {window.screen.width > 768 ? (
-                <Button
-                  className="signbtn2"
-                  type="button"
-                  onClick={() => navigate("/signup")}
-                >
-                  Start Monitoring. It's free!
-                </Button>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    className="signbtn2"
+                    type="button"
+                    onClick={() => navigate("/signup")}
+                  >
+                    Start Monitoring. It's free!
+                  </Button>
+                </div>
               ) : null}
             </Col>
             <Col xs={12} md={6}>

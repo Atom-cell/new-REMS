@@ -25,7 +25,7 @@ const TopUsers = ({ data }) => {
         },
       })
       .then((response) => {
-        // console.log("sssssssss ", response.data.data);
+        console.log("total time of all emps: ", response.data.data);
         filterData(response.data.data);
       });
   };
@@ -43,7 +43,7 @@ const TopUsers = ({ data }) => {
       users.push({ username: tt.username, times: (sum / 3600).toFixed(3) });
     });
 
-    // console.log("qqqqqqqqqqqqqqqqqqq, ", users);
+    console.log("BEFORE for chart: , ", users);
     convertDataForChart(users);
   };
 

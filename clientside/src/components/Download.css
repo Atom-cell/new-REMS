@@ -1,6 +1,6 @@
 .downloadWrapper {
   margin-top: 7rem;
-  margin-bottom: 7rem;
+  margin-bottom: 5rem;
 }
 .img {
   /* border: 3px solid black;
@@ -9,7 +9,8 @@
 .downloadbtnwrapper {
   /* background-color: blue;
   border: 3px solid black; */
-  padding: 5rem;
+  padding: 3rem;
+  margin-left: 0.5em;
 }
 .downloadbtnwrapper h1 {
   font-weight: bold;

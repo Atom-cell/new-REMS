@@ -30,7 +30,6 @@ export const SideBarData = {
       icon: <DashboardRoundedIcon />,
       cName: "nav-text",
     },
-
     {
       id: 3,
       title: "My Calendar",
@@ -38,7 +37,6 @@ export const SideBarData = {
       icon: <CalendarTodayIcon />,
       cName: "nav-text sub-nav",
     },
-
     {
       id: 11,
       title: "Activity Log",
@@ -136,6 +134,11 @@ export const SideBarData = {
         {
           title: "Projects",
           path: "/reports/projects",
+          icon: <TaskAltIcon />,
+        },
+        {
+          title: "Projects Work",
+          path: "/reports/projectswork",
           icon: <TaskAltIcon />,
         },
         {

@@ -45,6 +45,7 @@ import SpecificProject from "./Projects/SpecificProject";
 import InOutReport from "./Reports/InOutReport";
 import AppsSitesReport from "./Reports/AppsSitesReport";
 import ProjectsReport from "./Reports/ProjectsReport";
+import ProjectsWork from "./Reports/ProjectsWork";
 import ActiveIdleReport from "./Reports/ActiveIdleReport";
 import ProductivityReport from "./Reports/ProductivityReport";
 import Profile from "./components/Profile";
@@ -470,6 +471,10 @@ const App = () => {
                         <Route
                           path="/reports/projects"
                           element={<ProjectsReport />}
+                        />
+                        <Route
+                          path="/reports/projectswork"
+                          element={<ProjectsWork />}
                         />
                         <Route
                           path="/reports/activeidle"
