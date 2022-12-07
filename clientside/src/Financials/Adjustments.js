@@ -27,29 +27,23 @@ const Adjustments = ({
           <Modal.Title>Adjustments</Modal.Title>
         </Modal.Header>
         <Modal.Body className="adjustments-modal">
-          <div className="adjustments-deatils">
-            {/* <div className="payroll-detail">
-              <h6>Payroll Id</h6>
-              <span>{payroll?._id}</span>
-            </div> */}
-            {/* <div className="payroll-detail">
-              <h6>Payroll Range</h6>
-              <span>{payroll?.dateRange}</span>
-            </div> */}
-            <div className="payroll-detail">
-              <h6>Name</h6>
-              <span>{employee?.employeeUsername}</span>
-            </div>
-            <div className="payroll-detail">
-              <h6>Worked Time</h6>
-              <span>{employee?.totalTime}</span>
-            </div>
-            <div className="payroll-detail">
-              <h6>Base Amount</h6>
-              <span>
-                {currency?.symbol} {""}{" "}
-                {Number(employee?.baseAmount).toFixed(3)}
-              </span>
+          <div className="adjustments-details">
+            <div className="adjustments-employee-details">
+              <div className="adjustments-detail">
+                <h5>Name</h5>
+                <span>{employee?.employeeUsername}</span>
+              </div>
+              <div className="adjustments-detail">
+                <h5>Worked Time</h5>
+                <span>{employee?.totalTime}</span>
+              </div>
+              <div className="adjustments-detail">
+                <h5>Base Amount</h5>
+                <span>
+                  {currency?.symbol} {""}{" "}
+                  {Number(employee?.baseAmount).toFixed(3)}
+                </span>
+              </div>
             </div>
             <Table striped bordered hover>
               <thead>

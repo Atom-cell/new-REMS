@@ -45,12 +45,14 @@ function Card(props) {
 
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
-      {JSON.parse(localStorage.getItem("user")).role !== "Employee" && (
+      {JSON.parse(localStorage.getItem("user")).role !== "Employee" ? (
         <>
           {assignedTo
             ? `Update Assignee ${assignedToUser?.username}`
             : "Assign Task"}
         </>
+      ) : (
+        <>{assignedTo ? `${assignedToUser?.username}` : "Not assigned yet"}</>
       )}
     </Tooltip>
   );
@@ -86,7 +88,12 @@ function Card(props) {
           e.stopPropagation();
           props.dragEntered(props.boardId, _id);
         }}
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          const user = JSON.parse(localStorage.getItem("user"));
+          if (user?.role === "admin" || user?._id === assignedTo) {
+            setShowModal(true);
+          }
+        }}
       >
         <div className="card_top">
           <div className="card_top_labels">

@@ -57,83 +57,86 @@ const InvoiceDetails = ({ user, currency }) => {
 
   return (
     <div>
-      <div className="payroll-details">
-        <div className="payroll-detail">
-          <h6>Invoice Title:</h6>
-          <span>{selectedInvoice?.invoiceTitle}</span>
+      <div className="table-and-details-container">
+        <div className="payroll-details-container">
+          <div className="payroll-details">
+            <div className="payroll-detail">
+              <h5>Invoice Title:</h5>
+              <span>{selectedInvoice?.invoiceTitle}</span>
+            </div>
+            <div className="payroll-detail">
+              <h5>Created At:</h5>
+              <span>
+                {moment(selectedInvoice?.createdAt).format("DD-MM-YYYY")}
+              </span>
+            </div>
+            <div className="payroll-detail">
+              <h5>Invoice Range:</h5>
+              <span>{`${selectedInvoice?.dateRange.substring(
+                0,
+                10
+              )}---${selectedInvoice?.dateRange.substring(20, 30)}`}</span>
+            </div>
+            <div className="payroll-detail">
+              <h5>Total Amount:</h5>
+              <span>
+                {currency?.symbol} &nbsp;
+                {handleTotalAmount(selectedInvoice?.employees)}
+              </span>
+            </div>
+            <div className="payroll-detail">
+              <h5>Total Time:</h5>
+              <span>{handleTotalTime(selectedInvoice?.employees)}</span>
+            </div>
+          </div>
+          {user?.role !== "Employee" && (
+            <div className="payroll-detail">
+              <div>
+                <Button
+                  onClick={() =>
+                    navigate("/allinvoice/downloadinvoice", {
+                      state: {
+                        projects: projects,
+                        selectedInvoice: selectedInvoice,
+                      },
+                    })
+                  }
+                >
+                  Download Invoice
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="payroll-detail">
-          <h6>Created At:</h6>
-          <span>{moment(selectedInvoice?.createdAt).format("DD-MM-YYYY")}</span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Invoice Range:</h6>
-          <span>{`${selectedInvoice?.dateRange.substring(
-            0,
-            10
-          )}---${selectedInvoice?.dateRange.substring(20, 30)}`}</span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Total Amount:</h6>
-          <span>
-            {currency?.symbol} &nbsp;
-            {handleTotalAmount(selectedInvoice?.employees)}
-          </span>
-        </div>
-        <div className="payroll-detail">
-          <h6>Total Time:</h6>
-          <span>{handleTotalTime(selectedInvoice?.employees)}</span>
-        </div>
-      </div>
-      {user?.role !== "Employee" && (
-        <div className="payroll-detail">
-          <Button
-            style={{
-              backgroundColor: "#1890ff",
-              float: "right",
-              marginTop: "30px",
-            }}
-            onClick={() =>
-              navigate("/allinvoice/downloadinvoice", {
-                state: { projects: projects, selectedInvoice: selectedInvoice },
-              })
-            }
-          >
-            Download Invoice
-          </Button>
-        </div>
-      )}
-      <div style={{ margin: "30px 0 30px 0" }}>
-        <h6 style={{ display: "inline-block" }}>Projects:</h6>
-        {/* <strong> */}
-        {projects?.map((pro, index) => {
-          if (index === projects?.length - 1)
-            return <span key={index}>{pro.projectName}</span>;
+        <div className="table">
+          <div style={{ margin: "30px 0 30px 0" }}>
+            <h6 style={{ display: "inline-block" }}>Projects:</h6>
+            {projects?.map((pro, index) => {
+              if (index === projects?.length - 1)
+                return <span key={index}>{pro.projectName}</span>;
 
-          return <span key={index}>{pro.projectName},</span>;
-        })}
-        {/* </strong> */}
-      </div>
-      <div className="table">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Total Time</th>
-              <th>Total Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selectedInvoice?.employees.map((emp, index) => {
-              return (
-                <tr key={index}>
-                  <td>{emp.employeeUsername}</td>
-                  <td>{emp.totalTime}</td>
-                  <td>
-                    {currency?.symbol} &nbsp;
-                    {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
-                  </td>
-                  {/* <td
+              return <span key={index}>{pro.projectName},</span>;
+            })}
+          </div>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Total Time</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedInvoice?.employees.map((emp, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{emp.employeeUsername}</td>
+                    <td>{emp.totalTime}</td>
+                    <td>
+                      {currency?.symbol} &nbsp;
+                      {calculateWage(emp.totalTime, emp.hourlyRate).toFixed(2)}
+                    </td>
+                    {/* <td
                     onClick={() => {
                       setEmployee(emp);
                       handleShow();
@@ -145,11 +148,12 @@ const InvoiceDetails = ({ user, currency }) => {
                     {Number(emp.baseAmount) +
                       handleAdjustments(emp.adjustments)}
                   </td> */}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
       </div>
     </div>
   );

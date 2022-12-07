@@ -248,7 +248,7 @@ const AllPayroll = ({ user, currency }) => {
                 </span>
               </th>
               {user?.role !== "Employee" && <th>Download</th>}
-              <th>Pay</th>
+              <th>Status</th>
               {/* <th>Delete</th> */}
             </tr>
           </thead>
