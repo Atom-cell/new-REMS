@@ -58,6 +58,7 @@ import InvoiceDetails from "./Financials/InvoiceDetails";
 import Invoice from "./Financials/Invoice";
 import DownloadInvoice from "./Financials/DownloadInvoice";
 import axios from "axios";
+import AllComments from "./Projects/Comments/AllComments";
 const socket = io.connect("http://localhost:8900");
 // import ProjectInfo from "./Projects/ProjectInfo";
 
@@ -564,6 +565,10 @@ const App = () => {
                         <Route
                           path="/myproject/:pid"
                           element={<SpecificProject user={loggedUser} />}
+                        />
+                        <Route
+                          path="/allcomments"
+                          element={<AllComments user={loggedUser} />}
                         />
                         <Route
                           path="/allboards"

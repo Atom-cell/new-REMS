@@ -25,7 +25,7 @@ const peerServer = ExpressPeerServer(server, {
 app.use("/peerjs", peerServer);
 
 // mongoose connection
-var mongoDB = "mongodb://127.0.0.1/REMSruff";
+var mongoDB = "mongodb://127.0.0.1/fyp";
 mongoose.connect(mongoDB, (err) => {
   if (err) throw err;
   console.log("Database Connected");
@@ -48,6 +48,7 @@ const myProjectRouter = require("./routes/myProject");
 const myBoardRouter = require("./routes/myBoards");
 const myPayrollRouter = require("./routes/myPayroll.route");
 const myInvoiceRouter = require("./routes/myInvoice.route");
+const myCommentsRouter = require("./routes/myComments.route");
 const adminRouter = require("./routes/admin.route");
 const empRouter = require("./routes/emp.route");
 const desktopRouter = require("./routes/desktop.route");
@@ -68,6 +69,7 @@ app.use("/myProjects", myProjectRouter);
 app.use("/myBoards", myBoardRouter);
 app.use("/myPayroll", myPayrollRouter);
 app.use("/myInvoice", myInvoiceRouter);
+app.use("/myComments", myCommentsRouter);
 app.use("/admin", adminRouter);
 app.use("/emp", empRouter);
 app.use("/desk", desktopRouter);

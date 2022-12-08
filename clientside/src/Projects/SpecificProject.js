@@ -407,6 +407,20 @@ const SpecificProject = ({ user }) => {
             variant="primary"
             className=""
             style={{ display: "flex", float: "right", marginRight: "10px" }}
+            onClick={() => {
+              navigate(`/allcomments`, {
+                state: {
+                  project: myProject,
+                },
+              });
+            }}
+          >
+            View Comments
+          </Button>
+          <Button
+            variant="primary"
+            className=""
+            style={{ display: "flex", float: "right", marginRight: "10px" }}
             onClick={myBoard ? handleViewBoard : handleCreateBoard}
           >
             {myBoard ? "View Board" : "Create Board"}
