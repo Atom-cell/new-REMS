@@ -35,14 +35,16 @@ const Time = () => {
   };
 
   const timeConvert = (s) => {
-    let time = new Date(s * 1000).toISOString().slice(11, 19);
-    return time;
+    if (s) {
+      let time = new Date(s * 1000).toISOString().slice(11, 19);
+      return time;
+    } else return 0;
   };
 
   const yesterday = () => {
     if (data) {
       const time = data[data?.length - 1];
-      return timeConvert(time.activetime?.Seconds);
+      return timeConvert(time?.activetime.Seconds);
     } else return "00:00:00";
   };
 

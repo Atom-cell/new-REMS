@@ -65,9 +65,9 @@ function Login() {
           .then(function (response) {
             // console.log(response.data.data);
             // console.log(response.data.token);
-            setValid(response.data.msg);
             //for updating info email is needed
             setData(response.data.data);
+            setValid(response.data.msg);
             localStorage.setItem("token", response.data.token);
           })
           .catch(function (error) {
@@ -132,6 +132,7 @@ function Login() {
   };
 
   const forward = () => {
+    console.log("DATA: ", data);
     if (data.role === "admin" && !data.verified)
       alert("Please Verify your Credentials");
     else if (data.role === "admin" && data.verified) {
