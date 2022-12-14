@@ -68,10 +68,10 @@ router.get("/allProjects/:id/:status/:month", async (req, res) => {
       projectAssignedBy: req.params.id,
       status: req.params.status,
     });
-    // let proj = project.filter(
-    //   (p) => new Date(p.createdAt).getMonth() + 1 == month
-    // );
-    res.json(project);
+    let proj = project.filter(
+      (p) => new Date(p.createdAt).getMonth() + 1 == month
+    );
+    res.json(proj);
   }
 });
 

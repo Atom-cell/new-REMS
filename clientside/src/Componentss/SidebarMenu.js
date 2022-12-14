@@ -161,6 +161,8 @@ export default function SidebarMenu({
       //updateNotif(data, t);
     });
 
+    sock.on("boo", () => alert("ss"));
+
     sock.on("TeamDelete", (data) => {
       console.log("TeamDelete");
       toast.info(<NewToast msg={data} nav={navigate} link="/team" />);
@@ -281,6 +283,21 @@ export default function SidebarMenu({
     setOpen(false);
   };
 
+  // const getNotif = () =>{
+  //   let n = data.notifications.filter((n) => {
+  //     if (n.msg.includes("Message") || n.msg.includes("Video")) {
+  //     } else return n;
+  //   });
+  //   let rev = filterNotifications(n.reverse());
+  //   //push db notifs in here
+  //   localStorage.setItem("notif", JSON.stringify([...rev]));
+  //   localStorage.setItem("notifNum", rev.length);
+
+  // }
+
+  // const filterNotifications = (n) => {
+  //   return (n = n.filter((s) => s.flag === 0));
+  // };
   const notificationsNum = () => {
     let id = localStorage.getItem("id");
     let role = localStorage.getItem("role");
@@ -301,7 +318,9 @@ export default function SidebarMenu({
     await axios.get(`/notif/getNotif/${id}`).then((resp) => {
       localStorage.setItem("notif", JSON.stringify([...resp.data, ...notif]));
       localStorage.setItem("notifNum", resp.data.length);
-      setNotif([...resp.data, ...notif]);
+      let n = [...resp.data];
+      let rev = n.reverse();
+      setNotif([...rev, ...notif]);
       setNotifNum(resp.data.length);
     });
   };

@@ -47,9 +47,9 @@ const CommunicationNotification = ({
             overflowY: "auto",
           }}
         >
-          <Dropdown.Item style={{ marginTop: "0.4em", marginBottom: "0.4em" }}>
+          {/* <Dropdown.Item style={{ marginTop: "0.4em", marginBottom: "0.4em" }}>
             <Button>Refresh</Button>
-          </Dropdown.Item>
+          </Dropdown.Item> */}
           {allNotifications?.map((n, i) => {
             return (
               <>

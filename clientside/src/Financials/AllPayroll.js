@@ -37,7 +37,7 @@ const AllPayroll = ({ user, currency }) => {
       .post("/myPayroll/payment", {
         token: token,
         amount: amount,
-        currency: currency.code,
+        currency: currency?.code,
         payrollId: id,
       })
       .then((rec) => {

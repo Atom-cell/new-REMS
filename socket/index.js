@@ -221,7 +221,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("TeamAdded", ({ teamName, members }) => {
-    // console.log("team added ");
+    console.log("team added ");
     members.forEach((m) => {
       io.to(notif[m]).emit(
         "TeamAdded",
@@ -230,8 +230,13 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("boo", () => {
+    console.log("BOO");
+    io.to("628600c5bfaa78c7d2eb29d4").emit("boo");
+  });
+
   socket.on("TeamDelete", ({ teamName, members }) => {
-    // console.log("team delete ", teamName, members);
+    console.log("team delete ", teamName, members);
 
     members.forEach((m) => {
       io.to(notif[m._id]).emit(

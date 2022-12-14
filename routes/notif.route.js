@@ -135,6 +135,7 @@ router.post("/teamNotif", (req, res) => {
 
 //deleted team
 router.post("/deleteTeamNotif/:id", (req, res) => {
+  console.log("Delete Team NOTIF");
   let id = req.params.id;
   let lead;
   let members;
@@ -324,6 +325,7 @@ router.post("/setMeetingNotif", (req, res) => {
 });
 
 router.post("/deleteMeetingNotif", (req, res) => {
+  console.log("Delete Meeting Notification");
   myVid.findById(req.body.id, (err, resp) => {
     resp.employees.pop();
 

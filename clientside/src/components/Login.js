@@ -54,6 +54,8 @@ function Login() {
   };
 
   const uploadData = async () => {
+    let valid;
+    let data;
     if (email && password.length >= 8) {
       if (!emailE.error && !passwordE.error) {
         //alert("dd");
@@ -66,9 +68,25 @@ function Login() {
             // console.log(response.data.data);
             // console.log(response.data.token);
             //for updating info email is needed
-            setData(response.data.data);
+            // setData(response.data.data);
             setValid(response.data.msg);
+            // console.log("DATA: ", response.data.data);
+            // localStorage.setItem("email", response.data.data.email);
+            // localStorage.setItem("user", JSON.stringify(response.data.data));
+            // localStorage.setItem("role", response.data.data.role);
+            // localStorage.setItem("id", response.data.data._id);
+            // let n = response.data.data.notifications.filter((n) => {
+            //   if (n.msg.includes("Message") || n.msg.includes("Video")) {
+            //   } else return n;
+            // });
+            // let rev = filterNotifications(n.reverse());
+            // //push db notifs in here
+            // localStorage.setItem("notif", JSON.stringify([...rev]));
+            // localStorage.setItem("notifNum", rev.length);
+            console.log("VALID: ", response.data.msg);
             localStorage.setItem("token", response.data.token);
+            valid = response.data.msg;
+            data = response.data.data;
           })
           .catch(function (error) {
             console.log(error);
@@ -89,6 +107,10 @@ function Login() {
         setPassword("");
 
         setOpen(true);
+
+        if (valid !== 0) {
+          forward(data);
+        }
       }
     }
   };
@@ -119,19 +141,19 @@ function Login() {
     setOpen(false);
   };
 
-  const checkAuth = () => {
-    axios
-      .get("http://localhost:5000/emp/checkAuth", {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      })
-      .then((response) => {
-        console.log("Response: ", response);
-      });
-  };
+  // const checkAuth = () => {
+  //   axios
+  //     .get("http://localhost:5000/emp/checkAuth", {
+  //       headers: {
+  //         "x-access-token": localStorage.getItem("token"),
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log("Response: ", response);
+  //     });
+  // };
 
-  const forward = () => {
+  const forward = (data) => {
     console.log("DATA: ", data);
     if (data.role === "admin" && !data.verified)
       alert("Please Verify your Credentials");
@@ -165,7 +187,7 @@ function Login() {
   return (
     <AnimatedRoutes>
       <div className="container1">
-        {valid === 0 ? (
+        {/* {valid === 0 ? (
           <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
@@ -177,8 +199,8 @@ function Login() {
           </Snackbar>
         ) : (
           forward()
-        )}
-        {/* {valid === 0 ? (
+        )} */}
+        {valid === 0 ? (
           <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
@@ -188,17 +210,18 @@ function Login() {
               Invalid Credentials!
             </Alert>
           </Snackbar>
-        ) : data.role === "admin" && !data.verified ? (
-          alert("Please Verify your Credentials")
-        ) : data.role === "admin" && data.verified ? (
-          (window.location = "/dashboard")
-        ) : data.updated === false ? (
-          (window.location = "/update")
-        ) : data.updated && data.desktop ? (
-          (window.location = "/empdashboard")
-        ) : !data.desktop ? (
-          alert("Login on desktop first!")
-        ) : null} */}
+        ) : // : data.role === "admin" && !data.verified ? (
+        //   alert("Please Verify your Credentials")
+        // ) : data.role === "admin" && data.verified ? (
+        //   (window.location = "/dashboard")
+        // ) : data.role === "Employee" && data.updated === false ? (
+        //   (window.location = "/update")
+        // ) : data.role === "Employee" && data.updated && data.desktop ? (
+        //   (window.location = "/empdashboard")
+        // ) : data.role === "Employee" && !data.desktop ? (
+        //   alert("Login on desktop first!")
+        // )
+        null}
 
         <div style={{ display: "flex", marginTop: "-2em" }}>
           <Image src={LoginImg} />

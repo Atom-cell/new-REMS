@@ -58,6 +58,7 @@ const SetMeetingg = ({ userId, newMeet, setNewMeet }) => {
         employees: employees,
       };
 
+      console.log("MEETING: ", myObj);
       axios
         .post("http://localhost:5000/myVideo/addNewMeeting", myObj)
         .then((res) => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BoardList from "./BoardList/BoardList";
 import Editable from "./Editabled/Editable";
-import MeetingEmployeesTable from "../Meetings/MeetingEmployeesTable";
+import MeetingEmployeesTable from "./MeetingEmployeesTable";
 import "./boards.css";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";

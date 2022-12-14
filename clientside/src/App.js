@@ -285,7 +285,7 @@ const App = () => {
             `https://restcountries.com/v2/name/${user.currency}?fullText=true`
           )
           .then((rec) => {
-            // console.log(rec.data[0].currencies[0]);
+            console.log(rec.data[0].currencies[0]);
             setCurrency(rec.data[0].currencies[0]);
           })
           .catch((err) => console.log(err));

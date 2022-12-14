@@ -68,7 +68,9 @@ const VideoCall = ({
       socket.emit("leaveCall", otherId, user._id, name);
     } else socket.emit("leaveCall", caller, user._id, name);
     // window.location.reload();
-    navigate("/dashboard");
+    if (JSON.parse(localStorage.getItem("user")).role === "admin")
+      navigate("/dashboard");
+    else navigate("/empdashboard");
   };
 
   // const handleChatOnlineClick = (friend) => {
